@@ -36,24 +36,28 @@ export const labelRegExp = (label, flags = "g") => new RegExp(`(^|[^A-Za-z{])${e
  * fewer than two letters is ignored.
  */
 export function atomicLabels(characters, cards = []) {
-  const owners = new Map(); // label -> Set(token)
-  const add = (label, token) => {
+  const owners = new Map(); // label -> Map(id -> [token, ...]), in the order added: name, full_name, forms
+  const add = (label, id, token) => {
     if (typeof label !== "string" || label.replace(/[^A-Za-z]/g, "").length < 2) return;
-    if (!owners.has(label)) owners.set(label, new Set());
-    owners.get(label).add(token);
+    if (!owners.has(label)) owners.set(label, new Map());
+    const ids = owners.get(label);
+    if (!ids.has(id)) ids.set(id, []);
+    ids.get(id).push(token);
   };
   for (const [id, e] of Object.entries(characters || {})) {
-    add(e.name, `{{${id}}}`);
-    if (e.full_name) add(e.full_name, `{{${id}:full}}`);
-    for (const [form, value] of Object.entries(e.forms || {})) add(value, `{{${id}:${form}}}`);
+    add(e.name, id, `{{${id}}}`);
+    if (e.full_name) add(e.full_name, id, `{{${id}:full}}`);
+    for (const [form, value] of Object.entries(e.forms || {})) add(value, id, `{{${id}:${form}}}`);
   }
   for (const card of cards) for (const [key, c] of Object.entries(card?.characters || {})) {
-    if (typeof c?.scene_name === "string" && !characters?.[key] && !owners.has(c.scene_name)) add(c.scene_name, `{{${key}}}`);
+    if (typeof c?.scene_name === "string" && !characters?.[key] && !owners.has(c.scene_name)) add(c.scene_name, key, `{{${key}}}`);
   }
-  const idOf = (token) => token.replace(/^\{\{|(?::[a-z]+)?\}\}$/g, "");
-  const composite = (label, token) => new Set([...owners].filter(([o, t]) => o !== label && idOf([...t][0]) !== idOf(token) && labelRegExp(o, "").test(label)).map(([, t]) => idOf([...t][0]))).size >= 2;
-  const shared = [...owners].filter(([, t]) => t.size > 1).map(([l]) => l);
-  const list = [...owners].filter(([l, t]) => t.size === 1 && !composite(l, [...t][0])).map(([l, t]) => [l, [...t][0]]).sort((a, b) => b[0].length - a[0].length);
+  // Shared means two entries, not two tokens: one entry owning a label twice (name "Sam", forms.short "Sam") is that entry's,
+  // and the bare {{id}} wins over a form.
+  const tokenOf = (id, tokens) => (tokens.includes(`{{${id}}}`) ? `{{${id}}}` : tokens[0]);
+  const composite = (label, id) => new Set([...owners].filter(([o]) => o !== label && labelRegExp(o, "").test(label)).flatMap(([, ids]) => [...ids.keys()]).filter((other) => other !== id)).size >= 2;
+  const shared = [...owners].filter(([, ids]) => ids.size > 1).map(([l]) => l);
+  const list = [...owners].filter(([l, ids]) => ids.size === 1 && !composite(l, [...ids.keys()][0])).map(([l, ids]) => { const [[id, tokens]] = ids; return [l, tokenOf(id, tokens)]; }).sort((a, b) => b[0].length - a[0].length);
   return { list, shared };
 }
 

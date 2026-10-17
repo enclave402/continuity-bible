@@ -67,10 +67,30 @@ You will see the raw tokenized source in `examples/sample-scene.md` compiled int
 | Token | Resolution Example |
 | :--- | :--- |
 | `{{id}}` | Canonical display name (`"Sam"`) |
-| `{{id:first}}` | First word of name (`"Samantha"` -> `"Samantha"`, `"Rowan Thorne"` -> `"Rowan"`) |
+| `{{id:first}}` | First word of the display name (`"Sam"`; a name like `"Rowan Thorne"` -> `"Rowan"`) |
 | `{{id:full}}` | Full name from registry (`"Samantha Hayes"`) |
 | `{{id:formal}}` | Custom declared form (`"Samantha"`) |
 | `{{id:initial}}`| First initial (`"S"`) |
+
+An unknown id fails the build: `{{theo-vanse}}` throws `names: unknown token {{theo-vanse}}` instead of printing a guessed name.
+
+### 4. Migrate Existing Files Once
+Run from your project root (where `character-registry.json` lives):
+```bash
+node scripts/tokenize.mjs drafts/scene-14.md --text --dry-run   # show what would change
+node scripts/tokenize.mjs drafts/scene-14.md --text             # rewrite names into tokens
+```
+```text
+Sam texted Theo at midnight. Theodore Vance never answered, so Samantha called Chloe.
+{{sam-hayes}} texted {{theo-vance}} at midnight. {{theo-vance:full}} never answered, so {{sam-hayes:formal}} called {{chloe-jenkins}}.
+```
+Whole words only, never inside an existing token, longest name first. A name two characters share is skipped and reported, not guessed. JSON files work too (drop `--text`; `--skip k,k` leaves keys alone).
+
+### 5. Gate It
+```bash
+npm run check   # every name on every surface resolves to exactly one character, else exit 1
+npm test        # the resolver and migration tests
+```
 
 ---
 
