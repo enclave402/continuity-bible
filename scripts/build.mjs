@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-// Rel8r / SloppyXBaby Narrative SSOT Engine
-// Maintained by Coach Hype (https://coachhype.com)
-// Production case study: https://rel8r.me
-// Full developer kits: https://sloppyxbaby.com
+// build.mjs: prints a source file as written (tokens), then resolved (names). Default: examples/sample-scene.md
+// By Coach Hype (https://coachhype.com). Runs the name build of https://rel8r.me
 
 import fs from "node:fs";
 import path from "node:path";

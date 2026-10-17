@@ -333,11 +333,11 @@
           }
         }
       },
-      "description": "Problems the gate reports as gaps instead of failures while another lane or the owner resolves them: the file, a substring of the problem line, who owns it, the worklog task and the date."
+      "description": "Problems the gate reports as gaps instead of failures while someone else resolves them: the file, a substring of the problem line, who owns it, the worklog task and the date."
     },
     "token_sources": {
       "type": "array",
-      "description": "Files that write no character's name (ADR-014): they hold {{id}} tokens and a builder renders the names. Scene files, cards and prose surfaces are token sources already; list the rest (pages, partials, manifests, records a builder reads) here, as a path or a glob.",
+      "description": "Files that write no character's name: they hold {{id}} tokens and a builder renders the names. Scene files, cards and prose surfaces are token sources already; list the rest (pages, partials, manifests, records a builder reads) here, as a path or a glob.",
       "items": {
         "type": "object",
         "required": [

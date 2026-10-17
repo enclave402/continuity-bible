@@ -1,0 +1,15 @@
+{
+  "scenes": {
+    "14-read-at-1152": {
+      "title": "Read at 11:52",
+      "characters": ["{{sam-hayes}}", "{{chloe-jenkins}}", "{{theo-vance}}"],
+      "dialogue": [
+        { "speaker": "{{sam-hayes}}", "text": "{{chloe-jenkins:nickname}}, is this a red flag?" },
+        { "speaker": "{{chloe-jenkins}}", "text": "Send it and see." },
+        { "speaker": "{{theo-vance}}", "text": "Running late. Talk tmrw. –{{theo-vance:initial}}" }
+      ],
+      "narration": "{{theo-vance:full}} signed contracts with his whole name. He signed {{sam-hayes:formal}} with one letter.",
+      "image_prompt": "{{sam-hayes:full}} at a kitchen table, phone glowing, contact name '{{theo-vance:full}}' on screen"
+    }
+  }
+}
