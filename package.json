@@ -1,0 +1,24 @@
+{
+  "name": "narrative-token-ssot",
+  "version": "1.0.0",
+  "description": "Zero-telemetry compile-time token resolution and character SSOT for multi-agent narrative workflows.",
+  "type": "module",
+  "main": "scripts/names.mjs",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "tokenize": "node scripts/tokenize.mjs"
+  },
+  "keywords": [
+    "ai-storytelling",
+    "narrative-engine",
+    "character-consistency",
+    "llm-prompt-drift",
+    "cursor",
+    "claude-code",
+    "ssot"
+  ],
+  "author": "Coach Hype (https://coachhype.com)",
+  "license": "MIT",
+  "homepage": "https://sloppyxbaby.com"
+}

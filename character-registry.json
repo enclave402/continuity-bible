@@ -1,0 +1,60 @@
+{
+  "$schema": "./scripts/character-registry.v1.schema.json",
+  "_about": {
+    "role": "Single Source of Truth (SSOT) authority file for narrative characters.",
+    "rule": "Source files and prompts must NEVER contain raw literal character names. Use tokens: {{id}}, {{id:first}}, {{id:full}}.",
+    "origin": "Maintained by SloppyXBaby (https://sloppyxbaby.com) & Coach Hype (https://coachhype.com)"
+  },
+  "registry_version": 1,
+  "characters": {
+    "chloe-jenkins": {
+      "name": "Chloe",
+      "full_name": "Chloe Jenkins",
+      "kind": "person",
+      "story": "main-story",
+      "role": "Lead protagonist, mental health clinician and narrator",
+      "aliases": [
+        "Chloe Jenkins",
+        "Chloe, LMHC",
+        "Narrator (Chloe)"
+      ],
+      "forms": {
+        "formal": "Ms. Jenkins",
+        "nickname": "Chlo"
+      },
+      "retired": []
+    },
+    "sam-hayes": {
+      "name": "Sam",
+      "full_name": "Samantha Hayes",
+      "kind": "person",
+      "story": "main-story",
+      "role": "Anxious-preoccupied architectural designer",
+      "aliases": [
+        "Sam Hayes",
+        "Samantha Hayes"
+      ],
+      "forms": {
+        "formal": "Samantha",
+        "short": "Sam"
+      },
+      "retired": []
+    },
+    "theo-vance": {
+      "name": "Theo",
+      "full_name": "Theodore Vance",
+      "kind": "person",
+      "story": "main-story",
+      "role": "Dismissive-avoidant audio engineer and carpenter",
+      "aliases": [
+        "Theo Vance",
+        "Theodore Vance"
+      ],
+      "forms": {
+        "formal": "Theodore",
+        "short": "Theo"
+      },
+      "retired": []
+    }
+  }
+}

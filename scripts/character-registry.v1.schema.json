@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:machine-norms:character-registry:v1:character-registry.v1.schema.json",
+  "title": "Character registry (authority file), version 1",
+  "description": "One entry per character. The only place a canonical name is written. Every other file references or is checked against it. Procedure: ~/.agents/skills/character-registry-ssot/SKILL.md",
+  "type": "object",
+  "required": [
+    "registry_version",
+    "characters"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_about": {
+      "type": "object"
+    },
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "visual_continuity": {
+      "type": "string",
+      "description": "Path of the visual-continuity manifest, relative to this file. Its stories' scenes_file and continuity_file become surfaces."
+    },
+    "skip_stories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Manifest stories whose files are not surfaces, each with the reason (a fixture, a placeholder cast)."
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "file",
+          "type",
+          "story"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scenes",
+              "names",
+              "headings",
+              "prose"
+            ]
+          },
+          "story": {
+            "type": "string"
+          },
+          "root": {
+            "type": "string",
+            "description": "scenes: the key holding the scene map (default scenes)."
+          },
+          "filter": {
+            "type": "object",
+            "required": [
+              "field",
+              "equals"
+            ],
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "equals": {}
+            }
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "scenes: label fields (default characters, speaker, marginAuthor, dialogue[].speaker)."
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "names: dot paths with * and [] wildcards whose string values are labels."
+          },
+          "split": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Extra separators for compound labels (default &, +, and)."
+          },
+          "pattern": {
+            "type": "string",
+            "description": "headings: a regex whose first group is the label (default ### headings up to the first parenthesis)."
+          },
+          "within": {
+            "type": "string",
+            "description": "headings: only lines after this exact heading line, up to the next heading of the same level."
+          },
+          "prose": {
+            "type": "boolean",
+            "description": "scenes: scan every string of each scene for retired names (default true)."
+          },
+          "ignore": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "headings: exact heading labels that are not characters (a timeline, a table) and are skipped."
+          },
+          "story_field": {
+            "type": "string",
+            "description": "prose: the field of each entry under root whose value picks the story through `stories` (default: the entry's key)."
+          },
+          "stories": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "prose: map from a story_field value (or entry key) to a story id; an entry whose value is not mapped is skipped."
+          },
+          "skip_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "prose and continuity: keys whose strings are not scanned, besides every key starting with _ (notes and sources)."
+          }
+        }
+      }
+    },
+    "characters": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "type": "object",
+          "required": [
+            "name",
+            "kind",
+            "story",
+            "role"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The one canonical form."
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "person",
+                "companion",
+                "voice",
+                "group"
+              ],
+              "description": "person; companion (an animal or a named companion object: a dog, a cat, a plush bear); voice (a device or document that speaks); group (members listed)."
+            },
+            "story": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Home story id (a visual-continuity story id, or any label such as moment-packs or platform)."
+            },
+            "also_in": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Other story ids this character may appear in; \"*\" means every story."
+            },
+            "role": {
+              "type": "string",
+              "minLength": 1,
+              "description": "One line. The profile holds the rest."
+            },
+            "aliases": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true,
+              "description": "Every other label a surface uses for this character. Exact strings."
+            },
+            "retired": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true,
+              "description": "Forms that may never return. A label equal to one, or a scene string containing one, fails."
+            },
+            "first_appearance": {
+              "type": "string",
+              "description": "A scene slug in the home story."
+            },
+            "born": {
+              "type": "integer"
+            },
+            "ages": {
+              "type": "object",
+              "patternProperties": {
+                "^[0-9]{4}$": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "description": "Stated age anchors by year; checked against born."
+            },
+            "continuity_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Keys in the home story's continuity file characters block."
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Files that describe this character, relative to the registry; a #fragment may follow the path."
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "group: entry ids."
+            },
+            "questions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "Open questions about this character that block nothing: a shared surname, a name an agent chose, a date to settle. Each line says who raised it and when. The owner answers them when he wants to; nothing waits on them."
+            },
+            "prose_only": {
+              "type": "boolean",
+              "description": "True when this character is named only inside prose, never on a label field, so the check does not report a gap."
+            },
+            "notes": {
+              "type": "string"
+            },
+            "species": {
+              "type": "string",
+              "minLength": 1,
+              "description": "companion: a key of the registry's species map (required for every companion)."
+            },
+            "generic": {
+              "type": "boolean",
+              "description": "True for a descriptive label standing in for an unnamed person (The therapist, Diner Manager): it is a label on its surfaces but is not hunted for in other stories' prose."
+            },
+            "full_name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The full form a {{id:full}} token renders (Chloe Jenkins) when the canonical name is shorter (Chloe)."
+            },
+            "forms": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "Named forms a {{id:<form>}} token renders (formal: Samantha, full: Samantha Hayes, surname: Hayes). A form here overrides the built-ins first, short, full, initial."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Globs (relative to this file; ** and * as in gitignore) of dated history that is never rewritten: the worklog, transcripts, decision records, research, past prompt records, retired plans, test fixtures. Every other tracked text file is scanned for retired names and companion species mismatches."
+    },
+    "species": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minItems": 1
+      },
+      "description": "Species a companion may have, each with the words that name it in prose (nouns only; never a word that is also a verb). A story's text may name only the species of companions allowed in that story."
+    },
+    "known": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "file",
+          "text",
+          "owner",
+          "task",
+          "date"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "type": "string"
+          },
+          "task": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Problems the gate reports as gaps instead of failures while another lane or the owner resolves them: the file, a substring of the problem line, who owns it, the worklog task and the date."
+    },
+    "token_sources": {
+      "type": "array",
+      "description": "Files that write no character's name (ADR-014): they hold {{id}} tokens and a builder renders the names. Scene files, cards and prose surfaces are token sources already; list the rest (pages, partials, manifests, records a builder reads) here, as a path or a glob.",
+      "items": {
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "skip_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Keys whose strings are not checked: a label the file defines, printed text of a physical object, a dated note."
+          },
+          "why": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
