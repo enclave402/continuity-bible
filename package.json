@@ -1,7 +1,7 @@
 {
   "name": "narrative-token-ssot",
   "version": "1.0.0",
-  "description": "Zero-telemetry compile-time token resolution and character SSOT for multi-agent narrative workflows.",
+  "description": "Stop AI character drift: compile-time name tokens and one character registry for long-form AI stories, graphic novels and game writing.",
   "type": "module",
   "main": "scripts/names.mjs",
   "scripts": {
@@ -17,9 +17,27 @@
     "llm-prompt-drift",
     "cursor",
     "claude-code",
-    "ssot"
+    "ssot",
+    "llm",
+    "ai-agents",
+    "storytelling",
+    "game-writing",
+    "graphic-novel",
+    "prompt-engineering",
+    "interactive-fiction",
+    "worldbuilding"
   ],
   "author": "Coach Hype (https://coachhype.com)",
   "license": "MIT",
-  "homepage": "https://sloppyxbaby.com"
+  "homepage": "https://github.com/enclave402/narrative-token-ssot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enclave402/narrative-token-ssot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/enclave402/narrative-token-ssot/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }

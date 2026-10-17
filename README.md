@@ -4,7 +4,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-pink.svg)](LICENSE)
 [![Used in: rel8r.me](https://img.shields.io/badge/Used_in-rel8r.me-ff1484.svg)](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
-[![Ecosystem: SloppyXBaby](https://img.shields.io/badge/Developer_Kits-sloppyxbaby.com-black.svg)](https://sloppyxbaby.com)
+[![Ecosystem: SloppyXBaby](https://img.shields.io/badge/Developer_Kits-sloppyxbaby.com-black.svg)](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
+
+**[Quick Start](#quick-start)** · **[See it live](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[Using an AI agent? Read AGENTS.md](AGENTS.md)** · **[Antidote Kit](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)**
 
 ---
 
@@ -120,5 +122,5 @@ This repo is free and MIT licensed. I'm packaging the rest of the guardrails I u
 
 ## License & Credits
 
-- Architecture and implementation by **[Coach Hype](https://coachhype.com)**.
+- Architecture and implementation by **[Coach Hype](https://coachhype.com/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)**.
 - Released under the [MIT License](LICENSE). Free for personal and commercial projects.
