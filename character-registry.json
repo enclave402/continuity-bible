@@ -6,6 +6,18 @@
     "origin": "Maintained by SloppyXBaby (https://sloppyxbaby.com) & Coach Hype (https://coachhype.com)"
   },
   "registry_version": 1,
+  "surfaces": [
+    {
+      "type": "scenes",
+      "file": "examples/scenes.json",
+      "story": "main-story"
+    }
+  ],
+  "token_sources": [
+    {
+      "file": "examples/*.md"
+    }
+  ],
   "characters": {
     "chloe-jenkins": {
       "name": "Chloe",

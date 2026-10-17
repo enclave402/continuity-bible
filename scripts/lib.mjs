@@ -1,5 +1,5 @@
 /**
- * character-registry-ssot: the library behind check.mjs, rename.mjs and init.mjs.
+ * lib.mjs: the library behind check.mjs.
  *
  * A registry is an authority file: one entry per character, one canonical name, explicit aliases, retired forms.
  * Surfaces are the files that use names. Each label on a surface must resolve, by exact match only, to exactly one entry
@@ -35,7 +35,7 @@ export function registryPath(argv = process.argv, env = process.env, cwd = proce
 
 export function loadRegistry(file) {
   if (!fs.existsSync(file)) {
-    const error = new Error(`registry missing: ${file}. Fix: node init.mjs --dir ${path.dirname(file)}`);
+    const error = new Error(`registry missing: ${file}. Fix: create character-registry.json there (see the README), or pass --registry <path>`);
     error.exitCode = 1;
     throw error;
   }
@@ -100,7 +100,7 @@ export function buildIndex(registry) {
     const key = label.toLowerCase();
     const have = index.get(key);
     if (have && have.id !== id) {
-      failures.push(`${registry._file}: "${label}" is the ${what} of ${id} and already a label of ${have.id}. Fix: one name is one person; rename one of them (ADR-009)`);
+      failures.push(`${registry._file}: "${label}" is the ${what} of ${id} and already a label of ${have.id}. Fix: one name is one person; rename one of them`);
       return;
     }
     if (have && have.id === id && have.label !== label) failures.push(`${registry._file}: ${id} lists "${label}" twice with different case`);
@@ -271,7 +271,7 @@ function fixForUnknown(label, surface) {
   return `Fix: add "${label}" to aliases of the entry it means in character-registry.json, add a new entry for a new character, or rename it (story ${surface.story})`;
 }
 
-// ---- text rules (2026-10-17; owner: "These should never be hardcoded values. We need ssot") ----
+// ---- text rules ----
 const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const wordRe = (t, flags = "") => new RegExp(`(^|[^A-Za-z])${escapeRe(t)}(?![A-Za-z])`, flags);
 
@@ -405,7 +405,7 @@ function scanRepo(registry, surfaceFiles = []) {
 
 /** Strings of a value, skipping keys that start with _ (notes, sources, reasons) and any listed skip key. */
 /**
- * Token sources (ADR-014; owner 2026-10-17: "These should never be hardcoded values. We need ssot"): a scene file, a card,
+ * Token sources: a scene file, a card,
  * a prose data file and every file the registry lists under `token_sources` write no character's name. They hold
  * {{id}} / {{id:form}} tokens and a builder renders the names (names.mjs). A written-out registry label in one of them
  * fails, with the token to write. Keys starting with _, $schema, a card's scene_name (the label it defines) and a
@@ -449,7 +449,7 @@ function tokenSourceProblems(registry, surfaces, root) {
     const seen = new Set();
     const unique = out.filter((o) => !seen.has(o) && seen.add(o));
     for (const o of unique.slice(0, 8)) failures.push(`${rel}: ${o}`);
-    if (unique.length > 8) failures.push(`${rel}: ${unique.length - 8} more written-out name(s) in a token source. Fix: node scripts/character-registry/tokenize.mjs ${rel} [--story <id>]`);
+    if (unique.length > 8) failures.push(`${rel}: ${unique.length - 8} more written-out name(s) in a token source. Fix: node scripts/tokenize.mjs ${rel} [--text] [--story <id>]`);
   }
   return { failures, sources: sources.size };
 }
@@ -500,7 +500,7 @@ export function checkRegistry(registry) {
   const surfaces = surfacesOf(registry);
   const sceneSlugs = new Map(); // story -> Set(slug)
   const resolvedBy = []; // { id, surface }
-  // a story's continuity card, for cast fields that hold card keys (the look units of ADR-012) instead of names
+  // a story's continuity card, for cast fields that hold card keys (the look units of a story) instead of names
   const cardFiles = new Map(surfaces.filter((s) => s.type === "continuity").map((s) => [s.story, fromRoot(root, s.file)]));
   const cards = new Map();
   const cardOf = (storyId) => {
@@ -534,7 +534,7 @@ export function checkRegistry(registry) {
         touch(id);
         const entry = characters[id];
         if (!allowed(entry, surface.story)) {
-          failures.push(`${surface.file}: ${where}: "${cleanLabel(label)}" is ${entry.name} of ${entry.story}, not a character of ${surface.story}. Fix: rename this one, or add "${surface.story}" to ${id}.also_in if it is the same person (ADR-009)`);
+          failures.push(`${surface.file}: ${where}: "${cleanLabel(label)}" is ${entry.name} of ${entry.story}, not a character of ${surface.story}. Fix: rename this one, or add "${surface.story}" to ${id}.also_in if it is the same person`);
         }
         resolvedBy.push({ id, surface: surface.story });
       }
@@ -575,7 +575,7 @@ export function checkRegistry(registry) {
         for (const u of unresolved) failures.push(`${surface.file}: characters.${cid}.scene_name: unknown name "${u}". ${fixForUnknown(u, surface)}`);
         for (const id of ids) {
           touch(id);
-          if (!allowed(characters[id], surface.story)) failures.push(`${surface.file}: characters.${cid}.scene_name "${name}" is ${characters[id].name} of ${characters[id].story}, not of ${surface.story}. Fix: rename, or add also_in (ADR-009)`);
+          if (!allowed(characters[id], surface.story)) failures.push(`${surface.file}: characters.${cid}.scene_name "${name}" is ${characters[id].name} of ${characters[id].story}, not of ${surface.story}. Fix: rename, or add also_in`);
           if (linked.get(cid) !== id) gaps.push(`gap: ${surface.file}: characters.${cid} resolves to ${id} but ${id}.continuity_ids does not list "${cid}"`);
         }
       }
@@ -612,7 +612,7 @@ export function checkRegistry(registry) {
     }
     if (!used.get(id) && entry.kind !== "group" && !entry.prose_only) gaps.push(`gap: ${id} (${entry.name}) appears on no surface`);
   }
-  // known problems (another lane's file, an owner decision pending) print as gaps while they are listed, with the task that owns them
+  // known problems (someone else's file, a decision pending) print as gaps while they are listed, with the task that owns them
   const kept = [];
   const matched = new Set();
   for (const f of failures) {

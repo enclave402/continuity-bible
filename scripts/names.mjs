@@ -1,10 +1,10 @@
-// names.mjs: the one resolver between the registry, the continuity cards and every built output (owner 2026-10-17: "These
-// should never be hardcoded values. We need ssot"; the plan of 14:01 EDT: source files hold tokens, builders resolve them).
+// names.mjs: the one resolver between the registry, the continuity cards and every built output. Source files hold tokens;
+// builders resolve them.
 //
 // Source files never carry a character's name. They carry a token, resolved here at build or compile time:
-//   {{id}}         the display name: a registry id (rowan-thorne -> "Rowan Thorne", coach-hype -> "Coach Hype"; the registry
-//                  wins even when a card carries the same key) or a card-only key of the story (young-aleksandr -> "Young Aleksandr")
-//   {{id:first}}   the first word of that name (rowan-thorne:first -> "Rowan")
+//   {{id}}         the display name: a registry id (sam-hayes -> "Sam"; the registry wins even when a card carries the same
+//                  key) or a card-only key of the story (young-sam -> "Young Sam")
+//   {{id:first}}   the first word of that name (a registry name "Rowan Thorne" -> "Rowan")
 //   {{id:short}}   the card's stage label when the id is a card key, else the registry name
 //   {{id:full}}    the registry entry's full_name when it has one (chloe-jenkins:full -> "Chloe Jenkins"), else the name
 //   {{id:initial}} the first letter of the first name
@@ -14,10 +14,10 @@
 //
 //   import { loadNames } from "./names.mjs"
 //   const names = loadNames(root)
-//   names.resolveTokens("{{rowan-thorne}} and {{elena-sato}}’s frame", "dating-red-flags")  -> "Rowan Thorne and Elena Sato’s frame"
-//   names.resolveDeep(scene, "dating-red-flags")   -> the scene with every string resolved and every structured ref kept as is
-//   names.nameOf("coach-hype")                      -> "Coach Hype"  (a registry id; any other string comes back unchanged)
-//   names.castName(story, "young-aleksandr")        -> "Young Aleksandr"
+//   names.resolveTokens("{{sam-hayes}} and {{theo-vance:full}}")  -> "Sam and Theodore Vance"
+//   names.resolveDeep(scene, "main-story")   -> the scene with every string resolved and every structured ref kept as is
+//   names.nameOf("chloe-jenkins")            -> "Chloe"  (a registry id; any other string comes back unchanged)
+//   names.castName(story, "young-sam")       -> "Young Sam"  (a card-only key)
 //   names.castOf(story, scene)                      -> the scene's cast as names
 import fs from "node:fs";
 import path from "node:path";
@@ -31,7 +31,7 @@ export const labelRegExp = (label, flags = "g") => new RegExp(`(^|[^A-Za-z{])${e
 /**
  * The atomic labels a source file may not write out, each with the token it becomes: [label, token], longest first.
  * Registry names, `forms` and `full_name` ({{id}}, {{id:<form>}}, {{id:full}}) and the scene_name of every card key that is
- * not a registry id ({{young-aleksandr}}). A label two entries share is left out and reported in `shared`. A composite
+ * not a registry id ({{young-sam}}). A label two entries share is left out and reported in `shared`. A composite
  * label naming two or more other entries ("Sam & Theo") is left out: the labels inside it are the tokens. A label with
  * fewer than two letters is ignored.
  */
@@ -105,7 +105,7 @@ export function loadNames(root) {
     const m = member(story, id);
     const entry = characters[id];
     if (!m && !entry) return null;
-    const name = entry ? entry.name : m.scene_name; // the registry wins for an id; a card-only key (young-aleksandr) renders its scene_name
+    const name = entry ? entry.name : m.scene_name; // the registry wins for an id; a card-only key (young-sam) renders its scene_name
     if (!form) return name;
     if (entry?.forms && typeof entry.forms[form] === "string") return entry.forms[form];
     if (form === "first") return name.split(/\s+/)[0];

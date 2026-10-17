@@ -1,19 +1,21 @@
 # Narrative Token SSOT
 
-> **Stop fighting AI character drift.** A zero-telemetry, compile-time token resolution engine and character Single Source of Truth (SSOT) for long-form AI storytelling, graphic novels, and game writing.
+> Character names as build-time tokens, so AI agents can't drift them. One registry file is the single source of truth (SSOT) for every name in your scenes, prompts and image manifests. Plain Node, zero dependencies, no telemetry.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-pink.svg)](LICENSE)
-[![Production Receipt: Rel8r](https://img.shields.io/badge/Production_Proof-rel8r.me-ff1484.svg)](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
+[![Used in: rel8r.me](https://img.shields.io/badge/Used_in-rel8r.me-ff1484.svg)](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
 [![Ecosystem: SloppyXBaby](https://img.shields.io/badge/Developer_Kits-sloppyxbaby.com-black.svg)](https://sloppyxbaby.com)
 
 ---
 
 ## The Problem: AI Prompt Drift & Broken Lore
 
-When building multi-scene narratives, graphic novels, or game dialogues using LLMs (Cursor, Claude Code, Copilot, ChatGPT), models inevitably drift:
+When you write multi-scene stories, graphic novels or game dialogue with LLMs (Cursor, Claude Code, Copilot, ChatGPT), names drift:
 - Character names get subtly mutated across prompts (*Samantha* becomes *Sam*, *Chloe* becomes *Clara*).
 - Renaming a character requires dangerous global find-and-replace passes across hundreds of scene files, image generation manifests, and prompts.
-- Models hallucinate non-canonical aliases, confuse family names, and contaminate secondary characters.
+- Models invent aliases, mix up family names, and give side characters new ones.
+
+A rule in the agent's instructions makes this rarer. It doesn't make it impossible.
 
 ## The Solution: Compile-Time Token Resolution
 
@@ -33,7 +35,7 @@ Chloe turned around. "Did Theo answer you?"
 Sam shook her head. "Theodore has gone completely silent."
 ```
 
-Need to rename a character or change their canonical formal name? **Update one line in `character-registry.json`. Rebuild. Done.** Zero string mutations across your repo.
+To rename a character, change one line in `character-registry.json` and rebuild. No find-and-replace across the repo.
 
 ---
 
@@ -61,7 +63,7 @@ Clone this repo and run:
 ```bash
 node scripts/build.mjs
 ```
-You will see the raw tokenized source in `examples/sample-scene.md` compiled into clean prose instantaneously.
+It prints `examples/sample-scene.md` as written (tokens), then resolved (names).
 
 ### 3. Token Formats Supported
 | Token | Resolution Example |
@@ -91,32 +93,32 @@ Whole words only, never inside an existing token, longest name first. A name two
 npm run check   # every name on every surface resolves to exactly one character, else exit 1
 npm test        # the resolver and migration tests
 ```
+The registry declares which files to check: `surfaces` (here `examples/scenes.json`, where every cast, speaker and line is checked) and `token_sources` (here `examples/*.md`, which may hold tokens but no written-out names). Put `check` in a pre-commit hook or CI, and a name an agent types out fails with the fix:
+```text
+character registry: pass (3 entries, 6 labels resolved on 1 surfaces, 2 token sources, 11 files scanned)
+
+examples/sample-scene.md: line 9: names "Sam" in a token source. Fix: write {{sam-hayes}}
+character registry: fail (1 problem(s))
+```
 
 ---
 
-## Live Production Case Study
+## Where It's Used
 
-This architecture is not a toy experiment. It is the production backbone powering:
+It came out of, and still runs, the build for:
 
 - **[Dating Red Flags](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)**: an illustrated graphic novel on [rel8r.me](https://rel8r.me/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot), an on-device relationship self-regulation tool.
 - **82 illustrated scenes** across two dual-narrative editions (Sam-first and Theo-first), with every character name resolved from one registry file.
 
 ---
 
-## Upgrade to The Antidote Kit
+## Related
 
-Need more than token resolution?
-
-If you are shipping software or narrative engines using AI coding agents and are tired of:
-- Context window amnesia
-- Models ignoring repo instructions
-- Multi-agent collisions across branches
-
-Inspect **[The Antidote Kit at sloppyxbaby.com](https://sloppyxbaby.com)**. It delivers the complete suite of deterministic repository rails, git worktree isolation scripts, and anti-avoidance protocols designed by neurodivergent builders for high-agency engineers.
+This repo is free and MIT licensed. I'm packaging the rest of the guardrails I use with coding agents (git worktree isolation, repo rules that hold up across sessions) as the paid [Antidote Kit](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot).
 
 ---
 
 ## License & Credits
 
 - Architecture and implementation by **[Coach Hype](https://coachhype.com)**.
-- Released under the [MIT License](LICENSE). Free for personal, indie, and commercial creative projects.
+- Released under the [MIT License](LICENSE). Free for personal and commercial projects.

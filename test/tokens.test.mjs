@@ -37,3 +37,20 @@ test("a label two entries share is skipped and reported", () => {
 test("an unknown id fails the build instead of printing a name", () => {
   assert.throws(() => names.resolveTokens("He texted {{theo-vanse}} back."), /unknown token \{\{theo-vanse\}\}/);
 });
+
+test("check passes on the examples and fails on a written-out name, with the token to write", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const fs = await import("node:fs");
+  const os = await import("node:os");
+  const path = await import("node:path");
+  const pass = spawnSync(process.execPath, ["scripts/check.mjs"], { encoding: "utf8" });
+  assert.equal(pass.status, 0, pass.stderr);
+  assert.match(pass.stdout, /character registry: pass \(3 entries, 6 labels resolved on 1 surfaces/);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-"));
+  fs.cpSync(process.cwd(), dir, { recursive: true, filter: (src) => !src.includes(`${path.sep}.git`) });
+  fs.appendFileSync(path.join(dir, "examples/sample-scene.md"), "\nSam waited.\n");
+  const fail = spawnSync(process.execPath, ["scripts/check.mjs"], { cwd: dir, encoding: "utf8" });
+  fs.rmSync(dir, { recursive: true, force: true });
+  assert.equal(fail.status, 1);
+  assert.match(fail.stderr, /names "Sam" in a token source\. Fix: write \{\{sam-hayes\}\}/);
+});
