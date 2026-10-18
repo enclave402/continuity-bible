@@ -19,7 +19,7 @@ Sam is the lead of the story. The book has 99 pictures and she is in 85 of them.
 
 The author's decision, in the author's words, was this: it does not matter whether she matches the beginning or the end; the goal is the least amount of regeneration; a lighter or darker skin tone is acceptable as long as she is consistent throughout; and "eye color stays". Her heritage, one quarter Black on her father's side, is a fact of the story and stays in the story's text whatever the pictures do.
 
-That decision has three parts, and the engine has a place for each. A fixed trait goes in `canon_tags`. Everything the author lets follow the pictures goes to `consensus`, the most central picture. A story fact stays in prose. This page is how that played out, with the numbers.
+That decision has three parts, and the engine asks exactly two questions to hold them. What must never change? That is `canon_tags`, and for Sam it is her eye colour. For everything else, which look? The author's answer is *fewest redraws*, the most central picture among those that keep the fixed trait. A story fact stays in prose and is never a tag. This page is how that played out, with the numbers.
 
 ## What you would have, if this were your story
 
@@ -83,54 +83,53 @@ Two tools helped and one did not:
 - The same detector produced a number per face (a face embedding). `consensus` uses it to find the most central picture. Its limit is in step 5.
 - A small vision model on the author's computer was asked the same questions about the same 58 crops. It agreed with the person on 3 of them. It read most faces lit by lamplight as dark brown and Black, and two pale faces at night as Asian with straight hair. Its answers are kept in the evidence files as a caution. The person's tags are the record. If you let a model tag your pictures, look at every answer.
 
-## Step 4: write what may never change, and only that
+## Step 4: answer the first question: what must never change?
 
-The engine never reads canon off the pictures. The author writes it, on the registry entry, in the same vocabulary as the tags. For Sam that is one key:
+The engine never reads this off the pictures. The author writes it, on the registry entry, in the same vocabulary as the tags. For Sam that is one key, and the second answer sits beside it:
 
 ```json
 "sam-hayes": {
   "name": "Sam",
   "canon_tags": { "eyes": "amber-brown" },
-  "drift_resolution": { "policy": "canon", "pass_threshold": 0.35,
+  "drift_resolution": { "prefer": "fewest-redraws", "pass_threshold": 0.35,
                         "embeddings": "drift/sam-hayes/embeddings.jsonl" }
 }
 ```
 
-Her heritage is not in there. It is a story fact, written in her profile, and no picture tag can change it. Her skin tone and hair are not in there either, because the author decided those may follow the pictures. Put in `canon_tags` only what may never change. Everything else is `consensus`'s job.
+Her heritage is not in there. It is a story fact, written in her profile, and no picture tag can change it. Her skin tone and hair are not in there either, because the author decided those may follow the pictures. Put in `canon_tags` only what may never change. Everything else is the second question's job.
 
-## Step 5: run the policies and read the comparison line
+## Step 5: answer the second question and read the comparison line
 
-One command per policy. Every run prints the same last line, the comparison, so every price is visible next to the chosen one.
+One command per answer. Every run prints the same last line, the comparison, so every price is visible next to the chosen one. `--ask` asks both questions in plain words; these are the one-line spellings.
 
 ```bash
-node scripts/anchor.mjs drift/sam-hayes/embeddings.jsonl --policy canon --character sam-hayes
-node scripts/anchor.mjs drift/sam-hayes/embeddings.jsonl --policy consensus --character sam-hayes
-node scripts/anchor.mjs drift/sam-hayes/tags.jsonl --policy mode
+node scripts/anchor.mjs drift/sam-hayes/embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer fewest-redraws
+node scripts/anchor.mjs drift/sam-hayes/embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer first-look
+node scripts/anchor.mjs drift/sam-hayes/tags.jsonl --character sam-hayes --keep none --prefer most-common
 ```
 
-The full output is in [anchor-report.txt](assets/before-after/anchor-report.txt). This is what it says, policy by policy:
+The full output is in [anchor-report.txt](assets/before-after/anchor-report.txt). With eyes kept, 41 of 58 pictures are eligible and 17 are on the bill before any answer is given: the 2 light-eyed pictures, plus 15 where her eyes are closed or turned away. This is what the second question says, answer by answer:
 
-| Policy | Which picture it keeps as the anchor | To redo, by face similarity | To redo, by tags |
+| Answer to "which look?" | Which eligible picture it keeps as the anchor | Eligible faces below the threshold | The engine's bill in all |
 |---|---|---|---|
-| `origin` (the first picture made) | the conservation table, September, light olive | 9 | 30 |
-| `terminal` (the last picture made) | the reservoir run, October, warm golden-brown | 19 | 46 |
-| `consensus` (nearest the average face) | the sacred confession, September, light olive, amber eyes | 6 | not available |
-| `mode` (the most common tags) | the all-night booth: 28 of 58 pictures share its four tags | 7 | 30 |
-| `canon` (eyes amber-brown, then the most central) | the sacred confession, the same picture as `consensus` | 6 | 17 |
+| fewest redraws (chosen) | the sacred confession, September, light olive, amber eyes | 6 | 20 |
+| the first look | the conservation table, September, light olive | 9 | 22 |
+| the last look | the reservoir run, October, warm golden-brown | 19 | 30 |
+| the most common look | the all-night booth: 28 of 41 eligible pictures share its four tags | 7 | 20 |
 
 Four things to read off that table.
 
-**With one trait fixed, canon and consensus agree.** The most central of the 41 amber-eyed pictures is also the most central of all 58. The anchor is an untouched September original, which means the author's own first idea of her face is the one the whole book settles on.
+**With one trait fixed, the fewest-redraws answer is an untouched original.** The most central of the 41 amber-eyed pictures is also the most central of all 58. The author's own first idea of her face is the one the whole book settles on.
 
-**The tag bills count what a person cannot read.** `canon` bills 17 by tags: the 2 light-eyed pictures, plus 15 where her eyes are closed or turned away. Closed eyes are not drift. The engine cannot tell the difference yet, so the person splits the list by hand, below. The same goes for `mode`'s 30 and `origin`'s 30.
+**The bill counts what a person cannot read.** Fifteen of the 17 pictures that "lack" the kept tag have her eyes closed or turned away. Closed eyes are not drift. The engine cannot tell the difference yet, so the person splits the list by hand, below, and the engine's 20 becomes the person's 21.
 
 **The face similarity column is not about skin tone.** A face embedding is built to recognise the same face across lighting and shading. Against the anchor, 52 of 58 faces score as "the same face" and only 6 fall below the threshold, four of them among the warm golden-brown redos and two small or laughing faces. Similarity catches a different face. Tags catch a different look. For a skin-tone question the tags decide, and the similarity flags are a face check.
 
-**The other choice had a price, and the author saw it before choosing.** The first dry run of this set put skin tone and hair into canon as well. That run billed 40 pictures. Keeping her consistent at the look most of the book already has, with eyes fixed, bills 21. The author chose 21 with both numbers on the table. That is the engine's whole job here: not to pick, but to make sure nobody picks blind.
+**The other choice had a price, and the author saw it before choosing.** The first dry run of this set put skin tone and hair into the first question as well. That run billed 40 pictures. Keeping her consistent at the look most of the book already has, with only eyes fixed, bills 21. The author chose 21 with both numbers on the table. That is the engine's whole job here: not to pick, but to make sure nobody picks blind.
 
 ## Step 6: the list, proposed before anything is redrawn
 
-Against the proposed anchor, the pictures to redo are the 19 whose skin tone differs from it (the October redos, the corner café, the knight in the Nolita night, the lost symphony, the epilogue, and one fair-skinned picture) plus the 2 whose eyes came out light. Twenty-one pictures, each named with its reason:
+Against the proposed anchor, the pictures a reader would see as different are the 19 whose skin tone differs from it (the October redos, the corner café, the knight in the Nolita night, the lost symphony, the epilogue, and one fair-skinned picture) plus the 2 whose eyes came out light. The engine's own list of 20 overlaps it in 8 and adds the 15 unreadable-eyes pictures; the person keeps the 21 and drops those 15. Twenty-one pictures, each named with its reason:
 
 | Scene | Why | Made |
 |---|---|---|
@@ -156,7 +155,7 @@ Against the proposed anchor, the pictures to redo are the 19 whose skin tone dif
 | the all-night booth, Sam's aha | skin tone fair | September |
 | epilogue, the real work begins | skin tone warm golden-brown | September |
 
-Nothing on this list is redrawn until the author says so, picture by picture. The engine records the anchor (`--write`) only after the author confirms it. At the time of writing the proposal is with the author; this page updates as each pair lands.
+Nothing on this list is redrawn until the author says so, picture by picture. The engine records the anchor (`--write`, or the offer at the end of `--ask`) only after the author confirms it. At the time of writing the proposal is with the author; this page updates as each pair lands.
 
 ## Step 7: redo the pictures, one at a time, with the author's go on each
 
@@ -174,9 +173,9 @@ Each new pair the author approves is added here with its scene name, so this pag
 
 | | Pictures to redo | What the book says afterwards |
 |---|---|---|
-| Eyes fixed, the rest by consensus (chosen) | 21 | she is one consistent woman with amber-brown eyes, at the look most of the book already had |
-| Skin tone and hair in canon too | 40 | she is the woman of the first pictures everywhere |
-| Match the newest pictures (`terminal`) | 46 by tags | the whole book is redrawn to the October look |
+| Eyes fixed, fewest redraws for the rest (chosen) | 21 | she is one consistent woman with amber-brown eyes, at the look most of the book already had |
+| Skin tone and hair kept as well | 40 | she is the woman of the first pictures everywhere |
+| The last look, everything matched to the newest pictures | 46 by tags | the whole book is redrawn to the October look |
 
 The numbers are the point. Whichever you choose, you see every bill before you spend anything, with the pictures behind each one.
 
@@ -184,9 +183,9 @@ The numbers are the point. Whichever you choose, you see every bill before you s
 
 1. Write the character's token into every scene from the first day. The engine can then find her pictures.
 2. Name every download with its number. Order is evidence you cannot get back.
-3. Decide what may never change and write only that under `canon_tags`, before the first picture if you can. Story facts go in prose, not in tags.
+3. Answer the first question before the first picture if you can: what may never change goes under `canon_tags`, and only that. Story facts go in prose, not in tags.
 4. When something looks off, make the face sheet and tag it by hand, with a fixed vocabulary that has a word for "cannot tell". A chatbot may suggest; you decide.
-5. Run every policy and read the comparison line. Every price is there to be chosen with your eyes open.
+5. Answer the second question every way and read the comparison line. Every price is there to be chosen with your eyes open.
 6. Record the anchor. Redo within the list, one picture at a time, and keep the pairs.
 
 ## The files behind this page
