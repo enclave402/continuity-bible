@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-17 23:45 EDT
-**HEAD:** b01eba3
+**HEAD:** b682501
 **Date:** 2026-10-17
 **Session:** shot-to-shot continuity and render surfaces (branch `claude/continuity-card-and-shot-sheet`, pull request 6, cut from `claude/anchor-tags-only-bill` while it was pull request 5; pull requests 3, 4 and 5 are now merged into `main`, and `main` at 11cbd2c, with the owner's two-question drift correction, is merged into this branch)
 

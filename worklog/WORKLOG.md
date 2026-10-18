@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 24 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 25 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 22:29:53 (UTC-04:00) | milestone | repo/merge | [Pull request 6 merges cleanly again after merging main; STATE HEAD synced to the merge commit so main's worklog gate is one behind, not four, once the pull request lands](entries/2026-10-17_22-29-53_pull-request-6-merges-cleanly-again-after-merging-main-state.md) | agent:claude | closed |
 | 22:29:48 (UTC-04:00) | action | repo/merge | [Merged main (11cbd2c: pull requests 3, 4 and 5 and the owner's two-question drift correction) into claude/continuity-card-and-shot-sheet; six conflicts resolved keeping main's two-question wording beside the continuity and render-surface lines; worklog index regenerated; 50 tests](entries/2026-10-17_22-29-48_merged-main-11cbd2c-pull-requests-3-4-and-5-and-the-owner-s-.md) | agent:claude | closed |
 | 22:03:40 (UTC-04:00) | action | engine/anchor | [Two questions replace five policy names: anchor.mjs gains keep (what must never change), prefer (fewest-redraws, first-look, last-look, most-common) and --ask; canon is keep + consensus; tutorial, README, both how-tos, field reference, PRODUCT and ADR-004 rewritten around the questions](entries/2026-10-17_22-03-40_two-questions-replace-five-policy-names-anchor-mjs-gains-kee.md) | agent:claude | closed |
 | 21:51:29 (UTC-04:00) | action | repo/merge | [Merged claude/layperson-docs-and-tutorial (carrying efe2e46, the owner's correction: every policy shows its bill and the person chooses) into claude/anchor-tags-only-bill](entries/2026-10-17_21-51-29_merged-claude-layperson-docs-and-tutorial-carrying-efe2e46-t.md) | agent:claude | closed |
