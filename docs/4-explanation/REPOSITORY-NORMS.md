@@ -15,7 +15,7 @@ How this public single-source-of-truth repository is run, and why. The short, bi
 
 ## 1. Public by default, private by construction
 
-Everything in the tree is for anyone. That is a construction rule, not a hope: `scripts/check-private.mjs` runs on every commit and refuses keys, tokens, emails, local home paths, overlay-network and LAN addresses, private-key blocks and the words in your own gitignored `.private-terms`. A research card is deleted on the spot if the gate finds anything in it. The owner's private project names, people and machines never appear here; the private project consumes this repository's mechanisms and keeps its own data at home.
+Everything in the tree is for anyone. That is a construction rule, not a hope: `scripts/check-private.mjs` runs on every commit and refuses keys, tokens, emails, local home paths, overlay-network and LAN addresses, private-key blocks and the words in your own gitignored `.private-terms`. A research card is deleted on the spot if the gate finds anything in it. The owner's private project names, people and machines never appear here; the private project consumes this repository's mechanisms and keeps its own data at home. Examples, docs and tests use the public example cast in `character-registry.json` (Chloe, Sam and Theo, plus its example props) and nothing else.
 
 ## 2. Nothing hardcoded
 
@@ -44,6 +44,8 @@ The product core is files, git and gates. `AGENTS.md`, `CLAUDE.md` and `.context
 ## 8. One branch per task, humans merge
 
 Work happens on `<agent>/<task>` or `<you>/<task>` branches, for agents in a linked worktree under `.worktrees/` so the root tree stays on `main`. Files are staged by name. Commits follow Conventional Commits, carry an `Agent: <name>` trailer when an agent wrote them, and `CHANGELOG.md` is generated from them. Every change ships as a pull request that a maintainer merges.
+
+When a pull request conflicts with `main`, merge `origin/main` in the worktree (`git fetch origin main && git merge origin/main`): keep `main`'s newer wording where both sides touched a line, add the branch's lines beside it, run `node scripts/worklog-index.mjs`, and append a worklog entry so the helm stays at most one commit behind. An agent app's own base-branch sync may refuse a worktree the agent created; the manual merge is the path.
 
 ## 9. Evidence before claims
 
