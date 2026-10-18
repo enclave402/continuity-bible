@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-17 22:40 EDT
-**HEAD:** 11cbd2c
+**HEAD:** 12c1fc6
 **Date:** 2026-10-17
 **Session:** closing open loops after the first stack merged
 

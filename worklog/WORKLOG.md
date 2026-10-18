@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 23 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 24 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 22:31:28 (UTC-04:00) | fix | research | [Correction: finding accp-04 cites two loaded sources, not three; the third (a Medium-hosted post) answered HTTP 403 to the loader](entries/2026-10-17_22-31-28_correction-finding-accp-04-cites-two-loaded-sources-not-thre.md) | agent:claude | closed |
 | 22:30:30 (UTC-04:00) | action | repo | [Loop closing after the stack merged: review posted on the private fix-kinds MR; merged worktrees and local branches removed; status appended to the owner's issues log; STATE rewritten to the merged state](entries/2026-10-17_22-30-30_loop-closing-after-the-stack-merged-review-posted-on-the-pri.md) | agent:claude | closed |
 | 22:30:30 (UTC-04:00) | action | research | [Closed the findings open loop: loaded the six web sources behind accp-04, -22, -26, -28 and recorded them; the findings cite them as candidates and stay unchecked by rule (blog-only sources never make a finding checked); one duplicate arXiv key removed](entries/2026-10-17_22-30-30_closed-the-findings-open-loop-loaded-the-six-web-sources-beh.md) | agent:claude | closed |
 | 22:30:30 (UTC-04:00) | fix | repo/worklog | [Worklog gate ignores merge commits when counting helm lag; main's gate had failed after pull requests 3, 4 and 5 landed as merge commits](entries/2026-10-17_22-30-30_worklog-gate-ignores-merge-commits-when-counting-helm-lag-ma.md) | agent:claude | closed |
