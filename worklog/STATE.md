@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-17 23:05 EDT
-**HEAD:** 48d54f2
+**HEAD:** 740a138
 **Date:** 2026-10-17
 **Session:** before-and-after journey (branch `claude/before-and-after-journey`, branched from `claude/anchor-tags-only-bill`, the branch of pull request 5, which stacks on pull requests 4 and 3)
 

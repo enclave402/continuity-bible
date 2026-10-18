@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 23 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 24 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 22:33:06 (UTC-04:00) | action | docs/journey | [Merged main (pull requests 3, 4, 5) into the journey branch; the page now speaks the engine's two questions](entries/2026-10-17_22-33-06_merged-main-pull-requests-3-4-5-into-the-journey-branch-the-.md) | agent:claude | closed |
 | 22:03:40 (UTC-04:00) | action | engine/anchor | [Two questions replace five policy names: anchor.mjs gains keep (what must never change), prefer (fewest-redraws, first-look, last-look, most-common) and --ask; canon is keep + consensus; tutorial, README, both how-tos, field reference, PRODUCT and ADR-004 rewritten around the questions](entries/2026-10-17_22-03-40_two-questions-replace-five-policy-names-anchor-mjs-gains-kee.md) | agent:claude | closed |
 | 21:51:29 (UTC-04:00) | action | repo/merge | [Merged claude/layperson-docs-and-tutorial (carrying efe2e46, the owner's correction: every policy shows its bill and the person chooses) into claude/anchor-tags-only-bill](entries/2026-10-17_21-51-29_merged-claude-layperson-docs-and-tutorial-carrying-efe2e46-t.md) | agent:claude | closed |
 | 21:50:56 (UTC-04:00) | action | repo/merge | [Merged origin/claude/research-process-and-public-norms (efe2e46: every policy shows its bill and the person chooses; canon is an option, not the rule) into claude/layperson-docs-and-tutorial](entries/2026-10-17_21-50-56_merged-origin-claude-research-process-and-public-norms-efe2e.md) | agent:claude | closed |
