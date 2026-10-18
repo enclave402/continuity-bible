@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 18 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 19 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 22:26:46 (UTC-04:00) | action | docs/journey | [Journey page retold by the author's decision: one trait in canon (eyes), the rest by consensus, story facts in prose; proposed anchor and 21-picture list](entries/2026-10-17_22-26-46_journey-page-retold-by-the-author-s-decision-one-trait-in-ca.md) | agent:claude | open |
 | 22:07:33 (UTC-04:00) | milestone | docs/journey | [Pull request 7 opened: before-and-after journey page for the published story's drifted lead](entries/2026-10-17_22-07-33_pull-request-7-opened-before-and-after-journey-page-for-the-.md) | agent:claude | closed |
 | 22:05:42 (UTC-04:00) | action | docs/journey | [Before-and-after journey page: the engine on the published story's lead, real pictures, every policy's bill, the first pair](entries/2026-10-17_22-05-42_before-and-after-journey-page-the-engine-on-the-published-st.md) | agent:claude | open |
 | 21:26:20 (UTC-04:00) | milestone | engine/anchor | [Pull request 5 opened: anchor regeneration bill by tags when there are no embeddings; stacked on pull requests 4 and 3](entries/2026-10-17_21-26-20_pull-request-5-opened-anchor-regeneration-bill-by-tags-when-.md) | agent:claude | closed |

@@ -1,54 +1,52 @@
-# node scripts/anchor.mjs embeddings.jsonl --policy canon --character sam-hayes --threshold 0.35
-anchor: policy canon: drf_the_knight_in_the_nolita_night.png (order 8; nearest the centroid of the 18 image(s) matching canon {"skin_tone":"warm golden-brown","heritage":"mixed-race","hair":"textured curls"} (of 58); the cheapest state is not canon's job)
-anchor: 58 image(s) scored; mean cosine 0.4918, min 0.2252; 9 below 0.35 -> regenerate
-anchor: compare: origin=drf_the_conservation_table.png (10 to redo); terminal=drf_the_reservoir_agog.png (19 to redo); consensus=drf_the_sacred_confession.png (7 to redo); mode=drf_the_sacred_confession.png (7 to redo); canon=drf_the_knight_in_the_nolita_night.png (9 to redo)
+# node scripts/anchor.mjs embeddings.jsonl --policy canon --character sam-hayes   (canon_tags: eyes amber-brown; the most central amber-eyed picture)
+anchor: policy canon: drf_the_sacred_confession.png (order 9; nearest the centroid of the 41 image(s) matching canon {"eyes":"amber-brown"} (of 58); the cheapest state is not canon's job)
+anchor: 58 image(s) scored; mean cosine 0.562, min 0.104; 6 below 0.35 -> regenerate
+anchor: compare: origin=drf_the_conservation_table.png (9 to redo); terminal=drf_the_reservoir_agog.png (19 to redo); consensus=drf_the_sacred_confession.png (6 to redo); mode=drf_the_all_night_booth_the_hyperactivation_cycle.png (7 to redo); canon=drf_the_sacred_confession.png (6 to redo)
 
-# the same rows with the tags only (no embeddings): the bill by who she is
-anchor: policy canon: drf_the_corner_cafe_on_madison.png (order 5; nearest the centroid of the 18 image(s) matching canon {"skin_tone":"warm golden-brown","heritage":"mixed-race","hair":"textured curls"} (of 58); the cheapest state is not canon's job)
-anchor: 58 image(s), none with an embedding; 40 do not match canon -> regenerate (bill by tags, not by similarity)
-  regenerate drf_the_conservation_table.png
-  regenerate drf_the_tensile_memory.png
-  regenerate drf_the_madison_avenue_steps.png
-  regenerate drf_twilight_on_murray_hill.png
-  regenerate drf_the_sacred_confession.png
-  regenerate drf_the_hallway_limbo.png
-  regenerate drf_forty_five_minutes_on_read.png
-  regenerate drf_the_mercer_and_prince_downpour.png
-  regenerate drf_the_peer_tribunal_over_coffee.png
-  regenerate drf_marching_through_washington_square.png
-  regenerate drf_the_drafting_table_confrontation.png
-  regenerate drf_the_moral_indictment.png
-  regenerate drf_the_detached_protector_strikes.png
-  regenerate drf_the_gaze_drops.png
-  regenerate drf_the_cornered_animal.png
-  regenerate drf_symmetrical_heartbreak.png
-  regenerate drf_the_two_masters_of_their_craft.png
-  regenerate drf_the_knee_in_the_torrent.png
-  regenerate drf_the_reciprocal_kneel.png
-  regenerate drf_the_all_night_booth_the_origami_defense.png
-  regenerate drf_the_all_night_booth_the_server_crash.png
-  regenerate drf_the_all_night_booth_sams_aha.png
-  regenerate drf_the_all_night_booth_the_terror_of_silence.png
-  regenerate drf_the_all_night_booth_the_hyperactivation_cycle.png
-  regenerate drf_the_sunrise_ejection.png
-  regenerate drf_thirty_five_years_later_the_canopy_arrival.png
-  regenerate drf_thirty_five_years_later_the_date.png
-  regenerate drf_the_ring_toss_and_the_mortar.png
-  regenerate drf_the_sovereign_parting_at_the_curb.png
-  regenerate drf_the_sky_cab_ascent.png
-  regenerate drf_the_roommate_bob_barker_and_chloe.png
-  regenerate drf_that_same_night_the_sovereign_drawer.png
-  regenerate drf_the_peer_tribunal_the_text_audit.png
-  regenerate drf_the_peer_tribunal_chloes_pushback.png
-  regenerate drf_the_peer_tribunal_the_pressure_peak.png
-  regenerate drf_the_peer_tribunal_the_march_begins.png
-  regenerate drf_the_real_timeline_chloes_apology.png
-  regenerate drf_the_3_00_am_payment_crisis.png
-  regenerate drf_the_foyer_threshold_the_pantsuit.png
-  regenerate drf_the_dream_portal_what_if_they_had_the_tools.png
-anchor: compare: origin=drf_the_conservation_table.png (19 to redo, by tags); terminal=drf_the_reservoir_agog.png (40 to redo, by tags); consensus=n/a; mode=drf_the_conservation_table.png (19 to redo, by tags); canon=drf_the_corner_cafe_on_madison.png (40 to redo, by tags)
+# node scripts/anchor.mjs embeddings.jsonl --policy consensus --character sam-hayes
+anchor: policy consensus: drf_the_sacred_confession.png (order 9; nearest the centroid of 58 embedding(s))
+anchor: 58 image(s) scored; mean cosine 0.562, min 0.104; 6 below 0.35 -> regenerate
+anchor: compare: origin=drf_the_conservation_table.png (9 to redo); terminal=drf_the_reservoir_agog.png (19 to redo); consensus=drf_the_sacred_confession.png (6 to redo); mode=drf_the_all_night_booth_the_hyperactivation_cycle.png (7 to redo); canon=drf_the_sacred_confession.png (6 to redo)
+
+# node scripts/anchor.mjs embeddings.jsonl --policy mode --character sam-hayes
+anchor: policy mode: drf_the_all_night_booth_the_hyperactivation_cycle.png (order 44; most frequent tag combination [["eyes","amber-brown"],["hair","textured curls"],["heritage","white"],["skin_tone","light olive"]] (28 of 58 images))
+anchor: 58 image(s) scored; mean cosine 0.5409, min 0.0951; 7 below 0.35 -> regenerate
+anchor: compare: origin=drf_the_conservation_table.png (9 to redo); terminal=drf_the_reservoir_agog.png (19 to redo); consensus=drf_the_sacred_confession.png (6 to redo); mode=drf_the_all_night_booth_the_hyperactivation_cycle.png (7 to redo); canon=drf_the_sacred_confession.png (6 to redo)
+
+# the same rows with tags only: the bill by what a reader sees
+# node scripts/anchor.mjs tags.jsonl --policy canon --character sam-hayes
+anchor: policy canon: drf_the_conservation_table.png (order 1; nearest the centroid of the 41 image(s) matching canon {"eyes":"amber-brown"} (of 58); the cheapest state is not canon's job)
+anchor: 58 image(s), none with an embedding; 17 do not match canon -> regenerate (bill by tags, not by similarity)
+anchor: compare: origin=drf_the_conservation_table.png (30 to redo, by tags); terminal=drf_the_reservoir_agog.png (46 to redo, by tags); consensus=n/a; mode=drf_the_conservation_table.png (30 to redo, by tags); canon=drf_the_conservation_table.png (17 to redo, by tags)
 
 # node scripts/anchor.mjs tags.jsonl --policy mode
-anchor: policy mode: drf_the_conservation_table.png (order 1; most frequent tag combination [["hair","textured curls"],["heritage","white"],["skin_tone","light olive"]] (39 of 58 images))
-anchor: 58 image(s), none with an embedding; 19 differ from the anchor's tags -> regenerate (bill by tags, not by similarity)
-anchor: compare: origin=drf_the_conservation_table.png (19 to redo, by tags); terminal=drf_the_reservoir_agog.png (40 to redo, by tags); consensus=n/a; mode=drf_the_conservation_table.png (19 to redo, by tags); canon=n/a
+anchor: policy mode: drf_the_conservation_table.png (order 1; most frequent tag combination [["eyes","amber-brown"],["hair","textured curls"],["heritage","white"],["skin_tone","light olive"]] (28 of 58 images))
+anchor: 58 image(s), none with an embedding; 30 differ from the anchor's tags -> regenerate (bill by tags, not by similarity)
+anchor: compare: origin=drf_the_conservation_table.png (30 to redo, by tags); terminal=drf_the_reservoir_agog.png (46 to redo, by tags); consensus=n/a; mode=drf_the_conservation_table.png (30 to redo, by tags); canon=n/a
+
+# the proposed list against the-sacred-confession: eyes drifted, or skin tone or hair differ from the anchor's (eyes 'not readable' is not drift)
+anchor: the-sacred-confession story index 21 {'skin_tone': 'light olive', 'heritage': 'white', 'hair': 'textured curls', 'eyes': 'amber-brown'}
+to redraw: 21
+  s00 the-soap-bubble-rupture                          skin tone warm golden-brown      made 2026-10-16  cosine 0.61
+  s01 the-antiseptic-chignon                           skin tone warm golden-brown      made 2026-10-16  cosine 0.58
+  s02 the-reservoir-the-pass                           skin tone warm golden-brown      made 2026-10-16  cosine 0.29
+  s03 the-reservoir-translucent-gaze                   skin tone warm golden-brown      made 2026-10-16  cosine 0.33
+  s04 the-reservoir-agog                               skin tone warm golden-brown      made 2026-10-16  cosine 0.54
+  s11 the-brushed-knuckles-threshold                   skin tone warm golden-brown      made 2026-10-15  cosine 0.63
+  s12 the-corner-cafe-on-madison                       skin tone warm golden-brown      made 2026-09-30  cosine 0.59
+  s15 the-sentinel-and-the-watch                       skin tone warm golden-brown      made 2026-10-15  cosine 0.51
+  s16 the-knight-in-the-nolita-night                   skin tone warm golden-brown      made 2026-09-30  cosine 0.66
+  s17 the-fire-escape-the-load-rating                  skin tone warm golden-brown      made 2026-10-14  cosine 0.61
+  s18 the-fire-escape-the-last-inch                    skin tone warm golden-brown      made 2026-10-14  cosine 0.28
+  s19 the-fire-escape-heat-on-the-iron                 skin tone warm golden-brown      made 2026-10-14  cosine 0.10
+  s20 the-fire-escape-the-flinch                       skin tone warm golden-brown      made 2026-10-14  cosine 0.58
+  s25 forty-five-minutes-on-read                       eyes light                       made 2026-09-30  cosine 0.58
+  s28 the-catastrophic-projection-the-reaching-hand    skin tone warm golden-brown      made 2026-10-14  cosine 0.69
+  s34 the-prosecutors-finger                           skin tone warm golden-brown      made 2026-10-16  cosine 0.69
+  s60 the-somatic-recoil-extreme                       skin tone warm golden-brown      made 2026-10-15  cosine 0.44
+  s67 the-lost-symphony                                skin tone warm golden-brown      made 2026-09-30  cosine 0.56
+  s68 the-dream-portal-what-if-they-had-the-tools      eyes light                       made 2026-10-12  cosine 0.69
+  s74 the-all-night-booth-sams-aha                     skin tone fair                   made 2026-09-30  cosine 0.65
+  s93 epilogue-the-real-work-begins                    skin tone warm golden-brown      made 2026-09-30  cosine 0.46
+face encoder below 0.35 (a face check): the-madison-avenue-steps, the-ring-toss-and-the-mortar, the-fire-escape-the-last-inch, the-fire-escape-heat-on-the-iron, the-reservoir-the-pass, the-reservoir-translucent-gaze
+eyes not readable, otherwise matching, not on the list: 9
