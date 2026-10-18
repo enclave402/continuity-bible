@@ -20,12 +20,12 @@
 | Research process | `research/`, `scripts/research/*.mjs`, `research/research.config.json` | card → index → retrieval pack → local-model candidates → verified sources → findings → ask; every endpoint and model configurable |
 | Repository norms | `AGENTS.md`, `.context/`, `worklog/`, `docs/`, `scripts/check-private.mjs`, `scripts/git-hooks/` | `npm run verify` green on a clean clone; nothing private in the tree |
 | Layperson pass | `README.md`, `docs/1-tutorials/START-HERE.md`, `docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md` | a first-time, non-technical reader makes one consistent two-character scene with a browser chatbot from the docs alone; every command in them runs as written; hand tags drive `origin`, `terminal`, `mode` and `canon` with no API |
+| Before-and-after journey | `docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md`, `docs/4-explanation/assets/before-after/` | the page shows the published story's own drift with real pictures (the lead's 85 scenes found by token, 58 faces tagged by hand), every policy's anchor and bill side by side from the engine's own output, the anchor recorded, and the before-and-after pairs as the author approves each redo |
 
 ## Planned (owner direction 2026-10-17; not yet built)
 
 | Piece | What it is | Done when |
 |---|---|---|
-| Before-and-after journey | an expository page that shows the engine on the published story's own drift (a lead who began mixed-race and darker-skinned and drifted toward white over the book): the images, the policies compared, canon restored | the page shows real before and after images, the anchor report that chose them, and the regeneration bill |
 | Shot-to-shot continuity | a continuity card (per character, per story day) and a shot sheet (per scene) that carry wardrobe, props, time of day, location and state from one shot to the next, designed on real norms | the research prompt `research/corpus/prompts/continuity-norms-and-structures-prompt.md` has been run and carded; the cards compile into a copy-pasteable prompt block; the gate checks them |
 
 ## Evidence class

@@ -1,0 +1,54 @@
+# node scripts/anchor.mjs embeddings.jsonl --policy canon --character sam-hayes --threshold 0.35
+anchor: policy canon: drf_the_knight_in_the_nolita_night.png (order 8; nearest the centroid of the 18 image(s) matching canon {"skin_tone":"warm golden-brown","heritage":"mixed-race","hair":"textured curls"} (of 58); the cheapest state is not canon's job)
+anchor: 58 image(s) scored; mean cosine 0.4918, min 0.2252; 9 below 0.35 -> regenerate
+anchor: compare: origin=drf_the_conservation_table.png (10 to redo); terminal=drf_the_reservoir_agog.png (19 to redo); consensus=drf_the_sacred_confession.png (7 to redo); mode=drf_the_sacred_confession.png (7 to redo); canon=drf_the_knight_in_the_nolita_night.png (9 to redo)
+
+# the same rows with the tags only (no embeddings): the bill by who she is
+anchor: policy canon: drf_the_corner_cafe_on_madison.png (order 5; nearest the centroid of the 18 image(s) matching canon {"skin_tone":"warm golden-brown","heritage":"mixed-race","hair":"textured curls"} (of 58); the cheapest state is not canon's job)
+anchor: 58 image(s), none with an embedding; 40 do not match canon -> regenerate (bill by tags, not by similarity)
+  regenerate drf_the_conservation_table.png
+  regenerate drf_the_tensile_memory.png
+  regenerate drf_the_madison_avenue_steps.png
+  regenerate drf_twilight_on_murray_hill.png
+  regenerate drf_the_sacred_confession.png
+  regenerate drf_the_hallway_limbo.png
+  regenerate drf_forty_five_minutes_on_read.png
+  regenerate drf_the_mercer_and_prince_downpour.png
+  regenerate drf_the_peer_tribunal_over_coffee.png
+  regenerate drf_marching_through_washington_square.png
+  regenerate drf_the_drafting_table_confrontation.png
+  regenerate drf_the_moral_indictment.png
+  regenerate drf_the_detached_protector_strikes.png
+  regenerate drf_the_gaze_drops.png
+  regenerate drf_the_cornered_animal.png
+  regenerate drf_symmetrical_heartbreak.png
+  regenerate drf_the_two_masters_of_their_craft.png
+  regenerate drf_the_knee_in_the_torrent.png
+  regenerate drf_the_reciprocal_kneel.png
+  regenerate drf_the_all_night_booth_the_origami_defense.png
+  regenerate drf_the_all_night_booth_the_server_crash.png
+  regenerate drf_the_all_night_booth_sams_aha.png
+  regenerate drf_the_all_night_booth_the_terror_of_silence.png
+  regenerate drf_the_all_night_booth_the_hyperactivation_cycle.png
+  regenerate drf_the_sunrise_ejection.png
+  regenerate drf_thirty_five_years_later_the_canopy_arrival.png
+  regenerate drf_thirty_five_years_later_the_date.png
+  regenerate drf_the_ring_toss_and_the_mortar.png
+  regenerate drf_the_sovereign_parting_at_the_curb.png
+  regenerate drf_the_sky_cab_ascent.png
+  regenerate drf_the_roommate_bob_barker_and_chloe.png
+  regenerate drf_that_same_night_the_sovereign_drawer.png
+  regenerate drf_the_peer_tribunal_the_text_audit.png
+  regenerate drf_the_peer_tribunal_chloes_pushback.png
+  regenerate drf_the_peer_tribunal_the_pressure_peak.png
+  regenerate drf_the_peer_tribunal_the_march_begins.png
+  regenerate drf_the_real_timeline_chloes_apology.png
+  regenerate drf_the_3_00_am_payment_crisis.png
+  regenerate drf_the_foyer_threshold_the_pantsuit.png
+  regenerate drf_the_dream_portal_what_if_they_had_the_tools.png
+anchor: compare: origin=drf_the_conservation_table.png (19 to redo, by tags); terminal=drf_the_reservoir_agog.png (40 to redo, by tags); consensus=n/a; mode=drf_the_conservation_table.png (19 to redo, by tags); canon=drf_the_corner_cafe_on_madison.png (40 to redo, by tags)
+
+# node scripts/anchor.mjs tags.jsonl --policy mode
+anchor: policy mode: drf_the_conservation_table.png (order 1; most frequent tag combination [["hair","textured curls"],["heritage","white"],["skin_tone","light olive"]] (39 of 58 images))
+anchor: 58 image(s), none with an embedding; 19 differ from the anchor's tags -> regenerate (bill by tags, not by similarity)
+anchor: compare: origin=drf_the_conservation_table.png (19 to redo, by tags); terminal=drf_the_reservoir_agog.png (40 to redo, by tags); consensus=n/a; mode=drf_the_conservation_table.png (19 to redo, by tags); canon=n/a
