@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-17 20:58 EDT
-**HEAD:** b53d2e3
+**Last rewritten:** 2026-10-17 21:05 EDT
+**HEAD:** bb695fe
 **Date:** 2026-10-17
 **Session:** public repository norms, in-repo research process, continuity gate extensions, drift anchor policy (branch `claude/research-process-and-public-norms`)
 
@@ -24,6 +24,9 @@
 - **CLOSED:** hosted continuous integration (GitHub Actions or similar). Norm: local gates only; `scripts/git-hooks/pre-push` is the gate.
 - **CLOSED:** committing retrieval packs and vector caches. They are derived and deterministic (`research/retrieval/`, `research/.vectors/` gitignored); one command regenerates each.
 - **CLOSED:** matching prop names in prose to decide what a prompt prints. Replaced by `kind: prop` entries listed by id (`props`) and resolved by the gate.
+- **CLOSED:** a Markdown sidecar log (`WORK_LOG.md`) as a second trail; `worklog/log.jsonl` is the only spine (carried from main's STATE of 2026-10-17 20:43).
+- **CLOSED:** temporary analysis dumps at the repository root; scratch belongs under `.context/scratch/` (carried from main).
+- **CLOSED:** repository files that point at a private machine folder or name the owner. Three commits pushed directly to `main` on 2026-10-17 20:40 to 20:43 (worklog tooling delegating to a home-folder path, a STATE block naming the owner and private tools, a verbatim copy of a private standard) were replaced on merge by the self-contained public versions; the publication gate now refuses home-folder Documents paths and the private folder's name, and a gitignored `.private-terms` carries the owner's own words.
 - **CLOSED:** `checked` findings without a loaded source. `scripts/research/index.mjs --check` fails them; 20 sources were loaded through the arXiv API before any finding was marked checked.
 
 ### Conflicts with AGENTS (must be empty)

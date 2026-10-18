@@ -13,10 +13,16 @@
     "private-key-block": "-----BEGIN [A-Z ]*PRIVATE KEY-----",
     "bearer-token": "Bearer [A-Za-z0-9._~+/-]{24,}=*",
     "tailscale-address": "\\b100\\.(?:6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\\.[0-9]{1,3}\\.[0-9]{1,3}\\b",
-    "lan-address": "\\b(?:192\\.168|10)\\.[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{1,3})?\\b"
+    "lan-address": "\\b(?:192\\.168|10)\\.[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{1,3})?\\b",
+    "home-documents-path": "~/Documents/[A-Za-z0-9._/-]+",
+    "private-norms-folder": "Machine-Norms",
+    "private-tool-paths": "worklog-index-build\\.py|worklog-disposition\\.mjs|worklog-checkin\\.mjs|sync-worklog-ssot\\.sh"
   },
   "allow": {
-    "email": ["@example.com", "@users.noreply.github.com"],
+    "email": [
+      "@example.com",
+      "@users.noreply.github.com"
+    ],
     "_why": "example.com is reserved for documentation; GitHub noreply addresses are public by design."
   },
   "skip": [

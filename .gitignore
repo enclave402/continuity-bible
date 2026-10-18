@@ -29,8 +29,13 @@ build/
 # BEGIN repo-context-lifecycle (ephemeral AI scratch; see .context/README-less tiers in .context/_index.md)
 .context/**/*.tmp
 .context/**/.claude-tmp-*
+# any env file that strays into scratch
+.context/**/*.env
 # END repo-context-lifecycle
 
 # Research: derived, regenerable artifacts (npm run research:pack / research:ask -- --build)
 research/.vectors/
 research/retrieval/
+
+# Legacy Markdown worklogs are not a second trail
+WORK_LOG.md

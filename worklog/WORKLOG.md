@@ -1,11 +1,13 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 8 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 10 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 20:50:03 (UTC-04:00) | fix | repo/worklog | [[REMOVAL] Redacted two private names inside trail entry wl-281e96a2 (written by another agent and pushed straight to main) so the public repository carries none; merged main into the branch keeping the self-contained worklog tooling](entries/2026-10-17_20-50-03_removal-redacted-two-private-names-inside-trail-entry-wl-281.md) | agent:claude | closed |
+| 20:36:47 (UTC-04:00) | action | narrative-token-ssot | [Initialized canonical worklog and Machine Norms governance](entries/2026-10-17_20-36-47_initialized-canonical-worklog-and-machine-norms-governance.md) | agent:antigravity | closed |
 | 20:44:56 (UTC-04:00) | decision | product | [Owner direction (evening): layperson-first, browser-flow proof case, canon beats cheapest; recorded in PRODUCT.md. Added the canon anchor policy + canon_tags, carded the continuity-norms research prompt](entries/2026-10-17_20-44-56_owner-direction-evening-layperson-first-browser-flow-proof-c.md) | agent:claude | closed |
 | 20:39:38 (UTC-04:00) | fix | repo | [Correction: entry wl-e9fb3696 was premature; the first commit chain was refused by the pre-commit hook (coverage test read the hook's GIT_DIR). textFiles() now ignores hook env and lists only its own checkout; four commits landed](entries/2026-10-17_20-39-38_correction-entry-wl-e9fb3696-was-premature-the-first-commit-.md) | agent:claude | closed |
 | 20:37:42 (UTC-04:00) | milestone | repo | [Branch ready for review: engine, research, norms and README commits on claude/research-process-and-public-norms; CHANGELOG generated; full gate green](entries/2026-10-17_20-37-42_branch-ready-for-review-engine-research-norms-and-readme-com.md) | agent:claude | closed |
