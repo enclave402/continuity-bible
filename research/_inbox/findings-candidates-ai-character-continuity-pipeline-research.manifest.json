@@ -1,0 +1,12 @@
+{
+  "card_id": "ai-character-continuity-pipeline-research",
+  "model": "llama3.1:8b",
+  "base_url": "http://127.0.0.1:11434/v1",
+  "sections_total": 26,
+  "sections_extracted": 26,
+  "candidates": 75,
+  "quotes_verified": 60,
+  "errors": 1,
+  "seconds": 282,
+  "finished_at": "2026-10-18T00:19:05.342Z"
+}

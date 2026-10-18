@@ -1,0 +1,407 @@
+{
+ "_about": "Checked sources: each entry was loaded from its primary location by scripts/research/verify.mjs. A `checked` finding in FINDINGS.jsonl names a key here.",
+ "sources": {
+  "arxiv-2107-11721": {
+   "kind": "arxiv",
+   "id": "2107.11721",
+   "url": "https://arxiv.org/abs/2107.11721",
+   "title": "PoseFace: Pose-Invariant Features and Pose-Adaptive Loss for Face Recognition",
+   "authors": [
+    "Qiang Meng",
+    "Xiaqing Xu",
+    "Xiaobo Wang",
+    "Yang Qian",
+    "Yunxiao Qin",
+    "Zezheng Wang",
+    "Chenxu Zhao",
+    "Feng Zhou",
+    "Zhen Lei"
+   ],
+   "year": "2021",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Despite the great success achieved by deep learning methods in face recognition, severe performance drops are observed for large pose variations in unconstrained environments (e.g., in cases of surveillance and photo-tagging). To address it, current methods either deploy pose-specific models or frontalize faces by additional modules. Still, they ignore the fact that identity information should be ",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:43.183Z"
+  },
+  "arxiv-2208-12242": {
+   "kind": "arxiv",
+   "id": "2208.12242",
+   "url": "https://arxiv.org/abs/2208.12242",
+   "title": "DreamBooth: Fine Tuning Text-to-Image Diffusion Models for Subject-Driven Generation",
+   "authors": [
+    "Nataniel Ruiz",
+    "Yuanzhen Li",
+    "Varun Jampani",
+    "Yael Pritch",
+    "Michael Rubinstein",
+    "Kfir Aberman"
+   ],
+   "year": "2022",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Large text-to-image models achieved a remarkable leap in the evolution of AI, enabling high-quality and diverse synthesis of images from a given text prompt. However, these models lack the ability to mimic the appearance of subjects in a given reference set and synthesize novel renditions of them in different contexts. In this work, we present a new approach for \"personalization\" of text-to-image ",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:44.794Z"
+  },
+  "arxiv-2307-06949": {
+   "kind": "arxiv",
+   "id": "2307.06949",
+   "url": "https://arxiv.org/abs/2307.06949",
+   "title": "HyperDreamBooth: HyperNetworks for Fast Personalization of Text-to-Image Models",
+   "authors": [
+    "Nataniel Ruiz",
+    "Yuanzhen Li",
+    "Varun Jampani",
+    "Wei Wei",
+    "Tingbo Hou",
+    "Yael Pritch",
+    "Neal Wadhwa",
+    "Michael Rubinstein",
+    "Kfir Aberman"
+   ],
+   "year": "2023",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Personalization has emerged as a prominent aspect within the field of generative AI, enabling the synthesis of individuals in diverse contexts and styles, while retaining high-fidelity to their identities. However, the process of personalization presents inherent challenges in terms of time and memory requirements. Fine-tuning each personalized model needs considerable GPU time investment, and sto",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:46.537Z"
+  },
+  "arxiv-2311-10093": {
+   "kind": "arxiv",
+   "id": "2311.10093",
+   "url": "https://arxiv.org/abs/2311.10093",
+   "title": "The Chosen One: Consistent Characters in Text-to-Image Diffusion Models",
+   "authors": [
+    "Omri Avrahami",
+    "Amir Hertz",
+    "Yael Vinker",
+    "Moab Arar",
+    "Shlomi Fruchter",
+    "Ohad Fried",
+    "Daniel Cohen-Or",
+    "Dani Lischinski"
+   ],
+   "year": "2023",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Recent advances in text-to-image generation models have unlocked vast potential for visual creativity. However, the users that use these models struggle with the generation of consistent characters, a crucial aspect for numerous real-world applications such as story visualization, game development, asset design, advertising, and more. Current methods typically rely on multiple pre-existing images ",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:48.257Z"
+  },
+  "arxiv-2403-11641": {
+   "kind": "arxiv",
+   "id": "2403.11641",
+   "url": "https://arxiv.org/abs/2403.11641",
+   "title": "Arc2Face: A Foundation Model for ID-Consistent Human Faces",
+   "authors": [
+    "Foivos Paraperas Papantoniou",
+    "Alexandros Lattas",
+    "Stylianos Moschoglou",
+    "Jiankang Deng",
+    "Bernhard Kainz",
+    "Stefanos Zafeiriou"
+   ],
+   "year": "2024",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "This paper presents Arc2Face, an identity-conditioned face foundation model, which, given the ArcFace embedding of a person, can generate diverse photo-realistic images with an unparalleled degree of face similarity than existing models. Despite previous attempts to decode face recognition features into detailed images, we find that common high-resolution datasets (e.g. FFHQ) lack sufficient ident",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:49.982Z"
+  },
+  "arxiv-2404-16022": {
+   "kind": "arxiv",
+   "id": "2404.16022",
+   "url": "https://arxiv.org/abs/2404.16022",
+   "title": "PuLID: Pure and Lightning ID Customization via Contrastive Alignment",
+   "authors": [
+    "Zinan Guo",
+    "Yanze Wu",
+    "Zhuowei Chen",
+    "Lang Chen",
+    "Peng Zhang",
+    "Qian He"
+   ],
+   "year": "2024",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "We propose Pure and Lightning ID customization (PuLID), a novel tuning-free ID customization method for text-to-image generation. By incorporating a Lightning T2I branch with a standard diffusion one, PuLID introduces both contrastive alignment loss and accurate ID loss, minimizing disruption to the original model and ensuring high ID fidelity. Experiments show that PuLID achieves superior perform",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:51.764Z"
+  },
+  "arxiv-2407-15886": {
+   "kind": "arxiv",
+   "id": "2407.15886",
+   "url": "https://arxiv.org/abs/2407.15886",
+   "title": "CatVTON: Concatenation Is All You Need for Virtual Try-On with Diffusion Models",
+   "authors": [
+    "Zheng Chong",
+    "Xiao Dong",
+    "Haoxiang Li",
+    "Shiyue Zhang",
+    "Wenqing Zhang",
+    "Xujie Zhang",
+    "Hanqing Zhao",
+    "Dongmei Jiang",
+    "Xiaodan Liang"
+   ],
+   "year": "2024",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Virtual try-on methods based on diffusion models achieve realistic effects but often require additional encoding modules, a large number of training parameters, and complex preprocessing, which increases the burden on training and inference. In this work, we re-evaluate the necessity of additional modules and analyze how to improve training efficiency and reduce redundant steps in the inference pr",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:53.514Z"
+  },
+  "arxiv-2410-06244": {
+   "kind": "arxiv",
+   "id": "2410.06244",
+   "url": "https://arxiv.org/abs/2410.06244",
+   "title": "Story-Iter: A Training-free Iterative Paradigm for Long Story Visualization",
+   "authors": [
+    "Jiawei Mao",
+    "Xiaoke Huang",
+    "Yunfei Xie",
+    "Yuanqi Chang",
+    "Mude Hui",
+    "Bingjie Xu",
+    "Zeyu Zheng",
+    "Zirui Wang",
+    "Cihang Xie",
+    "Yuyin Zhou"
+   ],
+   "year": "2024",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "This paper introduces Story-Iter, a new training-free iterative paradigm to enhance long-story generation. Unlike existing methods that rely on fixed reference images to construct a complete story, our approach features a novel external iterative paradigm, extending beyond the internal iterative denoising steps of diffusion models, to continuously refine each generated image by incorporating all r",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:55.325Z"
+  },
+  "arxiv-2412-11638": {
+   "kind": "arxiv",
+   "id": "2412.11638",
+   "url": "https://arxiv.org/abs/2412.11638",
+   "title": "IDProtector: An Adversarial Noise Encoder to Protect Against ID-Preserving Image Generation",
+   "authors": [
+    "Yiren Song",
+    "Pei Yang",
+    "Hai Ci",
+    "Mike Zheng Shou"
+   ],
+   "year": "2024",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Recently, zero-shot methods like InstantID have revolutionized identity-preserving generation. Unlike multi-image finetuning approaches such as DreamBooth, these zero-shot methods leverage powerful facial encoders to extract identity information from a single portrait photo, enabling efficient identity-preserving generation through a single inference pass. However, this convenience introduces new ",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:57.072Z"
+  },
+  "arxiv-2503-15406": {
+   "kind": "arxiv",
+   "id": "2503.15406",
+   "url": "https://arxiv.org/abs/2503.15406",
+   "title": "Visual Persona: Foundation Model for Full-Body Human Customization",
+   "authors": [
+    "Jisu Nam",
+    "Soowon Son",
+    "Zhan Xu",
+    "Jing Shi",
+    "Difan Liu",
+    "Feng Liu",
+    "Aashish Misraa",
+    "Seungryong Kim",
+    "Yang Zhou"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "We introduce Visual Persona, a foundation model for text-to-image full-body human customization that, given a single in-the-wild human image, generates diverse images of the individual guided by text descriptions. Unlike prior methods that focus solely on preserving facial identity, our approach captures detailed full-body appearance, aligning with text descriptions for body structure and scene va",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:14:58.827Z"
+  },
+  "arxiv-2503-22352": {
+   "kind": "arxiv",
+   "id": "2503.22352",
+   "url": "https://arxiv.org/abs/2503.22352",
+   "title": "Meta-LoRA: Meta-Learning LoRA Components for Domain-Aware ID Personalization",
+   "authors": [
+    "Barış Batuhan Topal",
+    "Umut Özyurt",
+    "Zafer Doğan Budak",
+    "Ramazan Gokberk Cinbis"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Recent advancements in text-to-image generative models, particularly latent diffusion models (LDMs), have demonstrated remarkable capabilities in synthesizing high-quality images from textual prompts. However, achieving identity personalization-ensuring that a model consistently generates subject-specific outputs from limited reference images-remains a fundamental challenge. To address this, we in",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:00.595Z"
+  },
+  "arxiv-2504-08125": {
+   "kind": "arxiv",
+   "id": "2504.08125",
+   "url": "https://arxiv.org/abs/2504.08125",
+   "title": "Gen3DEval: Using vLLMs for Automatic Evaluation of Generated 3D Objects",
+   "authors": [
+    "Shalini Maiti",
+    "Lourdes Agapito",
+    "Filippos Kokkinos"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Rapid advancements in text-to-3D generation require robust and scalable evaluation metrics that align closely with human judgment, a need unmet by current metrics such as PSNR and CLIP, which require ground-truth data or focus only on prompt fidelity. To address this, we introduce Gen3DEval, a novel evaluation framework that leverages vision large language models (vLLMs) specifically fine-tuned fo",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:02.318Z"
+  },
+  "arxiv-2506-15742": {
+   "kind": "arxiv",
+   "id": "2506.15742",
+   "url": "https://arxiv.org/abs/2506.15742",
+   "title": "FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space",
+   "authors": [
+    "Black Forest Labs",
+    "Stephen Batifol",
+    "Andreas Blattmann",
+    "Frederic Boesel",
+    "Saksham Consul",
+    "Cyril Diagne",
+    "Tim Dockhorn",
+    "Jack English",
+    "Zion English",
+    "Patrick Esser",
+    "Sumith Kulal",
+    "Kyle Lacey",
+    "Yam Levi",
+    "Cheng Li",
+    "Dominik Lorenz",
+    "Jonas Müller",
+    "Dustin Podell",
+    "Robin Rombach",
+    "Harry Saini",
+    "Axel Sauer",
+    "Luke Smith"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "We present evaluation results for FLUX.1 Kontext, a generative flow matching model that unifies image generation and editing. The model generates novel output views by incorporating semantic context from text and image inputs. Using a simple sequence concatenation approach, FLUX.1 Kontext handles both local editing and generative in-context tasks within a single unified architecture. Compared to c",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:04.037Z"
+  },
+  "arxiv-2508-00319": {
+   "kind": "arxiv",
+   "id": "2508.00319",
+   "url": "https://arxiv.org/abs/2508.00319",
+   "title": "Steering Guidance for Personalized Text-to-Image Diffusion Models",
+   "authors": [
+    "Sunghyun Park",
+    "Seokeon Choi",
+    "Hyoungwoo Park",
+    "Sungrack Yun"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Personalizing text-to-image diffusion models is crucial for adapting the pre-trained models to specific target concepts, enabling diverse image generation. However, fine-tuning with few images introduces an inherent trade-off between aligning with the target distribution (e.g., subject fidelity) and preserving the broad knowledge of the original model (e.g., text editability). Existing sampling gu",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:06.073Z"
+  },
+  "arxiv-2511-07756": {
+   "kind": "arxiv",
+   "id": "2511.07756",
+   "url": "https://arxiv.org/abs/2511.07756",
+   "title": "Determinism of Randomness: Prompt-Residual Seed Shaping for Diffusion Generation",
+   "authors": [
+    "Song Yan",
+    "Wei Zhai",
+    "Chenfeng Wang",
+    "Xinliang Bi",
+    "Jian Yang",
+    "Yancheng Cai",
+    "Yusen Zhang",
+    "Yunwei Lan",
+    "Tao Zhang",
+    "GuanYe Xiong",
+    "Min Li",
+    "Zheng-Jun Zha"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Diffusion models start generation from an isotropic Gaussian latent, yet changing only the random seed can lead to large differences in prompt faithfulness, composition, and visual quality. We study this seed sensitivity through the semantic map from initial noise to generated meaning. Although the sampling flow is locally invertible, the subsequent semantic projection is many-to-one, inducing a d",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:07.802Z"
+  },
+  "arxiv-2511-10629": {
+   "kind": "arxiv",
+   "id": "2511.10629",
+   "url": "https://arxiv.org/abs/2511.10629",
+   "title": "One Small Step in Latent, One Giant Leap for Pixels: Fast Latent Upscale Adapter for Your Diffusion Models",
+   "authors": [
+    "Aleksandr Razin",
+    "Danil Kazantsev",
+    "Ilya Makarov"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Diffusion models struggle to scale beyond their training resolutions, as direct high-resolution sampling is slow and costly, while post-hoc image super-resolution (ISR) introduces artifacts and additional latency by operating after decoding. We present the Latent Upscaler Adapter (LUA), a lightweight module that performs super-resolution directly on the generator's latent code before the final VAE",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:09.529Z"
+  },
+  "arxiv-2511-17393": {
+   "kind": "arxiv",
+   "id": "2511.17393",
+   "url": "https://arxiv.org/abs/2511.17393",
+   "title": "Designing and Generating Diverse, Equitable Face Image Datasets for Face Verification Tasks",
+   "authors": [
+    "Georgia Baltsou",
+    "Ioannis Sarridis",
+    "Christos Koutlis",
+    "Symeon Papadopoulos"
+   ],
+   "year": "2025",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Face verification is a significant component of identity authentication in various applications including online banking and secure access to personal devices. The majority of the existing face image datasets often suffer from notable biases related to race, gender, and other demographic characteristics, limiting the effectiveness and fairness of face verification systems. In response to these cha",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:11.270Z"
+  },
+  "arxiv-2602-13994": {
+   "kind": "arxiv",
+   "id": "2602.13994",
+   "url": "https://arxiv.org/abs/2602.13994",
+   "title": "Inject Where It Matters: Training-Free Spatially-Adaptive Identity Preservation for Text-to-Image Personalization",
+   "authors": [
+    "Guandong Li",
+    "Mengxia Ye"
+   ],
+   "year": "2026",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Personalized text-to-image generation aims to integrate specific identities into arbitrary contexts. However, existing tuning-free methods typically employ Spatially Uniform Visual Injection, causing identity features to contaminate non-facial regions (e.g., backgrounds and lighting) and degrading text adherence. To address this without expensive fine-tuning, we propose SpatialID, a training-free ",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:13.042Z"
+  },
+  "arxiv-2605-09460": {
+   "kind": "arxiv",
+   "id": "2605.09460",
+   "url": "https://arxiv.org/abs/2605.09460",
+   "title": "When Few Steps Are Enough: Training-Free Acceleration of Identity-Preserved Generation",
+   "authors": [
+    "Dongqi Zheng"
+   ],
+   "year": "2026",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Identity-preserved image generation is typically built on many-step diffusion backbones, making personalized generation expensive at deployment time. We show that this cost is often unnecessary for identity-conditioned FLUX generation. A frozen InfuseNet identity adapter trained with dev transfers directly to the distilled schnell backbone without retraining. This two-line replacement -- changing ",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:14.892Z"
+  },
+  "arxiv-2610-15555": {
+   "kind": "arxiv",
+   "id": "2610.15555",
+   "url": "https://arxiv.org/abs/2610.15555",
+   "title": "ELECT: Settling Identity Before Rendering for Scalable Story Visualization",
+   "authors": [
+    "Mehrajul Abadin Miraj",
+    "Md. Mahmudul Hasan",
+    "Meherun Farzana",
+    "Aniket Joarder",
+    "Mahmudul Hasan",
+    "Abir Chakraborty Partha",
+    "Md. Ahasanul Alam",
+    "Redwan Ahmed Rizvee",
+    "Md. Fahim Arefin",
+    "Md Mahmudur Rahman",
+    "Md. Tanvir Alam",
+    "Md Mosaddek Khan"
+   ],
+   "year": "2026",
+   "venue": "arXiv preprint",
+   "abstract_excerpt": "Training-free story visualization without reference images must preserve recurring entities across frames while scaling to long narratives. Existing methods typically maintain consistency by conditioning each frame on other frames of the same story, coupling generation time, VRAM, or both to story length. We introduce ELECT, which instead settles cross-frame identity before final rendering through",
+   "checked_how": "arxiv-api",
+   "checked_at": "2026-10-18T00:15:16.638Z"
+  }
+ }
+}

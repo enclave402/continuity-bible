@@ -1,0 +1,43 @@
+{
+  "_about": "Subject taxonomy for this repository's research/. Add a subject only when none fits; scripts/research/index.mjs rejects unknown subjects, kinds, evidence levels and strengths.",
+  "subjects": {
+    "identity-locking": "Keeping a character's face and body the same across generations: fine-tuning, adapters, reference conditioning, drift limits.",
+    "wardrobe-props-anatomy": "Keeping clothing, props, scars, accessories, height and multi-character relations consistent.",
+    "workflow-architecture": "Production sequences: asset bibles, turnaround sheets, seeds and latents, inpainting and layered composition.",
+    "cross-model-drift": "How checkpoints, samplers, conversational canvases and prompt mechanics degrade consistency.",
+    "narrative-ssot": "Upstream declarative registries, token resolution, and the data contracts that feed image prompts.",
+    "qa-drift-gates": "Automated checks that measure drift: face embeddings, structural similarity, prompt alignment, model-as-judge audits.",
+    "continuity-sop": "End-to-end operating procedures for character continuity in a production pipeline.",
+    "research-methods": "How this repository ingests, verifies, grades and retrieves research.",
+    "agent-workflows": "Coding-agent practices that keep names, continuity and evidence honest in a repository."
+  },
+  "kinds": {
+    "owner-research": "Research written or commissioned by the repository owner, including AI deep-research reports they ran. Stored verbatim.",
+    "owner-notes": "Owner's notes and plans touching research. Stored verbatim.",
+    "paper-summary": "Summary of a third-party paper or book with a full citation. Never the full copyrighted text.",
+    "transcript-notes": "Notes or short excerpts from a talk or video, with its link.",
+    "design-doc": "An architecture or process document that encodes research decisions.",
+    "pointer": "An index card for research that lives elsewhere: a summary and a path or URL, not a copy.",
+    "prompt": "A research prompt to run in a deep-research tool; its answer becomes another card."
+  },
+  "evidence": {
+    "verified-key": "Backed by a checked entry in research/SOURCES.json.",
+    "peer-reviewed": "Cites peer-reviewed or preprint work only, not yet entered as checked sources.",
+    "mixed": "Mixes primary sources with web pages, blogs and forums.",
+    "web": "Web pages, blogs, forum posts and videos only.",
+    "uncited": "No sources given."
+  },
+  "strengths": {
+    "meta-analysis": "A synthesis of several studies.",
+    "rct": "A randomised controlled trial.",
+    "longitudinal": "A study following subjects over time.",
+    "study": "A single empirical study or paper with reported measurements.",
+    "benchmark": "A reported benchmark number (dataset, metric, conditions stated).",
+    "theory": "A reasoned model or derivation without new measurements.",
+    "clinical-manual": "A clinical or professional manual.",
+    "guideline": "A published guideline or standard.",
+    "law": "Statute or regulation.",
+    "vendor-doc": "A vendor's own documentation or model card.",
+    "expert-opinion": "A practitioner's or author's stated view, including blog posts and forum consensus."
+  }
+}
