@@ -14,7 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { loadNames } from "./names.mjs";
-import { registryPath, loadRegistry, checkTokenSourceFile, nearbyFiles } from "./lib.mjs";
+import { registryPath, loadRegistry, checkTokenSourceFile, nearbyFiles, withEnding } from "./lib.mjs";
 
 const argv = process.argv.slice(2);
 const flag = (n) => { const i = argv.indexOf(n); return i === -1 ? "" : argv[i + 1] || ""; };
@@ -26,6 +26,7 @@ const fail = (lines) => { for (const l of [].concat(lines)) console.error(l); co
 let registry, names;
 try { registry = loadRegistry(registryPath(process.argv)); names = loadNames(registry._root); }
 catch (e) { fail(e.message); }
+if (!fs.existsSync(source) && withEnding(source).length) fail(`render: ${source} is not in this folder. Did you mean ${withEnding(source).join(" or ")}? Fix: type the whole file name, ending included`);
 if (!fs.existsSync(source)) { const near = nearbyFiles(source); fail(`render: ${source} is not in this folder.${near.length ? ` There is ${near.map((n) => `"${n}"`).join(" and ")} here: rename it to ${path.basename(source)}.` : " Fix: check the file name (capital letters count, scene-01.md is not Scene-01.md) and run the command from the folder that holds it"}`); }
 const story = flag("--story") || undefined;
 const raw = fs.readFileSync(source, "utf8");
@@ -47,4 +48,4 @@ const left = [...new Set([...out.matchAll(/\{\{[^{}\n]*\}\}/g)].map((m) => m[0])
 if (left.length && !problems.length) console.error(`render: warning: ${source} still contains ${left.slice(0, 3).join(", ")}${left.length > 3 ? ` and ${left.length - 3} more` : ""}, which no token rule resolves. If these are your characters, check the spelling: ids use only lower-case letters, digits and hyphens`);
 const dest = flag("--out");
 if (dest) { fs.mkdirSync(path.dirname(path.resolve(dest)), { recursive: true }); fs.writeFileSync(dest, out); console.log(`render: ${source} -> ${dest} (${out.length} bytes; built output, do not edit)`); }
-else process.stdout.write(out);
+else process.stdout.write(out.endsWith("\n") ? out : out + "\n");

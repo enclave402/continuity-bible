@@ -404,9 +404,9 @@ test("tag.mjs asks about each picture and writes the tags file anchor.mjs reads,
 });
 
 test("tag.mjs re-asks an empty first answer, notes a value off the fixed trait, and never writes half a file", () => {
-  const r = tagRun({ answers: "\n\nbrown\n\n", pictures: ["a.png", "b.png"] });
+  const r = tagRun({ answers: "\n\nbrown\n\n\n", pictures: ["a.png", "b.png"] });
   assert.match(r.out, /Type what you see in this picture, or unknown if you cannot tell\./);
-  assert.match(r.out, /Noted: that is not the fixed skin \(dark brown\)\. If the picture does show dark brown, type it exactly that way instead\./);
+  assert.match(r.out, /Noted: that is not the fixed skin \(dark brown\)\. If that is what this picture shows, type it exactly that way; press Enter to keep "brown"\./, "a note is followed by one more question, so a correction lands on the same trait");
   assert.equal(r.status, 0, r.err);
   fs.rmSync(r.dir, { recursive: true, force: true });
   const cut = tagRun({ answers: "hair\ndark brown\n" });
@@ -431,4 +431,48 @@ test("tag.mjs names a wrong id, a missing pictures folder and an existing file, 
   assert.ok(open.exitedByItself, "tag.mjs must end by itself after the last answer\n" + open.out + open.err);
   assert.match(open.out, /Wrote tags-june\.jsonl/);
   fs.rmSync(open.dir, { recursive: true, force: true });
+});
+
+// The third dry run: what was recorded is the default next time, a yes never replaces it silently, and the wrong tags file is named.
+test("asking again after recording starts from what was recorded, and a yes that would replace it says so", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-again-"));
+  for (const [n, t] of Object.entries(askFiles)) fs.writeFileSync(path.join(dir, n), t);
+  fs.mkdirSync(path.join(dir, "renders")); for (const n of ["a", "b", "c"]) fs.writeFileSync(path.join(dir, "renders", `${n}.png`), n);
+  const run = (input) => spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--character", "june-okafor", "--ask"], { cwd: dir, encoding: "utf8", input });
+  const first = run("skin=dark brown, hair=two puffs\n\nok\n");
+  assert.match(first.stdout, /Recorded in character-registry\.json/, "ok is a yes");
+  const again = run("\n\n\n");
+  assert.match(again.stdout, /Last time you recorded: skin=dark brown, hair=two puffs\. Press Enter to keep that/);
+  assert.match(again.stdout, /Keep renders\/a\.png/, "Enter keeps the recorded answer, so the anchor stays");
+  const other = run("skin=dark brown\n\ny\n");
+  assert.match(other.stdout, /This replaces the anchor you recorded before, renders\/a\.png\./);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("the wrong tags file for a character is named, and two spellings of one look in the tags are pointed out", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-wrongfile-"));
+  const reg = JSON.parse(askRegistry); reg.characters["abel-marsh"] = { name: "Abel", kind: "person", story: "s", role: "r", prose_only: true, canon_tags: { beard: "white" } };
+  fs.writeFileSync(path.join(dir, "character-registry.json"), JSON.stringify(reg));
+  fs.writeFileSync(path.join(dir, "tags.jsonl"), askTags.replace('"hair":"loose curls"}}\n{"image":"renders/c.png"', '"hair":"loose curl"}}\n{"image":"renders/c.png"'));
+  const w = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--character", "abel-marsh", "--ask"], { cwd: dir, encoding: "utf8", input: "\n\n\n\n" });
+  assert.equal(w.status, 1);
+  assert.match(w.stderr, /These tags have no beard at all, so they are probably not Abel's tags\. Fix: check that the tags file is the one for Abel \(tags-abel\.jsonl\), and that --character is abel-marsh/);
+  assert.doesNotMatch(w.stderr, /paste the prompt sheet again/, "it does not send the reader off to redraw");
+  assert.match(w.stdout, /Check your tags: hair has both "loose curls?" and "loose curls?"\. If they are the same look, write them the same way/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("a curly-quoted value is located; tag.mjs shows what Enter repeats, asks again after a near-duplicate, and notes download names", async () => {
+  const { parseJson } = await import("../scripts/names.mjs");
+  let msg = "";
+  try { parseJson('{\n  "look": “a girl”\n}', "character-registry.json"); } catch (e) { msg = e.message; }
+  assert.match(msg, /^character-registry\.json: line 2, column 11: this is not valid JSON\. Likely cause: that line has curly quotes/);
+  const r = tagRun({ answers: "hair\ndark brown\nloose curls\n\nloose curl\n\n", pictures: ["image (1).png", "image (2).png"] });
+  assert.equal(r.status, 0, r.err);
+  assert.match(r.out, /Note: these pictures are not named by scene and order \(scene-01-01\.png\), so the order below may not be the order you got them in/);
+  assert.match(r.out, /  skin \(fixed: dark brown; Enter: dark brown\)/, "from the second picture on, the question shows what Enter repeats");
+  assert.match(r.out, /  hair \(Enter: loose curls\)/);
+  assert.match(r.out, /Noted: an earlier picture says "loose curls"\. If that is what this picture shows, type it exactly that way; press Enter to keep "loose curl"\./);
+  assert.match(fs.readFileSync(path.join(r.dir, "tags-june.jsonl"), "utf8"), /"hair": "loose curl"\}\}\n$/, "Enter after the note keeps what was typed");
+  fs.rmSync(r.dir, { recursive: true, force: true });
 });

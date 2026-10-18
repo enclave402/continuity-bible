@@ -32,7 +32,7 @@ import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import { createHash } from "node:crypto";
-import { registryPath, loadRegistry, writeJsonLike, closestIds, nearbyFiles } from "./lib.mjs";
+import { registryPath, loadRegistry, writeJsonLike, closestIds, nearbyFiles, editDistance } from "./lib.mjs";
 import { parseJson } from "./names.mjs";
 
 export const norm = (v) => { const n = Math.hypot(...v) || 1; return v.map((x) => x / n); };
@@ -228,7 +228,8 @@ async function main() {
   const unreadable = flag("--unreadable") ? flag("--unreadable").split(",").map((v) => v.trim()).filter(Boolean) : defaults.unreadable || DEFAULT_UNREADABLE;
   // question 1: --keep tag=value (repeatable; --canon is its alias) wins, else the character's canon_tags
   const keepFlags = argv.flatMap((a, i) => ((a === "--keep" || a === "--canon") && argv[i + 1] ? [argv[i + 1]] : []));
-  let keep = keepFlags.length ? parseKeep(keepFlags.join(",")) : entry?.canon_tags || null;
+  const recordedKeep = entry?.anchor?.keep && Object.keys(entry.anchor.keep).length ? entry.anchor.keep : null;
+  let keep = keepFlags.length ? parseKeep(keepFlags.join(",")) : recordedKeep || entry?.canon_tags || null;
   // question 2: --prefer (plain names) or --policy (developer names); the registry's drift_resolution supplies the default
   const preferFlag = flag("--prefer") || (flag("--policy") ? "" : defaults.prefer || "");
   if (preferFlag && !PREFER[preferFlag]) { console.error(`anchor: unknown --prefer ${preferFlag} (${Object.keys(PREFER).join(", ")})`); process.exit(2); }
@@ -263,6 +264,11 @@ async function main() {
     return [];
   });
 
+  // near-duplicate values for one trait ("loose curl" and "loose curls") are counted as two looks; say so
+  const twins = [];
+  for (const [k, m] of seen) { const vs = [...m.values()].map((x) => x.shown); for (let i = 0; i < vs.length; i++) for (let j = i + 1; j < vs.length; j++) { const a = low(vs[i]), b = low(vs[j]); if (a !== b && !unreadable.map(low).includes(a) && !unreadable.map(low).includes(b) && editDistance(a, b) <= Math.max(1, Math.min(2, Math.floor(Math.min(a.length, b.length) / 4)))) twins.push(`${k} has both "${vs[i]}" and "${vs[j]}"`); } }
+  if (twins.length) console.log(`${ask ? "" : "anchor: "}Check your tags: ${twins.join("; ")}. If they are the same look, write them the same way in the tags file, or they are counted as different looks.`);
+
   let question = null;
   if (ask) {
     // the two questions, in plain words, on the terminal; piped answers work too
@@ -272,7 +278,8 @@ async function main() {
     question = async (prompt) => { process.stdout.write(prompt); const { value, done } = await lines.next(); if (!process.stdin.isTTY) process.stdout.write("\n"); return done ? null : String(value); };
     const fromRegistry = keep && Object.keys(keep).length ? keep : null;
     console.log(`What about ${name} must never change? Type each trait like skin=dark brown, with commas between them.`);
-    if (fromRegistry) console.log(`  The registry says: ${pairs(fromRegistry)}. Press Enter to keep that, or type the whole list you want instead.`);
+    if (fromRegistry && recordedKeep && !keepFlags.length) console.log(`  Last time you recorded: ${pairs(fromRegistry)}. Press Enter to keep that, or type the whole list you want instead.`);
+    else if (fromRegistry) console.log(`  The registry says: ${pairs(fromRegistry)}. Press Enter to keep that, or type the whole list you want instead.`);
     else console.log("  Press Enter if nothing has to stay the same.");
     let warned = null;
     for (let tries = 1; ; tries++) {
@@ -316,6 +323,12 @@ async function main() {
   try { result = chooseAnchor(rows, { policy, threshold, pruneZ, keep, canon: policy === "canon" ? keep : null, unreadable }); }
   catch (e) {
     const theySay = Object.keys(keep || {}).map(tagsSay).filter(Boolean).join("; ");
+    const absent = Object.keys(keep || {}).filter((k) => !seen.has(low(k)));
+    const slug = String(entry?.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    if (absent.length && entry) {
+      console.error(`These tags have no ${absent.join(" or ")} at all, so they are probably not ${name}'s tags. Fix: check that the tags file is the one for ${name}${slug ? ` (tags-${slug}.jsonl)` : ""}, and that --character is ${id}`);
+      process.exit(1);
+    }
     if (ask && /drifted off/.test(e.message)) console.error(`None of the pictures has what must never change (${pairs(keep)}).${theySay ? ` Your tags say: ${theySay}.` : ""} If your tags mean the same thing, write it the same way in both places. If the pictures really drifted, paste the prompt sheet again, tag the new pictures, and ask again.`);
     else console.error(`${e.message}${/drifted off/.test(e.message) && theySay ? `. Your tags say: ${theySay}` : ""}`);
     process.exit(1);
@@ -339,11 +352,12 @@ async function main() {
     console.log(`If you answered differently: ${others.join("; ")}.`);
     if (id && entry && !write) {
       const missing = !fs.existsSync(path.resolve(path.dirname(path.resolve(source)), result.anchor.image));
+      const replaces = entry.anchor?.image && entry.anchor.image !== result.anchor.image ? ` This replaces the anchor you recorded before, ${entry.anchor.image}.` : "";
       console.log(missing
-        ? `Record this as ${name}'s anchor anyway? Its picture, ${result.anchor.image}, is not in this folder, so fix its name first if you can. Type y and press Enter to record it, or just press Enter to skip.`
-        : `Record this as ${name}'s anchor in the registry? Type y and press Enter to record it, or just press Enter to skip.`);
+        ? `Record this as ${name}'s anchor anyway? Its picture, ${result.anchor.image}, is not in this folder, so fix its name first if you can.${replaces} Type y and press Enter to record it, or just press Enter to skip.`
+        : `Record this as ${name}'s anchor in the registry?${replaces} Type y and press Enter to record it, or just press Enter to skip.`);
       const a3 = ((await question("> ")) || "").trim().toLowerCase();
-      write = /^y/.test(a3);
+      write = /^(y|ok|sure)/.test(a3);
       if (!write) console.log("Not recorded. Ask again when you have decided, or add --write to the command.");
     }
   } else {

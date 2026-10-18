@@ -46,9 +46,12 @@ export function loadRegistry(file) {
     error.exitCode = 1;
     throw error;
   }
-  const registry = readJson(file);
-  registry._file = file;
-  registry._root = path.dirname(file);
+  let real = file;
+  try { real = path.join(path.dirname(file), path.basename(fs.realpathSync.native(file))); } catch {}
+  const registry = readJson(real);
+  registry._file = real;
+  registry._root = path.dirname(real);
+  if (path.basename(real) !== path.basename(file)) registry._caseNote = `note: the registry file is named ${path.basename(real)}. Rename it to ${path.basename(file)}: other computers count capital letters and will not find it`;
   return registry;
 }
 
@@ -439,7 +442,8 @@ export function editDistance(a, b) {
 }
 const BUILT_IN_FORMS = ["first", "short", "full", "initial"];
 /** The ids a mistyped id was most likely meant to be: the same id in another case, ids it starts, then near spellings. */
-export function closestIds(typed, ids) {
+export function closestIds(typed, idsIn) {
+  const ids = idsIn.filter((k) => /^[a-z0-9][a-z0-9-]*$/.test(k));
   const t = String(typed).trim().toLowerCase().replace(/\s+/g, "-");
   const exact = ids.filter((k) => k.toLowerCase() === t);
   if (exact.length) return exact;
@@ -448,6 +452,12 @@ export function closestIds(typed, ids) {
   return ids.map((k) => [editDistance(t, k), k]).sort((a, b) => a[0] - b[0]).filter(([d]) => d <= Math.max(2, Math.floor(t.length / 3))).slice(0, 2).map(([, k]) => k);
 }
 /** Files next to `file` that are probably it under another name: an ending an editor added (.txt, .rtf), or other capital letters. */
+/** Files next to `file` that are it with an ending the person left off (scene-01 for scene-01.md). */
+export function withEnding(file) {
+  const dir = path.dirname(path.resolve(file)), base = path.basename(file).toLowerCase();
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter((n) => n.toLowerCase().startsWith(base + ".") && !/\.(txt|rtf)$/i.test(n.slice(base.length)));
+}
 export function nearbyFiles(file) {
   const dir = path.dirname(path.resolve(file)), base = path.basename(file).toLowerCase();
   if (!fs.existsSync(dir)) return [];
@@ -499,9 +509,12 @@ function tokenProblemsIn(text, where, ctx, { explicit = false, other = false } =
   const out = [];
   const str = String(text);
   const bare = str.replace(TOKEN, " ");
-  for (const [label, token] of ctx.list) if (labelRegExp(label, "").test(bare)) out.push(`${where}: names "${label}" in a token source. Fix: write ${token}`);
+  for (const [label, token] of ctx.list) {
+    if (labelRegExp(label, "").test(bare)) out.push(`${where}: names "${label}" in a token source. Fix: write ${token}`);
+    else if (label.replace(/[^A-Za-z]/g, "").length >= 3 && label !== label.toUpperCase() && labelRegExp(label.toUpperCase(), "").test(bare)) out.push(`${where}: names "${label.toUpperCase()}" in a token source. Fix: write ${token}; the name is printed the way the registry spells it`);
+  }
   if (!explicit || other) return out;
-  const ids = Object.keys(ctx.characters);
+  const ids = Object.keys(ctx.characters).filter((k) => /^[a-z0-9][a-z0-9-]*$/.test(k));
   const closest = (id) => closestIds(id, ids);
   const known = (inner) => { const id = inner.trim().toLowerCase().replace(/\s*:\s*/g, ":").replace(/\s+/g, "-").split(":")[0]; return Boolean(ctx.characters[id] || ctx.cardKeys.has(id)); };
   const tidy = (inner) => inner.trim().toLowerCase().replace(/\s*:\s*/g, ":").replace(/\s+/g, "-");
@@ -538,6 +551,8 @@ function tokenProblemsIn(text, where, ctx, { explicit = false, other = false } =
 function tokenSourceFileProblems(ctx, abs, info, text = fs.readFileSync(abs, "utf8")) {
   const out = [];
   if (/^\s*\{\\rtf/.test(text)) return ["was saved as rich text, not plain text, so its words are full of formatting codes. Fix: in TextEdit choose Format, then Make Plain Text, and save it again, or paste it again from the terminal"];
+  if (info.explicit && !text.trim()) return ["is empty. Fix: copy the grey box with the scene's text, then type the command that makes the file"];
+  if (info.explicit && (/^\s*(pbpaste|get-clipboard)\b/i.test(text) || /^\s*(mac|windows):/im.test(text))) return ["holds a command instead of the scene's text. Fix: copy the grey box with the scene's text first, then type the command yourself; copying the command replaces the text you copied"];
   const walkStrings = (value, where) => {
     if (typeof value === "string") return out.push(...tokenProblemsIn(value, where, ctx, info));
     if (Array.isArray(value)) return value.forEach((v, i) => walkStrings(v, `${where}[${i}]`));
@@ -622,7 +637,7 @@ function coverageProblems(registry, surfaces, root) {
     const hit = lines.map((line, i) => { const bare = line.replace(TOKEN, " "); const l = list.find(([label]) => labelRegExp(label, "").test(bare)); return l ? { label: l[0], line: i + 1 } : null; }).find(Boolean);
     if (!hit) continue;
     unclassified += 1;
-    problems.push(`${rel}:${hit.line}: names "${hit.label}" but is no surface, token source or record. Fix: list it under token_sources (a builder renders it), surfaces (the gate resolves its labels), records (dated history) or coverage.ignore (documentation that may show names), in ${path.basename(registry._file)} If this is your own notes file, you can ignore this line`);
+    problems.push(`${rel}:${hit.line}: names "${hit.label}" but is no surface, token source or record. Fix: list it under token_sources (a builder renders it), surfaces (the gate resolves its labels), records (dated history) or coverage.ignore (documentation that may show names), in ${path.basename(registry._file)}. If this is your own notes file, you can ignore this line`);
   }
   return { problems, unclassified };
 }
@@ -969,6 +984,11 @@ export function checkRegistry(registry) {
   const schema = readJson(SCHEMA_PATH);
   const bare = Object.fromEntries(Object.entries(registry).filter(([k]) => !k.startsWith("_") || k === "_about"));
   const plainSchema = (p) => {
+    const bad = p.match(/^\$\.characters: unknown field (.+?) \(ids are lower-case, digits and hyphens\)$/);
+    if (bad) {
+      const fixed = bad[1].trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      return `character id "${bad[1]}" is not allowed: an id uses only lower-case letters, digits and hyphens. Fix: change it to "${fixed}" in the registry, and write {{${fixed}}} in your scenes`;
+    }
     const m = p.match(/^\$\.characters\.([^.\[]+)\.([A-Za-z_]+): (.*)$/);
     if (!m) return p;
     const hint = m[2] === "kind" ? ' Most characters are "person", animals and robots included; "companion" also needs a species list in the registry' : "";

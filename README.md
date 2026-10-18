@@ -48,9 +48,9 @@ You need three things:
 **How to make a file.** Below, each file's text is in a grey box.
 
 1. Press the copy button on the box, or select all of its text and copy it.
-2. In the terminal, *type* the command shown under the box and press Enter. Do not copy the command: copying it would replace the text you just copied.
+2. In the terminal, *type* the command shown under the box and press Enter. Do not copy that command: copying it would replace the text you just copied. It prints nothing: that means it worked.
 
-On a Mac the command is `pbpaste >` and the file name. On Windows it is `Get-Clipboard | Set-Content` and the file name. This way nothing can change the text on the way. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. If you use TextEdit anyway, choose Format, then Make Plain Text, before you paste. These steps were tested on a Mac.
+On a Mac the command is `pbpaste >` and the file name. On Windows it is `Get-Clipboard | Set-Content` and the file name. This way nothing can change the text on the way. You can copy the other commands on these pages, like `mkdir my-story`; only the `pbpaste` line has to be typed. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. If you use TextEdit anyway, choose Format, then Make Plain Text, before you paste. These steps were tested on a Mac.
 
 **Coming back another day?** Open a terminal, type `cd ` with a space after it, drag your `my-story` folder onto the terminal window, and press Enter.
 
@@ -74,6 +74,8 @@ Make a folder for your story inside the one you just downloaded, and make two fi
 mkdir my-story
 cd my-story
 ```
+
+Before you paste, type `pwd` and press Enter. The last part must be `my-story`; if it is not, type `cd my-story` first, or the file lands in the wrong folder.
 
 `my-story/character-registry.json` is the registry. Copy this box:
 

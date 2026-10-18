@@ -24,9 +24,9 @@ You need three things:
 **How to make a file.** On this page, each file's text is in a grey box.
 
 1. Press the copy button on the box, or select all of its text and copy it.
-2. In the terminal, *type* the command shown under the box and press Enter. Do not copy the command: copying it would replace the text you just copied.
+2. In the terminal, *type* the command shown under the box and press Enter. Do not copy that command: copying it would replace the text you just copied. It prints nothing: that means it worked.
 
-On a Mac the command is `pbpaste >` and the file name. On Windows it is `Get-Clipboard | Set-Content` and the file name. This way nothing can change the text on the way. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. If you use TextEdit anyway, choose Format, then Make Plain Text, before you paste.
+On a Mac the command is `pbpaste >` and the file name. On Windows it is `Get-Clipboard | Set-Content` and the file name. This way nothing can change the text on the way. You can copy the other commands on these pages, like `mkdir my-story`; only the `pbpaste` line has to be typed. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. If you use TextEdit anyway, choose Format, then Make Plain Text, before you paste.
 
 **How to open a file to change it.** On a Mac, `open -e scene-01.md` opens it in TextEdit; change it, save, and close it. **How to see your folder.** `open .` shows the folder you are in, in Finder.
 
@@ -66,13 +66,15 @@ cd my-story
 
 If it says `File exists`, you made the folder before: just type `cd my-story`.
 
-Every command from here on runs inside `my-story`. The scripts live one folder up, which is why each command starts with `node ../scripts/` (`..` means "the folder above this one"). If a command ever prints `Cannot find module`, the terminal is in the wrong folder: `cd` into `my-story` and try again.
+Every command from here on runs inside `my-story`. The scripts live one folder up, which is why each command starts with `node ../scripts/` (`..` means "the folder above this one"). If a command ever prints `Cannot find module`, either the terminal is in the wrong folder or the command has a typo. Type `pwd` to see the folder; it should end in `my-story`. Then check the command letter by letter: `scripts`, not `script`, and `.mjs`, not `.js`.
 
 ## 3. Write two characters into the registry
 
 The *registry* is one file that says who each character is. It is the only place a name or a look is ever written.
 
-Use your own characters if you like: keep the shape and change the words. Two rules. An *id* uses only lower-case letters, digits and hyphens: `june-okafor`, not `June Okafor`. And `kind` is `person` for any character, animals and robots included; the other kinds are for special cases, in [Registry fields](../3-reference/REGISTRY-FIELDS.md). If you did the README's quick start, this file replaces the one you made there.
+Use your own characters if you like. Change only these words: the two ids (`june-okafor`, `abel-marsh`), and for each character its `name`, `full_name`, `role`, `look` and `canon_tags`. Keep every quote, colon, comma and brace. An *id* uses only lower-case letters, digits and hyphens: `mika-tanaka`, not `Mika Tanaka`. Keep `kind` as `person` for any character, animals and robots included; the other kinds are for special cases, in [Registry fields](../3-reference/REGISTRY-FIELDS.md). Then use your ids in the scene's tokens. If you did the README's quick start, this file replaces the one you made there.
+
+Before you paste, type `pwd` and press Enter. The last part must be `my-story`; if it is not, type `cd my-story` first, or the file lands in the wrong folder.
 
 Create `my-story/character-registry.json` (see *How to make a file*) with this text:
 
@@ -182,6 +184,8 @@ character registry: fail (1 problem(s))
 
 So does a token with a capital letter or a space in it, such as `{{June-okafor}}`: it would reach the chatbot as written, so the gate stops it.
 
+If a scene calls June by another name, such as a nickname, add it to her `forms` in the registry, for example `"nickname": "Junie"`, and write `{{june-okafor:nickname}}` in the scene. The gate only knows the names the registry has.
+
 ## 5. Render the prompt sheet
 
 *Rendering* swaps every token for its words and writes the result to a file you can paste from. That file is your *prompt sheet*.
@@ -283,25 +287,25 @@ Picture 1 of 4: renders/scene-01-01.png
   coat
 > yellow
 Picture 2 of 4: renders/scene-01-02.png
-  skin (fixed: dark brown)
+  skin (fixed: dark brown; Enter: dark brown)
 > 
-  hair
+  hair (Enter: two puffs)
 > loose curls
-  coat
+  coat (Enter: yellow)
 > 
 Picture 3 of 4: renders/scene-01-03.png
-  skin (fixed: dark brown)
+  skin (fixed: dark brown; Enter: dark brown)
 > 
-  hair
+  hair (Enter: loose curls)
 > 
-  coat
+  coat (Enter: yellow)
 > 
 Picture 4 of 4: renders/scene-01-04.png
-  skin (fixed: dark brown)
+  skin (fixed: dark brown; Enter: dark brown)
 > 
-  hair
+  hair (Enter: loose curls)
 > 
-  coat
+  coat (Enter: yellow)
 > 
 Wrote tags-june.jsonl: 4 pictures, 3 traits each.
 Next: node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --ask
@@ -316,7 +320,55 @@ It wrote `tags-june.jsonl`, one line per picture, in order:
 {"image": "renders/scene-01-04.png", "order": 4, "tags": {"skin": "dark brown", "hair": "loose curls", "coat": "yellow"}}
 ```
 
-Now Abel: run `node ../scripts/tag.mjs abel-marsh`, type `sweater` as the extra trait, and answer for each picture. In this example his beard went grey in picture 3. It writes `tags-abel.jsonl`:
+Each question shows what Enter would repeat from the picture before. Read it before you press Enter: a beard that went grey in one picture is not grey in the next unless you look and see it.
+
+Now Abel, with `sweater` as the extra trait. In this example his beard went grey in picture 3 only, so picture 4's beard is typed again:
+
+```bash
+node ../scripts/tag.mjs abel-marsh
+```
+
+```text
+Which traits do you want to write down for Abel? The fixed traits are: skin, beard.
+Type any others to track, with commas between them, like hair, coat. Press Enter for none.
+> sweater
+  Using: skin, beard, sweater.
+Look at each picture and type what you see. Type unknown if you cannot tell. From the second picture on, press Enter if a trait is the same as in the picture before.
+Picture 1 of 4: renders/scene-01-01.png
+  skin (fixed: light brown)
+> light brown
+  beard (fixed: white)
+> white
+  sweater
+> navy
+Picture 2 of 4: renders/scene-01-02.png
+  skin (fixed: light brown; Enter: light brown)
+> 
+  beard (fixed: white; Enter: white)
+> 
+  sweater (Enter: navy)
+> 
+Picture 3 of 4: renders/scene-01-03.png
+  skin (fixed: light brown; Enter: light brown)
+> 
+  beard (fixed: white; Enter: white)
+> grey
+  Noted: that is not the fixed beard (white). If that is what this picture shows, type it exactly that way; press Enter to keep "grey".
+> 
+  sweater (Enter: navy)
+> 
+Picture 4 of 4: renders/scene-01-04.png
+  skin (fixed: light brown; Enter: light brown)
+> 
+  beard (fixed: white; Enter: grey)
+> white
+  sweater (Enter: navy)
+> 
+Wrote tags-abel.jsonl: 4 pictures, 3 traits each.
+Next: node ../scripts/anchor.mjs tags-abel.jsonl --character abel-marsh --ask
+```
+
+It wrote `tags-abel.jsonl`:
 
 ```json
 {"image": "renders/scene-01-01.png", "order": 1, "tags": {"skin": "light brown", "beard": "white", "sweater": "navy"}}
@@ -423,12 +475,14 @@ Record this as Abel's anchor in the registry? Type y and press Enter to record i
 Recorded in character-registry.json. Next time, attach renders/scene-01-01.png to your chatbot message and paste the picture prompt.
 ```
 
+June's list and Abel's list are about the same four pictures. A picture on either list is one to make again: here, with two puffs kept, pictures 2, 3 and 4. Step 11 shows how to redraw one.
+
 Your pictures and tags will differ from these, and so will the pictures it names. That is right: it is reading your judgement, not guessing.
 
-If no picture has the fixed traits, the tool first asks you to check (the tags may say it another way), then says so instead of picking the least bad one. Here every picture was tagged `medium brown`:
+If no picture has the fixed traits, the tool first asks you to check (the tags may say it another way), then says so instead of picking the least bad one. Here every picture was tagged `medium brown`, after June's anchor was recorded with two puffs kept:
 
 ```text
-None of the pictures has what must never change (skin=dark brown). Your tags say: skin=medium brown (4 pictures). If your tags mean the same thing, write it the same way in both places. If the pictures really drifted, paste the prompt sheet again, tag the new pictures, and ask again.
+None of the pictures has what must never change (skin=dark brown, hair=two puffs). Your tags say: skin=medium brown (4 pictures); hair=two puffs (1 picture), hair=loose curls (3 pictures). If your tags mean the same thing, write it the same way in both places. If the pictures really drifted, paste the prompt sheet again, tag the new pictures, and ask again.
 ```
 
 Then go back to step 6, paste the same sheet again, and tag the new pictures as `05`, `06` and so on.
@@ -462,24 +516,6 @@ node ../scripts/check.mjs
 ```text
 character registry: pass (2 entries, 0 labels resolved on 0 surfaces, 1 token sources, 4 files scanned)
 ```
-
-Next time you can give both answers on one line instead of typing them. `--keep` answers question 1, once for each trait. `--prefer` answers question 2: `fewest-redraws`, `first-look` or `last-look`. Add `--write` to record.
-
-```bash
-node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --keep "skin=dark brown" --keep "hair=two puffs" --prefer fewest-redraws
-```
-
-```text
-anchor: policy consensus: renders/scene-01-01.png (order 1; no embeddings, so the most frequent tag combination [["coat","yellow"],["hair","two puffs"],["skin","dark brown"]] (1 of 1 images) among the 1 image(s) that keep {"skin":"dark brown","hair":"two puffs"} (of 4))
-anchor: keep {"skin":"dark brown","hair":"two puffs"}: 1 of 4 image(s) keep it; 3 do not and are always on the bill
-anchor: 4 image(s), none with an embedding; 3 to redo (3 lack a kept tag, 0 differ from the anchor's tags) -> regenerate (bill by tags, not by similarity)
-  regenerate renders/scene-01-02.png
-  regenerate renders/scene-01-03.png
-  regenerate renders/scene-01-04.png
-anchor: compare: origin=renders/scene-01-01.png (3 to redo, by tags); terminal=renders/scene-01-01.png (3 to redo, by tags); consensus=renders/scene-01-01.png (3 to redo, by tags); mode=renders/scene-01-01.png (3 to redo, by tags); canon=renders/scene-01-01.png (3 to redo, by tags)
-```
-
-That is the same decision in the tool's own words. The names on the last line are what the answers are called inside the tool: fewest redraws is `consensus`, the first look is `origin`, and the last look is `terminal`.
 
 ## 11. What to paste next time
 
@@ -521,11 +557,14 @@ Paste the picture prompt from `built/scene-02.md`, and add one thing: the anchor
 - If your chatbot lets you attach a picture, attach `renders/scene-01-01.png` (the anchor named in the registry): type `open renders` and drag that picture onto the chat, or use the chat's attach button and find it in your `my-story` folder. Start your message with: *Keep the two characters exactly as in the attached picture.* Then paste the picture prompt.
 - If it does not, paste the picture prompt as before. The words are the same every time, which is the best you can do when the chatbot cannot see your pictures.
 
-After every batch: save, name in order, tag, ask the two questions again, and redraw the pictures on the `Redraw` line. Keep the recorded anchor unless you decide, on purpose, to change it; then answer `y` again. The decision is always in the registry, never in your memory.
+To redraw one picture, paste its scene's picture prompt again with the anchor attached, and start your message with: *Make this picture again. Keep the characters exactly as in the attached picture.* Save the new picture with the next number (`05`), tag it, and ask again.
+
+After every batch: save, name in order, tag, ask the two questions again, and redraw the pictures on the `Redraw` lines. When you ask again, question 1 starts from what you recorded last time (`Last time you recorded: ...`), so Enter keeps it. If an answer would change the recorded picture, the record question says so before you type `y`. The decision is always in the registry, never in your memory.
 
 ## Where to go next
 
 - The whole loop in detail, with file naming, tagging conventions, how to answer the two questions, and what an API adds: [How to work from a browser chatbot](../2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md).
+- Both answers on one line, for next time: `node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --keep "skin=dark brown" --keep "hair=two puffs" --prefer fewest-redraws`. Add `--write` to record. Its report uses the names the answers have inside the tool: fewest redraws is `consensus`, the first look `origin`, the last look `terminal`.
 - You already have pages with names typed out: `node ../scripts/tokenize.mjs old-draft.md --text --dry-run` shows what it would change; drop `--dry-run` to do it.
 - Every field of the registry, with what the gate does for each: [Registry fields](../3-reference/REGISTRY-FIELDS.md).
 - You have an API or a local model and want the tool to score pictures and price the drift: [How to resolve character drift after the fact](../2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md).

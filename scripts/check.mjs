@@ -22,6 +22,7 @@ if (process.argv.includes("--suggest")) {
   process.stdout.write(JSON.stringify(suggest(registry), null, 2) + "\n");
   process.exit(0);
 }
+if (registry._caseNote) process.stdout.write(`${registry._caseNote}\n`);
 // run from the wrong folder? a story folder just below this one has its own registry: say which one was checked
 if (!process.argv.includes("--registry") && !process.env.CHARACTER_REGISTRY) {
   const here = path.dirname(registry._file);

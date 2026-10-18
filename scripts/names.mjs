@@ -75,7 +75,14 @@ export function parseJson(text, file = "this file", firstLine = 1) {
   try { return JSON.parse(text); }
   catch (e) {
     const m = String(e.message).match(/position (\d+)/);
-    const pos = m ? Number(m[1]) : null;
+    let pos = m ? Number(m[1]) : null;
+    // some errors carry no position ("Unexpected token '\u201c' ... is not valid JSON"): find that character, or a curly quote
+    if (pos === null) {
+      const tok = String(e.message).match(/Unexpected token '(.)'/);
+      const at = tok ? text.indexOf(tok[1]) : -1;
+      const curly = text.search(/[\u201c\u201d\u2018\u2019]/);
+      pos = at !== -1 ? at : curly !== -1 ? curly : null;
+    }
     let line = firstLine, col = 1;
     if (pos !== null) { const before = text.slice(0, pos); line = firstLine + (before.match(/\n/g) || []).length; col = pos - before.lastIndexOf("\n"); }
     const lineText = text.split("\n")[line - firstLine] || "";

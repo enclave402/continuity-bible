@@ -216,3 +216,39 @@ test("a registry field with the wrong value is said in plain words, with what mo
   assert.match(r.stderr, /character "sam-hayes", field "kind": must be one of person, companion, voice, group, prop\. Most characters are "person", animals and robots included/);
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test("a name in capital letters, an empty scene and a scene holding the paste command all fail; an invalid id is said in plain words", () => {
+  const dir = copyRepo();
+  const scene = path.join(dir, "examples/sample-scene.md");
+  const original = fs.readFileSync(scene, "utf8");
+  fs.writeFileSync(scene, original.replace("{{chloe-jenkins}} picked up", "CHLOE picked up"));
+  assert.match(check(dir).stderr, /names "CHLOE" in a token source\. Fix: write \{\{chloe-jenkins\}\}; the name is printed the way the registry spells it/);
+  fs.writeFileSync(scene, "");
+  assert.match(check(dir).stderr, /examples\/sample-scene\.md: is empty\. Fix: copy the grey box/);
+  fs.writeFileSync(scene, "pbpaste > sample-scene.md\n");
+  assert.match(check(dir).stderr, /examples\/sample-scene\.md: holds a command instead of the scene's text/);
+  fs.writeFileSync(scene, original);
+  editJson(dir, "character-registry.json", (j) => { j.characters["Mika Tanaka"] = j.characters["sam-hayes"]; delete j.characters["sam-hayes"]; });
+  const r = check(dir);
+  assert.match(r.stderr, /character id "Mika Tanaka" is not allowed: an id uses only lower-case letters, digits and hyphens\. Fix: change it to "mika-tanaka" in the registry, and write \{\{mika-tanaka\}\} in your scenes/);
+  assert.doesNotMatch(r.stderr, /use one of [^\n]*Mika Tanaka/, "an invalid id is never suggested as a fix");
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("render suggests the ending a file name left off and always ends the screen on a new line; a mis-cased registry is named", () => {
+  const dir = copyRepo();
+  const miss = spawnSync(process.execPath, [path.join(dir, "scripts/render.mjs"), "examples/sample-scene"], { cwd: dir, encoding: "utf8" });
+  assert.equal(miss.status, 1);
+  assert.match(miss.stderr, /render: examples\/sample-scene is not in this folder\. Did you mean sample-scene\.md\?/);
+  const scene = path.join(dir, "examples/sample-scene.md");
+  fs.writeFileSync(scene, fs.readFileSync(scene, "utf8").replace(/\n+$/, ""));
+  const out = spawnSync(process.execPath, [path.join(dir, "scripts/render.mjs"), "examples/sample-scene.md"], { cwd: dir, encoding: "utf8" });
+  assert.ok(out.stdout.endsWith("\n"), "a source with no final new line still ends the screen on one");
+  const story = path.join(dir, "my-story"); fs.mkdirSync(story);
+  fs.writeFileSync(path.join(story, "Character-Registry.json"), JSON.stringify({ registry_version: 1, characters: {} }));
+  const insensitive = fs.existsSync(path.join(story, "character-registry.json"));
+  const r = spawnSync(process.execPath, [path.join(dir, "scripts/check.mjs")], { cwd: story, encoding: "utf8" });
+  if (insensitive) assert.match(r.stdout, /note: the registry file is named Character-Registry\.json\. Rename it to character-registry\.json/);
+  else assert.match(r.stderr, /There is "Character-Registry\.json" here: rename it to character-registry\.json/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});

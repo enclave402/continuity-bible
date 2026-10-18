@@ -14,7 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
-import { registryPath, loadRegistry, closestIds } from "./lib.mjs";
+import { registryPath, loadRegistry, closestIds, editDistance } from "./lib.mjs";
 
 const PICTURE = /\.(png|jpe?g|webp|gif)$/i;
 const argv = process.argv.slice(2);
@@ -63,6 +63,8 @@ try {
   }
   if (!traits.length) stop("tag: there is nothing to write down: no fixed traits and no others. Fix: run it again and type the traits to track, like hair, coat");
   console.log(`  Using: ${traits.join(", ")}.`);
+  const loose = pictures.filter((p) => !/^scene-\d+-\d+\./i.test(path.posix.basename(p)));
+  if (loose.length) console.log(`Note: ${loose.length === pictures.length ? "these pictures are" : `${loose.length} picture${loose.length === 1 ? " is" : "s are"}`} not named by scene and order (scene-01-01.png), so the order below may not be the order you got them in: ${loose.slice(0, 4).map((p) => path.posix.basename(p)).join(", ")}${loose.length > 4 ? ", ..." : ""}. If it is wrong, press Ctrl-C now and rename them first.`);
   console.log("Look at each picture and type what you see. Type unknown if you cannot tell. From the second picture on, press Enter if a trait is the same as in the picture before.");
   const rows = [];
   for (const [i, image] of pictures.entries()) {
@@ -70,19 +72,34 @@ try {
     const tags = {};
     for (const t of traits) {
       const canonKey = Object.keys(fixed).find((k) => low(k) === t);
+      const key = canonKey || t;
+      const before = i > 0 ? rows[i - 1].tags[key] : undefined;
+      const earlier = [...new Set(rows.map((r) => r.tags[key]).filter((v) => v !== undefined))];
       for (;;) {
-        console.log(`  ${t}${canonKey ? ` (fixed: ${fixed[canonKey]})` : ""}`);
+        const hint = [canonKey ? `fixed: ${fixed[canonKey]}` : "", before !== undefined ? `Enter: ${before}` : ""].filter(Boolean).join("; ");
+        console.log(`  ${t}${hint ? ` (${hint})` : ""}`);
         const a = await ask("> ");
         if (a === null) ended();
         if (!a) {
-          if (i > 0) { tags[canonKey || t] = rows[i - 1].tags[canonKey || t]; break; }
+          if (before !== undefined) { tags[key] = before; break; }
           console.log("  Type what you see in this picture, or unknown if you cannot tell.");
           continue;
         }
         // the fixed value typed in another case is written the registry's way, so the two match exactly
-        const value = canonKey && low(a) === low(fixed[canonKey]) ? fixed[canonKey] : a;
-        if (canonKey && value !== fixed[canonKey] && low(a) !== "unknown") console.log(`  Noted: that is not the fixed ${t} (${fixed[canonKey]}). If the picture does show ${fixed[canonKey]}, type it exactly that way instead.`);
-        tags[canonKey || t] = value;
+        let value = canonKey && low(a) === low(fixed[canonKey]) ? fixed[canonKey] : a;
+        const same = earlier.find((v) => low(v) === low(value));
+        if (same !== undefined) value = same;
+        const near = canonKey && value !== fixed[canonKey] && low(value) !== "unknown"
+          ? `that is not the fixed ${t} (${fixed[canonKey]})`
+          : (() => { const twin = earlier.find((v) => low(v) !== low(value) && low(v) !== "unknown" && editDistance(low(v), low(value)) <= Math.max(1, Math.min(2, Math.floor(Math.min(v.length, value.length) / 4)))); return twin ? `an earlier picture says "${twin}"` : ""; })();
+        if (near) {
+          // say it, and ask once more: Enter keeps what was typed, anything else replaces it
+          console.log(`  Noted: ${near}. If that is what this picture shows, type it exactly that way; press Enter to keep "${value}".`);
+          const b = await ask("> ");
+          if (b === null) ended();
+          if (b) { const again = canonKey && low(b) === low(fixed[canonKey]) ? fixed[canonKey] : (earlier.find((v) => low(v) === low(b)) ?? b); tags[key] = again; break; }
+        }
+        tags[key] = value;
         break;
       }
     }

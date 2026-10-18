@@ -143,7 +143,7 @@ Never edit `built/`. Never edit a scene to match a picture. The registry is upst
 | Message | Meaning | Do |
 |---|---|---|
 | `registry missing: .../character-registry.json` | you ran the command outside your story folder, or the file was saved under another name | `cd` into it; if the message names a file such as `character-registry.json.txt`, rename that file |
-| `Cannot find module '.../scripts/check.mjs'` (with a long list of lines under it) | the terminal is not inside `my-story`, or `../` was left off the command | `cd` into `my-story` and type the command exactly as shown |
+| `Cannot find module '.../scripts/check.mjs'` (with a long list of lines under it) | the terminal is not inside `my-story`, `../` was left off, or the command has a typo (`script` for `scripts`, `.js` for `.mjs`) | `pwd` should end in `my-story`; then check the command letter by letter |
 | `character-registry.json: line 11, column 7: this is not valid JSON. Likely cause: ...` | the registry has a typing slip; the message says the line and the usual cause (curly quotes, a comma before `}`, a file saved as rich text) | fix that line, or paste the file again (see *How to make a file* in the tutorial) |
 | `token_sources "scene-*.md" matches no tracked file` | the registry names scene files that do not exist yet, or the scene's name differs in a capital letter (`Scene-01.md`) | write the first scene, or rename it to match exactly |
 | `names "June" in a token source. Fix: write {{june-okafor}}` | a name or a look was typed into a scene file | replace it with the token |
@@ -156,6 +156,14 @@ Never edit `built/`. Never edit a scene to match a picture. The registry is upst
 | `there is no character "June-okafor" ... Did you mean june-okafor?` | `--character` (or `tag.mjs`) was given an id that is not in the registry | use the id exactly as the registry writes it |
 | `{june-okafor} has single braces`, `has a {{ without a matching }}`, `has three braces in a row` | a token typed with the wrong number of braces | two braces on each side: `{{june-okafor}}` |
 | `was saved as rich text, not plain text` | a scene saved by a word processor | in TextEdit choose Format, then Make Plain Text, or paste it again from the terminal |
+| `is empty` or `holds a command instead of the scene's text` | the scene was made by copying the command instead of the box, or before copying anything | copy the box with the scene, then type the command |
+| `names "JUNE" in a token source` | a name typed in capital letters | write the token; the name is printed the way the registry spells it |
+| `Did you mean scene-01.md?` | the file's ending was left off the command | type the whole name |
+| `character id "Mika Tanaka" is not allowed` | an id with capitals or spaces | use the id it suggests, in the registry and in the tokens |
+| `Check your tags: hair has both "loose curl" and "loose curls"` | one look written two ways in a tags file | write it the same way everywhere |
+| `These tags have no beard at all, so they are probably not Abel's tags` | `--character` and the tags file are for different characters | use the character's own tags file |
+| `Last time you recorded: ...` / `This replaces the anchor you recorded before` | you are asking again after recording | Enter keeps what you recorded; a `y` that would change it is said first |
+| `note: the registry file is named Character-Registry.json` | the registry's name has capital letters | rename it to `character-registry.json` |
 | `note: this checked character-registry.json in this folder. my-story/ has its own registry` | the checker was run one folder above your story | `cd my-story` and run `node ../scripts/check.mjs` |
 | `Note: renders/scene-01-02.png is not in this folder` | the tags file names a picture that is not there, often because of its ending (`.jpg`, `.webp`) | rename the picture or fix the name in the tags file |
 | `None of the pictures has what must never change (...)` (or, on one line, `no image keeps {...}: every image has drifted off what must never change`) | nothing you tagged carries every fixed trait | paste the sheet again, tag the new pictures, ask again |
