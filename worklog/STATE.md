@@ -1,21 +1,21 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-18 10:37 EDT
-**HEAD:** 22b9236
+**Last rewritten:** 2026-10-18 14:35 EDT
+**HEAD:** 117f36c
 **Date:** 2026-10-18
-**Session:** integration of pull requests 6 and 7 into pull request 8, so one merge lands all three; loop-closing fixes; the before-and-after handoff from pull request 7 folded in
+**Session:** loose ends in the layperson pass found by re-testing main from the first-time reader's seat: `--ask` hang on a terminal, an `unclear` versus `unknown` contradiction, two claims the code did not make (branch `claude/layperson-loose-ends`)
 
 ## 1. Current verified facts
 
 - WHAT: `PRODUCT.md`. HOW: `AGENTS.md` (alias `CLAUDE.md`). Routing: `.context/_index.md`. Norms: `docs/4-explanation/REPOSITORY-NORMS.md`.
-- `main` is at 11cbd2c (pull requests 3, 4 and 5, merged by the owner on 2026-10-17 22:18 EDT). Branch `claude/close-open-loops` (pull request 8) now contains pull request 6 (`claude/continuity-card-and-shot-sheet`) and pull request 7 (`claude/before-and-after-journey`) merged in, with their conflicts resolved once; merging pull request 8 lands all three, and GitHub marks 6 and 7 merged.
-- Gate: `npm run verify` (names gate, tests, publication gate, worklog gate, research index, docs registry), green on this branch. The worklog gate counts helm lag on first-parent, non-merge commits.
+- `main` was at 117f36c when this branch was cut. Pull requests 1 to 9 are merged: 3, 4 and 5 by the owner on 2026-10-17 22:18 EDT; 8 landed 6 and 7 with it; 9 made `CLAUDE.md` import `AGENTS.md`.
+- Gate: `npm run verify` (names gate, tests, publication gate, worklog gate, research index, docs registry), green on this branch (54 tests). The worklog gate counts helm lag on first-parent, non-merge commits.
 - Names: one registry, `{{id}}` tokens, render to built output, props by id, contextual forms, forbidden duplicate keys, exclusive markers, a coverage report (ADR-003). `tokenize.mjs` never rewrites a card's own `scene_name`.
 - Drift: two questions (ADR-004 and its amendments). What must never change (`--keep`, or the entry's `canon_tags`); for everything else, fewest redraws, first look, last look or most common (`--prefer`); `--ask` asks both in plain words. A kept tag the person could not read (default word `unknown`, the registry's `drift_resolution.unreadable` replaces it) is never drift: such a picture is not eligible as the anchor and is not billed for the kept tag. The bill is by cosine with embeddings and by tags without. `scripts/sheet.mjs` writes one static HTML page of every picture in the order it was made, coloured anchor, redraw, replaced, cannot tell, keep, from the same engine as the report, with the dated replacements record (`drift_resolution.replacements`) shown as before-and-after pairs. Both scripts run through a symlinked folder.
 - Shot-to-shot continuity (ADR-005, from pull request 6): continuity cards per character per story day and a shot sheet per scene; carried state passes forward by itself, every change needs a reason; `scripts/compile-shot.mjs` prints one pasteable block per shot ending in KEEP and AVOID; the gate catches a missing reason, a prop in the wrong hand, a missing card, a contradicted time or place, a typed name, a sheet that disagrees with the scene file.
 - Render surfaces (from pull request 6, owner 2026-10-17: hardcoded rules are brittle, this must be a structure in the deliverable): `render_surfaces` in the registry, one per kind of picture, written once in the author's words; every shot names its surface; the block compiles KEEP and AVOID from it; a template, prompt or token source that retypes a rule fails with the file, the phrase and "read it from the surface".
 - Before-and-after journey (from pull request 7): `docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md` shows the engine on the published story's lead with real pictures, every answer's anchor and bill from the engine's own output, and the owner's reason (eyes kept, fewest redraws for the rest, heritage in prose). The owner confirmed the anchor (the sacred confession) and the 21-picture list; the anchor is recorded privately; redraws run privately and are shown to the owner in batches; each approved pair is added to the page.
-- Layperson pass: README for a non-technical reader, `docs/1-tutorials/START-HERE.md`, `docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md`; every command in them was executed and matched.
+- Layperson pass: README for a non-technical reader, `docs/1-tutorials/START-HERE.md`, `docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md`; every command in them was executed from their own code blocks and matched. `--ask` returns the prompt on a real terminal (a regression test feeds the answers on a stdin pipe that stays open, and a pseudo-terminal check ran every exit path). A trait the person could not read is tagged `unknown`, not `unclear` (ADR-004, third amendment). The README's claims about the network are limited to the scripts the guide uses; only `scripts/research/` goes online.
 - Research: 2 cards (the continuity report, reviewed; the continuity-norms prompt, not yet run), 35 findings (15 checked, 1 caution, 19 unchecked), 25 recorded sources (20 arXiv through the arXiv API, 5 web pages loaded at their URLs; one refused automated access). Blog sources never make a finding checked.
 - Docs: 17 canonical documents registered.
 - Private consumer repository: issues 1 to 5 and 7 of the owner's log are on its main (props by id and the stage-compiled attitude, one owner per scene description, program data through the registry, a kind on each fix, surface rules as data); issue 6's label contradiction was fixed by relabelling the day, and its gate is merge request 157 (a story declares its own time words; a day or row names its value; CI fails a contradiction); issue 8 stays as designed. The corrections to the drift-journey merge request are open there.
@@ -38,7 +38,7 @@
 
 ## 3. Prioritised next steps
 
-- [ ] **Next action:** the owner merges pull request 8 (`gh pr merge 8 --merge`), which lands 6 and 7 with it.
+- [ ] **Next action:** a human reviews and merges this branch's pull request (the layperson loose ends). Then the before-and-after redraws below continue.
 - [ ] Owner, optional: run `research/corpus/prompts/continuity-norms-and-structures-prompt.md` in a deep-research tool and drop the answer in Downloads; it is then carded, mined and verified, and each ADR-005 open loop closes against a finding id.
 - [ ] Before-and-after journey, what remains (handoff 2026-10-18 00:10 EDT; the anchor is confirmed and recorded privately, the page is corrected for the tag mistake):
   - [ ] Add a style-hold sentence to the redraw prompt (same line work, shading, texture, grain and colour grading as the kept picture). The author's verdict on the first candidates: "Skin feels too different from previous frame. If it was a new scene maybe. Even the art style feels like a change slightly".
