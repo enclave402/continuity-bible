@@ -75,9 +75,49 @@ mkdir my-story
 cd my-story
 ```
 
-Before you paste, type `pwd` and press Enter. The last part must be `my-story`; if it is not, type `cd my-story` first, or the file lands in the wrong folder.
+Before you make a file, type `pwd` and press Enter. The last part must be `my-story`; if it is not, type `cd my-story` first, or the file lands in the wrong folder.
 
-`my-story/character-registry.json` is the registry. Copy this box:
+`my-story/character-registry.json` is the registry. **For your own character**, a helper asks about it and writes the file for you. Type the answer to each question and press Enter:
+
+```bash
+node ../scripts/new-character.mjs
+```
+
+<details>
+<summary>What a run looks like (this one made June)</summary>
+
+```text
+There is no character-registry.json here yet, so this makes one, with your character in it. Answer each question and press Enter.
+What is your story called? A few words, like The Lighthouse.
+> The Lighthouse
+  Using: the-lighthouse.
+What does the story call this character? Type the name you use most, like Mika.
+> June
+What is June's full name? Press Enter if it is just June.
+> June Okafor
+June's id will be june-okafor. You write it in scenes, like {{june-okafor}}. Press Enter to use it, or type another id.
+> 
+  Using: june-okafor.
+Who is June, in one line? Like: Ten-year-old who builds robots in the garage.
+> Nine-year-old who wants to see the lamp lit
+How does June look? One line, in the words a picture prompt should use, like: a ten-year-old girl with brown skin, short black hair, round glasses and a green hoodie.
+> a nine-year-old girl with dark brown skin, black curls tied in two puffs, a yellow raincoat and red boots
+What about June must never change, in any picture? Type each trait like skin=dark brown, with commas between them. Press Enter for none.
+> skin=dark brown
+  Using: skin=dark brown.
+Made character-registry.json with june-okafor in it, in the story the-lighthouse.
+In your scenes, write these instead of June's name or look:
+  {{june-okafor}}       becomes  June
+  {{june-okafor:full}}  becomes  June Okafor
+  {{june-okafor:look}}  becomes  a nine-year-old girl with dark brown skin, black curls tied in two puffs, a yellow raincoat and red boots
+To add another character, run this again. Next: write your scene with these tokens, then check it with node ../scripts/check.mjs
+```
+
+</details>
+
+Then make `scene-01.md` from its box further down, open it with `open -e scene-01.md`, change both `june-okafor` to the id the helper gave you, and save. The [tutorial's step 3](docs/1-tutorials/START-HERE.md#3-write-two-characters-into-the-registry) says more about each question.
+
+**For June instead**, copy this box. Skip it if the helper made your file: pasting it would replace your character.
 
 ```json
 {
