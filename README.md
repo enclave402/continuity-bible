@@ -242,6 +242,7 @@ From the repository root:
 node scripts/anchor.mjs examples/anchor/embeddings.jsonl --prefer fewest-redraws
 node scripts/anchor.mjs examples/anchor/embeddings.jsonl --keep "hair=copper red" --prefer first-look
 node scripts/anchor.mjs examples/anchor/embeddings.jsonl --ask
+node scripts/sheet.mjs examples/anchor/embeddings.jsonl --out sheet.html   # every picture on one page: anchor, redraws, replaced, cannot tell
 node scripts/research/ask.mjs "how do I keep a prop consistent across panels"
 ```
 

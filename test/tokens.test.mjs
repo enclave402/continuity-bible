@@ -54,3 +54,11 @@ test("check passes on the examples and fails on a written-out name, with the tok
   assert.equal(fail.status, 1);
   assert.match(fail.stderr, /names "Sam" in a token source\. Fix: write \{\{sam-hayes\}\}/);
 });
+
+test("tokenize never rewrites a card's own label (scene_name) unless told to", async () => {
+  const { tokenizeValue } = await import("../scripts/tokenize.mjs");
+  const card = { characters: { "sam-hayes": { scene_name: "Sam", note: "Sam wears the watch" } } };
+  const out = tokenizeValue(card, "");
+  assert.equal(out.characters["sam-hayes"].scene_name, "Sam");
+  assert.equal(out.characters["sam-hayes"].note, "{{sam-hayes}} wears the watch");
+});

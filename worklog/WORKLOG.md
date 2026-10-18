@@ -1,11 +1,13 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 36 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 38 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 23:59:54 (UTC-04:00) | action | engine | [Closed four engine loops from the drift journey: a tag the person could not read is never drift; a zero-dependency picture sheet; a dated replacements record; tokenize never rewrites a card's own label; anchor and tokenize run through a symlinked folder](entries/2026-10-17_23-59-54_closed-four-engine-loops-from-the-drift-journey-a-tag-the-pe.md) | agent:claude | closed |
+| 23:59:53 (UTC-04:00) | issue | repo/process | [Lapse: the two integration merge commits (d49b6d0, aca876c) were made with git hooks switched off (core.hooksPath=/dev/null), skipping the pre-commit gate; the full gate was run on the resulting tree right after and passes](entries/2026-10-17_23-59-53_lapse-the-two-integration-merge-commits-d49b6d0-aca876c-were.md) | agent:claude | closed |
 | 23:46:50 (UTC-04:00) | correction | docs/journey | [Journey page corrected: the thumbnail skin tags were wrong for much of the book; a face-size review replaces them and changes the list](entries/2026-10-17_23-46-50_journey-page-corrected-the-thumbnail-skin-tags-were-wrong-fo.md) | agent:claude | open |
 | 23:09:43 (UTC-04:00) | action | docs/journey | [Journey page: anchor confirmed and recorded; step 8, the documents agree with the pictures](entries/2026-10-17_23-09-43_journey-page-anchor-confirmed-and-recorded-step-8-the-docume.md) | agent:claude | open |
 | 22:33:06 (UTC-04:00) | action | docs/journey | [Merged main (pull requests 3, 4, 5) into the journey branch; the page now speaks the engine's two questions](entries/2026-10-17_22-33-06_merged-main-pull-requests-3-4-5-into-the-journey-branch-the-.md) | agent:claude | closed |

@@ -4,87 +4,174 @@
   "title": "Character registry (authority file), version 1",
   "description": "One entry per character, companion, voice, group or prop. The only place a canonical name is written. Every other file holds {{id}} tokens or is checked against it. Field reference: docs/3-reference/REGISTRY-FIELDS.md",
   "type": "object",
-  "required": ["registry_version", "characters"],
+  "required": [
+    "registry_version",
+    "characters"
+  ],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
-    "_about": { "type": "object" },
-    "registry_version": { "type": "integer", "minimum": 1 },
+    "$schema": {
+      "type": "string"
+    },
+    "_about": {
+      "type": "object"
+    },
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1
+    },
     "visual_continuity": {
       "type": "string",
       "description": "Path of a visual-continuity manifest, relative to this file. Its stories' scenes_file and continuity_file become surfaces."
     },
     "skip_stories": {
       "type": "object",
-      "additionalProperties": { "type": "string", "minLength": 1 },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      },
       "description": "Manifest stories whose files are not surfaces, each with the reason (a fixture, a placeholder cast)."
     },
     "surfaces": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["file", "type", "story"],
+        "required": [
+          "file",
+          "type",
+          "story"
+        ],
         "additionalProperties": false,
         "properties": {
-          "file": { "type": "string" },
-          "type": { "type": "string", "enum": ["scenes", "names", "headings", "prose", "continuity-cards", "shot-sheet"], "description": "scenes, names, headings, prose: files whose labels must resolve. continuity-cards: how each character starts each story day (scripts/continuity-cards.v1.schema.json). shot-sheet: a story's scenes and shots in reading order, carrying the cards' state shot by shot (scripts/shot-sheet.v1.schema.json); one of each per story." },
-          "story": { "type": "string" },
-          "root": { "type": "string", "description": "scenes: the key holding the scene map (default scenes)." },
+          "file": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scenes",
+              "names",
+              "headings",
+              "prose",
+              "continuity-cards",
+              "shot-sheet"
+            ],
+            "description": "scenes, names, headings, prose: files whose labels must resolve. continuity-cards: how each character starts each story day (scripts/continuity-cards.v1.schema.json). shot-sheet: a story's scenes and shots in reading order, carrying the cards' state shot by shot (scripts/shot-sheet.v1.schema.json); one of each per story."
+          },
+          "story": {
+            "type": "string"
+          },
+          "root": {
+            "type": "string",
+            "description": "scenes: the key holding the scene map (default scenes)."
+          },
           "filter": {
             "type": "object",
-            "required": ["field", "equals"],
-            "properties": { "field": { "type": "string" }, "equals": {} }
+            "required": [
+              "field",
+              "equals"
+            ],
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "equals": {}
+            }
           },
           "fields": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "scenes: label fields (default characters, props, speaker, marginAuthor, dialogue[].speaker). Values are ids, aliases or tokens; never substrings."
           },
           "paths": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "names: dot paths with * and [] wildcards whose string values are labels."
           },
           "split": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Extra separators for compound labels (default &, +, and)."
           },
-          "pattern": { "type": "string", "description": "headings: a regex whose first group is the label (default ### headings up to the first parenthesis)." },
-          "within": { "type": "string", "description": "headings: only lines after this exact heading line, up to the next heading of the same level." },
-          "prose": { "type": "boolean", "description": "scenes: scan every string of each scene for retired names (default true)." },
+          "pattern": {
+            "type": "string",
+            "description": "headings: a regex whose first group is the label (default ### headings up to the first parenthesis)."
+          },
+          "within": {
+            "type": "string",
+            "description": "headings: only lines after this exact heading line, up to the next heading of the same level."
+          },
+          "prose": {
+            "type": "boolean",
+            "description": "scenes: scan every string of each scene for retired names (default true)."
+          },
           "ignore": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "headings: exact heading labels that are not characters (a timeline, a table) and are skipped."
           },
           "required": {
             "type": "array",
-            "items": { "type": "string", "minLength": 1 },
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
             "description": "continuity-cards: the card fields every card must fill (default wardrobe). shot-sheet: the header fields every scene must fill (default story_day, location, time_of_day)."
           },
-          "lead": { "type": "string", "minLength": 1, "description": "shot-sheet: the form that opens each character's line in the compiled block (default look). An entry without that form opens with its name." },
-          "story_field": { "type": "string", "description": "prose: the field of each entry under root whose value picks the story through `stories` (default: the entry's key)." },
+          "lead": {
+            "type": "string",
+            "minLength": 1,
+            "description": "shot-sheet: the form that opens each character's line in the compiled block (default look). An entry without that form opens with its name."
+          },
+          "story_field": {
+            "type": "string",
+            "description": "prose: the field of each entry under root whose value picks the story through `stories` (default: the entry's key)."
+          },
           "stories": {
             "type": "object",
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "description": "prose: map from a story_field value (or entry key) to a story id; an entry whose value is not mapped is skipped."
           },
           "skip_keys": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Keys whose strings are not scanned, besides every key starting with _ (notes and sources)."
           },
           "forbid_keys": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["key", "owner"],
+              "required": [
+                "key",
+                "owner"
+              ],
               "additionalProperties": false,
               "properties": {
-                "key": { "type": "string", "minLength": 1, "description": "A key (dot path allowed) no entry of this surface may hold, because another file owns that field." },
-                "owner": { "type": "string", "minLength": 1, "description": "The file (or builder) that owns the field; the builder reads it from there." },
-                "why": { "type": "string" }
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "A key (dot path allowed) no entry of this surface may hold, because another file owns that field."
+                },
+                "owner": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The file (or builder) that owns the field; the builder reads it from there."
+                },
+                "why": {
+                  "type": "string"
+                }
               }
             },
             "description": "A field lives once. Listing a key here makes the gate fail any entry of this surface that still carries its own copy."
@@ -93,18 +180,43 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["field", "values"],
+              "required": [
+                "field",
+                "values"
+              ],
               "additionalProperties": false,
               "properties": {
-                "field": { "type": "string", "minLength": 1, "description": "A scene field whose value picks one vocabulary (time_of_day, season, location_id)." },
+                "field": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "A scene field whose value picks one vocabulary (time_of_day, season, location_id)."
+                },
                 "values": {
                   "type": "object",
-                  "additionalProperties": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1
+                  },
                   "description": "For each value of the field, the words that belong to it. A scene whose prose uses a word of another value fails."
                 },
-                "fields": { "type": "array", "items": { "type": "string" }, "description": "The prose fields to scan (default: every string of the scene outside skip_keys)." },
-                "required": { "type": "boolean", "description": "True when a scene without the field fails instead of being skipped." },
-                "why": { "type": "string" }
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The prose fields to scan (default: every string of the scene outside skip_keys)."
+                },
+                "required": {
+                  "type": "boolean",
+                  "description": "True when a scene without the field fails instead of being skipped."
+                },
+                "why": {
+                  "type": "string"
+                }
               }
             },
             "description": "Declared vocabularies that may not mix: a scene labelled morning may not describe lamplight. On a shot sheet the other values' words also become the compiled block's AVOID line. Nothing is hardcoded; the words are yours."
@@ -117,37 +229,132 @@
       "patternProperties": {
         "^[a-z0-9][a-z0-9-]*$": {
           "type": "object",
-          "required": ["name", "kind", "story", "role"],
+          "required": [
+            "name",
+            "kind",
+            "story",
+            "role"
+          ],
           "additionalProperties": false,
           "properties": {
-            "name": { "type": "string", "minLength": 1, "description": "The one canonical form." },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The one canonical form."
+            },
             "kind": {
               "type": "string",
-              "enum": ["person", "companion", "voice", "group", "prop"],
+              "enum": [
+                "person",
+                "companion",
+                "voice",
+                "group",
+                "prop"
+              ],
               "description": "person; companion (an animal or a named companion object); voice (a device or document that speaks); group (members listed); prop (a named object a scene lists by id and a prompt describes from this entry, never by matching its name in prose)."
             },
-            "story": { "type": "string", "minLength": 1, "description": "Home story id (a visual-continuity story id, or any label such as moment-packs or platform)." },
-            "also_in": { "type": "array", "items": { "type": "string" }, "description": "Other story ids this character may appear in; \"*\" means every story." },
-            "role": { "type": "string", "minLength": 1, "description": "One line. The profile holds the rest." },
-            "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true, "description": "Every other label a surface uses for this character. Exact strings." },
-            "retired": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true, "description": "Forms that may never return. A label equal to one, or a scene string containing one, fails." },
-            "first_appearance": { "type": "string", "description": "A scene slug in the home story." },
-            "born": { "type": "integer" },
+            "story": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Home story id (a visual-continuity story id, or any label such as moment-packs or platform)."
+            },
+            "also_in": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Other story ids this character may appear in; \"*\" means every story."
+            },
+            "role": {
+              "type": "string",
+              "minLength": 1,
+              "description": "One line. The profile holds the rest."
+            },
+            "aliases": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true,
+              "description": "Every other label a surface uses for this character. Exact strings."
+            },
+            "retired": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true,
+              "description": "Forms that may never return. A label equal to one, or a scene string containing one, fails."
+            },
+            "first_appearance": {
+              "type": "string",
+              "description": "A scene slug in the home story."
+            },
+            "born": {
+              "type": "integer"
+            },
             "ages": {
               "type": "object",
-              "patternProperties": { "^[0-9]{4}$": { "type": "integer" } },
+              "patternProperties": {
+                "^[0-9]{4}$": {
+                  "type": "integer"
+                }
+              },
               "additionalProperties": false,
               "description": "Stated age anchors by year; checked against born."
             },
-            "continuity_ids": { "type": "array", "items": { "type": "string" }, "description": "Keys in the home story's continuity file characters block." },
-            "sources": { "type": "array", "items": { "type": "string" }, "description": "Files that describe this character, relative to the registry; a #fragment may follow the path." },
-            "members": { "type": "array", "items": { "type": "string" }, "description": "group: entry ids." },
-            "questions": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Open questions about this character that block nothing. Each line says who raised it and when." },
-            "prose_only": { "type": "boolean", "description": "True when this character is named only inside prose, never on a label field, so the check does not report a gap." },
-            "notes": { "type": "string" },
-            "species": { "type": "string", "minLength": 1, "description": "companion: a key of the registry's species map (required for every companion)." },
-            "generic": { "type": "boolean", "description": "True for a descriptive label standing in for an unnamed person (The therapist): a label on its surfaces, not hunted in other stories' prose." },
-            "full_name": { "type": "string", "minLength": 1, "description": "The full form a {{id:full}} token renders when the canonical name is shorter." },
+            "continuity_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Keys in the home story's continuity file characters block."
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Files that describe this character, relative to the registry; a #fragment may follow the path."
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "group: entry ids."
+            },
+            "questions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "Open questions about this character that block nothing. Each line says who raised it and when."
+            },
+            "prose_only": {
+              "type": "boolean",
+              "description": "True when this character is named only inside prose, never on a label field, so the check does not report a gap."
+            },
+            "notes": {
+              "type": "string"
+            },
+            "species": {
+              "type": "string",
+              "minLength": 1,
+              "description": "companion: a key of the registry's species map (required for every companion)."
+            },
+            "generic": {
+              "type": "boolean",
+              "description": "True for a descriptive label standing in for an unnamed person (The therapist): a label on its surfaces, not hunted in other stories' prose."
+            },
+            "full_name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The full form a {{id:full}} token renders when the canonical name is shorter."
+            },
             "forms": {
               "type": "object",
               "additionalProperties": {
@@ -157,31 +364,94 @@
             },
             "canon_tags": {
               "type": "object",
-              "additionalProperties": { "type": "string", "minLength": 1 },
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              },
               "description": "Fixed traits: what must never change about this character, as tags a person or a tagger can read off an image (eyes, a scar, heritage markers, a signature garment). The answer to the first drift question: only images carrying every one of them are eligible to be the anchor, and images without them are always on the redraw list. Written by the owner, never inferred from the drifted images."
             },
-            "prompt_tokens": { "type": "string", "description": "prop or companion: the look a prompt writer compiles from this entry, written once here." },
-            "negative_tokens": { "type": "array", "items": { "type": "string" }, "description": "prop or companion: what a prompt must avoid for this object." },
+            "prompt_tokens": {
+              "type": "string",
+              "description": "prop or companion: the look a prompt writer compiles from this entry, written once here."
+            },
+            "negative_tokens": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "prop or companion: what a prompt must avoid for this object."
+            },
             "anchor": {
               "type": "object",
-              "required": ["image", "policy", "chosen_at"],
+              "required": [
+                "image",
+                "policy",
+                "chosen_at"
+              ],
               "additionalProperties": false,
               "properties": {
-                "image": { "type": "string", "minLength": 1, "description": "The reference image every later generation conditions on, relative to the registry." },
-                "sha256": { "type": "string" },
-                "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "canon", "manual"] },
-                "prefer": { "type": "string", "enum": ["fewest-redraws", "first-look", "last-look", "most-common"], "description": "The plain-named answer to the second drift question that the policy spells out." },
-                "keep": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 }, "description": "The fixed traits the choice was made within: what must never change, as answered when the anchor was chosen." },
-                "metric": { "type": "string" },
-                "order": { "type": "integer" },
-                "chosen_at": { "type": "string" },
-                "embeddings": { "type": "string", "description": "The embeddings file the choice was computed from." },
-                "stats": { "type": "object" },
-                "why": { "type": "string" }
+                "image": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The reference image every later generation conditions on, relative to the registry."
+                },
+                "sha256": {
+                  "type": "string"
+                },
+                "policy": {
+                  "type": "string",
+                  "enum": [
+                    "origin",
+                    "terminal",
+                    "consensus",
+                    "mode",
+                    "canon",
+                    "manual"
+                  ]
+                },
+                "prefer": {
+                  "type": "string",
+                  "enum": [
+                    "fewest-redraws",
+                    "first-look",
+                    "last-look",
+                    "most-common"
+                  ],
+                  "description": "The plain-named answer to the second drift question that the policy spells out."
+                },
+                "keep": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "The fixed traits the choice was made within: what must never change, as answered when the anchor was chosen."
+                },
+                "metric": {
+                  "type": "string"
+                },
+                "order": {
+                  "type": "integer"
+                },
+                "chosen_at": {
+                  "type": "string"
+                },
+                "embeddings": {
+                  "type": "string",
+                  "description": "The embeddings file the choice was computed from."
+                },
+                "stats": {
+                  "type": "object"
+                },
+                "why": {
+                  "type": "string"
+                }
               },
               "description": "The visual anchor chosen for this character after drift, recorded by scripts/anchor.mjs --write or by hand (policy manual)."
             },
-            "drift_resolution": { "$ref": "#/$defs/drift_resolution" }
+            "drift_resolution": {
+              "$ref": "#/$defs/drift_resolution"
+            }
           }
         }
       },
@@ -189,27 +459,56 @@
     },
     "records": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 },
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "description": "Globs (relative to this file; ** and * as in gitignore) of dated history that is never rewritten: the worklog, transcripts, decision records, research, past prompt records, retired plans, test fixtures. Every other tracked text file is scanned for retired names and companion species mismatches."
     },
     "species": {
       "type": "object",
-      "additionalProperties": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minItems": 1
+      },
       "description": "Species a companion may have, each with the words that name it in prose (nouns only; never a word that is also a verb). A story's text may name only the species of companions allowed in that story."
     },
     "known": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["file", "text", "owner", "task", "date"],
+        "required": [
+          "file",
+          "text",
+          "owner",
+          "task",
+          "date"
+        ],
         "additionalProperties": false,
         "properties": {
-          "file": { "type": "string" },
-          "text": { "type": "string", "minLength": 1 },
-          "owner": { "type": "string" },
-          "task": { "type": "string" },
-          "date": { "type": "string" },
-          "why": { "type": "string" }
+          "file": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "type": "string"
+          },
+          "task": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          }
         }
       },
       "description": "Problems the gate reports as gaps instead of failures while another lane or the owner resolves them: the file, a substring of the problem line, who owns it, the task and the date."
@@ -219,12 +518,25 @@
       "description": "Files that write no character's name: they hold {{id}} tokens and a builder renders the names (scripts/render.mjs or your own). Scene files, cards and prose surfaces are token sources already; list the rest (pages, partials, manifests, run notes a builder reads) here, as a path or a glob.",
       "items": {
         "type": "object",
-        "required": ["file"],
+        "required": [
+          "file"
+        ],
         "additionalProperties": false,
         "properties": {
-          "file": { "type": "string", "minLength": 1 },
-          "skip_keys": { "type": "array", "items": { "type": "string" }, "description": "Keys whose strings are not checked: a label the file defines, printed text of a physical object, a dated note." },
-          "why": { "type": "string" }
+          "file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "skip_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Keys whose strings are not checked: a label the file defines, printed text of a physical object, a dated note."
+          },
+          "why": {
+            "type": "string"
+          }
         }
       }
     },
@@ -232,36 +544,116 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "ignore": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Globs of files that may write names and are nobody's surface: a README's examples, tests, the scripts themselves." },
-        "strict": { "type": "boolean", "description": "True turns an unclassified file that names a character into a failure instead of a gap." }
+        "ignore": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Globs of files that may write names and are nobody's surface: a README's examples, tests, the scripts themselves."
+        },
+        "strict": {
+          "type": "boolean",
+          "description": "True turns an unclassified file that names a character into a failure instead of a gap."
+        }
       },
       "description": "Every tracked text file is a surface, a token source, a record, or ignored here. A file that is none of those and names a character is reported, so the gate can never be silent about a file."
     },
-    "drift_resolution": { "$ref": "#/$defs/drift_resolution" },
+    "drift_resolution": {
+      "$ref": "#/$defs/drift_resolution"
+    },
     "render_surfaces": {
       "type": "object",
       "description": "Where a picture will be used, each with its own look rules written once in your words: a story page, a cover, a product card. A shot names one (surface, on the shot or its scene header; required once any surface is declared); scripts/compile-shot.mjs appends KEEP and AVOID lines from it; no template, token source or declared script may retype a phrase of it (see render_templates). The engine ships no rule words.",
       "additionalProperties": {
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "additionalProperties": false,
         "properties": {
-          "name": { "type": "string", "minLength": 1, "description": "Plain-language name: Story scene, Product card." },
-          "style_lock": { "type": "string", "description": "The style that must hold on this surface, in your words. Joins KEEP." },
-          "must_keep": { "description": "Expected a line or a list of lines every picture on this surface must keep; they join KEEP", "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "items": { "type": "string", "minLength": 1 } }] },
-          "exclude": { "description": "Expected a line or a list of things that may not appear on this surface; they join AVOID", "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "items": { "type": "string", "minLength": 1 } }] },
-          "size": { "type": "string", "description": "The size or format in words: 3:2 landscape, 1:1 square. Printed in the KEEP label." },
-          "aspect": { "type": "string", "description": "Alternative to size." },
-          "no_text": { "description": "Expected true (the word text joins AVOID) or your own sentence about lettering (joins KEEP as written)", "anyOf": [{ "type": "boolean" }, { "type": "string", "minLength": 1 }] },
-          "hands_rule": { "type": "string", "description": "Your rule for hands on this surface. Joins KEEP." },
-          "why": { "type": "string", "description": "Why this surface has these rules. Never printed." },
-          "continuity": { "type": "boolean", "description": "False for a surface that carries no story continuity (a product card, a cover): its scenes need no story_day, location or time_of_day, its shots need no cast, and its blocks carry no CHANGED line. Default true." }
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Plain-language name: Story scene, Product card."
+          },
+          "style_lock": {
+            "type": "string",
+            "description": "The style that must hold on this surface, in your words. Joins KEEP."
+          },
+          "must_keep": {
+            "description": "Expected a line or a list of lines every picture on this surface must keep; they join KEEP",
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            ]
+          },
+          "exclude": {
+            "description": "Expected a line or a list of things that may not appear on this surface; they join AVOID",
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            ]
+          },
+          "size": {
+            "type": "string",
+            "description": "The size or format in words: 3:2 landscape, 1:1 square. Printed in the KEEP label."
+          },
+          "aspect": {
+            "type": "string",
+            "description": "Alternative to size."
+          },
+          "no_text": {
+            "description": "Expected true (the word text joins AVOID) or your own sentence about lettering (joins KEEP as written)",
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "hands_rule": {
+            "type": "string",
+            "description": "Your rule for hands on this surface. Joins KEEP."
+          },
+          "why": {
+            "type": "string",
+            "description": "Why this surface has these rules. Never printed."
+          },
+          "continuity": {
+            "type": "boolean",
+            "description": "False for a surface that carries no story continuity (a product card, a cover): its scenes need no story_day, location or time_of_day, its shots need no cast, and its blocks carry no CHANGED line. Default true."
+          }
         }
       }
     },
     "render_templates": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 },
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "description": "Globs of the templates, builders and scripts that assemble prompts. None may retype a render surface phrase verbatim: the gate fails the file and the phrase and says to read it from the surface. A glob that matches no tracked file fails."
     }
   },
@@ -270,13 +662,59 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "canon"], "description": "The developer spelling of the second drift question, applied to the images that keep the fixed traits: origin: the first; terminal: the last; consensus: nearest the centroid (the most frequent tag combination when there are no embeddings); mode: the most frequent tag combination, nearest its centroid; canon: keep + consensus (an alias)." },
-        "prefer": { "type": "string", "enum": ["fewest-redraws", "first-look", "last-look", "most-common"], "description": "The plain spelling of the second drift question: fewest-redraws (consensus), first-look (origin), last-look (terminal), most-common (mode). Either prefer or policy; prefer wins when both are set and --policy is not passed." },
-        "metric": { "type": "string", "description": "Name of the embedding the file holds (arcface, clip, dinov2, aura, ...). Informational; vectors from two encoders are never mixed." },
-        "pass_threshold": { "type": "number", "description": "Cosine similarity to the anchor below which an image is listed for regeneration." },
-        "prune_outliers_z": { "type": "number", "description": "Drop images whose distance to the centroid is more than this many standard deviations before choosing." },
-        "max_regeneration_budget": { "type": "integer", "description": "How many regenerations you are willing to pay for; the report compares policies against it." },
-        "embeddings": { "type": "string", "description": "Default embeddings file for scripts/anchor.mjs, relative to the registry." }
+        "policy": {
+          "type": "string",
+          "enum": [
+            "origin",
+            "terminal",
+            "consensus",
+            "mode",
+            "canon"
+          ],
+          "description": "The developer spelling of the second drift question, applied to the images that keep the fixed traits: origin: the first; terminal: the last; consensus: nearest the centroid (the most frequent tag combination when there are no embeddings); mode: the most frequent tag combination, nearest its centroid; canon: keep + consensus (an alias)."
+        },
+        "prefer": {
+          "type": "string",
+          "enum": [
+            "fewest-redraws",
+            "first-look",
+            "last-look",
+            "most-common"
+          ],
+          "description": "The plain spelling of the second drift question: fewest-redraws (consensus), first-look (origin), last-look (terminal), most-common (mode). Either prefer or policy; prefer wins when both are set and --policy is not passed."
+        },
+        "metric": {
+          "type": "string",
+          "description": "Name of the embedding the file holds (arcface, clip, dinov2, aura, ...). Informational; vectors from two encoders are never mixed."
+        },
+        "pass_threshold": {
+          "type": "number",
+          "description": "Cosine similarity to the anchor below which an image is listed for regeneration."
+        },
+        "prune_outliers_z": {
+          "type": "number",
+          "description": "Drop images whose distance to the centroid is more than this many standard deviations before choosing."
+        },
+        "max_regeneration_budget": {
+          "type": "integer",
+          "description": "How many regenerations you are willing to pay for; the report compares policies against it."
+        },
+        "embeddings": {
+          "type": "string",
+          "description": "Default embeddings file for scripts/anchor.mjs, relative to the registry."
+        },
+        "unreadable": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Tag values that mean the person could not tell (eyes closed, face turned away). A picture tagged with one of them on a kept tag is not eligible as the anchor and is not billed for it. Default [\"unknown\"]."
+        },
+        "replacements": {
+          "type": "string",
+          "description": "A JSON-lines file, relative to the registry, recording each picture replaced: { scene, before, after, anchor, date, note }. scripts/sheet.mjs shows them as before-and-after pairs."
+        }
       },
       "description": "How a visual anchor is picked after a character has drifted (docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): two questions, what must never change (the entry's canon_tags) and, for everything else, which look (prefer). Registry-level defaults; an entry may override."
     }
