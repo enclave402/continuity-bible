@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-17 21:05 EDT
-**HEAD:** 2a5afab
+**Last rewritten:** 2026-10-17 21:40 EDT
+**HEAD:** b5ca135
 **Date:** 2026-10-17
 **Session:** public repository norms, in-repo research process, continuity gate extensions, drift anchor policy (branch `claude/research-process-and-public-norms`)
 
@@ -36,7 +36,7 @@
 ## 3. Prioritised next steps
 
 - [ ] **Next action:** a human reviews and merges pull request 3.
-- [ ] Before-and-after journey: in the private pipeline, write the lead's `canon_tags` (owner's words, not inferred), tag and embed the story's renders, run the anchor policies, restore canon, and bring the before and after images plus the anchor report into a public expository page here. Same session applies the public mechanisms privately (token sources for program data, `forbid_keys` on the art manifest, prop ids, a contextual form for the stage-dependent prop, time-of-day markers, run-notes rendering).
+- [ ] Before-and-after journey (session running): in the private pipeline, tag and embed the story's renders, run every anchor policy, adopt the least-regeneration anchor (owner's stated goal: fewest regenerations, consistency over endpoint; `consensus` cross-checked by `mode`, no `canon_tags` needed), regenerate the minority with the owner's GO, reconcile the profile prose to the adopted anchor, and bring the before and after images plus the anchor report into a public expository page here. Same session applies the public mechanisms privately (token sources for program data, `forbid_keys` on the art manifest, prop ids, a contextual form for the stage-dependent prop, time-of-day markers, run-notes rendering).
 - [ ] Layperson pass: README and a `docs/1-tutorials/` start-here walkthrough for a non-technical reader; a browser-flow how-to (copy-paste prompt sheets, hand tags, no API).
 - [ ] Run `research/corpus/prompts/continuity-norms-and-structures-prompt.md` in a deep-research tool, card the answer, overlap, extract, verify; then design the shot-to-shot continuity card and shot sheet on it.
 - [ ] Verify the conference and vendor sources behind the report's numeric thresholds and promote or correct findings accp-04, -22, -26, -28 (`docs/_registry/open_loops.md`).

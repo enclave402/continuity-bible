@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 12 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 13 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 21:46:53 (UTC-04:00) | fix | product | [Correction: the owner's intent for the drifted lead is the least-regeneration anchor (consistency over endpoint), not canon restoration; ADR-004, the drift how-to, PRODUCT.md and STATE.md now say so](entries/2026-10-17_21-46-53_correction-the-owner-s-intent-for-the-drifted-lead-is-the-le.md) | agent:claude | closed |
 | 20:51:29 (UTC-04:00) | fix | repo/worklog | [Correction: commit 2a5afab carried only the trail; the first-parent lag change had not been applied (edit anchor mismatch). Applied now in scripts/check-worklog.mjs](entries/2026-10-17_20-51-29_correction-commit-2a5afab-carried-only-the-trail-the-first-p.md) | agent:claude | closed |
 | 20:50:45 (UTC-04:00) | fix | repo/worklog | [Worklog gate counts HEAD lag on the first parent only, so a merge from main no longer trips the pre-push hook](entries/2026-10-17_20-50-45_worklog-gate-counts-head-lag-on-the-first-parent-only-so-a-m.md) | agent:claude | closed |
 | 20:50:03 (UTC-04:00) | fix | repo/worklog | [[REMOVAL] Redacted two private names inside trail entry wl-281e96a2 (written by another agent and pushed straight to main) so the public repository carries none; merged main into the branch keeping the self-contained worklog tooling](entries/2026-10-17_20-50-03_removal-redacted-two-private-names-inside-trail-entry-wl-281.md) | agent:claude | closed |
