@@ -32,7 +32,8 @@ import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import { createHash } from "node:crypto";
-import { registryPath, loadRegistry, writeJsonLike } from "./lib.mjs";
+import { registryPath, loadRegistry, writeJsonLike, closestIds, nearbyFiles, editDistance } from "./lib.mjs";
+import { parseJson } from "./names.mjs";
 
 export const norm = (v) => { const n = Math.hypot(...v) || 1; return v.map((x) => x / n); };
 export const dot = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; };
@@ -46,9 +47,11 @@ export const PLAIN = { consensus: "fewest redraws", origin: "the first look", te
 const METHODS = ["origin", "terminal", "consensus", "mode"];
 
 const low = (v) => String(v).trim().toLowerCase();
-const tagKey = (tags) => JSON.stringify(Object.entries(tags || {}).map(([k, v]) => [k, low(v)]).sort());
-/** True when the row carries every kept tag with the same value (case-insensitive). A row without tags keeps nothing. */
-export const keepsAll = (row, keep) => Boolean(row.tags) && Object.entries(keep || {}).every(([k, v]) => row.tags[k] !== undefined && low(row.tags[k]) === low(v));
+const tagKey = (tags) => JSON.stringify(Object.entries(tags || {}).map(([k, v]) => [low(k), low(v)]).sort());
+/** A row's value for a trait; the trait's name is compared case-insensitively, so Skin and skin are one trait. */
+export const tagOf = (row, k) => { const t = row?.tags; if (!t) return undefined; if (t[k] !== undefined) return t[k]; const hit = Object.keys(t).find((x) => low(x) === low(k)); return hit === undefined ? undefined : t[hit]; };
+/** True when the row carries every kept tag with the same value (names and values case-insensitive). A row without tags keeps nothing. */
+export const keepsAll = (row, keep) => Boolean(row.tags) && Object.entries(keep || {}).every(([k, v]) => tagOf(row, k) !== undefined && low(tagOf(row, k)) === low(v));
 /** The values a person writes when they cannot tell (eyes closed, face turned away). Default "unknown"; the registry's
  *  drift_resolution.unreadable or --unreadable a,b replaces it. Never part of the engine's vocabulary beyond this default. */
 export const DEFAULT_UNREADABLE = ["unknown"];
@@ -59,15 +62,44 @@ export function keepState(row, keep, unreadable = DEFAULT_UNREADABLE) {
   const u = new Set(unreadable.map(low));
   let unsure = false;
   for (const [k, v] of Object.entries(keep || {})) {
-    const have = row.tags?.[k];
+    const have = tagOf(row, k);
     if (have === undefined) return "off";
     if (u.has(low(have))) { unsure = true; continue; }
     if (low(have) !== low(v)) return "off";
   }
   return unsure ? "cannot-tell" : "keeps";
 }
-/** "tag=value, tag=value" -> { tag: value }; "none" or empty -> {}. */
-export const parseKeep = (text) => Object.fromEntries(String(text || "").split(/[,;\n]/).map((kv) => kv.split(/=(.*)/s)).filter((p) => p[0] && p[0].trim() && p[1] !== undefined && !/^none$/i.test(p[0].trim())).map(([k, v]) => [k.trim(), v.trim()]));
+/**
+ * Read an answer to "what must never change": traits like skin=dark brown or skin: dark brown, separated by commas,
+ * semicolons, new lines, or " and " when another trait follows ("skin=dark brown and hair=two puffs"; "hair=salt and pepper"
+ * stays one value). A trait's name is lower-cased; its value is kept as typed (values are compared case-insensitively).
+ * Returns { keep, unread, none }: the traits, the pieces that are not a trait (said back to the person, never guessed at),
+ * and whether the answer was "none".
+ */
+export function readKeep(text) {
+  const keep = {}, unread = [];
+  let none = false;
+  const pieces = String(text || "").split(/[,;\n]|\s+and\s+(?=[^=:,;\n]+[=:])/i).map((p) => p.trim()).filter(Boolean);
+  for (const p of pieces) {
+    if (/^(none|nothing)$/i.test(p)) { none = true; continue; }
+    const at = p.includes("=") ? p.indexOf("=") : p.indexOf(":");
+    const k = at > 0 ? p.slice(0, at).trim().toLowerCase() : "";
+    const v = at > 0 ? p.slice(at + 1).trim() : "";
+    if (k && v) keep[k] = v; else unread.push(p);
+  }
+  return { keep, unread, none };
+}
+/** "tag=value, tag: value" -> { tag: value }; "none" or empty -> {}. Pieces that are not a trait are dropped (use readKeep to see them). */
+export const parseKeep = (text) => readKeep(text).keep;
+/** Read an answer to "which look": 1 or fewest redraws, 2 or the first look, 3 or the last look. null when it is none of those, or more than one. */
+export function readLook(text) {
+  const t = String(text || "").toLowerCase();
+  const hits = new Set();
+  if (/(^|\D)1(\D|$)(?!st)|fewest|least|few\b/.test(t) && !/\b1st\b/.test(t)) hits.add("consensus");
+  if (/(^|\D)2(\D|$)|first|\b1st\b/.test(t)) hits.add("origin");
+  if (/(^|\D)3(\D|$)|last|latest/.test(t)) hits.add("terminal");
+  return hits.size === 1 ? [...hits][0] : null;
+}
 
 /**
  * Choose an anchor from rows. Pure: no files, no registry.
@@ -178,23 +210,40 @@ async function main() {
   const VALUE_FLAGS = new Set(["--policy", "--prefer", "--character", "--threshold", "--prune-outliers", "--registry", "--canon", "--keep", "--unreadable"]);
   const file = argv.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(argv[i - 1]));
   let registry = null;
-  try { registry = loadRegistry(registryPath(process.argv)); } catch { registry = null; }
+  const registryFile = registryPath(process.argv);
+  try { registry = loadRegistry(registryFile); }
+  catch (e) { if (fs.existsSync(registryFile)) { console.error(e.message); process.exit(1); } registry = null; }
   const id = flag("--character");
   const entry = id ? registry?.characters?.[id] : null;
+  if (id && !entry) {
+    const ids = Object.keys(registry?.characters || {});
+    const near = closestIds(id, ids);
+    console.error(registry
+      ? `anchor: there is no character "${id}" in ${path.basename(registry._file)}. ${near.length ? `Did you mean ${near.join(" or ")}? ` : ""}Fix: use the id exactly as the registry writes it${ids.length ? ` (${ids.join(", ")})` : ""}`
+      : `anchor: --character ${id} needs a character-registry.json in this folder. Fix: cd into your story folder first`);
+    process.exit(1);
+  }
   const defaults = { ...(registry?.drift_resolution || {}), ...(entry?.drift_resolution || {}) };
   // the words a person writes when they cannot tell: --unreadable a,b wins, else the registry's, else the default
   const unreadable = flag("--unreadable") ? flag("--unreadable").split(",").map((v) => v.trim()).filter(Boolean) : defaults.unreadable || DEFAULT_UNREADABLE;
   // question 1: --keep tag=value (repeatable; --canon is its alias) wins, else the character's canon_tags
   const keepFlags = argv.flatMap((a, i) => ((a === "--keep" || a === "--canon") && argv[i + 1] ? [argv[i + 1]] : []));
-  let keep = keepFlags.length ? parseKeep(keepFlags.join(",")) : entry?.canon_tags || null;
+  const recordedKeep = entry?.anchor?.keep && Object.keys(entry.anchor.keep).length ? entry.anchor.keep : null;
+  let keep = keepFlags.length ? parseKeep(keepFlags.join(",")) : recordedKeep || entry?.canon_tags || null;
   // question 2: --prefer (plain names) or --policy (developer names); the registry's drift_resolution supplies the default
   const preferFlag = flag("--prefer") || (flag("--policy") ? "" : defaults.prefer || "");
   if (preferFlag && !PREFER[preferFlag]) { console.error(`anchor: unknown --prefer ${preferFlag} (${Object.keys(PREFER).join(", ")})`); process.exit(2); }
   let policy = flag("--policy") || (preferFlag ? PREFER[preferFlag] : "") || defaults.policy || "consensus";
   const source = file || (defaults.embeddings ? path.join(registry._root, defaults.embeddings) : "");
   if (!source) { console.error("usage: node scripts/anchor.mjs <embeddings.jsonl|.json> [--character <id>] [--ask] [--keep tag=value ...] [--prefer fewest-redraws|first-look|last-look|most-common] [--policy origin|terminal|consensus|mode|canon] [--canon tag=value ...] [--threshold 0.6] [--prune-outliers 2] [--write] [--json]"); process.exit(2); }
+  if (!fs.existsSync(source)) { const near = nearbyFiles(source); console.error(`anchor: ${source} is not in this folder.${near.length ? ` There is ${near.map((n) => `"${n}"`).join(" and ")} here: rename it to ${path.basename(source)}.` : " Fix: check the file name (capital letters count) and run the command from the folder that holds it"}`); process.exit(1); }
   const raw = fs.readFileSync(source, "utf8");
-  const rows = source.endsWith(".jsonl") ? raw.split("\n").filter(Boolean).map((l) => JSON.parse(l)) : (() => { const j = JSON.parse(raw); return Array.isArray(j) ? j : j.rows || j.images || []; })();
+  let rows;
+  try {
+    rows = source.endsWith(".jsonl")
+      ? raw.split("\n").map((l, i) => [l, i + 1]).filter(([l]) => l.trim()).map(([l, n]) => parseJson(l, source, n))
+      : (() => { const j = parseJson(raw, source); return Array.isArray(j) ? j : j.rows || j.images || []; })();
+  } catch (e) { console.error(e.message); process.exit(1); }
   const threshold = Number(flag("--threshold") || defaults.pass_threshold || 0.6);
   const pruneZ = Number(flag("--prune-outliers") || defaults.prune_outliers_z || 0);
   const budget = defaults.max_regeneration_budget;
@@ -204,30 +253,84 @@ async function main() {
   const pairs = (m) => Object.entries(m || {}).map(([k, v]) => `${k}=${v}`).join(", ");
   const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
+  // what the tags actually say, trait by trait: to check an answer against, and to explain why nothing keeps it
+  const seen = new Map();
+  for (const r of rows) for (const [k, v] of Object.entries(r.tags || {})) { const kk = low(k), vv = low(v); if (!seen.has(kk)) seen.set(kk, new Map()); const m = seen.get(kk); m.set(vv, { shown: String(v), count: (m.get(vv)?.count || 0) + 1 }); }
+  const tagsSay = (k) => { const m = seen.get(low(k)); return m ? [...m.values()].map((x) => `${low(k)}=${x.shown} (${plural(x.count, "picture")})`).join(", ") : ""; };
+  const mismatches = (kp) => Object.entries(kp || {}).flatMap(([k, v]) => {
+    const m = seen.get(low(k));
+    if (!m) return [`no picture's tags have a trait called "${k}"; the traits in your tags are ${[...seen.keys()].join(", ") || "none yet"}`];
+    if (!m.has(low(v))) return [`no picture's tags say ${low(k)}=${v}; your tags say ${tagsSay(k)}`];
+    return [];
+  });
+
+  // near-duplicate values for one trait ("loose curl" and "loose curls") are counted as two looks; say so
+  const twins = [];
+  for (const [k, m] of seen) { const vs = [...m.values()].map((x) => x.shown); for (let i = 0; i < vs.length; i++) for (let j = i + 1; j < vs.length; j++) { const a = low(vs[i]), b = low(vs[j]); if (a !== b && !unreadable.map(low).includes(a) && !unreadable.map(low).includes(b) && editDistance(a, b) <= Math.max(1, Math.min(2, Math.floor(Math.min(a.length, b.length) / 4)))) twins.push(`${k} has both "${vs[i]}" and "${vs[j]}"`); } }
+  if (twins.length) console.log(`${ask ? "" : "anchor: "}Check your tags: ${twins.join("; ")}. If they are the same look, write them the same way in the tags file, or they are counted as different looks.`);
+
   let question = null;
   if (ask) {
     // the two questions, in plain words, on the terminal; piped answers work too
     const rl = askReader = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: false });
     const lines = rl[Symbol.asyncIterator]();
-    question = async (prompt) => { process.stdout.write(prompt); const { value, done } = await lines.next(); if (!process.stdin.isTTY) process.stdout.write("\n"); return done ? "" : String(value); };
-    console.log(`What about ${name} must never change? Type tag=value pairs separated by commas, or press Enter for none.`);
-    if (keep && Object.keys(keep).length) console.log(`  The registry says: ${pairs(keep)}. Press Enter to keep that, or type your own.`);
-    const a1 = (await question("> ")).trim();
-    if (a1) keep = parseKeep(a1);
+    // null when the input has ended (Ctrl-D, or a pipe with no answers left): the default is used and said
+    question = async (prompt) => { process.stdout.write(prompt); const { value, done } = await lines.next(); if (!process.stdin.isTTY) process.stdout.write("\n"); return done ? null : String(value); };
+    const fromRegistry = keep && Object.keys(keep).length ? keep : null;
+    console.log(`What about ${name} must never change? Type each trait like skin=dark brown, with commas between them.`);
+    if (fromRegistry && recordedKeep && !keepFlags.length) console.log(`  Last time you recorded: ${pairs(fromRegistry)}. Press Enter to keep that, or type the whole list you want instead.`);
+    else if (fromRegistry) console.log(`  The registry says: ${pairs(fromRegistry)}. Press Enter to keep that, or type the whole list you want instead.`);
+    else console.log("  Press Enter if nothing has to stay the same.");
+    let warned = null;
+    for (let tries = 1; ; tries++) {
+      const a1 = await question("> ");
+      const said = a1 === null ? "" : a1.trim();
+      const r = readKeep(said);
+      if (said && r.unread.length && tries < 5) { console.log(`  I could not read: ${r.unread.join("; ")}. Type each trait like skin=dark brown, with commas between them, or press Enter to keep ${fromRegistry ? "what the registry says" : "nothing fixed"}.`); continue; }
+      const candidate = said ? (Object.keys(r.keep).length ? r.keep : null) : fromRegistry;
+      // a trait or value that no picture's tags have is usually a typo; say what the tags have, and accept it if typed again
+      const probs = mismatches(candidate);
+      if (probs.length && a1 !== null && said !== warned && tries < 5) {
+        warned = said;
+        for (const p of probs) console.log(`  Check this: ${p}.`);
+        console.log(`  Type it the way your tags say it, or ${said ? "type the same answer again" : "press Enter again"} to keep it anyway.`);
+        continue;
+      }
+      if (!said) { keep = fromRegistry; break; }
+      keep = candidate;
+      const dropped = fromRegistry && keep ? Object.keys(fromRegistry).filter((k) => !Object.keys(keep).some((x) => low(x) === low(k))) : [];
+      if (dropped.length) console.log(`  That replaces the registry's list, so ${dropped.map((k) => `${k}=${fromRegistry[k]}`).join(", ")} is not kept this time.`);
+      break;
+    }
+    console.log(`  Using: ${keep ? pairs(keep) : "nothing fixed"}.`);
     console.log("For everything else, which look do you want?");
     console.log("  1. fewest redraws (default)");
     console.log("  2. the first look");
     console.log("  3. the last look");
-    const a2 = (await question("> ")).trim().toLowerCase();
-    policy = /^(2|first)/.test(a2) ? "origin" : /^(3|last)/.test(a2) ? "terminal" : "consensus";
+    for (let tries = 1; ; tries++) {
+      const a2 = await question("> ");
+      if (a2 === null || !a2.trim()) { policy = "consensus"; break; }
+      const picked = readLook(a2);
+      if (picked) { policy = picked; break; }
+      if (tries >= 5) { policy = "consensus"; break; }
+      console.log(`  I did not understand "${a2.trim()}". Type 1, 2 or 3, or press Enter for fewest redraws.`);
+    }
+    console.log(`  Using: ${PLAIN[policy]}.`);
   }
   if (keep && !Object.keys(keep).length) keep = null;
   // policy canon with kept tags is keep + fewest redraws; the alias keeps its name in the report
   let result;
   try { result = chooseAnchor(rows, { policy, threshold, pruneZ, keep, canon: policy === "canon" ? keep : null, unreadable }); }
   catch (e) {
-    if (ask && /drifted off/.test(e.message)) console.error(`None of the pictures has what must never change (${pairs(keep)}). Paste the prompt sheet again, tag the new pictures, and ask again.`);
-    else console.error(e.message);
+    const theySay = Object.keys(keep || {}).map(tagsSay).filter(Boolean).join("; ");
+    const absent = Object.keys(keep || {}).filter((k) => !seen.has(low(k)));
+    const slug = String(entry?.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    if (absent.length && entry) {
+      console.error(`These tags have no ${absent.join(" or ")} at all, so they are probably not ${name}'s tags. Fix: check that the tags file is the one for ${name}${slug ? ` (tags-${slug}.jsonl)` : ""}, and that --character is ${id}`);
+      process.exit(1);
+    }
+    if (ask && /drifted off/.test(e.message)) console.error(`None of the pictures has what must never change (${pairs(keep)}).${theySay ? ` Your tags say: ${theySay}.` : ""} If your tags mean the same thing, write it the same way in both places. If the pictures really drifted, paste the prompt sheet again, tag the new pictures, and ask again.`);
+    else console.error(`${e.message}${/drifted off/.test(e.message) && theySay ? `. Your tags say: ${theySay}` : ""}`);
     process.exit(1);
   }
   const compare = comparePolicies(rows, { threshold, pruneZ, keep, canon: keep, unreadable });
@@ -238,6 +341,7 @@ async function main() {
   if (argv.includes("--json")) console.log(JSON.stringify({ ...result, prefer, compare, chosen_at: chosenAt, budget }, null, 2));
   else if (ask) {
     console.log(`Keep ${result.anchor.image} as the one true picture of ${name}.`);
+    if (!fs.existsSync(path.resolve(path.dirname(path.resolve(source)), result.anchor.image))) console.log(`  Note: ${result.anchor.image} is not in this folder. Check the picture's file name and its ending (.png, .jpg, .webp); the tags file must use exactly the same name.`);
     if (result.regenerate.length) console.log(`Redraw ${plural(result.regenerate.length, "picture")}: ${result.regenerate.join(", ")}.`);
     else console.log("Nothing to redraw.");
     if (result.keep && result.stats.excluded) console.log(`  ${plural(result.stats.excluded, "picture")} ${result.stats.excluded === 1 ? "lacks" : "lack"} what must never change (${pairs(result.keep)}) and ${result.stats.excluded === 1 ? "is" : "are"} always redrawn.`);
@@ -247,8 +351,13 @@ async function main() {
     const others = ["consensus", "origin", "terminal"].filter((p) => p !== result.method).map((p) => { const v = compare[p]; return v.unavailable ? `${PLAIN[p]} is not possible here (${v.unavailable})` : `${PLAIN[p]} would keep ${v.image} and redraw ${v.to_redo ?? "?"}`; });
     console.log(`If you answered differently: ${others.join("; ")}.`);
     if (id && entry && !write) {
-      const a3 = (await question(`Record this as ${name}'s anchor in the registry? [y/N] `)).trim().toLowerCase();
-      write = /^y/.test(a3);
+      const missing = !fs.existsSync(path.resolve(path.dirname(path.resolve(source)), result.anchor.image));
+      const replaces = entry.anchor?.image && entry.anchor.image !== result.anchor.image ? ` This replaces the anchor you recorded before, ${entry.anchor.image}.` : "";
+      console.log(missing
+        ? `Record this as ${name}'s anchor anyway? Its picture, ${result.anchor.image}, is not in this folder, so fix its name first if you can.${replaces} Type y and press Enter to record it, or just press Enter to skip.`
+        : `Record this as ${name}'s anchor in the registry?${replaces} Type y and press Enter to record it, or just press Enter to skip.`);
+      const a3 = ((await question("> ")) || "").trim().toLowerCase();
+      write = /^(y|ok|sure)/.test(a3);
       if (!write) console.log("Not recorded. Ask again when you have decided, or add --write to the command.");
     }
   } else {
@@ -272,6 +381,7 @@ async function main() {
     const rel = path.relative(registry._root, path.resolve(source));
     const imgAbs = path.resolve(path.dirname(path.resolve(source)), result.anchor.image);
     const sha = result.anchor.sha256 || (fs.existsSync(imgAbs) ? createHash("sha256").update(fs.readFileSync(imgAbs)).digest("hex") : undefined);
+    if (!fs.existsSync(imgAbs) && !ask) console.log(`anchor: warning: the anchor picture ${result.anchor.image} is not on disk here, so no fingerprint is recorded. Check the file name and its ending (.png, .jpg, .webp); the tags file must use exactly the same name`);
     entry.anchor = { image: path.isAbsolute(result.anchor.image) ? path.relative(registry._root, result.anchor.image) : path.relative(registry._root, imgAbs), ...(sha ? { sha256: sha } : {}), policy: result.policy, prefer, ...(result.keep ? { keep: result.keep } : {}), metric: defaults.metric || "cosine", order: result.anchor.order, chosen_at: chosenAt, embeddings: rel, stats: result.stats, why: result.basis };
     const { _file, _root, ...bare } = registry;
     writeJsonLike(_file, bare, fs.readFileSync(_file, "utf8"));

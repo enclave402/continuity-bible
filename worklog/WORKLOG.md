@@ -1,11 +1,14 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 45 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 48 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-18
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 17:30:46 (UTC-04:00) | fix | docs/layperson | [Third eighth-grade dry run fixed: recorded keep is the next default and a replacing yes is said; wrong tags file named; tag.mjs shows what Enter repeats and re-asks after a note; curly values located; JUNE, empty and command-filled scenes fail](entries/2026-10-18_17-30-46_third-eighth-grade-dry-run-fixed-recorded-keep-is-the-next-d.md) | agent:claude | closed |
+| 17:11:38 (UTC-04:00) | fix | docs/layperson | [Second eighth-grade dry run fixed: tag.mjs writes the tags file from questions; typos in traits are asked again, not billed as drift; near-tokens, rich-text scenes and .txt endings are named; each file box has its own typed command](entries/2026-10-18_17-11-38_second-eighth-grade-dry-run-fixed-tag-mjs-writes-the-tags-fi.md) | agent:claude | closed |
+| 16:50:33 (UTC-04:00) | fix | docs/layperson | [Eighth-grade dry run fixes: --ask reads what a beginner types and says it back; broken tokens fail the gate and render; JSON errors name the file, real line and cause; the tutorial and README teach Node, the terminal and making a file](entries/2026-10-18_16-50-33_eighth-grade-dry-run-fixes-ask-reads-what-a-beginner-types-a.md) | agent:claude | closed |
 | 16:20:45 (UTC-04:00) | note | integration | [Pull request 10 (layperson loose ends) merged into pull request 11's branch so one merge lands both; only the worklog conflicted (STATE kept both sides' facts, the index rebuilt).](entries/2026-10-18_16-20-45_pull-request-10-layperson-loose-ends-merged-into-pull-reques.md) | agent:claude | closed |
 | 14:31:46 (UTC-04:00) | fix | engine/anchor | [--ask now returns the prompt on a real terminal; layperson docs corrected where they disagreed with the engine or the code (unclear -> unknown, the network claim, the recorded-anchor block, the shot-to-shot command's prerequisites)](entries/2026-10-18_14-31-46_ask-now-returns-the-prompt-on-a-real-terminal-layperson-docs.md) | agent:claude | closed |
 | 15:07:15 (UTC-04:00) | note | state | [[REMOVAL] Session close (2026-10-18): STATE rewritten for main at 117f36c with pull requests 3 to 9 merged and pull request 10 open; next-session priority recorded: the layperson browser-first workflow proven on the drifted-lead case (live START-HERE run in a signed-in chatbot, before-and-after pairs, a deep-research prompt on shot-to-shot continuity norms).](entries/2026-10-18_15-07-15_removal-session-close-2026-10-18-state-rewritten-for-main-at.md) | agent:claude | closed |

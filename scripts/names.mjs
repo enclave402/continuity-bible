@@ -66,8 +66,47 @@ export function atomicLabels(characters, cards = []) {
   return { list, shared };
 }
 
+/**
+ * JSON.parse with an error a person can act on: the file, the line and column in that file (computed from the parser's
+ * position, so it is right on every Node version and for one line of a .jsonl file), and the usual causes in plain words.
+ * firstLine is the file line the text starts on (a .jsonl row passes its own line number).
+ */
+export function parseJson(text, file = "this file", firstLine = 1) {
+  try { return JSON.parse(text); }
+  catch (e) {
+    const m = String(e.message).match(/position (\d+)/);
+    let pos = m ? Number(m[1]) : null;
+    // some errors carry no position ("Unexpected token '\u201c' ... is not valid JSON"): find that character, or a curly quote
+    if (pos === null) {
+      const tok = String(e.message).match(/Unexpected token '(.)'/);
+      const at = tok ? text.indexOf(tok[1]) : -1;
+      const curly = text.search(/[\u201c\u201d\u2018\u2019]/);
+      pos = at !== -1 ? at : curly !== -1 ? curly : null;
+    }
+    let line = firstLine, col = 1;
+    if (pos !== null) { const before = text.slice(0, pos); line = firstLine + (before.match(/\n/g) || []).length; col = pos - before.lastIndexOf("\n"); }
+    const lineText = text.split("\n")[line - firstLine] || "";
+    const hints = [];
+    const trimmed = text.trim();
+    if (!trimmed) hints.push("the file is empty. Copy the grey box with the file's text, then type the command that makes the file");
+    else if (/^(pbpaste|get-clipboard)\b/i.test(trimmed) || /^\s*(mac|windows):/im.test(trimmed)) hints.push("the file holds a command instead of the file's text. Copy the grey box with the file's text first, then type the command yourself; copying the command replaces the text you copied");
+    else if (/^```/.test(trimmed)) hints.push("the file starts with ``` from the page. Copy only the text inside the grey box");
+    else if (/^\s*\{\\rtf/.test(text)) hints.push("it was saved as rich text, not plain text: in TextEdit choose Format, then Make Plain Text, and save it again");
+    else if (/end of (json )?input/i.test(e.message)) hints.push("the file stops too early, as if part of it is missing. Copy the whole grey box again");
+    else {
+      if (/[\u201c\u201d\u2018\u2019]/.test(lineText)) hints.push("that line has curly quotes (\u201c \u201d); JSON needs straight quotes (\")");
+      if (pos !== null && /,\s*$/.test(text.slice(0, pos)) && /[}\]]/.test(text[pos] || "")) hints.push("there is a comma just before this } or ]; delete that comma");
+      if (!hints.length) hints.push("a missing or extra comma, quote or brace at that spot or just before it");
+    }
+    const err = new Error(`${file}${pos === null ? "" : `: line ${line}, column ${col}`}: this is not valid JSON. Likely cause: ${hints.join("; ")}.`);
+    err.code = "BAD_JSON";
+    err.exitCode = 1;
+    throw err;
+  }
+}
+
 export function loadNames(root) {
-  const read = (f) => JSON.parse(fs.readFileSync(path.join(root, f), "utf8"));
+  const read = (f) => parseJson(fs.readFileSync(path.join(root, f), "utf8"), f);
   const registry = read("character-registry.json");
   const characters = registry.characters || {};
   const cards = new Map();
