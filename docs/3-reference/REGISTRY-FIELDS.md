@@ -25,7 +25,7 @@ canonical: true
 | `species` | `{ name: [words] }` | a story's text may name only species of companions allowed in it; a companion called by another species' word fails |
 | `known[]` | `{ file, text, owner, task, date, why? }` | a matching failure prints as a gap while listed; a listed problem that no longer occurs asks to be removed |
 | `visual_continuity`, `skip_stories` | path, map | a sibling continuity manifest whose stories' scene and card files become surfaces |
-| `drift_resolution` | object | defaults for `scripts/anchor.mjs`: `policy` (`origin`, `terminal`, `consensus`, `mode`, `canon`), `metric`, `pass_threshold`, `prune_outliers_z`, `max_regeneration_budget`, `embeddings` |
+| `drift_resolution` | object | defaults for `scripts/anchor.mjs`: `prefer` (`fewest-redraws`, `first-look`, `last-look`, `most-common`) or its developer spelling `policy` (`consensus`, `origin`, `terminal`, `mode`, `canon`), `metric`, `pass_threshold`, `prune_outliers_z`, `max_regeneration_budget`, `embeddings` |
 
 ## Surfaces
 
@@ -54,9 +54,9 @@ Ids: lower-case letters, digits, hyphens.
 | `aliases[]` | other exact labels a surface uses |
 | `retired[]` | forms that may never return; found in any live file outside `records` unless a live name of the same entry is beside it |
 | `prompt_tokens`, `negative_tokens[]` | a prop's or companion's look, written once for prompt compilers |
-| `canon_tags{}` | who the character is, as image-readable tags written by the owner; the `canon` anchor policy keeps only images matching every one |
+| `canon_tags{}` | fixed traits: what must never change, as image-readable tags written by the owner; the default answer to the first drift question, so only images carrying every one are eligible to be the anchor and the rest are always on the redraw list (`--keep` overrides for one run) |
 | `continuity_ids[]`, `sources[]`, `first_appearance`, `born`, `ages{}`, `members[]`, `questions[]`, `prose_only`, `generic`, `notes` | cross-references the gate checks exist and agree |
-| `anchor` | `{ image, sha256?, policy, metric?, order?, chosen_at, embeddings?, stats?, why? }`: the visual anchor chosen after drift; a missing image file is a gap |
+| `anchor` | `{ image, sha256?, policy, prefer?, keep?, metric?, order?, chosen_at, embeddings?, stats?, why? }`: the visual anchor chosen after drift; `prefer` is the plain-named second answer, `keep` the fixed traits the choice was made within, `stats.kept` and `stats.excluded` how many images did and did not carry them; `stats.bill_basis` says whether the regeneration bill was by `cosine`, by `tags` (hand tags, no embeddings; `stats.tag_mismatches` is the count) or `none`; a missing image file is a gap |
 | `drift_resolution` | per-entry override of the top-level defaults |
 
 ## Tokens

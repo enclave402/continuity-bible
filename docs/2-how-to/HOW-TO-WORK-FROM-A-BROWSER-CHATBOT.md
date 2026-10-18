@@ -15,15 +15,15 @@ Outcome: you make every picture for a story by pasting into a chatbot tab, and t
 
 ## The loop
 
-1. Characters live in `character-registry.json`: id, name, `forms.look`, `canon_tags`.
+1. Characters live in `character-registry.json`: id, name, `forms.look`, `canon_tags` (the fixed traits: what must never change).
 2. Each scene is a file with tokens (`scene-NN.md`): story text and a picture prompt.
 3. `node ../scripts/check.mjs` passes.
 4. `node ../scripts/render.mjs scene-NN.md --out built/scene-NN.md` makes the prompt sheet.
 5. Paste the picture prompt (and attach the anchor picture if the chatbot allows it).
 6. Download into `renders/`, named by scene and order.
 7. Tag each picture by hand, one file per character.
-8. `node ../scripts/anchor.mjs tags-<id>.jsonl --policy canon --character <id>` and read the comparison.
-9. `--write` when you accept the choice. Back to 2.
+8. `node ../scripts/anchor.mjs tags-<id>.jsonl --character <id> --ask`, answer the two questions, read the redraw list and the prices of the other answers.
+9. Answer `y` to record the choice. Back to 2.
 
 Everything below is one of those steps in detail. All commands run inside your story folder, with the scripts one folder up.
 
@@ -68,33 +68,49 @@ A tags file is one line per picture, in order, in a strict format called JSON Li
 ```
 
 - **One file per character:** `tags-june.jsonl`, `tags-abel.jsonl`. A picture appears in a character's file only if that character is in it; `order` keeps the picture's number, so gaps are fine.
-- **Write the vocabulary before you tag.** The keys and the canon values are the character's `canon_tags` in the registry. Three to five keys per character, the ones that drift in practice: skin, hair, build, one garment, one signature object. Put them in the registry first; the tags file follows them.
+- **Write the vocabulary before you tag.** Three to five keys per character: the fixed traits in `canon_tags` (what must never change), plus the things that drift in practice and that you want question 2 to weigh: hair, build, one garment, one signature object. Put the fixed traits in the registry first; the tags file follows them.
 - **Same keys on every line.** A key missing from a line means that line cannot match canon.
-- **Canon values exactly as written in the registry.** The comparison is a case-insensitive exact match on the value, so `two puffs` matches `Two Puffs` but not `2 puffs`. Copy and paste the value.
-- **Anything else in two or three plain words.** `loose curls`, `grey`, `too light`. If you cannot tell from the picture, write `unclear`; it will not match canon, which is the honest result.
+- **Fixed-trait values exactly as written in the registry.** The comparison is a case-insensitive exact match on the value, so `two puffs` matches `Two Puffs` but not `2 puffs`. Copy and paste the value.
+- **Anything else in two or three plain words.** `loose curls`, `grey`, `too light`. If you cannot tell from the picture, write `unclear`; it will never match a fixed trait, which is the honest result.
 - **Tag what the picture shows, not what you asked for.** The prompt is not evidence. Open the picture at full size.
 - **Keep `order` ascending and matching the file names.**
 - **Double quotes, commas between fields, no comma before a closing brace.** A broken line stops the tool with an error that mentions `JSON` and a position; fix that line.
 - Keep the tags files in the story folder next to the registry. They are small text files and they are your record of what the AI actually produced.
 
-## 4. When to use canon, and when consensus
+## 4. The two questions
 
-| Policy | Picks | Right when | With hand tags only |
+```bash
+node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --ask
+```
+
+**Question 1: what about this character must never change?** Zero or more `tag=value` pairs. The registry answers it by default with the character's `canon_tags`; press Enter to accept, or type your own for this run. Only pictures carrying every one of these tags can be the anchor, and pictures without them are always on the redraw list, whatever you answer next. Put here what is a story fact (heritage markers, eye colour, a scar) and nothing that is merely what you asked for.
+
+**Question 2: for everything else, which look do you want?**
+
+| Answer | Keeps | Right when | With hand tags only |
 |---|---|---|---|
-| `canon` | among the pictures matching every `canon_tags` value, the one nearest their middle | the drift is a mistake and the character has a definition you wrote down | works; with no embeddings the first matching picture is taken |
-| `mode` | the most common tag combination, nearest its middle | a classifier or you can name the states and the common one is the right one | works; with no embeddings the first picture of the common group is taken |
-| `origin` | the first picture | the beginning is right and everything after is drift | works |
-| `terminal` | the last picture | the drift was a deliberate change you want to keep | works |
-| `consensus` | the picture nearest the middle of all pictures | you want the fewest corrections and you trust that the middle is the character | needs embeddings: `n/a` |
+| fewest redraws (default) | the look most of the eligible pictures already have | consistency throughout matters more than any particular endpoint | works; the most frequent tag combination among the eligible pictures |
+| the first look | the first eligible picture | you cast carefully and the first picture is the casting | works |
+| the last look | the last eligible picture | you changed the character on purpose and want the new look to win | works |
 
-Default to `canon`. The cheapest choice (`consensus`, or `mode`) keeps whatever most pictures already show, and most pictures show the drift. A lead who began mixed-race and darker-skinned and drifted lighter over a book is cheapest to keep light. That is arithmetic, not a decision. `canon_tags` is where you make the decision, in words you wrote before looking at the pile, and the comparison line prints every policy side by side so nobody picks the cheap one by accident.
+The answer is applied to the eligible pictures only, and the tool prints what the other two answers would have cost, so the choice is made on purpose. It never chooses for you.
 
-Use `consensus` when you have embeddings (section 5), the character has no written definition yet, and you genuinely want the centre of what exists. Use `terminal` when you changed the character on purpose mid-story and want the new look to win. Use `origin` when you cast carefully and the first picture is the casting.
+**Which to choose.** The cheapest answer keeps whatever most pictures already show, and most pictures may show the drift. A lead who began mixed-race and darker-skinned and drifted lighter over a book is cheapest to keep light. Both answers are legitimate; they serve different goals. The author of this repository's own case took *fewest redraws* for skin tone and hair (consistency throughout over any particular endpoint) and put the story facts in question 1 (she is one quarter Black; her eyes are amber-brown). If a look must not move, it is a fixed trait: write it into `canon_tags` once, and the price of insisting shows up as a longer redraw list.
 
-Set the default in the registry so it is declared, not remembered:
+**Under the hood**, for developers and for scripts, each answer is a policy name, and the questions are flags:
+
+| Answer | Flag | Policy |
+|---|---|---|
+| what must never change | `--keep tag=value` (repeatable; the registry's `canon_tags` when absent) | the filter every policy runs inside |
+| fewest redraws | `--prefer fewest-redraws` | `consensus` |
+| the first look | `--prefer first-look` | `origin` |
+| the last look | `--prefer last-look` | `terminal` |
+| most common | `--prefer most-common` | `mode` |
+
+`--policy canon` is keep + fewest redraws and stays as an alias. Set the default in the registry so it is declared, not remembered:
 
 ```json
-"drift_resolution": { "policy": "canon" }
+"drift_resolution": { "prefer": "fewest-redraws" }
 ```
 
 ## 5. What the engine cannot do without an API
@@ -103,19 +119,19 @@ An *embedding* is a long list of numbers a model computes from a picture so that
 
 Without them, in the anchor report:
 
-- There are no similarity scores, so there is no mean, no minimum and no threshold.
-- There is no regeneration list. The tool cannot tell you which pictures are too far from the anchor, because "far" is a number it does not have. With tags only, the pictures to redo are the ones whose tags differ from canon. Read them off the tags file; for four to ten pictures a scene, that takes a minute.
-- `consensus` is unavailable, and outlier pruning (`--prune-outliers`) does nothing.
-- `canon` and `mode` pick the first picture of their group instead of the one nearest the group's middle, since there is no middle to measure.
-- The `budget` in `drift_resolution` is never checked against anything, because the bill is not computed.
+- There are no similarity scores, so there is no mean, no minimum and no threshold. The tool cannot measure *how far* a picture drifted.
+- *Fewest redraws* is the most frequent tag combination among the eligible pictures, not the centre of a cloud of numbers. It picks the first picture of that group.
+- The redraw list is counted by tags, not by similarity: every picture that lacks a fixed trait, plus every eligible picture whose tags differ from the chosen one. A picture you did not tag is on the list, because nothing shows it matches. The answer says `Counted by your tags, not measured by a model`, the developer report says `bill by tags, not by similarity`, and the recorded anchor carries `"bill_basis": "tags"`. A tag bill is exactly as good as your tagging (section 3).
+- Outlier pruning (`--prune-outliers`) does nothing.
+- The `budget` in `drift_resolution` is checked against the tag bill as it would be against a similarity bill.
 
-What tags still give you, with no model at all: a stated policy, a recorded anchor with the file's fingerprint and the reason, and a comparison that shows when the cheap policy would have picked the drift. That is the decision; the API would only price it.
+What tags give you, with no model at all: your two answers, a recorded anchor with the file's fingerprint and the reason, the list of pictures to redraw, and the price of each other answer. That is the whole decision. A model would add the measurement: how far each picture is from the anchor, as a number, and with it a centroid instead of a head count and pruning of broken renders.
 
-When you do have a model, each tags line gains an `"embedding": [...]` field and everything above switches on: scores, the regeneration list, `consensus`, pruning, the budget. How to produce the rows, which encoder family fits which job, and the licence caveats: [How to resolve character drift after the fact](HOW-TO-RESOLVE-CHARACTER-DRIFT.md).
+When you do have a model, each tags line gains an `"embedding": [...]` field and the report switches to similarity: scores, a threshold, pruning, and a bill by distance instead of by tags. How to produce the rows, which encoder family fits which job, and the licence caveats: [How to resolve character drift after the fact](HOW-TO-RESOLVE-CHARACTER-DRIFT.md).
 
 ## 6. Change a name or a look
 
-Edit the registry only. Render every scene again. Paste again. Pictures you already made do not change: decide whether the old anchor still stands (a renamed character looks the same) or whether the look changed on purpose (then the next good picture is the new anchor; `terminal` is the policy for that, or `--write` after you pick it).
+Edit the registry only. Render every scene again. Paste again. Pictures you already made do not change: decide whether the old anchor still stands (a renamed character looks the same) or whether the look changed on purpose (then ask again and answer *the last look*, so the new look wins).
 
 Never edit `built/`. Never edit a scene to match a picture. The registry is upstream of everything.
 
@@ -127,9 +143,10 @@ Never edit `built/`. Never edit a scene to match a picture. The registry is upst
 | `token_sources "scene-*.md" matches no tracked file` | the registry names scene files that do not exist yet | write the first scene, then run again |
 | `names "June" in a token source. Fix: write {{june-okafor}}` | a name or a look was typed into a scene file | replace it with the token |
 | `unknown token {{june-okafer}}` | a token with a typo, or an id not in the registry | fix the spelling, or add the character |
-| `canon needs the character's canon_tags in the registry or --canon tag=value` | you ran `canon` without `--character <id>`, or the entry has no `canon_tags` | add `--character <id>`; write the tags |
-| `no image matches canon {...}: every image has drifted off canon` | nothing you tagged matches the definition | paste the sheet again, tag the new pictures, run again |
-| `consensus needs embeddings on the rows` | tags only | use `canon`, `mode`, `origin` or `terminal` |
+| `None of the pictures has what must never change (...)` (or, on one line, `no image keeps {...}: every image has drifted off what must never change`) | nothing you tagged carries every fixed trait | paste the sheet again, tag the new pictures, ask again |
+| `unknown --prefer ...` | a misspelled answer on the command line | one of `fewest-redraws`, `first-look`, `last-look`, `most-common` |
+| `consensus needs embeddings or tags on the rows` | the pictures have neither embeddings nor tags | tag them (section 3) |
+| `canon needs the character's canon_tags in the registry or --canon tag=value` | the old `--policy canon` spelling without fixed traits | use `--ask`, or `--keep tag=value` |
 | `--write needs --character <id> that exists in .../character-registry.json` | `--write` without a character, or an id that is not in the registry | add `--character <id>` with the id as written in the registry |
 | `SyntaxError: ... JSON at position N` | a broken line in a tags file | fix the quotes or commas on that line |
 | `gap: <id>.anchor.image ... is not on disk here` | the registry names an anchor picture the folder no longer holds | restore the file, or re-run `--write` |
