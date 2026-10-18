@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-18 10:37 EDT
-**HEAD:** e20708e
+**HEAD:** ad86d95
 **Date:** 2026-10-18
 **Session:** integration of pull requests 6 and 7 into pull request 8, so one merge lands all three; loop-closing fixes; the before-and-after handoff from pull request 7 folded in
 
