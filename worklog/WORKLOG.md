@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 44 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 45 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-18
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 17:11:38 (UTC-04:00) | fix | docs/layperson | [Second eighth-grade dry run fixed: tag.mjs writes the tags file from questions; typos in traits are asked again, not billed as drift; near-tokens, rich-text scenes and .txt endings are named; each file box has its own typed command](entries/2026-10-18_17-11-38_second-eighth-grade-dry-run-fixed-tag-mjs-writes-the-tags-fi.md) | agent:claude | closed |
 | 16:50:33 (UTC-04:00) | fix | docs/layperson | [Eighth-grade dry run fixes: --ask reads what a beginner types and says it back; broken tokens fail the gate and render; JSON errors name the file, real line and cause; the tutorial and README teach Node, the terminal and making a file](entries/2026-10-18_16-50-33_eighth-grade-dry-run-fixes-ask-reads-what-a-beginner-types-a.md) | agent:claude | closed |
 | 14:31:46 (UTC-04:00) | fix | engine/anchor | [--ask now returns the prompt on a real terminal; layperson docs corrected where they disagreed with the engine or the code (unclear -> unknown, the network claim, the recorded-anchor block, the shot-to-shot command's prerequisites)](entries/2026-10-18_14-31-46_ask-now-returns-the-prompt-on-a-real-terminal-layperson-docs.md) | agent:claude | closed |
 | 13:54:40 (UTC-04:00) | action | norms | [REPOSITORY-NORMS: the public example cast is the registry's Chloe, Sam and Theo only; a conflicting pull request is fixed by merging origin/main in the worktree (rules that had lived only in one agent's private memory).](entries/2026-10-18_13-54-40_repository-norms-the-public-example-cast-is-the-registry-s-c.md) | agent:claude | closed |
