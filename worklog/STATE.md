@@ -1,14 +1,14 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-18 10:37 EDT
-**HEAD:** 22b9236
+**Last rewritten:** 2026-10-18 15:07 EDT
+**HEAD:** 117f36c
 **Date:** 2026-10-18
-**Session:** integration of pull requests 6 and 7 into pull request 8, so one merge lands all three; loop-closing fixes; the before-and-after handoff from pull request 7 folded in
+**Session:** close of the 2026-10-18 session: state after pull requests 3 to 9 merged; next-session priority recorded
 
 ## 1. Current verified facts
 
 - WHAT: `PRODUCT.md`. HOW: `AGENTS.md` (alias `CLAUDE.md`). Routing: `.context/_index.md`. Norms: `docs/4-explanation/REPOSITORY-NORMS.md`.
-- `main` is at 11cbd2c (pull requests 3, 4 and 5, merged by the owner on 2026-10-17 22:18 EDT). Branch `claude/close-open-loops` (pull request 8) now contains pull request 6 (`claude/continuity-card-and-shot-sheet`) and pull request 7 (`claude/before-and-after-journey`) merged in, with their conflicts resolved once; merging pull request 8 lands all three, and GitHub marks 6 and 7 merged.
+- `main` is at 117f36c: pull requests 3 to 9 are merged (owner, 2026-10-17 and 2026-10-18). Pull request 10 (`claude/layperson-loose-ends`: the `--ask` hang on a real terminal and other layperson loose ends) is open. `CLAUDE.md` imports `AGENTS.md` (pull request 9), so every session opened here carries the repository rules.
 - Gate: `npm run verify` (names gate, tests, publication gate, worklog gate, research index, docs registry), green on this branch. The worklog gate counts helm lag on first-parent, non-merge commits.
 - Names: one registry, `{{id}}` tokens, render to built output, props by id, contextual forms, forbidden duplicate keys, exclusive markers, a coverage report (ADR-003). `tokenize.mjs` never rewrites a card's own `scene_name`.
 - Drift: two questions (ADR-004 and its amendments). What must never change (`--keep`, or the entry's `canon_tags`); for everything else, fewest redraws, first look, last look or most common (`--prefer`); `--ask` asks both in plain words. A kept tag the person could not read (default word `unknown`, the registry's `drift_resolution.unreadable` replaces it) is never drift: such a picture is not eligible as the anchor and is not billed for the kept tag. The bill is by cosine with embeddings and by tags without. `scripts/sheet.mjs` writes one static HTML page of every picture in the order it was made, coloured anchor, redraw, replaced, cannot tell, keep, from the same engine as the report, with the dated replacements record (`drift_resolution.replacements`) shown as before-and-after pairs. Both scripts run through a symlinked folder.
@@ -38,7 +38,8 @@
 
 ## 3. Prioritised next steps
 
-- [ ] **Next action:** the owner merges pull request 8 (`gh pr merge 8 --merge`), which lands 6 and 7 with it.
+- [ ] **Next action:** the owner merges pull request 10.
+- [ ] **Next session priority (owner, 2026-10-18): the layperson, browser-first workflow, proven on the drifted-lead case.** The tutorial has only been replayed with placeholder pictures; run `docs/1-tutorials/START-HERE.md` live in a signed-in browser chatbot. Show concrete before-and-after pairs from the published story's lead as the expository showcase. Structure shot-to-shot continuity for a person prompting in a browser chatbot with no API keys, no local servers and no command line. First step on re-open: a deep-research prompt, building on `research/corpus/prompts/continuity-norms-and-structures-prompt.md`, that audits existing shot-to-shot continuity norms and designs that browser workflow around the case.
 - [ ] Owner, optional: run `research/corpus/prompts/continuity-norms-and-structures-prompt.md` in a deep-research tool and drop the answer in Downloads; it is then carded, mined and verified, and each ADR-005 open loop closes against a finding id.
 - [ ] Before-and-after journey, what remains (handoff 2026-10-18 00:10 EDT; the anchor is confirmed and recorded privately, the page is corrected for the tag mistake):
   - [ ] Add a style-hold sentence to the redraw prompt (same line work, shading, texture, grain and colour grading as the kept picture). The author's verdict on the first candidates: "Skin feels too different from previous frame. If it was a new scene maybe. Even the art style feels like a change slightly".
