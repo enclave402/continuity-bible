@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 46 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 47 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-18
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 18:15:45 (UTC-04:00) | action | scripts/new-character | [new-character.mjs puts a reader's own characters into the registry by answering questions; START-HERE step 3 and the README quick start offer it with a real transcript; a fresh 13-year-old dry run added a girl and a robot and rendered both](entries/2026-10-18_18-15-45_new-character-mjs-puts-a-reader-s-own-characters-into-the-re.md) | agent:claude | closed |
 | 17:30:46 (UTC-04:00) | fix | docs/layperson | [Third eighth-grade dry run fixed: recorded keep is the next default and a replacing yes is said; wrong tags file named; tag.mjs shows what Enter repeats and re-asks after a note; curly values located; JUNE, empty and command-filled scenes fail](entries/2026-10-18_17-30-46_third-eighth-grade-dry-run-fixed-recorded-keep-is-the-next-d.md) | agent:claude | closed |
 | 17:11:38 (UTC-04:00) | fix | docs/layperson | [Second eighth-grade dry run fixed: tag.mjs writes the tags file from questions; typos in traits are asked again, not billed as drift; near-tokens, rich-text scenes and .txt endings are named; each file box has its own typed command](entries/2026-10-18_17-11-38_second-eighth-grade-dry-run-fixed-tag-mjs-writes-the-tags-fi.md) | agent:claude | closed |
 | 16:50:33 (UTC-04:00) | fix | docs/layperson | [Eighth-grade dry run fixes: --ask reads what a beginner types and says it back; broken tokens fail the gate and render; JSON errors name the file, real line and cause; the tutorial and README teach Node, the terminal and making a file](entries/2026-10-18_16-50-33_eighth-grade-dry-run-fixes-ask-reads-what-a-beginner-types-a.md) | agent:claude | closed |
