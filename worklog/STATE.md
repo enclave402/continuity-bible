@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-18 15:07 EDT
-**HEAD:** 117f36c
+**HEAD:** db76ae1
 **Date:** 2026-10-18
 **Session:** close of the 2026-10-18 session, with pull request 10 (layperson loose ends) folded in: state after pull requests 1 to 9 merged; next-session priority recorded
 

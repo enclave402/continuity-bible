@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 44 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 45 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-18
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 16:20:45 (UTC-04:00) | note | integration | [Pull request 10 (layperson loose ends) merged into pull request 11's branch so one merge lands both; only the worklog conflicted (STATE kept both sides' facts, the index rebuilt).](entries/2026-10-18_16-20-45_pull-request-10-layperson-loose-ends-merged-into-pull-reques.md) | agent:claude | closed |
 | 14:31:46 (UTC-04:00) | fix | engine/anchor | [--ask now returns the prompt on a real terminal; layperson docs corrected where they disagreed with the engine or the code (unclear -> unknown, the network claim, the recorded-anchor block, the shot-to-shot command's prerequisites)](entries/2026-10-18_14-31-46_ask-now-returns-the-prompt-on-a-real-terminal-layperson-docs.md) | agent:claude | closed |
 | 15:07:15 (UTC-04:00) | note | state | [[REMOVAL] Session close (2026-10-18): STATE rewritten for main at 117f36c with pull requests 3 to 9 merged and pull request 10 open; next-session priority recorded: the layperson browser-first workflow proven on the drifted-lead case (live START-HERE run in a signed-in chatbot, before-and-after pairs, a deep-research prompt on shot-to-shot continuity norms).](entries/2026-10-18_15-07-15_removal-session-close-2026-10-18-state-rewritten-for-main-at.md) | agent:claude | closed |
 | 13:54:40 (UTC-04:00) | action | norms | [REPOSITORY-NORMS: the public example cast is the registry's Chloe, Sam and Theo only; a conflicting pull request is fixed by merging origin/main in the worktree (rules that had lived only in one agent's private memory).](entries/2026-10-18_13-54-40_repository-norms-the-public-example-cast-is-the-registry-s-c.md) | agent:claude | closed |
