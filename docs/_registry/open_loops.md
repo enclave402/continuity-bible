@@ -10,5 +10,6 @@ One line per item: date, what, where it sits now, what would resolve it. Remove 
   - shot size words (`wide`, `medium`, `close-up`, `two-shot`, `insert`) and whether free-text eyeline and position suffice or screen direction and the 180-degree rule need fields;
   - carrying state across a day's scenes by file order with no timeline, and resetting at a day boundary;
   - the AVOID line built from exclusive markers (negative prompting of the other time's and place's words) on today's hosted tools;
-  - labelling people CHARACTER 1, 2 in the block instead of by name.
+  - labelling people CHARACTER 1, 2 in the block instead of by name;
+  - the render surface fields (`style_lock`, `must_keep`, `exclude`, `size`, `no_text`, `hands_rule`, ADR-005 amendment) against a style guide's, a model sheet's and a colour script's own fields, and the two-word rule for what counts as a retyped phrase.
 - 2026-10-17: the research findings layer holds the first findings merged from a local-model extraction; the checked subset covers only the sources verified through the arXiv API. Resolve by verifying the conference and vendor sources behind the numeric thresholds and promoting or correcting the findings that rest on them.

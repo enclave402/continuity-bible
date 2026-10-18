@@ -204,10 +204,11 @@ node ../scripts/compile-shot.mjs scene-02 --shot 2b
 CHARACTER 1: a nine-year-old girl with dark brown skin and black curls tied in two puffs. WEARING: yellow raincoat over striped jersey, blue dungarees, red boots. HAIR: two puffs, a little loose on the left. IN HAND: a dented tin matchbox with a faded blue label. ACTION: strikes the match, face lit from below. EYELINE: at the flame.
 SHOT: close-up. SETTING: the narrow iron walkway outside the top of the lighthouse, a railing, the sea far below. TIME: night. WEATHER: clear, a cold wind off the sea.
 CHANGED SINCE THE LAST SHOT: nothing.
-AVOID: lighter, cardboard matchbox, dusk, sunset, orange sky.
+KEEP (Picture-book page, landscape, wider than tall): children's picture-book illustration, soft watercolor; the characters exactly as in the anchor pictures; every hand shows five fingers.
+AVOID: lighter, cardboard matchbox, dusk, sunset, orange sky, modern clothes, extra people, speech bubbles, text.
 ```
 
-The matchbox is in June's hand because, two shots earlier, the sheet says Abel handed it to her and why. Take that reason out, or write *sunset* into a night shot, and the gate stops with the line to fix. The two files and the whole walk: [How to keep continuity from shot to shot](docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md).
+The matchbox is in June's hand because, two shots earlier, the sheet says Abel handed it to her and why. Take that reason out, or write *sunset* into a night shot, and the gate stops with the line to fix. The last two lines come from a *render surface*: where will this picture be used? A page of the book has its own look rules, a sticker has others; each is written once in the registry, every prompt gets the right ones, and a template that retypes a rule is refused. The two files and the whole walk: [How to keep continuity from shot to shot](docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md).
 
 ## For developers
 
@@ -225,6 +226,7 @@ The same engine runs the name build of a published 82-scene graphic novel. Plain
 | `forbid_keys` on a manifest: `visualDescription` is owned by the scene file | fails a manifest entry that still carries its own copy |
 | `canon_tags` on an entry, `drift_resolution` defaults | `scripts/anchor.mjs` picks and records a visual anchor (`origin`, `terminal`, `consensus`, `mode`, `canon`) over any encoder's embeddings or hand tags; the regeneration bill is by cosine with embeddings and by tags without (`stats.bill_basis`); `--write` stores it under `characters.<id>.anchor` |
 | A `continuity-cards` surface (how each character starts each story day) and a `shot-sheet` surface (scenes and shots in order) | `carryContinuity()` in `scripts/lib.mjs` carries wardrobe, hair, accessories, marks and carried props shot by shot; the gate fails a change without a reason, a prop in a hand that never received it, a missing card, a contradicted time or place; `scripts/compile-shot.mjs` renders one block per shot, character first, AVOID from the declared vocabularies |
+| `render_surfaces` (where a picture will be used: name, `style_lock`, `must_keep`, `exclude`, `size`, `no_text`, `hands_rule`, `why`) and `render_templates` globs | every shot names its surface; the block ends with KEEP and AVOID compiled from it; a template, prompt or token source that retypes a rule phrase verbatim fails with the file, the phrase and "read it from the surface" |
 
 From the repository root:
 

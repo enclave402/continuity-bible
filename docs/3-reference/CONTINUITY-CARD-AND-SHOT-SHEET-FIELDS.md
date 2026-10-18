@@ -11,7 +11,7 @@ canonical: true
 
 # Continuity card and shot sheet fields
 
-Two files carry a story's state from one shot to the next. The **continuity cards** (`scripts/continuity-cards.v1.schema.json`) say how each character starts each story day. The **shot sheet** (`scripts/shot-sheet.v1.schema.json`) lists the scenes in reading order with their shots; every shot inherits the previous shot's state and only a change with a reason alters it. Both are declared in `character-registry.json` as surfaces, checked by `scripts/check.mjs`, and compiled into a pasteable block by `scripts/compile-shot.mjs`. How to use them: [HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md](../2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md). Why they look like this: [ADR-005](../4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md). The example pair: `examples/continuity/cards.json`, `examples/continuity/shot-sheet.json`.
+Two files carry a story's state from one shot to the next, and one registry block says where each picture will be used. The **continuity cards** (`scripts/continuity-cards.v1.schema.json`) say how each character starts each story day. The **shot sheet** (`scripts/shot-sheet.v1.schema.json`) lists the scenes in reading order with their shots; every shot inherits the previous shot's state and only a change with a reason alters it. Both are declared in `character-registry.json` as surfaces, checked by `scripts/check.mjs`, and compiled into a pasteable block by `scripts/compile-shot.mjs`. The registry's `render_surfaces` (a story page, a product card, a cover) hold each place's look rules once; a shot names its surface and the block ends with KEEP and AVOID lines from it. How to use them: [HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md](../2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md). Why they look like this: [ADR-005](../4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md). The example pair: `examples/continuity/cards.json`, `examples/continuity/shot-sheet.json`.
 
 Keys starting with `_` are notes anywhere in either file: never validated, never scanned. Every other string is a token source: a written-out name or look fails the gate with the token to write, exactly as in a scene file. Props are ids, never names.
 
@@ -91,7 +91,9 @@ One continuity-cards surface and one shot-sheet surface per story, under `surfac
 | `time_of_day` | the in-story clock. Declare the words each value owns under the surface's `exclusive_markers` |
 | `weather` | overrides the day's weather for this scene |
 | any other scalar on the header (`stage`, `season`) | context for contextual forms in every shot of the scene: `{{brass-key:attitude}}` picks its variant by the scene's `stage` |
+| `surface` (header) | where every shot of the scene will be used: a key of the registry's `render_surfaces`. Required on the header or on each shot once any surface is declared |
 | `shots[].id` | short and unique within the scene (`14a`); defaults to the position |
+| `shots[].surface` | where this shot will be used, when it differs from the scene's |
 | `shots[].size` | shot size in the usual words: wide, medium, close-up, two-shot, insert |
 | `shots[].characters[]` | who is in the shot, in the order the block lists them (CHARACTER 1, 2, ...). A token (`{{sam-hayes}}`) or `{ who, action, eyeline, position, holding }`, all but `who` optional. `holding` lists prop ids visibly in hand in this shot |
 | `shots[].action` | the staging of the whole shot, when one line for everyone is clearer than a line per person |
@@ -105,6 +107,44 @@ One continuity-cards surface and one shot-sheet surface per story, under `surfac
 | wardrobe, hair, accessories, marks, what each person carries, within a story day and across its scenes | every change to those, as `changes[]` |
 | the scene's story day, location, time of day and weather, to every shot in the scene | the scene header itself: a new scene says where and when |
 | nothing across a story day boundary: the new day starts from the cards | the next day's card, including any mark that is still there |
+
+## Render surfaces: where a picture will be used
+
+`character-registry.json` holds `render_surfaces`, one entry per kind of picture, and `render_templates`, the globs of the files that assemble prompts. Every value is the author's own words; the engine ships no rule phrase and the compiler holds none.
+
+```json
+"render_surfaces": {
+  "story-scene": {
+    "name": "Story scene",
+    "style_lock": "painted graphic-novel panel, muted palette, visible brush texture, one light source",
+    "must_keep": ["faces as in the anchor pictures", "props exactly as described, nothing added to them"],
+    "exclude": ["packaging", "blister pack", "price tags", "logos", "speech bubbles", "panel borders"],
+    "size": "3:2 landscape",
+    "no_text": true,
+    "hands_rule": "every hand shows all five fingers, none extra, none merged",
+    "why": "a page of the story: nothing on it may look like merchandise, and the letterer places every word later"
+  },
+  "product-card": { "name": "Product card", "continuity": false, "...": "..." }
+},
+"render_templates": ["examples/templates/**"]
+```
+
+| Field | Meaning | In the block |
+|---|---|---|
+| `name` | plain-language name; required | the KEEP label |
+| `style_lock` | the style that must hold on this surface | KEEP |
+| `must_keep` | a line or a list of lines every picture must keep | KEEP |
+| `exclude` | a line or a list of things that may not appear | AVOID |
+| `size` or `aspect` | the format in words | the KEEP label, after the name |
+| `no_text` | `true`, or your own sentence about lettering | `true` adds the word `text` to AVOID; a sentence joins KEEP as written |
+| `hands_rule` | your rule for hands | KEEP |
+| `why` | why this surface has these rules | never printed |
+| `continuity` | `false` for a surface with no story continuity (a card, a cover) | its scenes need no `story_day`, `location` or `time_of_day`, its shots no cast; no CHANGED line; a sheet scene of its own is not compared with the story's scene file |
+| `render_templates[]` | globs of templates, builders and scripts that assemble prompts | none may retype a surface phrase; a glob matching no tracked file fails |
+
+**KEEP** is `style_lock`, then `must_keep`, then `hands_rule`, then a `no_text` sentence, joined by semicolons and labelled `KEEP (<name>, <size>)`. **AVOID** is the held props' and in-frame props' `negative_tokens`, then the other values' words of the sheet surface's exclusive markers, then the render surface's `exclude` list, then `text` when `no_text` is `true`. Tokens inside any rule are resolved like any other string.
+
+**The phrase gate.** A rule is written once, in the registry. A *phrase* is any `style_lock`, `must_keep`, `exclude`, `hands_rule` or `no_text` string of two or more words (a single word such as `hands` is AVOID vocabulary, not a rule, and ordinary prose may use it). The gate reads every file under `render_templates`, every structured surface (scene files, cards, sheets, prose data) and every `token_sources` file, and fails one that contains a phrase verbatim, case-insensitively: `<file>: <line or key>: retypes the render surface phrase "<phrase>" (render_surfaces.<id>.<field>). Fix: read it from the surface: node scripts/compile-shot.mjs prints KEEP and AVOID from render_surfaces.<id>, and a builder reads that entry from the registry`. It is the same inverted gate the registry applies to names: the copy is refused, the owner is read. Documentation and tests are not scanned; the registry itself is the owner.
 
 ## What the gate checks
 
@@ -126,6 +166,10 @@ One continuity-cards surface and one shot-sheet surface per story, under `surfac
 | a sheet with no cards surface for its story | `the shot-sheet surface ... has no continuity-cards surface for the same story` |
 | a cast reference that is no id, token or known name, or a character of another story | `characters[0] "..." is no registry id, token or known name of main-story` |
 | a shape the schema refuses | `scenes.14-read-at-1152.shots[0]: unknown field charaters` |
+| a shot with no surface once any is declared | `shot 14a: has no surface: where will this picture be used? Fix: set "surface" on the shot or on the scene header, one of story-scene, product-card` |
+| a surface the registry does not declare, or a surface named when none is declared | `surface "poster" is not in render_surfaces (story-scene, product-card)`; `names surface "story-scene" but character-registry.json declares no render_surfaces` |
+| a template, token source or structured surface that retypes a rule phrase | `examples/templates/redo-prompt.md: line 9: retypes the render surface phrase "every hand shows all five fingers, none extra, none merged" (render_surfaces.story-scene.hands_rule). Fix: read it from the surface ...` |
+| a `render_templates` glob with no tracked file | `render_templates "templates/nowhere/**" matches no tracked file` |
 | gap: a mark that ends a day and is missing from the next card | `gap: ... Theo ended day-1 with marks [...] that this card does not list` |
 | gap: a sheet scene the story's scene file does not have | `gap: ... no scene "16-next-morning" in the story's scene file` |
 | gap: a scene with no shots | `gap: ... has no shots yet` |
@@ -145,13 +189,14 @@ CHARACTER 2: ...
 SHOT: <size>. SETTING: <location look>. TIME: <time_of_day>. WEATHER: <weather>.
 ALSO IN FRAME: <prompt_tokens of shots[].props>.
 STAGING: <shots[].action>.
-CHANGED SINCE THE LAST SHOT: <each change in words, people as CHARACTER n>.   (omitted on the first shot of a story day; "nothing" when the shot changes nothing)
-AVOID: <negative_tokens of held props and props in frame>, <every other value's words of each exclusive marker>.
+CHANGED SINCE THE LAST SHOT: <each change in words, people as CHARACTER n>.   (omitted on the first shot of a story day and on a surface without continuity; "nothing" when the shot changes nothing)
+KEEP (<surface name>, <size>): <style_lock>; <must_keep ...>; <hands_rule>; <no_text sentence>.
+AVOID: <negative_tokens of held props and props in frame>, <every other value's words of each exclusive marker>, <the surface's exclude list>, text.
 ```
 
-The character comes first and the setting after, because text encoders weight early tokens most and reordering a description changes the face (research finding `accp-26`). An empty list prints nothing; `IN HAND: nothing` is always printed, so empty hands are stated. A character is labelled by position, never by name, so a pasted block carries no name; set `lead` to a form of your own to open each line differently. Someone changed off-screen is named.
+The character comes first and the setting after, because text encoders weight early tokens most and reordering a description changes the face (research finding `accp-26`); the surface's rules close the block, where a style sentence steers without displacing the people. The header line carries no story day on a surface without continuity. An empty list prints nothing; `IN HAND: nothing` is always printed, so empty hands are stated. A character is labelled by position, never by name, so a pasted block carries no name; set `lead` to a form of your own to open each line differently. Someone changed off-screen is named.
 
-`--json` prints the same shots as data (`characters[].in_hand` as ids, `avoid`, `changes`, `block`). `--out` writes built output and says so; edit the sheet, never the output. The whole gate runs first: nothing is compiled from a sheet the gate fails. Exit 0 on success, 1 on a named problem, 2 on usage.
+`--json` prints the same shots as data (`characters[].in_hand` as ids, `avoid`, `changes`, `surface` with its `id`, `name`, `keep`, `avoid` and `continuity`, `block`). `--out` writes built output and says so; edit the sheet, never the output. The whole gate runs first: nothing is compiled from a sheet the gate fails. Exit 0 on success, 1 on a named problem, 2 on usage.
 
 ## Left out on purpose
 

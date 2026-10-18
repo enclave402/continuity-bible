@@ -484,6 +484,7 @@ function coverageProblems(registry, surfaces, root) {
     ...(registry.records || []),
     ...(registry.coverage?.ignore || []),
     ...(registry.token_sources || []).map((t) => t.file),
+    ...(registry.render_templates || []),
   ].map(globToRegExp);
   let unclassified = 0;
   for (const rel of tracked) {
@@ -597,6 +598,81 @@ const cloneState = (s) => ({ wardrobe: { ...s.wardrobe }, hair: s.hair, accessor
 const addAll = (list, items) => { for (const i of items) if (!list.includes(i)) list.push(i); };
 const removeAll = (list, items) => list.filter((x) => !items.includes(x));
 
+/** A render surface carries story continuity unless it says continuity: false (a product card, a cover). No surface, or an unknown one, counts as carrying. */
+export function surfaceCarriesContinuity(id, renderSurfaces) {
+  return !id || !renderSurfaces?.[id] || renderSurfaces[id].continuity !== false;
+}
+
+/** A scene carries story continuity when it has no shots yet or any shot renders for a surface that does. */
+export function sceneCarriesContinuity(scene, renderSurfaces) {
+  const shots = Array.isArray(scene?.shots) ? scene.shots : [];
+  const sid = (shot) => (filled(shot?.surface) ? String(shot.surface).trim() : filled(scene?.surface) ? String(scene.surface).trim() : undefined);
+  return !shots.length || shots.some((s) => surfaceCarriesContinuity(sid(s), renderSurfaces));
+}
+
+/**
+ * The author's own rule phrases, per render surface and field: what no template, token source or declared script may retype.
+ * A phrase is two or more words (a single word such as "hands" or "packaging" is AVOID vocabulary, not a rule, and ordinary
+ * prose may use it); the phrase is matched verbatim, case-insensitively.
+ */
+export function renderPhrases(renderSurfaces) {
+  const out = [];
+  for (const [id, s] of Object.entries(renderSurfaces || {})) {
+    if (id.startsWith("_") || !s || typeof s !== "object") continue;
+    const add = (field, v) => { for (const p of listOf(v)) if (/\s/.test(p) && p.replace(/[^A-Za-z]/g, "").length >= 4) out.push({ phrase: p, at: `render_surfaces.${id}.${field}`, surface: id }); };
+    add("style_lock", s.style_lock);
+    add("must_keep", s.must_keep);
+    add("exclude", s.exclude);
+    add("hands_rule", s.hands_rule);
+    if (typeof s.no_text === "string") add("no_text", s.no_text);
+  }
+  return out;
+}
+
+/**
+ * The inverted gate for render rules, the same shape as the one for names: a surface's phrases are written once, in the
+ * registry, and every declared template (render_templates globs), token source and structured surface that retypes one
+ * verbatim fails with the file, the phrase and the fix. A rule copied into a template goes stale the day the surface
+ * changes; the compiler and the builders read the surface instead.
+ */
+function renderPhraseProblems(registry, surfaces, root) {
+  const failures = [];
+  const phrases = renderPhrases(registry.render_surfaces);
+  const tracked = textFiles(root);
+  const files = new Map(); // abs -> { rel, skip }
+  const declare = (rel, skip = []) => { const abs = fromRoot(root, rel); if (fs.existsSync(abs) && fs.statSync(abs).isFile()) files.set(abs, { rel, skip: new Set(skip) }); };
+  let templates = 0;
+  for (const g of registry.render_templates || []) {
+    const re = globToRegExp(g);
+    const hits = tracked.filter((rel) => re.test(rel));
+    if (!hits.length && !fs.existsSync(fromRoot(root, g))) failures.push(`${registry._file}: render_templates "${g}" matches no tracked file. Fix: correct the glob or remove it`);
+    for (const rel of hits.length ? hits : [g]) { declare(rel); templates += 1; }
+  }
+  const count = Object.keys(registry.render_surfaces || {}).filter((k) => !k.startsWith("_")).length;
+  if (!phrases.length) return { failures, templates, surfaces: count };
+  for (const s of surfaces) if (!s.error && ["scenes", "continuity", "prose", "continuity-cards", "shot-sheet"].includes(s.type)) declare(s.file, s.skip_keys || []);
+  for (const t of registry.token_sources || []) { const re = globToRegExp(t.file); for (const rel of tracked.filter((r) => re.test(r))) declare(rel, t.skip_keys || []); }
+  const self = path.relative(root, registry._file);
+  const hit = (text, where, rel, out) => {
+    const lower = String(text).toLowerCase();
+    for (const p of phrases) if (lower.includes(p.phrase.toLowerCase())) out.push(`${rel}: ${where}: retypes the render surface phrase "${p.phrase}" (${p.at}). Fix: read it from the surface: node scripts/compile-shot.mjs prints KEEP and AVOID from render_surfaces.${p.surface}, and a builder reads that entry from the registry`);
+  };
+  const walkStrings = (value, skip, where, rel, out) => {
+    if (typeof value === "string") return hit(value, where || "$", rel, out);
+    if (Array.isArray(value)) return value.forEach((v, i) => walkStrings(v, skip, `${where}[${i}]`, rel, out));
+    if (value && typeof value === "object") for (const [k, v] of Object.entries(value)) { if (k.startsWith("_") || k === "$schema" || skip.has(k)) continue; walkStrings(v, skip, where ? `${where}.${k}` : k, rel, out); }
+  };
+  for (const [abs, { rel, skip }] of files) {
+    if (rel === self) continue;
+    const out = [];
+    const text = fs.readFileSync(abs, "utf8");
+    if (rel.endsWith(".json")) { let json; try { json = JSON.parse(text); } catch { continue; } walkStrings(json, skip, "", rel, out); }
+    else text.split("\n").forEach((line, i) => hit(line, `line ${i + 1}`, rel, out));
+    failures.push(...new Set(out));
+  }
+  return { failures, templates, surfaces: count };
+}
+
 /**
  * Carry state through one story's shot sheet, from its continuity cards. Pure: takes the two parsed files, returns the
  * compiled scenes (each shot with every present character's state after that shot's changes, the changes applied and what
@@ -611,9 +687,10 @@ const removeAll = (list, items) => list.filter((x) => !items.includes(x));
  *   - a character holds only what they carry at that moment: the card, an earlier add, or a hand-over;
  *   - marks that end a story day and are missing from that character's next card are a gap (healed, or forgotten?).
  */
-export function carryContinuity({ cards, sheet, characters = {}, index, story, cardsFile = "the cards file", sheetFile = "the shot sheet", cardRequired = CARD_REQUIRED, sceneRequired = SCENE_REQUIRED }) {
+export function carryContinuity({ cards, sheet, characters = {}, index, story, cardsFile = "the cards file", sheetFile = "the shot sheet", cardRequired = CARD_REQUIRED, sceneRequired = SCENE_REQUIRED, renderSurfaces = null, registryFile = "character-registry.json" }) {
   const failures = [];
   const gaps = [];
+  const surfaceIds = renderSurfaces && typeof renderSurfaces === "object" ? Object.keys(renderSurfaces).filter((k) => !k.startsWith("_")) : [];
   const seen = []; // every cast or card reference, for the registry's usage count
   const nameOf = (id) => characters[id]?.name || id;
   const days = cards?.story_days || {};
@@ -660,7 +737,11 @@ export function carryContinuity({ cards, sheet, characters = {}, index, story, c
   };
   for (const [slug, scene] of Object.entries(sheet?.scenes || {})) {
     const at = `${sheetFile}: ${slug}`;
-    for (const f of sceneRequired) if (!filled(scene?.[f])) failures.push(`${at}: missing ${f}. Fix: every scene header says ${sceneRequired.join(", ")}${f === "story_day" && dayKeys.length ? ` (story days: ${dayKeys.join(", ")})` : ""}${f === "location" && locations ? ` (locations: ${Object.keys(locations).join(", ")})` : ""}`);
+    const shots = Array.isArray(scene?.shots) ? scene.shots : [];
+    const surfaceOf = (shot) => (filled(shot?.surface) ? String(shot.surface).trim() : filled(scene?.surface) ? String(scene.surface).trim() : undefined);
+    // a scene whose every shot renders for a surface without story continuity (a product card, a cover) needs no story day, place or time
+    const storyScene = sceneCarriesContinuity(scene, renderSurfaces);
+    if (storyScene) for (const f of sceneRequired) if (!filled(scene?.[f])) failures.push(`${at}: missing ${f}. Fix: every scene header says ${sceneRequired.join(", ")}${f === "story_day" && dayKeys.length ? ` (story days: ${dayKeys.join(", ")})` : ""}${f === "location" && locations ? ` (locations: ${Object.keys(locations).join(", ")})` : ""}`);
     const day = scene?.story_day;
     const dayOk = filled(day) && !!days[day];
     if (filled(day) && !days[day]) failures.push(`${at}: story_day "${day}" is not a key of story_days in ${cardsFile}${dayKeys.length ? ` (${dayKeys.join(", ")})` : ""}. Fix: add it there with a label, or correct it here`);
@@ -674,12 +755,17 @@ export function carryContinuity({ cards, sheet, characters = {}, index, story, c
       state.set(id, s);
       return s;
     };
-    const shots = Array.isArray(scene?.shots) ? scene.shots : [];
     if (!shots.length) gaps.push(`gap: ${at}: has no shots yet`);
     const compiled = { slug, ...scalarsOf(scene), day: dayOk ? days[day] : {}, place: locations?.[scene?.location] || {}, shots: [] };
     shots.forEach((shot, i) => {
       const shotId = filled(shot?.id) ? String(shot.id) : String(i + 1);
       const where = `${at}: shot ${shotId}`;
+      // where will this picture be used? a declared render surface, named on the shot or on the scene header
+      const sid = surfaceOf(shot);
+      if (surfaceIds.length) {
+        if (!sid) failures.push(`${where}: has no surface: where will this picture be used? Fix: set "surface" on the shot or on the scene header, one of ${surfaceIds.join(", ")}`);
+        else if (!renderSurfaces[sid]) failures.push(`${where}: surface "${sid}" is not in render_surfaces (${surfaceIds.join(", ")}). Fix: add it to render_surfaces in ${registryFile} with its look rules, or correct it here`);
+      } else if (sid) failures.push(`${where}: names surface "${sid}" but ${registryFile} declares no render_surfaces. Fix: declare render_surfaces there (name, style_lock, must_keep, exclude, size, no_text, hands_rule, why), or remove surface here`);
       const cast = [];
       (Array.isArray(shot?.characters) ? shot.characters : []).forEach((entry, j) => {
         const id = castId(entry, characters, index);
@@ -743,7 +829,7 @@ export function carryContinuity({ cards, sheet, characters = {}, index, story, c
         return { id: c.id, ...scalarsOf(Object.fromEntries(Object.entries(c.entry).filter(([k]) => k !== "who"))), holding, state: cloneState(s) };
       });
       const props = listOf(shot?.props).filter((p) => propOk(p, where, "props"));
-      compiled.shots.push({ id: shotId, index: i, ...scalarsOf(Object.fromEntries(Object.entries(shot || {}).filter(([k]) => k !== "id"))), characters: people, props, changes: applied, in_shot: inShot, first_of_day: dayOk && i === 0 && compiled.shots.length === 0 && Object.values(scenes).every((sc) => sc.story_day !== day) });
+      compiled.shots.push({ id: shotId, index: i, ...scalarsOf(Object.fromEntries(Object.entries(shot || {}).filter(([k]) => k !== "id"))), surface: sid, continuity: surfaceCarriesContinuity(sid, renderSurfaces), characters: people, props, changes: applied, in_shot: inShot, first_of_day: dayOk && i === 0 && compiled.shots.length === 0 && Object.values(scenes).every((sc) => sc.story_day !== day) });
     });
     scenes[slug] = compiled;
   }
@@ -916,7 +1002,7 @@ export function checkRegistry(registry) {
     try { cards = cardsAbs ? readJson(cardsAbs) : null; sheet = sheetAbs ? readJson(sheetAbs) : null; } catch (e) { failures.push(`${pair.story}: ${e.message}`); continue; }
     if (cards) for (const p of validate(readJson(CARDS_SCHEMA_PATH), withoutNotes(cards))) failures.push(`${pair.cards.file}: ${p}`);
     if (sheet) for (const p of validate(readJson(SHOT_SHEET_SCHEMA_PATH), withoutNotes(sheet))) failures.push(`${pair.sheet.file}: ${p}`);
-    const carried = carryContinuity({ cards, sheet, characters, index, story: pair.story, cardsFile: pair.cards?.file, sheetFile: pair.sheet?.file, cardRequired: pair.cards?.required || CARD_REQUIRED, sceneRequired: pair.sheet?.required || SCENE_REQUIRED });
+    const carried = carryContinuity({ cards, sheet, characters, index, story: pair.story, cardsFile: pair.cards?.file, sheetFile: pair.sheet?.file, cardRequired: pair.cards?.required || CARD_REQUIRED, sceneRequired: pair.sheet?.required || SCENE_REQUIRED, renderSurfaces: registry.render_surfaces, registryFile: path.basename(registry._file) });
     failures.push(...carried.failures);
     gaps.push(...carried.gaps);
     stats.labels += carried.labels;
@@ -941,7 +1027,7 @@ export function checkRegistry(registry) {
         markerProblems(pair.sheet, resolved, slug, failures, gaps);
         const link = typeof scene?.scene === "string" && scene.scene ? scene.scene : slug;
         const linked = storyScenes.get(link);
-        if (storyScenes.size && !linked) gaps.push(`gap: ${pair.sheet.file}: ${slug}: no scene "${link}" in the story's scene file; the sheet plans a scene the story does not have yet`);
+        if (storyScenes.size && !linked && sceneCarriesContinuity(scene, registry.render_surfaces)) gaps.push(`gap: ${pair.sheet.file}: ${slug}: no scene "${link}" in the story's scene file; the sheet plans a scene the story does not have yet`);
         if (linked) for (const f of ["time_of_day", "story_day", "stage"]) {
           if (scene?.[f] !== undefined && linked.scene?.[f] !== undefined && String(scene[f]) !== String(linked.scene[f])) failures.push(`${pair.sheet.file}: ${slug}: ${f} "${scene[f]}" but ${linked.file} says "${linked.scene[f]}". Fix: one of them is wrong; the picture follows the sheet, the page follows the scene, and they must agree`);
         }
@@ -952,6 +1038,11 @@ export function checkRegistry(registry) {
   const tokens = tokenSourceProblems(registry, surfaces, root);
   failures.push(...tokens.failures);
   stats.token_sources = tokens.sources;
+  // render surfaces: a rule phrase is written once, in the registry; a template or token source that retypes it fails
+  const rules = renderPhraseProblems(registry, surfaces, root);
+  failures.push(...rules.failures);
+  stats.render_surfaces = rules.surfaces;
+  stats.templates = rules.templates;
   const repo = scanRepo(registry, surfaces.filter((s) => !s.error).map((s) => fromRoot(root, s.file)));
   failures.push(...repo.failures);
   stats.files = repo.scanned;

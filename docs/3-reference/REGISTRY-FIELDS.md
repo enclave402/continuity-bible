@@ -25,6 +25,8 @@ canonical: true
 | `species` | `{ name: [words] }` | a story's text may name only species of companions allowed in it; a companion called by another species' word fails |
 | `known[]` | `{ file, text, owner, task, date, why? }` | a matching failure prints as a gap while listed; a listed problem that no longer occurs asks to be removed |
 | `visual_continuity`, `skip_stories` | path, map | a sibling continuity manifest whose stories' scene and card files become surfaces |
+| `render_surfaces` | `{ id: { name, style_lock?, must_keep?, exclude?, size? or aspect?, no_text?, hands_rule?, why?, continuity? } }` | where a picture will be used, each place's look rules written once in the author's words; a shot-sheet shot names one (`surface`), required once any is declared, an unknown one fails; `scripts/compile-shot.mjs` appends KEEP and AVOID from it; a template, token source or structured surface that retypes a phrase of two or more words verbatim fails with the file, the phrase and "read it from the surface". Fields: [CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md](CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md) |
+| `render_templates` | globs | the templates, builders and scripts that assemble prompts; scanned for retyped surface phrases; a glob matching no tracked file fails |
 | `drift_resolution` | object | defaults for `scripts/anchor.mjs`: `policy` (`origin`, `terminal`, `consensus`, `mode`, `canon`), `metric`, `pass_threshold`, `prune_outliers_z`, `max_regeneration_budget`, `embeddings` |
 
 ## Surfaces

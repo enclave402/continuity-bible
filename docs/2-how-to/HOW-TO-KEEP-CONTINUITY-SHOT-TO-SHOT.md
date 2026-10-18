@@ -11,7 +11,7 @@ canonical: true
 
 # How to keep continuity from shot to shot
 
-Outcome: for every picture in your story you paste one block that says what each character wears, carries and has on them right now, where they are, what time it is, and what changed since the last picture. You write each of those things once. The tool carries them forward and stops you when a coat vanishes, a prop jumps hands, or a night scene mentions the sunset. Field by field: [Continuity card and shot sheet fields](../3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md). Why it is built this way: [ADR-005](../4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md).
+Outcome: for every picture in your story you paste one block that says what each character wears, carries and has on them right now, where they are, what time it is, what changed since the last picture, and the look rules of the place the picture is for (a page, a sticker). You write each of those things once. The tool carries them forward and stops you when a coat vanishes, a prop jumps hands, a night scene mentions the sunset, or a prompt retypes a rule that lives on a surface. Field by field: [Continuity card and shot sheet fields](../3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md). Why it is built this way: [ADR-005](../4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md).
 
 This continues the [tutorial](../1-tutorials/START-HERE.md): you have `my-story/` with June, Abel and `scene-01.md`. All commands run inside `my-story`, with the scripts one folder up.
 
@@ -335,7 +335,160 @@ gap: continuity/cards.json: cards.abel-marsh.day-2: Abel ended day-1 with marks 
 
 Any key starting with `_` is a note for you (`"_notes": "he washed before bed"`); the tool never reads it.
 
-## 10. Messages you will see
+## 11. Where will this picture be used?
+
+A page of the book, a sticker for the back cover, a poster: each place has its own look rules. Write them once, in the registry, as *render surfaces*. Every shot says which surface it is for, and its block ends with a **KEEP** line and a longer **AVOID** line built from that surface. Nothing is retyped anywhere else: a scene prompt or a template that copies one of those rules fails the gate, because a copied rule goes stale the day you change the surface.
+
+Add two keys to `character-registry.json`, after `coverage`:
+
+```json
+  "render_surfaces": {
+    "page": {
+      "name": "Picture-book page",
+      "style_lock": "children's picture-book illustration, soft watercolor",
+      "must_keep": ["the characters exactly as in the anchor pictures"],
+      "exclude": ["modern clothes", "extra people", "speech bubbles"],
+      "size": "landscape, wider than tall",
+      "no_text": true,
+      "hands_rule": "every hand shows five fingers",
+      "why": "a page of the book: the words are printed later, never drawn"
+    },
+    "sticker": {
+      "name": "Sticker",
+      "style_lock": "flat vector sticker, thick white border, plain white background",
+      "must_keep": ["the prop alone, large and centred"],
+      "exclude": ["people", "scenery", "shadows"],
+      "size": "square",
+      "no_text": true,
+      "hands_rule": "no hands",
+      "why": "a sticker of the matchbox for the back cover; the page's look does not apply",
+      "continuity": false
+    }
+  },
+  "render_templates": ["templates/**"],
+```
+
+| Field | What to write |
+|---|---|
+| `name` | What you call this kind of picture. It labels the KEEP line. |
+| `style_lock` | The style that must hold on this surface. Joins KEEP. |
+| `must_keep` | Lines every picture on this surface must keep. Join KEEP. |
+| `exclude` | Things that may not appear here. Join AVOID. |
+| `size` | The shape, in words. Printed next to the name. |
+| `no_text` | `true` adds the word *text* to AVOID. Your own sentence about lettering goes into KEEP as written. |
+| `hands_rule` | Your rule for hands. Joins KEEP. |
+| `why` | For you. Never printed. |
+| `continuity` | `false` for a surface with no story continuity: a sticker, a cover, a shop card. Its scenes need no day, place or time, and their blocks have no CHANGED line. |
+| `render_templates` | Where your prompt templates live. None may retype a surface rule. |
+
+Every word of every rule is yours. The tool ships none.
+
+Create `my-story/templates/redo.md`, a template you will paste from when a picture has to be made again. It holds no rules; it points at the block:
+
+```markdown
+# Redo prompt
+
+Make this picture again. Keep the characters exactly as in the attached picture.
+
+<paste the block from: node ../scripts/compile-shot.mjs <scene> --shot <id>>
+
+Change only: <what was wrong last time>
+```
+
+In `continuity/shot-sheet.json`, give each scene header a first line `"surface": "page",` and add a third scene for the sticker, with no story day, no place, no time and nobody in it:
+
+```json
+    "sticker-matchbox": {
+      "surface": "sticker",
+      "shots": [
+        { "id": "s1", "props": ["the-matchbox"], "action": "{{the-matchbox}} alone, lid half open" }
+      ]
+    }
+```
+
+Now run the gate:
+
+```bash
+node ../scripts/check.mjs
+```
+
+```text
+scene-01.md: line 11: retypes the render surface phrase "children's picture-book illustration, soft watercolor" (render_surfaces.page.style_lock). Fix: read it from the surface: node scripts/compile-shot.mjs prints KEEP and AVOID from render_surfaces.page, and a builder reads that entry from the registry
+scene-01.md: line 16: retypes the render surface phrase "modern clothes" (render_surfaces.page.exclude). Fix: read it from the surface: node scripts/compile-shot.mjs prints KEEP and AVOID from render_surfaces.page, and a builder reads that entry from the registry
+scene-01.md: line 16: retypes the render surface phrase "extra people" (render_surfaces.page.exclude). Fix: read it from the surface: node scripts/compile-shot.mjs prints KEEP and AVOID from render_surfaces.page, and a builder reads that entry from the registry
+character registry: fail (3 problem(s))
+```
+
+It found the rules you typed into the tutorial's picture prompt: the style on line 11 and the avoid list on line 16. They live on the surface now, and the picture prompt may not carry a second copy. In `scene-01.md`, cut the style words off the front of line 11 and delete the *Avoid* line, so the picture prompt reads:
+
+```markdown
+## Picture prompt
+
+Warm dusk light. Inside the top of a lighthouse, a big brass lamp in the middle. Two characters:
+
+- {{june-okafor:look}}, holding the bottom of a wooden ladder, looking up.
+- {{abel-marsh:look}}, halfway up the ladder, reaching for the lamp.
+```
+
+```bash
+node ../scripts/check.mjs
+```
+
+```text
+character registry: pass (3 entries, 16 labels resolved on 2 surfaces, 3 token sources, 2 files scanned, 2 render surface(s), 1 template(s))
+```
+
+Compile the shot you pasted before. Two lines have joined it:
+
+```bash
+node ../scripts/compile-shot.mjs scene-02 --shot 2b
+```
+
+```text
+=== scene-02 · shot 2b (close-up) · day-1: The night the lamp is lit ===
+CHARACTER 1: a nine-year-old girl with dark brown skin and black curls tied in two puffs. WEARING: yellow raincoat over striped jersey, blue dungarees, red boots. HAIR: two puffs, a little loose on the left. IN HAND: a dented tin matchbox with a faded blue label. ACTION: strikes the match, face lit from below. EYELINE: at the flame.
+SHOT: close-up. SETTING: the narrow iron walkway outside the top of the lighthouse, a railing, the sea far below. TIME: night. WEATHER: clear, a cold wind off the sea.
+CHANGED SINCE THE LAST SHOT: nothing.
+KEEP (Picture-book page, landscape, wider than tall): children's picture-book illustration, soft watercolor; the characters exactly as in the anchor pictures; every hand shows five fingers.
+AVOID: lighter, cardboard matchbox, dusk, sunset, orange sky, modern clothes, extra people, speech bubbles, text.
+```
+
+KEEP is the page surface's `style_lock`, `must_keep` and `hands_rule`, in your words, labelled with its name and size. AVOID now ends with its `exclude` list and the word *text*. The same matchbox on the sticker:
+
+```bash
+node ../scripts/compile-shot.mjs sticker-matchbox
+```
+
+```text
+=== sticker-matchbox · shot s1 ===
+ALSO IN FRAME: a dented tin matchbox with a faded blue label.
+STAGING: the matchbox alone, lid half open.
+KEEP (Sticker, square): flat vector sticker, thick white border, plain white background; the prop alone, large and centred; no hands.
+AVOID: lighter, cardboard matchbox, people, scenery, shadows, text.
+```
+
+Same prop, from the same registry entry, two different pictures: the sticker's KEEP and AVOID come from the sticker surface, and because that surface says `"continuity": false` there is no story day, no setting, no time and no CHANGED line.
+
+Let the gate catch a copied rule. Add a line to `templates/redo.md` that says *Always: every hand shows five fingers.* and run the gate:
+
+```text
+templates/redo.md: line 9: retypes the render surface phrase "every hand shows five fingers" (render_surfaces.page.hands_rule). Fix: read it from the surface: node scripts/compile-shot.mjs prints KEEP and AVOID from render_surfaces.page, and a builder reads that entry from the registry
+character registry: fail (1 problem(s))
+```
+
+Take the line out. Then delete `"surface": "page"` from the `scene-02` header:
+
+```text
+continuity/shot-sheet.json: scene-02: shot 2a: has no surface: where will this picture be used? Fix: set "surface" on the shot or on the scene header, one of page, sticker
+continuity/shot-sheet.json: scene-02: shot 2b: has no surface: where will this picture be used? Fix: set "surface" on the shot or on the scene header, one of page, sticker
+character registry: fail (2 problem(s))
+```
+
+Put it back. Once any surface is declared, every shot says where it will be used.
+
+A rule is a phrase of two or more words. A single word in an `exclude` list (*people*, *shadows*) goes on the AVOID line but is not hunted in your prose, so a scene may still say that someone stands in the shadows.
+
+## 12. Messages you will see
 
 | Message | Meaning | Do |
 |---|---|---|
@@ -350,9 +503,13 @@ Any key starting with `_` is a note for you (`"_notes": "he washed before bed"`)
 | `no scene "scene-03" in continuity/shot-sheet.json. Scenes: ...` | you asked to compile a scene the sheet does not have | check the spelling, or add it |
 | `compile-shot: the gate fails (N problem(s)); nothing is compiled ...` | the sheet or the cards have a problem the lines above name | fix them, compile again |
 | `gap: ... ended day-1 with marks [...] that this card does not list` | a mark vanished between days without a word | list it on the new card, or note why it is gone |
+| `... shot 2a: has no surface: where will this picture be used?` | surfaces are declared and this shot names none | add `"surface"` to the shot or its scene header |
+| `... surface "poster" is not in render_surfaces (page, sticker)` | a surface you did not declare | add it to `render_surfaces`, or fix the spelling |
+| `... retypes the render surface phrase "..." (render_surfaces.page.hands_rule)` | a prompt or template copied a rule that lives on a surface | delete the copy; the block carries the rule |
+| `render_templates "templates/**" matches no tracked file` | the registry names a templates folder that does not exist yet | create the template, or remove the entry |
 
 ## Where to go next
 
-- Every field of both files and every check: [Continuity card and shot sheet fields](../3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md).
+- Every field of both files, the render surfaces and every check: [Continuity card and shot sheet fields](../3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md).
 - The reasoning, the research it rests on, and what the continuity-norms research still has to confirm: [ADR-005](../4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md).
 - The example story in this repository (three people, two props, three scenes): `examples/continuity/`, compiled with `node scripts/compile-shot.mjs 14-read-at-1152` from the repository root.

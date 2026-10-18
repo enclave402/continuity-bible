@@ -32,20 +32,21 @@
           "time_of_day": { "type": "string", "minLength": 1, "description": "The in-story clock (morning, evening). Declare the words each value owns under the surface's exclusive_markers." },
           "weather": { "type": "string", "description": "Overrides the story day's weather for this scene." },
           "scene": { "type": "string", "description": "The slug in the story's scene file when it differs from this key." },
+          "surface": { "type": "string", "minLength": 1, "description": "Where every shot of this scene will be used: a key of the registry's render_surfaces. A shot may name its own. Required on one or the other once any surface is declared." },
           "shots": {
             "type": "array",
             "minItems": 1,
             "description": "Shots in order. Any other scalar on the scene header (a stage, a season) is context for contextual forms in every shot.",
             "items": {
               "type": "object",
-              "required": ["characters"],
               "additionalProperties": false,
               "properties": {
                 "id": { "type": "string", "minLength": 1, "description": "Short and unique within the scene (14a). Defaults to the position." },
+                "surface": { "type": "string", "minLength": 1, "description": "Where this picture will be used, when it differs from the scene's: a key of render_surfaces." },
                 "size": { "type": "string", "description": "Shot size in the usual words: wide, medium, close-up, two-shot, insert." },
                 "characters": {
                   "type": "array",
-                  "description": "Who is in the shot, in the order the block lists them (CHARACTER 1, 2, ...). A token ({{id}}) or an object with who and that person's action, eyeline, position and holding.",
+                  "description": "Who is in the shot, in the order the block lists them (CHARACTER 1, 2, ...). A token ({{id}}) or an object with who and that person's action, eyeline, position and holding. May be left out for a shot with nobody in it (a prop on a card).",
                   "items": {
                     "anyOf": [
                       { "type": "string", "minLength": 1 },

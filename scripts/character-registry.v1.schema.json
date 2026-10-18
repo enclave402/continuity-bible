@@ -235,7 +235,33 @@
       },
       "description": "Every tracked text file is a surface, a token source, a record, or ignored here. A file that is none of those and names a character is reported, so the gate can never be silent about a file."
     },
-    "drift_resolution": { "$ref": "#/$defs/drift_resolution" }
+    "drift_resolution": { "$ref": "#/$defs/drift_resolution" },
+    "render_surfaces": {
+      "type": "object",
+      "description": "Where a picture will be used, each with its own look rules written once in your words: a story page, a cover, a product card. A shot names one (surface, on the shot or its scene header; required once any surface is declared); scripts/compile-shot.mjs appends KEEP and AVOID lines from it; no template, token source or declared script may retype a phrase of it (see render_templates). The engine ships no rule words.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "description": "Plain-language name: Story scene, Product card." },
+          "style_lock": { "type": "string", "description": "The style that must hold on this surface, in your words. Joins KEEP." },
+          "must_keep": { "description": "Expected a line or a list of lines every picture on this surface must keep; they join KEEP", "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "items": { "type": "string", "minLength": 1 } }] },
+          "exclude": { "description": "Expected a line or a list of things that may not appear on this surface; they join AVOID", "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "items": { "type": "string", "minLength": 1 } }] },
+          "size": { "type": "string", "description": "The size or format in words: 3:2 landscape, 1:1 square. Printed in the KEEP label." },
+          "aspect": { "type": "string", "description": "Alternative to size." },
+          "no_text": { "description": "Expected true (the word text joins AVOID) or your own sentence about lettering (joins KEEP as written)", "anyOf": [{ "type": "boolean" }, { "type": "string", "minLength": 1 }] },
+          "hands_rule": { "type": "string", "description": "Your rule for hands on this surface. Joins KEEP." },
+          "why": { "type": "string", "description": "Why this surface has these rules. Never printed." },
+          "continuity": { "type": "boolean", "description": "False for a surface that carries no story continuity (a product card, a cover): its scenes need no story_day, location or time_of_day, its shots need no cast, and its blocks carry no CHANGED line. Default true." }
+        }
+      }
+    },
+    "render_templates": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Globs of the templates, builders and scripts that assemble prompts. None may retype a render surface phrase verbatim: the gate fails the file and the phrase and says to read it from the surface. A glob that matches no tracked file fails."
+    }
   },
   "$defs": {
     "drift_resolution": {

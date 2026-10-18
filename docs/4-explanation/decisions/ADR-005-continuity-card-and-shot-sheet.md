@@ -45,6 +45,20 @@ A sibling system already does this privately: a continuity file with characters,
 - Everything the block says is in the files; nothing is inferred from pictures. Measuring whether the model obeyed the block is the anchor flow's job (ADR-004), not this one's.
 - A field that the norms research shows professionals rely on and this design lacks is added by amendment, never by a project hardcoding it.
 
+## Amendment, 2026-10-17: render surfaces are a declared structure, and no template may retype their rules
+
+**Context.** In the private consumer project a restage template was found hardcoding a sentence of look rules (keep the style, no text, every hand shows its digits, no packaging) that already lived as prose in the render program, while another surface of the same program, a product card, is deliberately packaging. The owner, the same evening: "we shouldn't be using hardcoding. It's brittle", and "this must be a structure in the deliverable". A rule copied into a template goes stale the day the surface changes, and a rule that is right for one surface is wrong for another.
+
+**Decision.**
+
+1. `character-registry.json` gains `render_surfaces`: one entry per kind of picture (a story scene, a product card, a cover), with a plain-language `name` and the fields the private project adopts the same night: `style_lock`, `must_keep`, `exclude`, `size` (or `aspect`), `no_text`, `hands_rule`, `why`, plus `continuity: false` for a surface that carries no story state. Every value is the author's own words; the engine ships only the example.
+2. The shot sheet gains `surface`, on a scene header or on a shot. Once any surface is declared every shot names one; an unknown surface fails; a surface named with none declared fails.
+3. `scripts/compile-shot.mjs` appends `KEEP (<name>, <size>)` from `style_lock`, `must_keep`, `hands_rule` and a `no_text` sentence, and extends AVOID with `exclude` and the word `text` when `no_text` is `true`. The script holds no rule phrase; the two example surfaces compile the same prop, the brass key, into two different blocks.
+4. `scripts/lib.mjs` gains the inverted gate for rules, the same shape as the one for names: every file matched by `render_templates` (declared globs, so nothing is hardcoded about where templates live), every structured surface and every token source that contains a surface phrase verbatim fails with the file, the phrase, its source field and the fix: read it from the surface. A phrase is two or more words; single words are AVOID vocabulary and prose may use them.
+5. The example registry declares two surfaces and a template; the tests plant a retyped rule in the template and in a token source, an unknown surface, a missing surface, a surface with none declared and a glob with no file, and expect each to be named.
+
+**Consequences.** The rules reach every prompt through the compiled block and only through it; a change to a surface changes every later block and no template. The how-to's walk shows the gate finding the tutorial's own picture prompt retyping the page surface's style and exclusions, and the reader moving them to the surface, which is the private project's case in public form. The field names mirror the private project's so its export is a copy, not a translation; whether they match the names professionals use for a style guide and a model sheet is a further open loop for the continuity-norms research (below).
+
 ## Open loops the continuity-norms research should confirm or correct
 
 Each is also a line in `docs/_registry/open_loops.md`; the answer to the carded prompt becomes a card, and each loop closes against a finding id.
@@ -56,3 +70,4 @@ Each is also a line in `docs/_registry/open_loops.md`; the answer to the carded 
 5. Carrying state across scenes of a day by file order, with no explicit timeline, and resetting at a day boundary.
 6. The AVOID line built from exclusive markers: whether negative prompting of the other time or place words helps or hurts on today's hosted tools (`accp-13` warns that re-describing fixed features hurts; the AVOID words describe what is not in the shot).
 7. Labelling people CHARACTER 1, 2 in the block instead of by name.
+8. The render surface fields (`style_lock`, `must_keep`, `exclude`, `size`, `no_text`, `hands_rule`) against the fields of a style guide, a model sheet and a colour script; and the two-word rule for what counts as a retyped phrase.

@@ -5,7 +5,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { carryContinuity } from "../scripts/lib.mjs";
+import { carryContinuity, renderPhrases } from "../scripts/lib.mjs";
 import { wardrobeLine } from "../scripts/compile-shot.mjs";
 
 const SKIP = new Set([".git", "node_modules", ".worktrees", ".context", "research"]);
@@ -58,7 +58,7 @@ test("the block puts the character first, builds AVOID from props and the declar
   assert.match(lines[1], /MARKS: fresh scrape across the right knuckles/);
   assert.match(w, /^SHOT: medium\. SETTING: a carpenter's workshop[^\n]*TIME: evening\. WEATHER: clear and cold\.$/m);
   assert.match(w, /^ALSO IN FRAME: a small tarnished brass key on a frayed red thread\.$/m);
-  assert.match(w, /^AVOID: shiny gold key, keyring, morning, sunrise, dawn, daylight, porch, doorstep, front door, kitchen, stove, fridge, kettle\.$/m);
+  assert.match(w, /^AVOID: shiny gold key, keyring, morning, sunrise, dawn, daylight, porch, doorstep, front door, kitchen, stove, fridge, kettle, packaging, blister pack, price tags, logos, speech bubbles, panel borders, text\.$/m, "props, the other markers' words, then the render surface's exclude list and the word text for no_text: true");
   const k = spawnSync(process.execPath, ["scripts/compile-shot.mjs", "14-read-at-1152", "--shot", "14b", "--json"], { encoding: "utf8" });
   const json = JSON.parse(k.stdout);
   assert.equal(json.shots.length, 1);
@@ -148,7 +148,7 @@ test("a shot sheet without continuity cards for its story fails", () => {
 test("marks that end a story day and vanish from the next day's card are a gap, not a failure", () => {
   const dir = copyRepo();
   editJson(dir, CARDS, (j) => { j.story_days["day-2"] = { label: "The morning after" }; j.cards["theo-vance"]["day-2"] = { wardrobe: "the same work clothes", hair: "wet from the shower", marks: [] }; });
-  editJson(dir, SHEET, (j) => { j.scenes["16-next-morning"] = { story_day: "day-2", time_of_day: "morning", location: "workshop", shots: [{ id: "16a", characters: [{ who: "{{theo-vance}}", action: "unlocks the shutter" }] }] }; });
+  editJson(dir, SHEET, (j) => { j.scenes["16-next-morning"] = { surface: "story-scene", story_day: "day-2", time_of_day: "morning", location: "workshop", shots: [{ id: "16a", characters: [{ who: "{{theo-vance}}", action: "unlocks the shutter" }] }] }; });
   editJson(dir, "examples/scenes.json", (j) => { j.scenes["16-next-morning"] = { title: "Next morning", time_of_day: "morning", characters: ["{{theo-vance}}"], narration: "{{theo-vance}} unlocked the shutter." }; });
   const r = check(dir);
   const c = run(dir, "compile-shot.mjs", ["16-next-morning"]);
@@ -174,6 +174,54 @@ test("compile-shot refuses a sheet the gate fails, and names an unknown scene or
   const shot = spawnSync(process.execPath, ["scripts/compile-shot.mjs", "14-read-at-1152", "--shot", "14z"], { encoding: "utf8" });
   assert.equal(shot.status, 1);
   assert.match(shot.stderr, /no shot "14z" in 14-read-at-1152\. Shots: 14a, 14b, 14c/);
+});
+
+test("render surfaces: the same prop compiles two different blocks, one per surface; a card scene carries no story continuity", () => {
+  const story = spawnSync(process.execPath, ["scripts/compile-shot.mjs", "15-across-town"], { encoding: "utf8" }).stdout;
+  const card = spawnSync(process.execPath, ["scripts/compile-shot.mjs", "card-brass-key"], { encoding: "utf8" }).stdout;
+  assert.match(story, /^KEEP \(Story scene, 3:2 landscape\): painted graphic-novel panel, muted palette, visible brush texture, one light source; faces as in the anchor pictures; props exactly as described, nothing added to them; every hand shows all five fingers, none extra, none merged\.$/m);
+  assert.match(story, /^ALSO IN FRAME: a small tarnished brass key on a frayed red thread\.$/m);
+  assert.match(card, /^=== card-brass-key · shot card-1 \(square\) ===$/m, "no story day in the header");
+  assert.match(card, /^SHOT: square\.$/m);
+  assert.match(card, /^ALSO IN FRAME: a small tarnished brass key on a frayed red thread\.$/m, "the same prop");
+  assert.match(card, /^STAGING: the key alone, its thread coiled beside it\.$/m);
+  assert.match(card, /^KEEP \(Product card, 1:1 square\): studio product photograph on a white sweep, soft even light; the prop sealed in a clear blister pack on a printed cardboard backing; the prop centred, nothing else in frame; no hands in frame; no text except the card's own printed label\.$/m, "a no_text sentence joins KEEP as written");
+  assert.match(card, /^AVOID: shiny gold key, keyring, people, hands, scenery, shadows that hide the prop\.$/m);
+  assert.doesNotMatch(card, /CHARACTER|SETTING|TIME:|CHANGED SINCE|false|day-1/);
+  const json = JSON.parse(spawnSync(process.execPath, ["scripts/compile-shot.mjs", "card-brass-key", "--json"], { encoding: "utf8" }).stdout);
+  assert.equal(json.shots[0].surface.id, "product-card");
+  assert.equal(json.shots[0].surface.continuity, false);
+  assert.deepEqual(json.shots[0].surface.avoid, ["people", "hands", "scenery", "shadows that hide the prop"]);
+  const r = check(process.cwd());
+  assert.match(r.stdout, /, 2 render surface\(s\), 1 template\(s\)\)/);
+});
+
+test("a template that retypes a render surface phrase fails with the file, the phrase and the fix", () => {
+  const r = planted((dir) => fs.appendFileSync(path.join(dir, "examples/templates/redo-prompt.md"), "\nAlways: every hand shows all five fingers, none extra, none merged.\n"));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /examples\/templates\/redo-prompt\.md: line \d+: retypes the render surface phrase "every hand shows all five fingers, none extra, none merged" \(render_surfaces\.story-scene\.hands_rule\)\. Fix: read it from the surface: node scripts\/compile-shot\.mjs prints KEEP and AVOID from render_surfaces\.story-scene, and a builder reads that entry from the registry/);
+});
+
+test("a token source that retypes a rule fails too; a single word of a rule is vocabulary, not a phrase", () => {
+  const r = planted((dir) => editJson(dir, SHEET, (j) => { kitchen(j).shots[1].characters[0].action = "reads the message; painted graphic-novel panel, muted palette, visible brush texture, one light source"; }));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /shot-sheet\.json: scenes\.14-read-at-1152\.shots\[1\]\.characters\[0\]\.action: retypes the render surface phrase "painted graphic-novel panel, muted palette, visible brush texture, one light source" \(render_surfaces\.story-scene\.style_lock\)/);
+  assert.deepEqual(renderPhrases({ s: { name: "S", exclude: ["hands", "blister pack"], must_keep: "one line", no_text: true, hands_rule: "no hands", why: "why is never a phrase" } }).map((p) => p.phrase), ["one line", "blister pack", "no hands"], "style_lock, must_keep, exclude, hands_rule, in that order; single words and why are left out");
+});
+
+test("once a surface is declared every shot names one; an unknown or missing surface fails, so does a surface with none declared or a template glob with no file", () => {
+  let r = planted((dir) => editJson(dir, SHEET, (j) => { kitchen(j).shots[1].surface = "poster"; }));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /shot 14b: surface "poster" is not in render_surfaces \(story-scene, product-card\)\. Fix: add it to render_surfaces in character-registry\.json with its look rules, or correct it here/);
+  r = planted((dir) => editJson(dir, SHEET, (j) => { delete kitchen(j).surface; }));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /shot 14a: has no surface: where will this picture be used\? Fix: set "surface" on the shot or on the scene header, one of story-scene, product-card/);
+  r = planted((dir) => editJson(dir, "character-registry.json", (j) => { delete j.render_surfaces; delete j.render_templates; }));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /shot 13a: names surface "story-scene" but character-registry\.json declares no render_surfaces\. Fix: declare render_surfaces there \(name, style_lock, must_keep, exclude, size, no_text, hands_rule, why\), or remove surface here/);
+  r = planted((dir) => editJson(dir, "character-registry.json", (j) => { j.render_templates = ["templates/nowhere/**"]; }));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /render_templates "templates\/nowhere\/\*\*" matches no tracked file\. Fix: correct the glob or remove it/);
 });
 
 test("--out writes built output and says so", () => {

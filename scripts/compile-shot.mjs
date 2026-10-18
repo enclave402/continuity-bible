@@ -11,7 +11,11 @@
  *     when the entry has no such form), WEARING, HAIR, ACCESSORIES, MARKS, IN HAND, ACTION, EYELINE, POSITION;
  *   - SHOT size, SETTING (the location's look), TIME, WEATHER; props in frame; the staging line;
  *   - CHANGED SINCE THE LAST SHOT, in words, or "nothing" (the first shot of a story day has no previous shot);
- *   - AVOID: the held props' negative tokens plus every other value's words of the surface's exclusive markers.
+ *   - KEEP, from the render surface the shot is for (registry.render_surfaces, named by the shot or its scene header):
+ *     the surface's style_lock, must_keep, hands_rule and no_text sentence, in the author's words, labelled with its name
+ *     and size; this script holds no rule phrase of its own;
+ *   - AVOID: the held props' negative tokens, every other value's words of the sheet surface's exclusive markers, and the
+ *     render surface's exclude list (plus the word text when its no_text is true).
  * The character comes first and the setting after, the order the carded research recommends for a prompt. The whole gate
  * runs first: nothing is compiled from a sheet the gate fails, so a block never carries a contradiction. Exit 1 on a named
  * problem, 2 on usage. --json prints the same shots as data; --out writes built output (never edit it; edit the sheet).
@@ -24,7 +28,7 @@ import { CARD_REQUIRED, SCENE_REQUIRED, WARDROBE_LAYERS, avoidWords, buildIndex,
 
 const filled = (v) => v !== null && v !== undefined && String(v).trim() !== "";
 const scalarsOf = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k, v]) => !k.startsWith("_") && ["string", "number", "boolean"].includes(typeof v)));
-const sentence = (parts) => parts.filter(filled).map((p) => String(p).trim().replace(/\.$/, "")).join(". ") + ".";
+const sentence = (parts) => parts.filter((p) => typeof p === "string" && p.trim()).map((p) => p.trim().replace(/\.$/, "")).join(". ") + ".";
 const articled = (text) => `the ${String(text).replace(/^(a|an|the)\s+/i, "")}`;
 const problem = (message, exitCode = 1) => { const e = new Error(message); e.exitCode = exitCode; return e; };
 
@@ -55,7 +59,18 @@ export function describeChange(change, labelOf, propText) {
 }
 
 /** One compiled shot as data plus its pasteable block. */
-export function formatShot(scene, shot, { names, story, surface, characters, lead = "look" }) {
+/** The KEEP items and AVOID items a render surface contributes, in the author's words; nothing here is a rule of the engine's. */
+export function surfaceRules(renderSurface) {
+  if (!renderSurface || typeof renderSurface !== "object") return { keep: [], avoid: [], label: "" };
+  const list = (v) => (Array.isArray(v) ? v : filled(v) ? [v] : []).filter((x) => typeof x === "string" && x.trim()).map((x) => x.trim());
+  const keep = [...list(renderSurface.style_lock), ...list(renderSurface.must_keep), ...list(renderSurface.hands_rule), ...(typeof renderSurface.no_text === "string" ? list(renderSurface.no_text) : [])];
+  const avoid = [...list(renderSurface.exclude), ...(renderSurface.no_text === true ? ["text"] : [])];
+  const size = filled(renderSurface.size) ? renderSurface.size : filled(renderSurface.aspect) ? renderSurface.aspect : "";
+  const label = [renderSurface.name, size].filter(filled).join(", ");
+  return { keep, avoid, label };
+}
+
+export function formatShot(scene, shot, { names, story, surface, characters, lead = "look", renderSurfaces = {} }) {
   const context = { ...scalarsOf(scene), ...scalarsOf(shot) };
   const r = (text, extra = {}) => names.resolveTokens(String(text), story, { context: { ...context, ...extra } });
   const propText = (id) => r(characters[id]?.prompt_tokens || characters[id]?.name || id);
@@ -86,25 +101,33 @@ export function formatShot(scene, shot, { names, story, surface, characters, lea
   const setting = filled(scene.place?.look) ? r(scene.place.look) : filled(scene.location) ? String(scene.location) : "";
   const weather = filled(scene.weather) ? r(scene.weather) : filled(scene.day?.weather) ? r(scene.day.weather) : "";
   const changes = shot.changes.map((c) => describeChange(c, labelOf, propText)).filter(Boolean);
+  const renderSurface = shot.surface ? renderSurfaces?.[shot.surface] : undefined;
+  const rules = surfaceRules(renderSurface);
+  const keep = rules.keep.map((k) => r(k));
+  const continuity = shot.continuity !== false;
   const avoid = [...new Set([
     ...shot.characters.flatMap((c) => c.holding.flatMap((p) => characters[p]?.negative_tokens || [])),
     ...shot.props.flatMap((p) => characters[p]?.negative_tokens || []),
     ...avoidWords(surface, scene),
+    ...rules.avoid.map((a) => r(a)),
   ])];
   const lines = [
-    `=== ${scene.slug} · shot ${shot.id}${filled(shot.size) ? ` (${shot.size})` : ""} · ${scene.story_day ?? "no story day"}${filled(scene.day?.label) ? `: ${r(scene.day.label)}` : ""} ===`,
+    `=== ${scene.slug} · shot ${shot.id}${filled(shot.size) ? ` (${shot.size})` : ""}${filled(scene.story_day) ? ` · ${scene.story_day}${filled(scene.day?.label) ? `: ${r(scene.day.label)}` : ""}` : ""} ===`,
     ...people.map((p) => p.line),
     sentence([filled(shot.size) && `SHOT: ${shot.size}`, setting && `SETTING: ${setting}`, filled(scene.time_of_day) && `TIME: ${scene.time_of_day}`, weather && `WEATHER: ${weather}`]),
     shot.props.length ? `ALSO IN FRAME: ${shot.props.map(propText).join("; ")}.` : "",
     filled(shot.action) ? `STAGING: ${r(shot.action)}.` : "",
-    changes.length ? `CHANGED SINCE THE LAST SHOT: ${changes.join("; ")}.` : shot.first_of_day ? "" : "CHANGED SINCE THE LAST SHOT: nothing.",
+    changes.length ? `CHANGED SINCE THE LAST SHOT: ${changes.join("; ")}.` : shot.first_of_day || !continuity ? "" : "CHANGED SINCE THE LAST SHOT: nothing.",
+    keep.length ? `KEEP${rules.label ? ` (${rules.label})` : ""}: ${keep.join("; ")}.` : "",
     avoid.length ? `AVOID: ${avoid.join(", ")}.` : "",
   ].filter((l) => l && l !== ".");
   return {
     scene: scene.slug, shot: shot.id, size: shot.size ?? "", story_day: scene.story_day ?? "", story_day_label: filled(scene.day?.label) ? r(scene.day.label) : "",
     time_of_day: scene.time_of_day ?? "", location: scene.location ?? "", setting, weather,
     characters: people.map(({ line, ...rest }) => rest), also_in_frame: shot.props.map((p) => ({ id: p, text: propText(p) })),
-    staging: filled(shot.action) ? r(shot.action) : "", changes, avoid, block: lines.join("\n"),
+    staging: filled(shot.action) ? r(shot.action) : "", changes,
+    surface: shot.surface ? { id: shot.surface, name: renderSurface?.name ?? "", label: rules.label, keep, avoid: rules.avoid.map((a) => r(a)), continuity } : null,
+    avoid, block: lines.join("\n"),
   };
 }
 
@@ -122,14 +145,14 @@ export function compileContinuity(registry, { story, scene: slug, shot: shotId }
   if (!pair.cards) throw problem(`${registry._file}: story ${pair.story} has a shot sheet but no continuity-cards surface. Fix: declare one; the sheet carries what the cards start`);
   const cards = readJson(abs(pair.cards.file));
   const characters = registry.characters || {};
-  const carried = carryContinuity({ cards, sheet, characters, index: buildIndex(registry).index, story: pair.story, cardsFile: pair.cards.file, sheetFile: pair.sheet.file, cardRequired: pair.cards.required || CARD_REQUIRED, sceneRequired: pair.sheet.required || SCENE_REQUIRED });
+  const carried = carryContinuity({ cards, sheet, characters, index: buildIndex(registry).index, story: pair.story, cardsFile: pair.cards.file, sheetFile: pair.sheet.file, cardRequired: pair.cards.required || CARD_REQUIRED, sceneRequired: pair.sheet.required || SCENE_REQUIRED, renderSurfaces: registry.render_surfaces, registryFile: path.basename(registry._file) });
   const compiled = carried.scenes[slug];
   const shots = shotId !== undefined ? compiled.shots.filter((s) => s.id === String(shotId)) : compiled.shots;
   if (shotId !== undefined && !shots.length) throw problem(`no shot "${shotId}" in ${slug}. Shots: ${compiled.shots.map((s) => s.id).join(", ")}`);
   const names = loadNames(root);
   return {
     story: pair.story, scene: slug, failures: carried.failures, gaps: carried.gaps,
-    shots: shots.map((shot) => formatShot(compiled, shot, { names, story: pair.story, surface: pair.sheet, characters, lead: pair.sheet.lead || "look" })),
+    shots: shots.map((shot) => formatShot(compiled, shot, { names, story: pair.story, surface: pair.sheet, characters, lead: pair.sheet.lead || "look", renderSurfaces: registry.render_surfaces || {} })),
   };
 }
 

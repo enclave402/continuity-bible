@@ -3,7 +3,7 @@
   "_about": {
     "role": "Single Source of Truth (SSOT) authority file for narrative characters, companions and props.",
     "rule": "Source files and prompts never contain a written-out name or a written-out variant. Use tokens: {{id}}, {{id:first}}, {{id:full}}, {{id:<form>}}.",
-    "example": "This registry is the repository's own example: three people, two props, one scene file, one art manifest, one token source, continuity cards and a shot sheet."
+    "example": "This registry is the repository's own example: three people, two props, one scene file, one art manifest, one token source, continuity cards, a shot sheet, two render surfaces and a prompt template."
   },
   "registry_version": 1,
   "surfaces": [
@@ -66,7 +66,6 @@
             "workshop": ["workshop", "workbench", "sawdust"]
           },
           "fields": ["shots[].action", "shots[].characters[].action", "shots[].characters[].eyeline"],
-          "required": true,
           "why": "a shot planned in the kitchen may not describe the workbench"
         }
       ]
@@ -99,6 +98,33 @@
     "max_regeneration_budget": 3,
     "embeddings": "examples/anchor/embeddings.jsonl"
   },
+  "render_surfaces": {
+    "story-scene": {
+      "name": "Story scene",
+      "style_lock": "painted graphic-novel panel, muted palette, visible brush texture, one light source",
+      "must_keep": ["faces as in the anchor pictures", "props exactly as described, nothing added to them"],
+      "exclude": ["packaging", "blister pack", "price tags", "logos", "speech bubbles", "panel borders"],
+      "size": "3:2 landscape",
+      "no_text": true,
+      "hands_rule": "every hand shows all five fingers, none extra, none merged",
+      "why": "a page of the story: nothing on it may look like merchandise, and the letterer places every word later"
+    },
+    "product-card": {
+      "name": "Product card",
+      "style_lock": "studio product photograph on a white sweep, soft even light",
+      "must_keep": [
+        "the prop sealed in a clear blister pack on a printed cardboard backing",
+        "the prop centred, nothing else in frame"
+      ],
+      "exclude": ["people", "hands", "scenery", "shadows that hide the prop"],
+      "size": "1:1 square",
+      "no_text": "no text except the card's own printed label",
+      "hands_rule": "no hands in frame",
+      "why": "a shop card for the prop: here the packaging is the point, and the story's rules do not apply",
+      "continuity": false
+    }
+  },
+  "render_templates": ["examples/templates/**"],
   "characters": {
     "chloe-jenkins": {
       "name": "Chloe",

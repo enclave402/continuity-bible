@@ -27,4 +27,4 @@ if (failures.length) {
   process.stderr.write(`character registry: fail (${failures.length} problem(s))\n`);
   process.exit(1);
 }
-process.stdout.write(`character registry: pass (${stats.entries} entries, ${stats.labels} labels resolved on ${stats.surfaces} surfaces, ${stats.token_sources ?? 0} token sources, ${stats.files ?? 0} files scanned${gaps.length ? `, ${gaps.length} gap(s)` : ""})\n`);
+process.stdout.write(`character registry: pass (${stats.entries} entries, ${stats.labels} labels resolved on ${stats.surfaces} surfaces, ${stats.token_sources ?? 0} token sources, ${stats.files ?? 0} files scanned${stats.render_surfaces ? `, ${stats.render_surfaces} render surface(s), ${stats.templates ?? 0} template(s)` : ""}${gaps.length ? `, ${gaps.length} gap(s)` : ""})\n`);
