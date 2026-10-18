@@ -115,7 +115,7 @@ To add another character, run this again. Next: write your scene with these toke
 
 The *id* is how every scene will refer to the character. The helper makes it from the full name, and Enter takes it. If you type your own, use only lower-case letters, digits and hyphens (`mika-tanaka`, not `Mika Tanaka`); the helper says so and asks again if it cannot use what you typed. What must never change are the character's *fixed traits*: short things you can read off a picture, like `skin=dark brown`. Write what the character *is*, never what the AI happened to draw; step 9 shows why. If the look does not mention a fixed trait, the helper points it out, because a picture prompt only asks for what the look says.
 
-Now run the same command again for your second character. It does not ask for the story again: it uses the one your first character is in. Robots, animals and everyone else are written the same way. If you did the README's quick start, the helper adds your characters to that file, next to June. Nothing is written until the last answer, so if you get stuck, press Ctrl and C together and start again.
+Now run the same command again for your second character. It does not ask for the story again: it uses the one your first character is in. Robots, animals and everyone else are written the same way. Came from the README's quick start? What you made there is already in the file, so run the helper only for the characters you have not made yet; if you copied June's box there, it adds yours next to her. Nothing is written until the last answer, so if you get stuck, press Ctrl and C together and start again.
 
 ### June and Abel: copy the box
 
@@ -201,7 +201,7 @@ Avoid: text, letters, extra people, modern clothes.
 
 Then, in the terminal, type `pbpaste > scene-01.md` on a Mac, or `Get-Clipboard | Set-Content scene-01.md` on Windows, and press Enter.
 
-**Made your own characters?** Make the file from the box all the same. Then open it with `open -e scene-01.md` and change every `june-okafor` to your first character's id and every `abel-marsh` to your second's, the ids the helper printed. Keep the `{{` and `}}` around them. Change the other words to fit your story if you like, then save.
+**Made your own characters?** Make the file from the box all the same. Then open it with `open -e scene-01.md` and change every `june-okafor` to your first character's id and every `abel-marsh` to your second's, the ids the helper printed. Keep the `{{` and `}}` around them, and save. The other words are about a lighthouse: you can keep them for now, because only the ids have to be yours for the next steps, or rewrite them for your story. In the picture prompt, write what to draw, never a name: *a messy garage*, not *Mika's garage*.
 
 Notice that the picture prompt never says *June* or *Abel*. An image model does not know your characters by name. It knows them by look, and the look comes from the registry.
 

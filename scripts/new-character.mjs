@@ -185,19 +185,31 @@ async function main() {
   }
 
   console.log(`What about ${name} must never change, in any picture? Type each trait like skin=dark brown, with commas between them. Press Enter for none.`);
-  let keep;
+  let keep, joinedOnce = null;
   for (;;) {
     const a = await ask("> ");
     if (a === null) ended();
+    if (!a && joinedOnce) { keep = joinedOnce; break; } // Enter after the note on "and" keeps what was typed
     const r = readKeep(a);
     if (a && r.unread.length) { console.log(`  I could not read: ${r.unread.join("; ")}. Type each trait like skin=dark brown, with commas between them, or press Enter for none.`); continue; }
+    // "hair=purple braid and freckles" is one trait to readKeep (hair=salt and pepper must stay one); say so, and ask once more
+    const joined = Object.entries(r.keep).filter(([, v]) => /\s+and\s+/i.test(v));
+    if (joined.length && !joinedOnce) {
+      const [k, v] = joined[0], [first, ...rest] = v.split(/\s+and\s+/i);
+      console.log(`  Noted: ${joined.map(([jk, jv]) => `${jk}=${jv}`).join(" and ")} is one trait with "and" in it. If it is two things, type the whole list again with a comma between them, like ${k}=${first}, ${rest.join(" and ")}=yes. Press Enter to keep it as one.`);
+      joinedOnce = r.keep;
+      continue;
+    }
     keep = r.keep;
     break;
   }
   const pairs = Object.entries(keep).map(([k, v]) => `${k}=${v}`).join(", ");
   console.log(`  Using: ${pairs || "nothing fixed"}.`);
-  // a fixed trait the look never mentions is never asked for, so the pictures will not keep it
-  const unsaid = Object.values(keep).filter((v) => !look.toLowerCase().includes(low(v)));
+  // a fixed trait the look never mentions is never asked for, so the pictures will not keep it. freckles=yes asks for the
+  // word freckles; a no asks for nothing; "purple braid and freckles" is said when each part is
+  const has = (t) => look.toLowerCase().includes(low(t));
+  const said = ([k, v]) => (/^(yes|y|true)$/i.test(v) ? has(k) : /^(no|n|none|false)$/i.test(v) || has(v) || v.split(/\s+and\s+/i).every(has));
+  const unsaid = Object.entries(keep).filter((kv) => !said(kv)).map(([k, v]) => (/^(yes|y|true)$/i.test(v) ? k : v));
   if (unsaid.length) {
     console.log(`  Noted: the look does not say ${unsaid.map((v) => `"${v}"`).join(" or ")}. A picture prompt asks only for what the look says. Type the whole look again with it, or press Enter to keep the look as it is.`);
     const b = await ask("> ");

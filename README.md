@@ -117,7 +117,7 @@ To add another character, run this again. Next: write your scene with these toke
 
 Then make `scene-01.md` from its box further down, open it with `open -e scene-01.md`, change both `june-okafor` to the id the helper gave you, and save. The [tutorial's step 3](docs/1-tutorials/START-HERE.md#3-write-two-characters-into-the-registry) says more about each question.
 
-**For June**, copy this box instead:
+**For June instead**, copy this box. Skip it if the helper made your file: pasting it would replace your character.
 
 ```json
 {

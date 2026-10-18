@@ -105,6 +105,26 @@ test("a taken id or name is refused; a close spelling of one is pointed out; an 
   fs.rmSync(tricky.dir, { recursive: true, force: true });
 });
 
+// The fourth dry run: a kid typed hair=purple braid and freckles, meaning two traits; it was kept as one, unsaid.
+test("a trait joined by 'and' is pointed out and asked once more; a yes trait is looked for by its name in the look", () => {
+  const look = "a girl with tan skin, freckles and a long purple braid";
+  const two = newRun({ answers: `S\nLuna\nLuna Rivera\n\nr\n${look}\nhair=purple braid and freckles\nhair=purple braid, freckles=yes\n` });
+  assert.equal(two.status, 0, two.err);
+  assert.match(two.out, /  Noted: hair=purple braid and freckles is one trait with "and" in it\. If it is two things, type the whole list again with a comma between them, like hair=purple braid, freckles=yes\. Press Enter to keep it as one\./);
+  assert.match(two.out, /  Using: hair=purple braid, freckles=yes\./);
+  assert.doesNotMatch(two.out, /the look does not say/, "freckles=yes is said by the word freckles in the look");
+  assert.deepEqual(JSON.parse(read(two.dir)).characters["luna-rivera"].canon_tags, { hair: "purple braid", freckles: "yes" });
+  fs.rmSync(two.dir, { recursive: true, force: true });
+  const one = newRun({ answers: "S\nAbe\n\n\nr\nan old man with salt and pepper hair\nhair=salt and pepper\n\n" });
+  assert.equal(one.status, 0, one.err);
+  assert.match(one.out, /  Using: hair=salt and pepper\./, "Enter keeps it as one");
+  assert.doesNotMatch(one.out, /the look does not say/);
+  fs.rmSync(one.dir, { recursive: true, force: true });
+  const missing = newRun({ answers: "S\nPip\n\n\nr\na tin robot\nantenna=yes\n\n" });
+  assert.match(missing.out, /  Noted: the look does not say "antenna"\./, "a yes trait the look never names is pointed out by its name");
+  fs.rmSync(missing.dir, { recursive: true, force: true });
+});
+
 test("a run cut short writes nothing, new file or old; a broken registry is named and left alone", () => {
   const fresh = newRun({ answers: JUNE.split("\n").slice(0, 6).join("\n") + "\n" });
   assert.equal(fresh.status, 1);
