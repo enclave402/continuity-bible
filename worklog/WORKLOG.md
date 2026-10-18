@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 7 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 8 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 20:44:56 (UTC-04:00) | decision | product | [Owner direction (evening): layperson-first, browser-flow proof case, canon beats cheapest; recorded in PRODUCT.md. Added the canon anchor policy + canon_tags, carded the continuity-norms research prompt](entries/2026-10-17_20-44-56_owner-direction-evening-layperson-first-browser-flow-proof-c.md) | agent:claude | closed |
 | 20:39:38 (UTC-04:00) | fix | repo | [Correction: entry wl-e9fb3696 was premature; the first commit chain was refused by the pre-commit hook (coverage test read the hook's GIT_DIR). textFiles() now ignores hook env and lists only its own checkout; four commits landed](entries/2026-10-17_20-39-38_correction-entry-wl-e9fb3696-was-premature-the-first-commit-.md) | agent:claude | closed |
 | 20:37:42 (UTC-04:00) | milestone | repo | [Branch ready for review: engine, research, norms and README commits on claude/research-process-and-public-norms; CHANGELOG generated; full gate green](entries/2026-10-17_20-37-42_branch-ready-for-review-engine-research-norms-and-readme-com.md) | agent:claude | closed |
 | 20:35:39 (UTC-04:00) | milestone | research | [35 findings merged from 75 local-model candidates after validation against the card; 15 checked against verified arXiv abstracts, 1 caution, 19 unchecked with line-range refs](entries/2026-10-17_20-35-39_35-findings-merged-from-75-local-model-candidates-after-vali.md) | agent:claude | closed |

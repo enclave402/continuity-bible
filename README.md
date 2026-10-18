@@ -121,7 +121,7 @@ Field reference: [REGISTRY-FIELDS.md](docs/3-reference/REGISTRY-FIELDS.md). Adop
 
 ## After the Drift: Pick an Anchor
 
-Most tools prevent drift going forward and assume a pristine reference from the first render. When a character has already mutated halfway through a project, `scripts/anchor.mjs` looks backward: feed it one embedding per image from the encoder you trust, choose a policy (`origin`, `terminal`, `consensus`, `mode`), read the regeneration bill, and record the anchor in the registry.
+Most tools prevent drift going forward and assume a pristine reference from the first render. When a character has already mutated halfway through a project, `scripts/anchor.mjs` looks backward: feed it one embedding per image from the encoder you trust, choose a policy (`origin`, `terminal`, `consensus`, `mode`, or `canon` when the drift is a defect and the cheapest state must not win), read the regeneration bill, and record the anchor in the registry. Tags written by hand are enough for every policy but `consensus`: no API, no model required.
 
 ```bash
 node scripts/anchor.mjs examples/anchor/embeddings.jsonl --policy consensus

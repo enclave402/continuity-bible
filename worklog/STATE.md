@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-17 20:45 EDT
-**HEAD:** 097d83c
+**Last rewritten:** 2026-10-17 20:58 EDT
+**HEAD:** b53d2e3
 **Date:** 2026-10-17
 **Session:** public repository norms, in-repo research process, continuity gate extensions, drift anchor policy (branch `claude/research-process-and-public-norms`)
 
@@ -9,7 +9,10 @@
 
 - WHAT: `PRODUCT.md`. HOW: `AGENTS.md` (alias `CLAUDE.md`). Routing: `.context/_index.md`. Norms rationale: `docs/4-explanation/REPOSITORY-NORMS.md`.
 - Gate: `npm run verify` = names gate + tests + publication gate + worklog gate + research index check + docs registry. All green on this branch (20 tests).
-- Engine: registry schema v1 extended with `kind: prop`, contextual `forms`, `surfaces[].forbid_keys`, `surfaces[].exclusive_markers`, `coverage`, `drift_resolution`, `characters.<id>.anchor`; `scripts/render.mjs` and `scripts/anchor.mjs` added. Example registry: 4 entries, 2 surfaces, 3 token sources.
+- Engine: registry schema v1 extended with `kind: prop`, contextual `forms`, `surfaces[].forbid_keys`, `surfaces[].exclusive_markers`, `coverage`, `drift_resolution`, `canon_tags`, `characters.<id>.anchor`; `scripts/render.mjs` and `scripts/anchor.mjs` (origin, terminal, consensus, mode, canon) added. Example registry: 4 entries, 2 surfaces, 3 token sources.
+- Pull request 3 is open from this branch to `main` (https://github.com/enclave402/narrative-token-ssot/pull/3); the app's Auto-fix watches it. Nothing is merged.
+- Positioning changed by the owner on 2026-10-17 evening and recorded in `PRODUCT.md`: layperson-first, browser-flow proof case, canon beats cheapest; three planned pieces listed there.
+- A research prompt on continuity norms is carded (`research/corpus/prompts/continuity-norms-and-structures-prompt.md`), not yet run.
 - Research: `research/` holds one card (`ai-character-continuity-pipeline-research`, 13,601 words, reviewed), 35 findings (15 checked against 20 verified arXiv sources, 1 caution), generated index; toolchain in `scripts/research/` runs on the endpoints in `research/research.config.json` (local by default).
 - Docs: 11 canonical documents registered (3 how-tos, 3 references, 1 explanation, 4 ADRs).
 - Worklog: trail and generated indexes in `worklog/`; appender is `scripts/worklog-append.mjs`.
@@ -29,7 +32,8 @@
 
 ## 3. Prioritised next steps
 
-- [ ] **Next action:** open the pull request from `claude/research-process-and-public-norms` to `main` and have a human review and merge it.
-- [ ] Apply the public mechanisms in the private consumer repository per its own issues log (token sources for program data, `forbid_keys` on the art manifest, prop ids, a contextual form for the stage-dependent prop, time-of-day markers, run-notes rendering). Its own session.
-- [ ] Verify the conference and vendor sources behind the report's numeric thresholds (face-cosine bands, step window, 600-panel pass rates) and promote or correct findings accp-04, -22, -26, -28 (`docs/_registry/open_loops.md`).
-- [ ] Add a `1-tutorials/` walkthrough once a second adopter exists; leave `c4/` and `arc42/` empty until a diagram earns them.
+- [ ] **Next action:** a human reviews and merges pull request 3.
+- [ ] Before-and-after journey: in the private pipeline, write the lead's `canon_tags` (owner's words, not inferred), tag and embed the story's renders, run the anchor policies, restore canon, and bring the before and after images plus the anchor report into a public expository page here. Same session applies the public mechanisms privately (token sources for program data, `forbid_keys` on the art manifest, prop ids, a contextual form for the stage-dependent prop, time-of-day markers, run-notes rendering).
+- [ ] Layperson pass: README and a `docs/1-tutorials/` start-here walkthrough for a non-technical reader; a browser-flow how-to (copy-paste prompt sheets, hand tags, no API).
+- [ ] Run `research/corpus/prompts/continuity-norms-and-structures-prompt.md` in a deep-research tool, card the answer, overlap, extract, verify; then design the shot-to-shot continuity card and shot sheet on it.
+- [ ] Verify the conference and vendor sources behind the report's numeric thresholds and promote or correct findings accp-04, -22, -26, -28 (`docs/_registry/open_loops.md`).

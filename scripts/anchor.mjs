@@ -28,8 +28,14 @@ export const dot = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s +
 const mean = (xs) => xs.reduce((a, b) => a + b, 0) / (xs.length || 1);
 const centroidOf = (vs) => norm(vs[0].map((_, i) => mean(vs.map((v) => v[i]))));
 
-/** Choose an anchor from rows under a policy. Pure: no files, no registry. */
-export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pruneZ = 0 } = {}) {
+/**
+ * Choose an anchor from rows under a policy. Pure: no files, no registry.
+ * canon: { tag: value } the character is declared to have (registry canon_tags or --canon). The canon policy keeps only
+ * images whose tags match every canon tag, then picks the one nearest their centroid. It exists because the cheapest
+ * anchor is often the drifted one: a lead who started mixed-race and darker-skinned and drifted lighter for most of the
+ * book would be "cheapest" to keep light. Canon says who she is; the regeneration bill is the price of the drift.
+ */
+export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pruneZ = 0, canon = null } = {}) {
   const rows = rowsIn.map((r, i) => ({ ...r, order: r.order ?? i, embedding: r.embedding ? norm(r.embedding) : undefined })).sort((a, b) => a.order - b.order);
   if (!rows.length) throw new Error("anchor: no rows");
   const withVec = rows.filter((r) => r.embedding);
@@ -62,7 +68,16 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
     if (vec.length) { const c = centroidOf(vec.map((r) => r.embedding)); anchor = vec.map((r) => [dot(r.embedding, c), r]).sort((a, b) => b[0] - a[0])[0][1]; }
     else anchor = members[0];
     basis = `most frequent tag combination ${best} (${n} of ${tagged.length} images)`;
-  } else throw new Error(`anchor: unknown policy ${policy} (origin, terminal, consensus, mode)`);
+  } else if (policy === "canon") {
+    if (!canon || !Object.keys(canon).length) throw new Error("anchor: canon needs the character's canon_tags in the registry or --canon tag=value");
+    const low = (v) => String(v).trim().toLowerCase();
+    const matches = rows.filter((r) => r.tags && Object.entries(canon).every(([k, v]) => r.tags[k] !== undefined && low(r.tags[k]) === low(v)));
+    if (!matches.length) throw new Error(`anchor: no image matches canon ${JSON.stringify(canon)}: every image has drifted off canon. Fix: recast or regenerate from the master, tag the result, run again`);
+    const vec = matches.filter((r) => r.embedding);
+    if (vec.length) { const c = centroidOf(vec.map((r) => r.embedding)); anchor = vec.map((r) => [dot(r.embedding, c), r]).sort((a, b) => b[0] - a[0])[0][1]; }
+    else anchor = matches[0];
+    basis = `nearest the centroid of the ${matches.length} image(s) matching canon ${JSON.stringify(canon)} (of ${rows.length}); the cheapest state is not canon's job`;
+  } else throw new Error(`anchor: unknown policy ${policy} (origin, terminal, consensus, mode, canon)`);
   const sims = anchor.embedding ? rows.filter((r) => r.embedding).map((r) => ({ image: r.image, order: r.order, cosine: dot(r.embedding, anchor.embedding) })) : [];
   const regenerate = sims.filter((s) => s.cosine < threshold).map((s) => s.image);
   const stats = sims.length ? { n: rows.length, with_embedding: sims.length, pruned: pruned.length, mean_cosine: +mean(sims.map((s) => s.cosine)).toFixed(4), min_cosine: +Math.min(...sims.map((s) => s.cosine)).toFixed(4), threshold, below_threshold: regenerate.length } : { n: rows.length, with_embedding: 0, pruned: 0, threshold, below_threshold: null };
@@ -72,7 +87,7 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
 /** Compare every policy on the same rows, so the cheapest one is visible. */
 export function comparePolicies(rows, opts) {
   const out = {};
-  for (const policy of ["origin", "terminal", "consensus", "mode"]) {
+  for (const policy of ["origin", "terminal", "consensus", "mode", "canon"]) {
     try { const r = chooseAnchor(rows, { ...opts, policy }); out[policy] = { image: r.anchor.image, below_threshold: r.stats.below_threshold, mean_cosine: r.stats.mean_cosine }; }
     catch (e) { out[policy] = { unavailable: e.message.replace(/^anchor: /, "") }; }
   }
@@ -83,22 +98,25 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve
 if (isMain) {
   const argv = process.argv.slice(2);
   const flag = (n) => { const i = argv.indexOf(n); return i === -1 ? "" : argv[i + 1] || ""; };
-  const VALUE_FLAGS = new Set(["--policy", "--character", "--threshold", "--prune-outliers", "--registry"]);
+  const VALUE_FLAGS = new Set(["--policy", "--character", "--threshold", "--prune-outliers", "--registry", "--canon"]);
   const file = argv.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(argv[i - 1]));
   let registry = null;
   try { registry = loadRegistry(registryPath(process.argv)); } catch { registry = null; }
   const id = flag("--character");
   const defaults = { ...(registry?.drift_resolution || {}), ...(id && registry?.characters?.[id]?.drift_resolution ? registry.characters[id].drift_resolution : {}) };
+  // canon tags: --canon tag=value (repeatable) wins, else the character's declared canon_tags
+  const canonFlags = argv.flatMap((a, i) => (a === "--canon" && argv[i + 1] ? [argv[i + 1]] : [])).map((kv) => kv.split(/=(.*)/s)).filter((p) => p[0] && p[1] !== undefined);
+  const canon = canonFlags.length ? Object.fromEntries(canonFlags.map(([k, v]) => [k.trim(), v.trim()])) : (id && registry?.characters?.[id]?.canon_tags) || null;
   const source = file || (defaults.embeddings ? path.join(registry._root, defaults.embeddings) : "");
-  if (!source) { console.error("usage: node scripts/anchor.mjs <embeddings.jsonl|.json> --policy origin|terminal|consensus|mode [--character <id>] [--threshold 0.6] [--prune-outliers 2] [--write] [--json]"); process.exit(2); }
+  if (!source) { console.error("usage: node scripts/anchor.mjs <embeddings.jsonl|.json> --policy origin|terminal|consensus|mode|canon [--character <id>] [--canon tag=value ...] [--threshold 0.6] [--prune-outliers 2] [--write] [--json]"); process.exit(2); }
   const raw = fs.readFileSync(source, "utf8");
   const rows = source.endsWith(".jsonl") ? raw.split("\n").filter(Boolean).map((l) => JSON.parse(l)) : (() => { const j = JSON.parse(raw); return Array.isArray(j) ? j : j.rows || j.images || []; })();
   const policy = flag("--policy") || defaults.policy || "consensus";
   const threshold = Number(flag("--threshold") || defaults.pass_threshold || 0.6);
   const pruneZ = Number(flag("--prune-outliers") || defaults.prune_outliers_z || 0);
   let result;
-  try { result = chooseAnchor(rows, { policy, threshold, pruneZ }); } catch (e) { console.error(e.message); process.exit(1); }
-  const compare = comparePolicies(rows, { threshold, pruneZ });
+  try { result = chooseAnchor(rows, { policy, threshold, pruneZ, canon }); } catch (e) { console.error(e.message); process.exit(1); }
+  const compare = comparePolicies(rows, { threshold, pruneZ, canon });
   const chosenAt = new Date().toISOString();
   const budget = defaults.max_regeneration_budget;
   if (argv.includes("--json")) { console.log(JSON.stringify({ ...result, compare, chosen_at: chosenAt, budget }, null, 2)); }

@@ -149,6 +149,11 @@
               },
               "description": "Named forms. A form here overrides the built-ins first, short, full, initial."
             },
+            "canon_tags": {
+              "type": "object",
+              "additionalProperties": { "type": "string", "minLength": 1 },
+              "description": "Who this character is, as tags a tagger or a person can read off an image (skin_tone, heritage, hair_color, build). The canon anchor policy keeps only images that match every one of them. Written by the owner, never inferred from the drifted images."
+            },
             "prompt_tokens": { "type": "string", "description": "prop or companion: the look a prompt writer compiles from this entry, written once here." },
             "negative_tokens": { "type": "array", "items": { "type": "string" }, "description": "prop or companion: what a prompt must avoid for this object." },
             "anchor": {
@@ -158,7 +163,7 @@
               "properties": {
                 "image": { "type": "string", "minLength": 1, "description": "The reference image every later generation conditions on, relative to the registry." },
                 "sha256": { "type": "string" },
-                "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "manual"] },
+                "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "canon", "manual"] },
                 "metric": { "type": "string" },
                 "order": { "type": "integer" },
                 "chosen_at": { "type": "string" },
@@ -231,7 +236,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode"], "description": "origin: the first generated image; terminal: the last; consensus: the image nearest the centroid of all embeddings; mode: the most frequent attribute combination (tags), nearest the centroid among those." },
+        "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "canon"], "description": "origin: the first generated image; terminal: the last; consensus: the image nearest the centroid of all embeddings; mode: the most frequent attribute combination (tags), nearest the centroid among those; canon: only images whose tags match the entry's canon_tags, nearest their centroid (cheapest never outvotes canon)." },
         "metric": { "type": "string", "description": "Name of the embedding the file holds (arcface, clip, dinov2, aura, ...). Informational; vectors from two encoders are never mixed." },
         "pass_threshold": { "type": "number", "description": "Cosine similarity to the anchor below which an image is listed for regeneration." },
         "prune_outliers_z": { "type": "number", "description": "Drop images whose distance to the centroid is more than this many standard deviations before choosing." },

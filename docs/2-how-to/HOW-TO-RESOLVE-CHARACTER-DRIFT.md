@@ -25,7 +25,7 @@ Produce one row per generated image with an embedding from the encoder you trust
 | Whole-figure structure, wardrobe silhouette | a self-supervised vision transformer (DINOv2-style) | crop the character's bounding box |
 | General semantics, style | a CLIP-style image encoder | least discriminative between similar characters |
 
-Write `embeddings.jsonl` (any script, any language): `{"image": "<path>", "order": <n>, "embedding": [..], "tags": {"hair": "auburn"}, "sha256": "<optional>"}`. Order is the generation sequence. Tags are optional discrete attributes from a classifier or by hand; the `mode` policy needs them. Never mix two encoders in one file.
+Write `embeddings.jsonl` (any script, any language): `{"image": "<path>", "order": <n>, "embedding": [..], "tags": {"hair": "auburn"}, "sha256": "<optional>"}`. Order is the generation sequence. Tags are discrete attributes from a classifier or written by hand while looking at the image; `mode` and `canon` need them, and with tags alone (no embeddings, no API, no model) `origin`, `terminal`, `mode` and `canon` all work. Never mix two encoders in one file.
 
 ## 2. Compare the policies
 
@@ -39,6 +39,11 @@ The report names the chosen image, the mean and minimum cosine to it, every imag
 - **terminal**: the last image. Right when the drift was a deliberate evolution you want to keep.
 - **consensus**: the image nearest the centroid. The fewest corrections across the library.
 - **mode**: the most frequent attribute combination, nearest its own centroid. Right when a classifier can name the states and one dominates.
+- **canon**: only images whose tags match the character's declared `canon_tags`, nearest their centroid. Right whenever the drift is a defect rather than an evolution.
+
+## When cheapest is wrong
+
+The cheapest anchor is often the drifted one. A lead who began mixed-race and darker-skinned and drifted lighter for most of a book is "cheapest" to keep light: `mode` and `consensus` will both say so, and the regeneration list will be short. That is arithmetic, not a decision. Write who the character is into the registry (`canon_tags`, by the owner, never read off the drifted images), run `--policy canon`, and read the longer regeneration list as the price of the drift. The comparison line prints every policy side by side so nobody chooses the cheap one by accident.
 
 Set `drift_resolution` in the registry (policy, threshold, pruning, budget, default embeddings file) so the defaults are declared, not remembered. An entry may override the registry.
 
