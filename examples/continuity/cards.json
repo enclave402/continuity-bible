@@ -1,0 +1,35 @@
+{
+  "_about": "Continuity cards for main-story: how each character starts each story day. A story day is a day inside the story, not a day of work. The shot sheet (shot-sheet.json) carries these forward shot by shot; a change is written there, with its reason. Names are never written here: cards are keyed by registry id, and props are listed by id.",
+  "story_days": {
+    "day-1": { "label": "The night of the text", "weather": "clear and cold" }
+  },
+  "cards": {
+    "sam-hayes": {
+      "day-1": {
+        "wardrobe": { "outer": "camel wool coat", "top": "wine silk blouse", "bottom": "black wide-leg trousers", "shoes": "black ankle boots" },
+        "hair": "pinned up, loose strands at the temples",
+        "accessories": ["small gold pendant"],
+        "marks": [],
+        "carries": ["cracked-phone"]
+      }
+    },
+    "chloe-jenkins": {
+      "day-1": {
+        "wardrobe": { "outer": "none", "top": "grey ribbed turtleneck", "bottom": "dark jeans", "shoes": "white sneakers" },
+        "hair": "close-cropped natural cut",
+        "accessories": ["reading glasses pushed up on her head", "thin silver ring"],
+        "marks": [],
+        "carries": []
+      }
+    },
+    "theo-vance": {
+      "day-1": {
+        "wardrobe": { "outer": "none", "top": "faded black t-shirt", "bottom": "work jeans", "shoes": "steel-toe boots" },
+        "hair": "sandy, flattened where a cap sat all day",
+        "accessories": ["leather-strap watch on the left wrist"],
+        "marks": ["fresh scrape across the right knuckles"],
+        "carries": ["brass-key"]
+      }
+    }
+  }
+}

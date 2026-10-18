@@ -11,6 +11,7 @@ Entry point for any agent or harness that can read a repository. Under 300 words
 | Names and the gate | `character-registry.json`, `scripts/names.mjs`, `scripts/check.mjs`, `docs/3-reference/REGISTRY-FIELDS.md` |
 | Research | `research/README.md`, then `node scripts/research/ask.mjs "<question>"` before opening any corpus card |
 | Drift anchors | `docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md`, `scripts/anchor.mjs` |
+| Shot-to-shot continuity | `docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md`, `docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md`, `scripts/compile-shot.mjs`, `examples/continuity/` |
 | Decisions | `docs/4-explanation/decisions/` |
 | Repo-local skill payloads | `.context/skills/` (inert until retrieved) |
 | Scratch | write `.context/scratch/<name>.tmp`, keep a summary in the conversation, delete at session end |

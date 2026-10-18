@@ -20,13 +20,14 @@
 | Research process | `research/`, `scripts/research/*.mjs`, `research/research.config.json` | card → index → retrieval pack → local-model candidates → verified sources → findings → ask; every endpoint and model configurable |
 | Repository norms | `AGENTS.md`, `.context/`, `worklog/`, `docs/`, `scripts/check-private.mjs`, `scripts/git-hooks/` | `npm run verify` green on a clean clone; nothing private in the tree |
 | Layperson pass | `README.md`, `docs/1-tutorials/START-HERE.md`, `docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md` | a first-time, non-technical reader makes one consistent two-character scene with a browser chatbot from the docs alone; every command in them runs as written; hand tags drive `origin`, `terminal`, `mode` and `canon` with no API |
+| Shot-to-shot continuity | `examples/continuity/`, `scripts/compile-shot.mjs`, `scripts/continuity-cards.v1.schema.json`, `scripts/shot-sheet.v1.schema.json`, `docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md` | a layperson fills two continuity cards (per character, per story day) and one shot sheet (per scene) from the how-to and gets one block to paste per shot; wardrobe, hair, accessories, marks, carried props, place and time carry forward by themselves; every change needs a reason; the gate catches a missing reason, a prop in the wrong hand, a missing card, a contradicted time or place, a typed name, and a sheet that disagrees with the page. Designed on the private system's proven shape and the carded research (ADR-005); the continuity-norms research prompt is still to be run, and its findings close the open loops listed there |
 
 ## Planned (owner direction 2026-10-17; not yet built)
 
 | Piece | What it is | Done when |
 |---|---|---|
 | Before-and-after journey | an expository page that shows the engine on the published story's own drift (a lead who began mixed-race and darker-skinned and drifted toward white over the book): the images, the policies compared, canon restored | the page shows real before and after images, the anchor report that chose them, and the regeneration bill |
-| Shot-to-shot continuity | a continuity card (per character, per story day) and a shot sheet (per scene) that carry wardrobe, props, time of day, location and state from one shot to the next, designed on real norms | the research prompt `research/corpus/prompts/continuity-norms-and-structures-prompt.md` has been run and carded; the cards compile into a copy-pasteable prompt block; the gate checks them |
+| Continuity norms research | run `research/corpus/prompts/continuity-norms-and-structures-prompt.md` in a deep-research tool and ingest the answer (card, index, pack, overlap, extract, verify, merge) | the open loops of ADR-005 each close against a finding id, by confirmation or by an amendment to the card and sheet fields |
 
 ## Evidence class
 

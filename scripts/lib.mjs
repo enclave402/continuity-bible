@@ -48,6 +48,11 @@ export function loadRegistry(file) {
 // ---- a small JSON Schema validator: the subset the registry schema uses, so nothing has to be installed ----
 export function validate(schema, value, at = "$") {
   const problems = [];
+  if (schema.anyOf) {
+    // one of several shapes (a wardrobe is one line of text or an object of layers); the description says which
+    if (!schema.anyOf.some((s) => !validate(s, value, at).length)) problems.push(`${at}: ${schema.description ? schema.description.split(". ")[0] : `fits none of the ${schema.anyOf.length} allowed shapes`}`);
+    return problems;
+  }
   const type = schema.type;
   const kind = Array.isArray(value) ? "array" : value === null ? "null" : typeof value;
   if (type && !(type === "integer" ? Number.isInteger(value) : kind === type)) {
@@ -431,6 +436,7 @@ function tokenSourceProblems(registry, surfaces, root) {
     if (s.type === "scenes") declare(s.file, s.skip_keys || []);
     if (s.type === "continuity") declare(s.file, ["scene_name", ...(s.skip_keys || [])]);
     if (s.type === "prose") declare(s.file, s.skip_keys || []);
+    if (s.type === "continuity-cards" || s.type === "shot-sheet") declare(s.file, s.skip_keys || []);
   }
   const tracked = textFiles(root);
   for (const t of registry.token_sources || []) {
@@ -500,6 +506,248 @@ function scannedStrings(value, skipKeys = [], out = []) {
   else if (Array.isArray(value)) value.forEach((v) => scannedStrings(v, skipKeys, out));
   else if (value && typeof value === "object") for (const [k, v] of Object.entries(value)) if (!k.startsWith("_") && !skipKeys.includes(k)) scannedStrings(v, skipKeys, out);
   return out;
+}
+
+/** exclusive_markers: a unit labelled one value may not use another value's words. Shared by scene files and shot sheets. */
+function markerProblems(surface, unit, slug, failures, gaps) {
+  for (const rule of surface.exclusive_markers || []) {
+    const picked = walk(unit, rule.field)[0]?.value;
+    if (picked === undefined) { if (rule.required) failures.push(`${surface.file}: ${slug}: has no ${rule.field}, which exclusive_markers require. Fix: set ${rule.field} to one of ${Object.keys(rule.values).join(", ")}`); continue; }
+    if (!rule.values[picked]) { gaps.push(`gap: ${surface.file}: ${slug}: ${rule.field} "${picked}" is not a key of exclusive_markers.values (${Object.keys(rule.values).join(", ")})`); continue; }
+    const text = (rule.fields?.length ? rule.fields.flatMap((f) => walk(unit, f).map((w) => w.value)) : scannedStrings(unit, [rule.field, ...(surface.skip_keys || [])])).flatMap((v) => scannedStrings(v)).join("\n");
+    for (const [other, words] of Object.entries(rule.values)) {
+      if (other === picked) continue;
+      for (const w of words) {
+        const m = text.match(wordRe(w, "i"));
+        if (m) { failures.push(`${surface.file}: ${slug}: says "${m[0].slice(m[1].length)}" (${rule.field} ${other}) but ${rule.field} is "${picked}"${rule.why ? ` (${rule.why})` : ""}. Fix: change ${rule.field} or the text`); break; }
+      }
+    }
+  }
+}
+
+/** The words a unit's text must not use, for a prompt's AVOID line: every other value's words of each exclusive marker on its surface. */
+export function avoidWords(surface, unit) {
+  const out = [];
+  for (const rule of surface?.exclusive_markers || []) {
+    const picked = walk(unit, rule.field)[0]?.value;
+    if (picked === undefined || !rule.values[picked]) continue;
+    for (const [other, words] of Object.entries(rule.values)) if (other !== picked) for (const w of words) if (!out.includes(w)) out.push(w);
+  }
+  return out;
+}
+
+// ---- continuity cards and shot sheets ----
+// A continuity card says how a character starts a story day (wardrobe, hair, accessories, marks, what they carry). A shot
+// sheet lists a story's scenes in reading order, each with its shots; every shot inherits the previous shot's state and
+// only a change with a reason alters it. carryContinuity() is the one implementation the gate and compile-shot.mjs share.
+export const CARDS_SCHEMA_PATH = path.join(HERE, "continuity-cards.v1.schema.json");
+export const SHOT_SHEET_SCHEMA_PATH = path.join(HERE, "shot-sheet.v1.schema.json");
+export const CARD_REQUIRED = ["wardrobe"];
+export const SCENE_REQUIRED = ["story_day", "location", "time_of_day"];
+export const WARDROBE_LAYERS = ["outer", "top", "outfit", "bottom", "shoes"];
+export const CHANGE_KEYS = ["wardrobe", "hair", "accessories", "marks", "carries", "hands"];
+const CAST_TOKEN = /^\{\{([a-z0-9][a-z0-9-]*)(?::[a-z]+)?\}\}$/;
+const filled = (v) => v !== null && v !== undefined && String(v).trim() !== "";
+const isNone = (v) => !filled(v) || /^none$/i.test(String(v).trim());
+const listOf = (v) => (Array.isArray(v) ? v : filled(v) ? [v] : []).filter((x) => typeof x === "string" && x.trim()).map((x) => x.trim());
+const scalarsOf = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k, v]) => !k.startsWith("_") && ["string", "number", "boolean"].includes(typeof v)));
+
+/** Keys starting with _ are notes anywhere in a cards file or a shot sheet: dropped before schema validation, as every scanner skips them. */
+export function withoutNotes(value) {
+  if (Array.isArray(value)) return value.map(withoutNotes);
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).filter(([k]) => !k.startsWith("_")).map(([k, v]) => [k, withoutNotes(v)]));
+  return value;
+}
+
+/**
+ * The registry id a cast reference means: a token ({{sam-hayes}}, {{sam-hayes:first}}), a bare id, a { who } object, or a
+ * label the index resolves to exactly one entry (so a typed name still computes state while the token-source scan reports
+ * it). Null when unknown.
+ */
+export function castId(ref, characters, index) {
+  const raw = typeof ref === "string" ? ref : ref && typeof ref === "object" ? ref.who ?? ref.name : null;
+  if (typeof raw !== "string") return null;
+  const m = raw.trim().match(CAST_TOKEN);
+  if (m) return characters[m[1]] ? m[1] : null;
+  const clean = cleanLabel(raw);
+  if (characters[clean]) return clean;
+  if (!index) return null;
+  const { ids, unresolved } = resolve(index, clean);
+  return ids.length === 1 && !unresolved.length ? ids[0] : null;
+}
+
+/** Each story's continuity pair among the surfaces: its continuity-cards surface and its shot-sheet surface. */
+export function continuityStories(surfaces) {
+  const byStory = new Map();
+  for (const s of surfaces) {
+    if (s.error || (s.type !== "continuity-cards" && s.type !== "shot-sheet")) continue;
+    const pair = byStory.get(s.story) || { story: s.story };
+    pair[s.type === "continuity-cards" ? "cards" : "sheet"] = s;
+    byStory.set(s.story, pair);
+  }
+  return [...byStory.values()];
+}
+
+/** A card's starting state. A one-line wardrobe becomes the layer "outfit"; a layer whose value is "none" is left out. */
+export function stateFromCard(card = {}) {
+  const wardrobe = typeof card.wardrobe === "string" ? (isNone(card.wardrobe) ? {} : { outfit: card.wardrobe.trim() }) : Object.fromEntries(Object.entries(card.wardrobe || {}).filter(([, v]) => !isNone(v)).map(([k, v]) => [k, String(v).trim()]));
+  return { wardrobe, hair: filled(card.hair) ? String(card.hair).trim() : "", accessories: listOf(card.accessories), marks: listOf(card.marks), carries: listOf(card.carries) };
+}
+const cloneState = (s) => ({ wardrobe: { ...s.wardrobe }, hair: s.hair, accessories: [...s.accessories], marks: [...s.marks], carries: [...s.carries] });
+const addAll = (list, items) => { for (const i of items) if (!list.includes(i)) list.push(i); };
+const removeAll = (list, items) => list.filter((x) => !items.includes(x));
+
+/**
+ * Carry state through one story's shot sheet, from its continuity cards. Pure: takes the two parsed files, returns the
+ * compiled scenes (each shot with every present character's state after that shot's changes, the changes applied and what
+ * is held) and the problems the gate reports. The rules:
+ *   - a scene header fills sceneRequired (default story_day, location, time_of_day); story_day is a key of the cards'
+ *     story_days; location is a key of the sheet's locations when it declares any;
+ *   - a character in a shot has a card for the scene's story day, else there is nothing to carry (a failure);
+ *   - a card fills cardRequired (default wardrobe); carries lists prop ids;
+ *   - within a story day, state carries from shot to shot and scene to scene; a new story day starts from the cards again;
+ *   - every change names who and says why; wardrobe layers merge ("none" removes a layer, a string replaces the whole),
+ *     hair replaces, accessories, marks and carries add or remove, hands moves a prop from who to `to`;
+ *   - a character holds only what they carry at that moment: the card, an earlier add, or a hand-over;
+ *   - marks that end a story day and are missing from that character's next card are a gap (healed, or forgotten?).
+ */
+export function carryContinuity({ cards, sheet, characters = {}, index, story, cardsFile = "the cards file", sheetFile = "the shot sheet", cardRequired = CARD_REQUIRED, sceneRequired = SCENE_REQUIRED }) {
+  const failures = [];
+  const gaps = [];
+  const seen = []; // every cast or card reference, for the registry's usage count
+  const nameOf = (id) => characters[id]?.name || id;
+  const days = cards?.story_days || {};
+  const dayKeys = Object.keys(days);
+  const locations = sheet?.locations;
+  const cardOf = (id, day) => cards?.cards?.[id]?.[day];
+  const propOk = (p, where, field) => {
+    if (!characters[p]) { failures.push(`${where}: ${field} "${p}" is not a registry id. Fix: props are entries of kind prop, listed by id (never by name)`); return false; }
+    if (characters[p].kind !== "prop") { failures.push(`${where}: ${field} "${p}" is ${nameOf(p)} (kind ${characters[p].kind}), not a prop. Fix: list a prop id here; a person belongs under characters`); return false; }
+    seen.push(p); // a prop on a card or in a hand is used on this surface, like a prop a scene lists
+    return true;
+  };
+  // the cards
+  for (const [id, byDay] of Object.entries(cards?.cards || {})) {
+    if (!characters[id]) { failures.push(`${cardsFile}: cards.${id}: unknown id. Fix: use a registry id (lower-case letters, digits, hyphens), or add the entry first`); continue; }
+    seen.push(id);
+    if (!allowed(characters[id], story)) failures.push(`${cardsFile}: cards.${id}: ${nameOf(id)} is of ${characters[id].story}, not a character of ${story}. Fix: add "${story}" to ${id}.also_in, or remove the card`);
+    for (const [day, card] of Object.entries(byDay || {})) {
+      const where = `${cardsFile}: cards.${id}.${day}`;
+      if (!days[day]) failures.push(`${where}: "${day}" is not a key of story_days${dayKeys.length ? ` (${dayKeys.join(", ")})` : ""}. Fix: add it to story_days with a label, or correct the key`);
+      for (const f of cardRequired) {
+        const v = card?.[f];
+        const empty = !filled(v) || (typeof v === "object" && !Array.isArray(v) && !Object.values(v).some((x) => !isNone(x))) || (Array.isArray(v) && !v.length);
+        if (empty) failures.push(`${where}: missing ${f}. Fix: write ${nameOf(id)}'s ${f} at the start of ${day}; the shot sheet carries it forward from there`);
+      }
+      for (const p of listOf(card?.carries)) propOk(p, where, "carries");
+    }
+  }
+  // the scenes, in reading order
+  const scenes = {};
+  const state = new Map(); // id -> state within the current story day
+  let currentDay;
+  const startDay = (day) => {
+    if (currentDay !== undefined) {
+      for (const [id, s] of state) {
+        const next = cardOf(id, day);
+        if (!next || !s.marks.length) continue;
+        const missing = s.marks.filter((m) => !listOf(next.marks).includes(m));
+        if (missing.length) gaps.push(`gap: ${cardsFile}: cards.${id}.${day}: ${nameOf(id)} ended ${currentDay} with marks [${missing.join(", ")}] that this card does not list. If they healed or washed off overnight, say so in _notes; if not, list them`);
+      }
+    }
+    state.clear();
+    currentDay = day;
+  };
+  for (const [slug, scene] of Object.entries(sheet?.scenes || {})) {
+    const at = `${sheetFile}: ${slug}`;
+    for (const f of sceneRequired) if (!filled(scene?.[f])) failures.push(`${at}: missing ${f}. Fix: every scene header says ${sceneRequired.join(", ")}${f === "story_day" && dayKeys.length ? ` (story days: ${dayKeys.join(", ")})` : ""}${f === "location" && locations ? ` (locations: ${Object.keys(locations).join(", ")})` : ""}`);
+    const day = scene?.story_day;
+    const dayOk = filled(day) && !!days[day];
+    if (filled(day) && !days[day]) failures.push(`${at}: story_day "${day}" is not a key of story_days in ${cardsFile}${dayKeys.length ? ` (${dayKeys.join(", ")})` : ""}. Fix: add it there with a label, or correct it here`);
+    if (filled(scene?.location) && locations && !locations[scene.location]) failures.push(`${at}: location "${scene.location}" is not a key of locations (${Object.keys(locations).join(", ")}). Fix: add it to locations with its look, or correct it here`);
+    if (dayOk && day !== currentDay) startDay(day);
+    const ensure = (id, where) => {
+      if (state.has(id)) return state.get(id);
+      const card = dayOk ? cardOf(id, day) : undefined;
+      if (dayOk && !card) failures.push(`${where}: ${nameOf(id)} is in this shot but has no continuity card for ${day}. Fix: add cards.${id}.${day} to ${cardsFile} (${cardRequired.join(", ")} at least); nothing carries forward from an empty card`);
+      const s = stateFromCard(card);
+      state.set(id, s);
+      return s;
+    };
+    const shots = Array.isArray(scene?.shots) ? scene.shots : [];
+    if (!shots.length) gaps.push(`gap: ${at}: has no shots yet`);
+    const compiled = { slug, ...scalarsOf(scene), day: dayOk ? days[day] : {}, place: locations?.[scene?.location] || {}, shots: [] };
+    shots.forEach((shot, i) => {
+      const shotId = filled(shot?.id) ? String(shot.id) : String(i + 1);
+      const where = `${at}: shot ${shotId}`;
+      const cast = [];
+      (Array.isArray(shot?.characters) ? shot.characters : []).forEach((entry, j) => {
+        const id = castId(entry, characters, index);
+        const label = typeof entry === "string" ? entry : entry?.who;
+        if (!id) { failures.push(`${where}: characters[${j}] "${label}" is no registry id, token or known name of ${story}. Fix: write {{<id>}} of an entry allowed in ${story}, or add the entry first`); return; }
+        if (!allowed(characters[id], story)) failures.push(`${where}: "${label}" is ${nameOf(id)} of ${characters[id].story}, not a character of ${story}. Fix: add "${story}" to ${id}.also_in if it is the same person`);
+        seen.push(id);
+        cast.push({ id, entry: entry && typeof entry === "object" ? entry : {} });
+      });
+      const inShot = cast.map((c) => c.id);
+      for (const c of cast) ensure(c.id, where);
+      // changes first: a change is in force for the whole shot ("in this shot she has taken off the coat")
+      const applied = [];
+      (Array.isArray(shot?.changes) ? shot.changes : []).forEach((change, k) => {
+        const cw = `${where}: changes[${k}]`;
+        const who = castId(change?.who, characters, index);
+        if (!who) { failures.push(`${cw}: who "${change?.who}" is no registry id, token or known name. Fix: "who": "{{<id>}}"`); return; }
+        seen.push(who);
+        if (!filled(change?.reason)) failures.push(`${cw}: the change for ${nameOf(who)} has no reason. Fix: add "reason": why it changes in this shot. A change is a decision; everything else carries forward on its own`);
+        const touched = CHANGE_KEYS.filter((key) => change[key] !== undefined);
+        if (!touched.length) failures.push(`${cw}: changes nothing. Fix: set one of ${CHANGE_KEYS.join(", ")}`);
+        const s = ensure(who, cw);
+        if (typeof change.wardrobe === "string") { applied.push({ who, kind: "wardrobe", to: change.wardrobe.trim() }); s.wardrobe = isNone(change.wardrobe) ? {} : { outfit: change.wardrobe.trim() }; }
+        else if (change.wardrobe && typeof change.wardrobe === "object") {
+          for (const [layer, value] of Object.entries(change.wardrobe)) {
+            const from = s.wardrobe[layer];
+            if (isNone(value)) delete s.wardrobe[layer]; else s.wardrobe[layer] = String(value).trim();
+            applied.push({ who, kind: "wardrobe", layer, from, to: isNone(value) ? undefined : String(value).trim() });
+          }
+        }
+        if (filled(change.hair)) { applied.push({ who, kind: "hair", from: s.hair, to: String(change.hair).trim() }); s.hair = String(change.hair).trim(); }
+        for (const key of ["accessories", "marks", "carries"]) {
+          if (change[key] === undefined) continue;
+          const add = listOf(change[key]?.add).filter((x) => key !== "carries" || propOk(x, cw, "carries.add"));
+          const remove = listOf(change[key]?.remove);
+          addAll(s[key], add);
+          s[key] = removeAll(s[key], remove);
+          for (const a of add) applied.push({ who, kind: key, add: a });
+          for (const r of remove) applied.push({ who, kind: key, remove: r });
+        }
+        if (change.hands !== undefined) {
+          const prop = String(change.hands).trim();
+          const to = castId(change.to, characters, index);
+          if (!to) failures.push(`${cw}: hands "${prop}" to "${change.to}", who is no registry id, token or known name. Fix: "to": "{{<id>}}"`);
+          if (propOk(prop, cw, "hands")) {
+            if (!s.carries.includes(prop)) failures.push(`${cw}: ${nameOf(who)} hands over "${prop}" but does not carry it here (carries: ${s.carries.join(", ") || "nothing"}). Fix: give it on cards.${who}.${day}, or hand it to ${nameOf(who)} in an earlier shot`);
+            s.carries = removeAll(s.carries, [prop]);
+            if (to) { seen.push(to); addAll(ensure(to, cw).carries, [prop]); }
+            applied.push({ who, kind: "hands", prop, to });
+          }
+        }
+      });
+      // what each present character holds must be something they carry at this moment
+      const people = cast.map((c) => {
+        const s = state.get(c.id) || stateFromCard();
+        const holding = listOf(c.entry.holding);
+        for (const p of holding) {
+          if (!propOk(p, where, "holding")) continue;
+          if (!s.carries.includes(p)) failures.push(`${where}: ${nameOf(c.id)} holds "${p}", which the card for ${day} does not give ${nameOf(c.id)} and no earlier change handed over. Fix: add "${p}" to cards.${c.id}.${day}.carries in ${cardsFile}, or add a change { "who": "{{<id>}}", "hands": "${p}", "to": "{{${c.id}}}", "reason": "..." } in an earlier shot`);
+        }
+        return { id: c.id, ...scalarsOf(Object.fromEntries(Object.entries(c.entry).filter(([k]) => k !== "who"))), holding, state: cloneState(s) };
+      });
+      const props = listOf(shot?.props).filter((p) => propOk(p, where, "props"));
+      compiled.shots.push({ id: shotId, index: i, ...scalarsOf(Object.fromEntries(Object.entries(shot || {}).filter(([k]) => k !== "id"))), characters: people, props, changes: applied, in_shot: inShot, first_of_day: dayOk && i === 0 && compiled.shots.length === 0 && Object.values(scenes).every((sc) => sc.story_day !== day) });
+    });
+    scenes[slug] = compiled;
+  }
+  return { failures, gaps, scenes, ids: [...new Set(seen)], labels: seen.length };
 }
 
 // ---- the check ----
@@ -606,20 +854,10 @@ export function checkRegistry(registry) {
           if (walk(scene, rule.key).length) failures.push(`${surface.file}: ${slug}: holds "${rule.key}", which ${rule.owner} owns${rule.why ? ` (${rule.why})` : ""}. Fix: delete it here; the builder reads ${rule.key} from ${rule.owner}`);
         }
         // declared vocabularies may not mix: a scene labelled morning does not describe lamplight
-        for (const rule of surface.exclusive_markers || []) {
-          const picked = walk(scene, rule.field)[0]?.value;
-          if (picked === undefined) { if (rule.required) failures.push(`${surface.file}: ${slug}: has no ${rule.field}, which exclusive_markers require. Fix: set ${rule.field} to one of ${Object.keys(rule.values).join(", ")}`); continue; }
-          if (!rule.values[picked]) { gaps.push(`gap: ${surface.file}: ${slug}: ${rule.field} "${picked}" is not a key of exclusive_markers.values (${Object.keys(rule.values).join(", ")})`); continue; }
-          const text = (rule.fields?.length ? rule.fields.flatMap((f) => walk(scene, f).map((w) => w.value)) : scannedStrings(scene, [rule.field, ...(surface.skip_keys || [])])).flatMap((v) => scannedStrings(v)).join("\n");
-          for (const [other, words] of Object.entries(rule.values)) {
-            if (other === picked) continue;
-            for (const w of words) {
-              const m = text.match(wordRe(w, "i"));
-              if (m) { failures.push(`${surface.file}: ${slug}: says "${m[0].slice(m[1].length)}" (${rule.field} ${other}) but ${rule.field} is "${picked}"${rule.why ? ` (${rule.why})` : ""}. Fix: change ${rule.field} or the text`); break; }
-            }
-          }
-        }
+        markerProblems(surface, scene, slug, failures, gaps);
       }
+    } else if (surface.type === "continuity-cards" || surface.type === "shot-sheet") {
+      // read and carried per story once every surface is known: see continuityStories() below the loop
     } else if (surface.type === "names") {
       const json = readJson(file);
       for (const spec of surface.paths || []) {
@@ -668,6 +906,48 @@ export function checkRegistry(registry) {
       }
     }
   }
+  // continuity cards and shot sheets, per story: the cards start each story day, the sheet carries state shot by shot
+  for (const pair of continuityStories(surfaces)) {
+    const cardsAbs = pair.cards && fromRoot(root, pair.cards.file);
+    const sheetAbs = pair.sheet && fromRoot(root, pair.sheet.file);
+    if (pair.sheet && !pair.cards) failures.push(`${registry._file}: the shot-sheet surface ${pair.sheet.file} (${pair.story}) has no continuity-cards surface for the same story. Fix: declare { "type": "continuity-cards", "file": "<cards.json>", "story": "${pair.story}" }; the sheet carries what the cards start`);
+    if ((cardsAbs && !fs.existsSync(cardsAbs)) || (sheetAbs && !fs.existsSync(sheetAbs))) continue; // the missing file is already a failure
+    let cards = null, sheet = null;
+    try { cards = cardsAbs ? readJson(cardsAbs) : null; sheet = sheetAbs ? readJson(sheetAbs) : null; } catch (e) { failures.push(`${pair.story}: ${e.message}`); continue; }
+    if (cards) for (const p of validate(readJson(CARDS_SCHEMA_PATH), withoutNotes(cards))) failures.push(`${pair.cards.file}: ${p}`);
+    if (sheet) for (const p of validate(readJson(SHOT_SHEET_SCHEMA_PATH), withoutNotes(sheet))) failures.push(`${pair.sheet.file}: ${p}`);
+    const carried = carryContinuity({ cards, sheet, characters, index, story: pair.story, cardsFile: pair.cards?.file, sheetFile: pair.sheet?.file, cardRequired: pair.cards?.required || CARD_REQUIRED, sceneRequired: pair.sheet?.required || SCENE_REQUIRED });
+    failures.push(...carried.failures);
+    gaps.push(...carried.gaps);
+    stats.labels += carried.labels;
+    for (const id of carried.ids) touch(id);
+    const names = loadNames(root);
+    if (cards) {
+      try { storyText(scannedStrings(names.resolveDeep(cards, pair.story), pair.cards.skip_keys || []).join("\n"), pair.story, pair.cards.file); }
+      catch (e) { failures.push(`${pair.cards.file}: ${e.message.replace(/^names: /, "")}`); }
+    }
+    if (sheet) {
+      // the story's scene file, when it has one: the sheet plans the picture, the scene holds the page, and they must agree
+      const storyScenes = new Map();
+      for (const s of surfaces) {
+        if (s.error || s.type !== "scenes" || s.story !== pair.story || !fs.existsSync(fromRoot(root, s.file))) continue;
+        for (const [slug, sc] of scenesIn(s, readJson(fromRoot(root, s.file)))) storyScenes.set(slug, { scene: sc, file: s.file });
+      }
+      for (const [slug, scene] of Object.entries(sheet.scenes || {})) {
+        let resolved = scene;
+        try { resolved = names.resolveDeep(scene, pair.story); }
+        catch (e) { failures.push(`${pair.sheet.file}: ${slug}: ${e.message.replace(/^names: /, "")}. Fix: use a registry id or a card key of ${pair.story}`); }
+        storyText(scannedStrings(resolved, pair.sheet.skip_keys || []).join("\n"), pair.story, `${pair.sheet.file}: ${slug}`);
+        markerProblems(pair.sheet, resolved, slug, failures, gaps);
+        const link = typeof scene?.scene === "string" && scene.scene ? scene.scene : slug;
+        const linked = storyScenes.get(link);
+        if (storyScenes.size && !linked) gaps.push(`gap: ${pair.sheet.file}: ${slug}: no scene "${link}" in the story's scene file; the sheet plans a scene the story does not have yet`);
+        if (linked) for (const f of ["time_of_day", "story_day", "stage"]) {
+          if (scene?.[f] !== undefined && linked.scene?.[f] !== undefined && String(scene[f]) !== String(linked.scene[f])) failures.push(`${pair.sheet.file}: ${slug}: ${f} "${scene[f]}" but ${linked.file} says "${linked.scene[f]}". Fix: one of them is wrong; the picture follows the sheet, the page follows the scene, and they must agree`);
+        }
+      }
+    }
+  }
   // every tracked text file outside records: a retired name must not come back anywhere live
   const tokens = tokenSourceProblems(registry, surfaces, root);
   failures.push(...tokens.failures);
@@ -701,7 +981,7 @@ export function suggest(registry) {
   const { index } = buildIndex(registry);
   const stubs = {};
   for (const surface of surfacesOf(registry)) {
-    if (surface.error || surface.type === "continuity") continue;
+    if (surface.error || ["continuity", "continuity-cards", "shot-sheet"].includes(surface.type)) continue;
     const file = fromRoot(registry._root, surface.file);
     if (!fs.existsSync(file)) continue;
     const add = (label) => {

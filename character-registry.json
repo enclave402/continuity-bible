@@ -3,7 +3,7 @@
   "_about": {
     "role": "Single Source of Truth (SSOT) authority file for narrative characters, companions and props.",
     "rule": "Source files and prompts never contain a written-out name or a written-out variant. Use tokens: {{id}}, {{id:first}}, {{id:full}}, {{id:<form>}}.",
-    "example": "This registry is the repository's own example: three people, one prop, one scene file, one art manifest, one token source."
+    "example": "This registry is the repository's own example: three people, two props, one scene file, one art manifest, one token source, continuity cards and a shot sheet."
   },
   "registry_version": 1,
   "surfaces": [
@@ -36,6 +36,40 @@
           "why": "a scene's description lives once, on the scene; the art manifest keeps slot, src and prompt only"
         }
       ]
+    },
+    {
+      "type": "continuity-cards",
+      "file": "examples/continuity/cards.json",
+      "story": "main-story",
+      "required": ["wardrobe", "hair"]
+    },
+    {
+      "type": "shot-sheet",
+      "file": "examples/continuity/shot-sheet.json",
+      "story": "main-story",
+      "lead": "look",
+      "exclusive_markers": [
+        {
+          "field": "time_of_day",
+          "values": {
+            "morning": ["morning", "sunrise", "dawn", "daylight"],
+            "evening": ["evening", "dusk", "lamplight", "midnight"]
+          },
+          "fields": ["shots[].action", "shots[].characters[].action", "shots[].characters[].eyeline"],
+          "why": "a shot planned for the evening may not describe daylight; the other values' words become the block's AVOID line"
+        },
+        {
+          "field": "location",
+          "values": {
+            "porch": ["porch", "doorstep", "front door"],
+            "kitchen": ["kitchen", "stove", "fridge", "kettle"],
+            "workshop": ["workshop", "workbench", "sawdust"]
+          },
+          "fields": ["shots[].action", "shots[].characters[].action", "shots[].characters[].eyeline"],
+          "required": true,
+          "why": "a shot planned in the kitchen may not describe the workbench"
+        }
+      ]
     }
   ],
   "token_sources": [
@@ -43,7 +77,18 @@
   ],
   "records": ["worklog/**", "research/**", "CHANGELOG.md"],
   "coverage": {
-    "ignore": ["README.md", "AGENTS.md", "CLAUDE.md", "PRODUCT.md", "CONTRIBUTING.md", "docs/**", "test/**", "scripts/**", ".context/**", "examples/anchor/**"],
+    "ignore": [
+      "README.md",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "PRODUCT.md",
+      "CONTRIBUTING.md",
+      "docs/**",
+      "test/**",
+      "scripts/**",
+      ".context/**",
+      "examples/anchor/**"
+    ],
     "strict": false
   },
   "drift_resolution": {
@@ -61,14 +106,11 @@
       "kind": "person",
       "story": "main-story",
       "role": "Lead protagonist, mental health clinician and narrator",
-      "aliases": [
-        "Chloe Jenkins",
-        "Chloe, LMHC",
-        "Narrator (Chloe)"
-      ],
+      "aliases": ["Chloe Jenkins", "Chloe, LMHC", "Narrator (Chloe)"],
       "forms": {
         "formal": "Ms. Jenkins",
-        "nickname": "Chlo"
+        "nickname": "Chlo",
+        "look": "a Black woman in her late thirties with deep brown skin and a close-cropped natural cut"
       },
       "retired": []
     },
@@ -78,13 +120,11 @@
       "kind": "person",
       "story": "main-story",
       "role": "Anxious-preoccupied architectural designer",
-      "aliases": [
-        "Sam Hayes",
-        "Samantha Hayes"
-      ],
+      "aliases": ["Sam Hayes", "Samantha Hayes"],
       "forms": {
         "formal": "Samantha",
-        "short": "Sam"
+        "short": "Sam",
+        "look": "a mixed-race woman in her early thirties with warm brown skin, dark curly hair and a small scar through her left eyebrow"
       },
       "retired": []
     },
@@ -94,13 +134,11 @@
       "kind": "person",
       "story": "main-story",
       "role": "Dismissive-avoidant audio engineer and carpenter",
-      "aliases": [
-        "Theo Vance",
-        "Theodore Vance"
-      ],
+      "aliases": ["Theo Vance", "Theodore Vance"],
       "forms": {
         "formal": "Theodore",
-        "short": "Theo"
+        "short": "Theo",
+        "look": "a tall white man in his thirties with sandy hair, a short beard and a chipped front tooth"
       },
       "retired": []
     },
@@ -114,13 +152,17 @@
       "forms": {
         "attitude": {
           "by": "stage",
-          "values": {
-            "childhood": "clutched like a toy",
-            "adult": "kept in a drawer",
-            "default": "on the side table"
-          }
+          "values": { "childhood": "clutched like a toy", "adult": "kept in a drawer", "default": "on the side table" }
         }
       }
+    },
+    "cracked-phone": {
+      "name": "the cracked phone",
+      "kind": "prop",
+      "story": "main-story",
+      "role": "Sam's phone, the object the kitchen scene turns on; listed by id on scenes and cards, held by whoever the shot sheet says",
+      "prompt_tokens": "a black phone with a cracked corner in a clear case",
+      "negative_tokens": ["pristine phone", "a second phone"]
     }
   }
 }

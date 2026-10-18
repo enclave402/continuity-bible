@@ -27,7 +27,7 @@
         "additionalProperties": false,
         "properties": {
           "file": { "type": "string" },
-          "type": { "type": "string", "enum": ["scenes", "names", "headings", "prose"] },
+          "type": { "type": "string", "enum": ["scenes", "names", "headings", "prose", "continuity-cards", "shot-sheet"], "description": "scenes, names, headings, prose: files whose labels must resolve. continuity-cards: how each character starts each story day (scripts/continuity-cards.v1.schema.json). shot-sheet: a story's scenes and shots in reading order, carrying the cards' state shot by shot (scripts/shot-sheet.v1.schema.json); one of each per story." },
           "story": { "type": "string" },
           "root": { "type": "string", "description": "scenes: the key holding the scene map (default scenes)." },
           "filter": {
@@ -58,6 +58,12 @@
             "items": { "type": "string" },
             "description": "headings: exact heading labels that are not characters (a timeline, a table) and are skipped."
           },
+          "required": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "continuity-cards: the card fields every card must fill (default wardrobe). shot-sheet: the header fields every scene must fill (default story_day, location, time_of_day)."
+          },
+          "lead": { "type": "string", "minLength": 1, "description": "shot-sheet: the form that opens each character's line in the compiled block (default look). An entry without that form opens with its name." },
           "story_field": { "type": "string", "description": "prose: the field of each entry under root whose value picks the story through `stories` (default: the entry's key)." },
           "stories": {
             "type": "object",
@@ -101,7 +107,7 @@
                 "why": { "type": "string" }
               }
             },
-            "description": "Declared vocabularies that may not mix: a scene labelled morning may not describe lamplight. Nothing is hardcoded; the words are yours."
+            "description": "Declared vocabularies that may not mix: a scene labelled morning may not describe lamplight. On a shot sheet the other values' words also become the compiled block's AVOID line. Nothing is hardcoded; the words are yours."
           }
         }
       }

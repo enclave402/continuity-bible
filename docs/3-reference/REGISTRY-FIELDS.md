@@ -38,7 +38,9 @@ Common: `file`, `type`, `story`, `split[]` (extra label separators), `skip_keys[
 | `names` | `paths[]` | each string at the paths resolves |
 | `headings` | `pattern`, `within`, `ignore[]` | each heading label resolves |
 | any of `scenes`, `prose` | `forbid_keys[] { key, owner, why? }` | an entry holding the key fails: the field lives once, in `owner` |
-| `scenes` | `exclusive_markers[] { field, values{ value: [words] }, fields[]?, required?, why? }` | a scene whose text uses a word of another value than its own fails; a scene without the field is skipped, or fails with `required` |
+| `scenes`, `shot-sheet` | `exclusive_markers[] { field, values{ value: [words] }, fields[]?, required?, why? }` | a scene whose text uses a word of another value than its own fails; a scene without the field is skipped, or fails with `required`; on a shot sheet the other values' words become the compiled block's AVOID line |
+| `continuity-cards` | `required[]` (default `wardrobe`) | how each character starts each story day (`scripts/continuity-cards.v1.schema.json`); every card fills the required fields, every day is a key of `story_days`, `carries` lists prop ids; one per story. Fields: [CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md](CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md) |
+| `shot-sheet` | `required[]` (default `story_day`, `location`, `time_of_day`), `lead` (default `look`) | scenes and shots in reading order (`scripts/shot-sheet.v1.schema.json`); state carries from the cards shot by shot; every change needs a reason; a character holds only what they carry; the header agrees with the story's scene file; compiled by `scripts/compile-shot.mjs`; one per story, paired with the story's `continuity-cards` surface |
 
 ## Entries (`characters.<id>`)
 
@@ -65,4 +67,4 @@ Ids: lower-case letters, digits, hyphens.
 
 ## Exit codes
 
-`check.mjs`: 0 with `character registry: pass (...)`; 1 with one line per failure and the fix. Gaps print on stdout and do not fail. `render.mjs`, `tokenize.mjs`, `anchor.mjs`: 0 on success, 1 on a named problem, 2 on usage.
+`check.mjs`: 0 with `character registry: pass (...)`; 1 with one line per failure and the fix. Gaps print on stdout and do not fail. `render.mjs`, `tokenize.mjs`, `anchor.mjs`, `compile-shot.mjs`: 0 on success, 1 on a named problem, 2 on usage. `compile-shot.mjs` runs the whole gate first and compiles nothing when it fails.
