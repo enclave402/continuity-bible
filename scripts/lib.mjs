@@ -13,7 +13,7 @@ import { loadNames, TOKEN, atomicLabels, labelRegExp } from "./names.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const SCHEMA_PATH = path.join(HERE, "character-registry.v1.schema.json");
-export const DEFAULT_FIELDS = ["characters", "speaker", "marginAuthor", "dialogue[].speaker"];
+export const DEFAULT_FIELDS = ["characters", "props", "speaker", "marginAuthor", "dialogue[].speaker"];
 export const DEFAULT_SPLIT = ["&", "+", " and "];
 export const DEFAULT_HEADING = "^###\\s+(?:\\d+\\.\\s+)?([^(\\n]+?)\\s*\\(";
 
@@ -361,7 +361,14 @@ const BINARY_EXT = new Set(["png", "jpg", "jpeg", "webp", "gif", "svg", "ico", "
 export function textFiles(root) {
   let files = [];
   try {
-    files = execFileSync("git", ["-C", root, "ls-files", "-z"], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] }).split("\0").filter(Boolean);
+    // List the checkout that root actually is. A git hook exports GIT_DIR / GIT_INDEX_FILE, which would make a copy of
+    // the repo (a test fixture, an export) report the hook's index instead of its own files; strip them and require that
+    // root is the top level of the checkout being listed, else walk the directory.
+    const env = Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^GIT_(DIR|INDEX_FILE|WORK_TREE|COMMON_DIR|PREFIX)$/.test(k)));
+    const opts = { cwd: root, env, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] };
+    const top = execFileSync("git", ["rev-parse", "--show-toplevel"], opts).trim();
+    if (!top || fs.realpathSync(top) !== fs.realpathSync(root)) throw new Error("root is not the top level of a checkout");
+    files = execFileSync("git", ["ls-files", "-z"], opts).split("\0").filter(Boolean);
     if (!files.length) throw new Error("not a checkout");
   } catch {
     const walkDir = (dir) => {
@@ -454,6 +461,40 @@ function tokenSourceProblems(registry, surfaces, root) {
   return { failures, sources: sources.size };
 }
 
+/**
+ * Coverage: every tracked text file is a surface, a token source, a record, or listed under coverage.ignore. Any other file
+ * that writes a registry label as a whole word is unclassified, and the gate says so (a gap, or a failure with
+ * coverage.strict), so no data file can sit outside the gate unnoticed.
+ */
+function coverageProblems(registry, surfaces, root) {
+  const problems = [];
+  const characters = registry.characters || {};
+  const { list } = atomicLabels(characters, []);
+  if (!list.length) return { problems, unclassified: 0 };
+  const tracked = textFiles(root);
+  const classified = new Set([path.relative(root, registry._file), path.relative(root, SCHEMA_PATH)]);
+  for (const s of surfaces) if (!s.error) classified.add(s.file.replace(/^\.\//, ""));
+  const globs = [
+    ...(registry.records || []),
+    ...(registry.coverage?.ignore || []),
+    ...(registry.token_sources || []).map((t) => t.file),
+  ].map(globToRegExp);
+  let unclassified = 0;
+  for (const rel of tracked) {
+    if (classified.has(rel) || globs.some((re) => re.test(rel))) continue;
+    const full = path.join(root, rel);
+    if (!fs.existsSync(full) || fs.statSync(full).isDirectory()) continue;
+    const buffer = fs.readFileSync(full);
+    if (looksBinary(buffer)) continue;
+    const lines = buffer.toString("utf8").split("\n");
+    const hit = lines.map((line, i) => { const bare = line.replace(TOKEN, " "); const l = list.find(([label]) => labelRegExp(label, "").test(bare)); return l ? { label: l[0], line: i + 1 } : null; }).find(Boolean);
+    if (!hit) continue;
+    unclassified += 1;
+    problems.push(`${rel}:${hit.line}: names "${hit.label}" but is no surface, token source or record. Fix: list it under token_sources (a builder renders it), surfaces (the gate resolves its labels), records (dated history) or coverage.ignore (documentation that may show names), in ${path.basename(registry._file)}`);
+  }
+  return { problems, unclassified };
+}
+
 function scannedStrings(value, skipKeys = [], out = []) {
   if (typeof value === "string") out.push(value);
   else if (Array.isArray(value)) value.forEach((v) => scannedStrings(v, skipKeys, out));
@@ -495,6 +536,13 @@ export function checkRegistry(registry) {
         if (age !== expected && age !== expected - 1) failures.push(`${registry._file}: ${id} is ${age} in ${year} but born ${entry.born} (that is ${expected - 1} or ${expected}). Fix: correct born or the age`);
       }
     }
+    // a form is a string, or a contextual form picked by a field of the unit being resolved
+    for (const [form, value] of Object.entries(entry.forms || {})) {
+      if (typeof value === "string") continue;
+      const ok = value && typeof value === "object" && typeof value.by === "string" && value.by && value.values && typeof value.values === "object" && Object.values(value.values).every((t) => typeof t === "string" && t);
+      if (!ok) failures.push(`${registry._file}: ${id}.forms.${form} must be a string or { "by": "<field>", "values": { "<value>": "<text>", "default": "<text>" } }`);
+    }
+    if (entry.anchor?.image && !fs.existsSync(fromRoot(root, entry.anchor.image))) gaps.push(`gap: ${id}.anchor.image ${entry.anchor.image} is not on disk here (generated images are often untracked); the registry still records which image is the anchor`);
   }
 
   const surfaces = surfacesOf(registry);
@@ -553,6 +601,24 @@ export function checkRegistry(registry) {
       for (const [slug, scene] of scenes) {
         for (const { label, where } of labelsOfScene(surface, scene)) seen(label, `${slug}.${where}`);
         if (surface.prose) storyText(scannedStrings(scene, surface.skip_keys || []).join("\n"), surface.story, `${surface.file}: ${slug}`);
+        // a field lives once: a key another file owns may not be copied here
+        for (const rule of surface.forbid_keys || []) {
+          if (walk(scene, rule.key).length) failures.push(`${surface.file}: ${slug}: holds "${rule.key}", which ${rule.owner} owns${rule.why ? ` (${rule.why})` : ""}. Fix: delete it here; the builder reads ${rule.key} from ${rule.owner}`);
+        }
+        // declared vocabularies may not mix: a scene labelled morning does not describe lamplight
+        for (const rule of surface.exclusive_markers || []) {
+          const picked = walk(scene, rule.field)[0]?.value;
+          if (picked === undefined) { if (rule.required) failures.push(`${surface.file}: ${slug}: has no ${rule.field}, which exclusive_markers require. Fix: set ${rule.field} to one of ${Object.keys(rule.values).join(", ")}`); continue; }
+          if (!rule.values[picked]) { gaps.push(`gap: ${surface.file}: ${slug}: ${rule.field} "${picked}" is not a key of exclusive_markers.values (${Object.keys(rule.values).join(", ")})`); continue; }
+          const text = (rule.fields?.length ? rule.fields.flatMap((f) => walk(scene, f).map((w) => w.value)) : scannedStrings(scene, [rule.field, ...(surface.skip_keys || [])])).flatMap((v) => scannedStrings(v)).join("\n");
+          for (const [other, words] of Object.entries(rule.values)) {
+            if (other === picked) continue;
+            for (const w of words) {
+              const m = text.match(wordRe(w, "i"));
+              if (m) { failures.push(`${surface.file}: ${slug}: says "${m[0].slice(m[1].length)}" (${rule.field} ${other}) but ${rule.field} is "${picked}"${rule.why ? ` (${rule.why})` : ""}. Fix: change ${rule.field} or the text`); break; }
+            }
+          }
+        }
       }
     } else if (surface.type === "names") {
       const json = readJson(file);
@@ -596,6 +662,9 @@ export function checkRegistry(registry) {
         let resolved; // the entry holds {{id}} tokens; the names are rendered for the story before the scan, so a wrong-story token still fails
         try { resolved = names.resolveDeep(entry, storyId); } catch (e) { failures.push(`${surface.file}: ${key}: ${e.message}`); continue; }
         storyText(scannedStrings(resolved, surface.skip_keys || []).join("\n"), storyId, `${surface.file}: ${key}`);
+        for (const rule of surface.forbid_keys || []) {
+          if (walk(entry, rule.key).length) failures.push(`${surface.file}: ${key}: holds "${rule.key}", which ${rule.owner} owns${rule.why ? ` (${rule.why})` : ""}. Fix: delete it here; the builder reads ${rule.key} from ${rule.owner}`);
+        }
       }
     }
   }
@@ -606,6 +675,10 @@ export function checkRegistry(registry) {
   const repo = scanRepo(registry, surfaces.filter((s) => !s.error).map((s) => fromRoot(root, s.file)));
   failures.push(...repo.failures);
   stats.files = repo.scanned;
+  // coverage: a file that is no surface, token source, record or ignored path, and still names a character, is reported
+  const coverage = coverageProblems(registry, surfaces, root);
+  (registry.coverage?.strict ? failures : gaps).push(...coverage.problems.map((p) => (registry.coverage?.strict ? p : `gap: ${p}`)));
+  stats.unclassified = coverage.unclassified;
   for (const [id, entry] of Object.entries(characters)) {
     if (entry.first_appearance && sceneSlugs.has(entry.story) && !sceneSlugs.get(entry.story).has(entry.first_appearance)) {
       failures.push(`${registry._file}: ${id}.first_appearance "${entry.first_appearance}" is not a scene of ${entry.story}. Fix: use a scene slug`);

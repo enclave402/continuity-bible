@@ -1,0 +1,11 @@
+{
+  "_about": "An art manifest: one slot per picture. It names the scene it illustrates and keeps the prompt that was sent; the scene's description is not copied here (see the registry's forbid_keys), the page builder reads it from the scene.",
+  "art": {
+    "art-14-kitchen-table": {
+      "scene": "14-read-at-1152",
+      "storyKey": "main",
+      "src": "img/14-kitchen-table.png",
+      "prompt": "{{sam-hayes:full}} at a kitchen table, phone glowing; PROP {{brass-key}}: a small tarnished brass key on a frayed red thread; AVOID: shiny gold key, keyring"
+    }
+  }
+}
