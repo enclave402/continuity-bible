@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-17 21:05 EDT
-**HEAD:** 1255e47
+**HEAD:** 2a5afab
 **Date:** 2026-10-17
 **Session:** public repository norms, in-repo research process, continuity gate extensions, drift anchor policy (branch `claude/research-process-and-public-norms`)
 

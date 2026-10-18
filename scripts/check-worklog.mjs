@@ -7,7 +7,7 @@
  * Fails on: a missing worklog/README.md, STATE.md, log.jsonl or entries/README.md; a trail line that is not JSON or lacks
  * id, timestamp, edited_at, event_type, scope, summary, or whose timestamp has no numeric offset; a STATE.md without
  * "Last rewritten:", a HEAD line, a Current facts section, a Closed directions section or a Next action; a STATE HEAD that
- * is not an ancestor of git HEAD or is more than one commit behind it (WORKLOG_ALLOW_STATE_HEAD_DRIFT=1 skips this while
+ * is not an ancestor of git HEAD or is more than one first-parent commit behind it (merged-in commits do not count; WORKLOG_ALLOW_STATE_HEAD_DRIFT=1 skips this while
  * you are mid-edit); a WORKLOG.md that does not list the last trail entry; a second log.jsonl anywhere in the tree.
  */
 import fs from "node:fs";
@@ -52,7 +52,8 @@ if (fs.existsSync(path.join(wl, "STATE.md"))) {
   if (!m) fail("STATE.md: missing a **HEAD:** <short-sha> line");
   else if (m[1] !== "uncommitted" && process.env.WORKLOG_ALLOW_STATE_HEAD_DRIFT !== "1") {
     try {
-      const lag = Number(execFileSync("git", ["-C", repo, "rev-list", "--count", `${m[1]}..HEAD`], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim());
+      // first-parent only: commits merged in from another branch are not lag on this branch's helm
+      const lag = Number(execFileSync("git", ["-C", repo, "rev-list", "--count", "--first-parent", `${m[1]}..HEAD`], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim());
       if (lag > 1) fail(`STATE.md: HEAD ${m[1]} is ${lag} commits behind git HEAD (max 1). Fix: rewrite STATE.md, or run the appender once`);
       else if (lag === 1) warnings.push(`STATE.md: HEAD ${m[1]} is 1 commit behind git HEAD (allowed)`);
     } catch { fail(`STATE.md: HEAD ${m[1]} is not an ancestor of git HEAD`); }
