@@ -69,9 +69,10 @@ A tags file is one line per picture, in order, in a strict format called JSON Li
 
 - **One file per character:** `tags-june.jsonl`, `tags-abel.jsonl`. A picture appears in a character's file only if that character is in it; `order` keeps the picture's number, so gaps are fine.
 - **Write the vocabulary before you tag.** Three to five keys per character: the fixed traits in `canon_tags` (what must never change), plus the things that drift in practice and that you want question 2 to weigh: hair, build, one garment, one signature object. Put the fixed traits in the registry first; the tags file follows them.
-- **Same keys on every line.** A key missing from a line means that line cannot match canon.
+- **Same keys on every line.** A key missing from a line means that picture does not carry that trait, and a fixed trait it does not carry counts as drift. If you could not look, write `unknown` (below), not nothing.
 - **Fixed-trait values exactly as written in the registry.** The comparison is a case-insensitive exact match on the value, so `two puffs` matches `Two Puffs` but not `2 puffs`. Copy and paste the value.
-- **Anything else in two or three plain words.** `loose curls`, `grey`, `too light`. If you cannot tell from the picture, write `unclear`; it will never match a fixed trait, which is the honest result.
+- **Anything else in two or three plain words.** `loose curls`, `grey`, `too light`.
+- **If you cannot tell, write `unknown`.** Her eyes are closed, his face is turned away: tag that trait `unknown` instead of guessing. A picture you could not judge on a fixed trait is not counted as drift for it: it cannot become the anchor, it is not put on the redraw list for that trait, and the report says how many it left out. It still goes on the list if something you could see has drifted. Any other word, `unclear` included, is read as what you saw, and a fixed trait that does not match is billed as drift. To use your own word instead, see [When you cannot tell](HOW-TO-RESOLVE-CHARACTER-DRIFT.md#when-you-cannot-tell).
 - **Tag what the picture shows, not what you asked for.** The prompt is not evidence. Open the picture at full size.
 - **Keep `order` ascending and matching the file names.**
 - **Double quotes, commas between fields, no comma before a closing brace.** A broken line stops the tool with an error that mentions `JSON` and a position; fix that line.
@@ -145,6 +146,7 @@ Never edit `built/`. Never edit a scene to match a picture. The registry is upst
 | `unknown token {{june-okafer}}` | a token with a typo, or an id not in the registry | fix the spelling, or add the character |
 | `None of the pictures has what must never change (...)` (or, on one line, `no image keeps {...}: every image has drifted off what must never change`) | nothing you tagged carries every fixed trait | paste the sheet again, tag the new pictures, ask again |
 | `unknown --prefer ...` | a misspelled answer on the command line | one of `fewest-redraws`, `first-look`, `last-look`, `most-common` |
+| `N picture(s) could not be judged on that (tagged unknown); they are not counted as drift.` | you tagged a fixed trait `unknown` on those pictures | nothing to fix: they are left out of the anchor choice and the bill for that trait |
 | `consensus needs embeddings or tags on the rows` | the pictures have neither embeddings nor tags | tag them (section 3) |
 | `canon needs the character's canon_tags in the registry or --canon tag=value` | the old `--policy canon` spelling without fixed traits | use `--ask`, or `--keep tag=value` |
 | `--write needs --character <id> that exists in .../character-registry.json` | `--write` without a character, or an id that is not in the registry | add `--character <id>` with the id as written in the registry |

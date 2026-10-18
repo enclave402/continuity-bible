@@ -167,7 +167,10 @@ export function comparePolicies(rows, opts) {
 
 // run as a command (also through a symlinked folder): compare real paths, not the spelling of argv[1]
 const isMain = (() => { try { return fs.realpathSync(process.argv[1]) === fs.realpathSync(new URL(import.meta.url)); } catch { return false; } })();
-if (isMain) main().catch((e) => { console.error(e.message); process.exit(1); });
+// The --ask reader holds stdin open. On a piped stdin that ends by itself; on a terminal it never does, so the command would
+// print its last line and then wait for Ctrl-C. Close it when main() ends, whichever way it ends.
+let askReader = null;
+if (isMain) main().catch((e) => { console.error(e.message); process.exitCode = 1; }).finally(() => askReader?.close());
 
 async function main() {
   const argv = process.argv.slice(2);
@@ -204,7 +207,7 @@ async function main() {
   let question = null;
   if (ask) {
     // the two questions, in plain words, on the terminal; piped answers work too
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: false });
+    const rl = askReader = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: false });
     const lines = rl[Symbol.asyncIterator]();
     question = async (prompt) => { process.stdout.write(prompt); const { value, done } = await lines.next(); if (!process.stdin.isTTY) process.stdout.write("\n"); return done ? "" : String(value); };
     console.log(`What about ${name} must never change? Type tag=value pairs separated by commas, or press Enter for none.`);

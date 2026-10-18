@@ -19,7 +19,7 @@ You need:
 - A browser chatbot that can make pictures. Any one you already use.
 - A text editor. Notepad, TextEdit (in plain-text mode) or VS Code all work.
 
-Nothing here talks to any service. The scripts read and write files in one folder on your computer.
+Once you have the folder, nothing here talks to any service. The scripts only read and write files on your computer.
 
 ## 1. Get the folder
 
@@ -340,7 +340,7 @@ You answered `y`, so the choice is saved in the registry, next to the character 
   "order": 1,
   "chosen_at": "2026-10-18T01:56:57.713Z",
   "embeddings": "tags-june.jsonl",
-  "stats": { "n": 4, "with_embedding": 0, "pruned": 0, "threshold": 0.6, "kept": 1, "excluded": 3, "below_threshold": null, "bill_basis": "tags", "tag_mismatches": 3, "tag_differ": 0 },
+  "stats": { "n": 4, "with_embedding": 0, "pruned": 0, "threshold": 0.6, "kept": 1, "excluded": 3, "cannot_tell": 0, "below_threshold": null, "bill_basis": "tags", "tag_mismatches": 3, "tag_differ": 0 },
   "why": "no embeddings, so the most frequent tag combination [[\"coat\",\"yellow\"],[\"hair\",\"two puffs\"],[\"skin\",\"dark brown\"]] (1 of 1 images) among the 1 image(s) that keep {\"skin\":\"dark brown\",\"hair\":\"two puffs\"} (of 4)"
 }
 ```
