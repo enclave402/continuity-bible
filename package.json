@@ -8,7 +8,24 @@
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
     "test": "node --test",
-    "tokenize": "node scripts/tokenize.mjs"
+    "tokenize": "node scripts/tokenize.mjs",
+    "render": "node scripts/render.mjs",
+    "anchor": "node scripts/anchor.mjs",
+    "verify": "node scripts/check.mjs && node --test && node scripts/check-private.mjs && node scripts/check-worklog.mjs && node scripts/research/index.mjs --check && node scripts/check-docs.mjs",
+    "private": "node scripts/check-private.mjs",
+    "hooks": "bash scripts/install-git-hooks.sh",
+    "worklog": "node scripts/worklog-append.mjs",
+    "worklog:check": "node scripts/check-worklog.mjs",
+    "worklog:index": "node scripts/worklog-index.mjs",
+    "docs:check": "node scripts/check-docs.mjs",
+    "research:card": "node scripts/research/card.mjs",
+    "research:index": "node scripts/research/index.mjs",
+    "research:pack": "node scripts/research/pack.mjs",
+    "research:extract": "node scripts/research/extract.mjs",
+    "research:overlap": "node scripts/research/overlap.mjs",
+    "research:ask": "node scripts/research/ask.mjs",
+    "research:verify": "node scripts/research/verify.mjs",
+    "changelog": "git cliff -o CHANGELOG.md"
   },
   "keywords": [
     "ai-storytelling",
@@ -39,5 +56,14 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "files": [
+    "scripts/",
+    "character-registry.json",
+    "examples/",
+    "research/research.config.json",
+    "README.md",
+    "AGENTS.md",
+    "LICENSE"
+  ]
 }

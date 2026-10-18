@@ -1,0 +1,34 @@
+{
+  "_about": "Patterns the publication gate (scripts/check-private.mjs) refuses in a public repository. Names are what the gate prints. Add a pattern when a class of private value could reach the tree; add an allow entry only for a specific public string, with the reason in _why.",
+  "patterns": {
+    "local-home-path": "(?:/Users|/home)/[A-Za-z0-9._-]+(?:/|\\b)|[A-Z]:\\\\Users\\\\",
+    "dotfile-agent-state": "~/\\.(?:hermes|codex|gemini|cursor)/",
+    "env-store": "env_ssot|master\\.env",
+    "email": "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}",
+    "openai-style-key": "\\bsk-[A-Za-z0-9_-]{20,}",
+    "github-token": "\\bgh[pousr]_[A-Za-z0-9]{30,}",
+    "aws-access-key": "\\bAKIA[0-9A-Z]{16}\\b",
+    "slack-token": "\\bxox[baprs]-[A-Za-z0-9-]{10,}",
+    "google-api-key": "\\bAIza[0-9A-Za-z_-]{35}\\b",
+    "private-key-block": "-----BEGIN [A-Z ]*PRIVATE KEY-----",
+    "bearer-token": "Bearer [A-Za-z0-9._~+/-]{24,}=*",
+    "tailscale-address": "\\b100\\.(?:6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\\.[0-9]{1,3}\\.[0-9]{1,3}\\b",
+    "lan-address": "\\b(?:192\\.168|10)\\.[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{1,3})?\\b",
+    "home-documents-path": "~/Documents/[A-Za-z0-9._/-]+",
+    "private-norms-folder": "Machine-Norms",
+    "private-tool-paths": "worklog-index-build\\.py|worklog-disposition\\.mjs|worklog-checkin\\.mjs|sync-worklog-ssot\\.sh"
+  },
+  "allow": {
+    "email": [
+      "@example.com",
+      "@users.noreply.github.com"
+    ],
+    "_why": "example.com is reserved for documentation; GitHub noreply addresses are public by design."
+  },
+  "skip": [
+    "LICENSE",
+    "package-lock.json",
+    "scripts/check-private.config.json",
+    "scripts/check-private.mjs"
+  ]
+}

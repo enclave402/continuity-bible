@@ -1,1 +1,8 @@
+# Normalise line endings; keep the trail append-friendly across branches.
+* text=auto eol=lf
 worklog/log.jsonl merge=union
+worklog/WORKLOG.md merge=union
+research/FINDINGS.jsonl merge=union
+*.png binary
+*.jpg binary
+*.webp binary

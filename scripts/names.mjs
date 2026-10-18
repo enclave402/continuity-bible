@@ -8,7 +8,9 @@
 //   {{id:short}}   the card's stage label when the id is a card key, else the registry name
 //   {{id:full}}    the registry entry's full_name when it has one (chloe-jenkins:full -> "Chloe Jenkins"), else the name
 //   {{id:initial}} the first letter of the first name
-//   {{id:<form>}}  any key of the entry's `forms` map (sam-hayes:formal -> "Samantha"); a form in the map overrides a built-in
+//   {{id:<form>}}  any key of the entry's `forms` map (sam-hayes:formal -> "Samantha"); a form in the map overrides a built-in.
+//                  A contextual form ({ "by": "stage", "values": { "childhood": "...", "default": "..." } }) renders the variant
+//                  the resolved unit's field picks (a scene with stage: "childhood"); no match and no default throws.
 // A card key resolves without a story when exactly one card holds it. An unknown id throws: a build never prints a token,
 // and never guesses a name.
 //
@@ -47,7 +49,10 @@ export function atomicLabels(characters, cards = []) {
   for (const [id, e] of Object.entries(characters || {})) {
     add(e.name, id, `{{${id}}}`);
     if (e.full_name) add(e.full_name, id, `{{${id}:full}}`);
-    for (const [form, value] of Object.entries(e.forms || {})) add(value, id, `{{${id}:${form}}}`);
+    for (const [form, value] of Object.entries(e.forms || {})) {
+      if (typeof value === "string") add(value, id, `{{${id}:${form}}}`);
+      else if (value && typeof value === "object") for (const text of Object.values(value.values || {})) add(text, id, `{{${id}:${form}}}`); // a contextual form: every variant is written once, here
+    }
   }
   for (const card of cards) for (const [key, c] of Object.entries(card?.characters || {})) {
     if (typeof c?.scene_name === "string" && !characters?.[key] && !owners.has(c.scene_name)) add(c.scene_name, key, `{{${key}}}`);
@@ -100,25 +105,41 @@ export function loadNames(root) {
   };
   const castOf = (story, scene) => (scene?.characters || []).map((ref) => castName(story, ref)).filter(Boolean);
 
-  /** The text of one token, or null when the id is unknown. */
-  const tokenText = (story, id, form) => {
+  /**
+   * The text of one token, or null when the id is unknown. A contextual form ({ by, values }) is picked by a field of the
+   * unit being resolved (opts.context: the scene, the row, the record): values[context[by]], else values.default, else an
+   * error that names the field, so a stage-dependent attribute is compiled by rule and never left to "the prompt writer".
+   */
+  const tokenText = (story, id, form, context) => {
     const m = member(story, id);
     const entry = characters[id];
     if (!m && !entry) return null;
     const name = entry ? entry.name : m.scene_name; // the registry wins for an id; a card-only key (young-sam) renders its scene_name
     if (!form) return name;
-    if (entry?.forms && typeof entry.forms[form] === "string") return entry.forms[form];
+    const declared = entry?.forms?.[form];
+    if (typeof declared === "string") return declared;
+    if (declared && typeof declared === "object") {
+      const picked = context ? context[declared.by] : undefined;
+      const text = picked !== undefined && typeof declared.values?.[String(picked)] === "string" ? declared.values[String(picked)] : declared.values?.default;
+      if (typeof text !== "string") {
+        const err = new Error(`names: {{${id}:${form}}} is picked by "${declared.by}", but the unit being resolved has ${picked === undefined ? `no ${declared.by}` : `${declared.by} "${picked}", which forms.${form}.values does not list`} and the form has no default. Fix: set ${declared.by} on the unit, add the value under forms.${form}.values, or add a default`);
+        err.code = "CONTEXT";
+        throw err;
+      }
+      return text;
+    }
     if (form === "first") return name.split(/\s+/)[0];
     if (form === "short") return m?.scene_name ?? name;
     if (form === "full") return entry?.full_name ?? name;
     if (form === "initial") return name.split(/\s+/)[0][0];
     return null;
   };
-  /** opts.keep: a token that is no character's ({{pattern:anxious}} in a data file another builder resolves) stays as written. */
+  /** opts.keep: a token that is no character's ({{pattern:anxious}} in a data file another builder resolves) stays as written.
+   *  opts.context: the unit (scene, row) whose fields pick contextual forms; resolveDeep sets it from the data itself. */
   const resolveTokens = (text, story, opts = {}) => {
     if (typeof text !== "string" || !text.includes("{{")) return text;
     return text.replace(TOKEN, (whole, id, form) => {
-      const out = tokenText(story, id, form);
+      const out = tokenText(story, id, form, opts.context);
       if (out === null) {
         if (opts.keep && !characters[id] && !member(story, id)) return whole;
         throw new Error(`names: unknown token ${whole}${story ? ` in story ${story}` : ""}: no continuity-card key and no registry id ${id}`);
@@ -126,11 +147,17 @@ export function loadNames(root) {
       return out;
     });
   };
-  /** Every string in a value resolved; arrays and objects rebuilt; structured references (ids, card keys) are not strings with tokens and stay. */
+  /** Every string in a value resolved; arrays and objects rebuilt; structured references (ids, card keys) are not strings with
+   *  tokens and stay. Each object's own scalar fields join the context its strings are resolved with (a scene's stage or
+   *  time_of_day picks that scene's contextual forms; a nested object inherits and may override). */
   const resolveDeep = (value, story, opts = {}) => {
     if (typeof value === "string") return resolveTokens(value, story, opts);
     if (Array.isArray(value)) return value.map((v) => resolveDeep(v, story, opts));
-    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, resolveDeep(v, story, opts)]));
+    if (value && typeof value === "object") {
+      const own = Object.fromEntries(Object.entries(value).filter(([, v]) => ["string", "number", "boolean"].includes(typeof v)));
+      const inner = { ...opts, context: { ...(opts.context || {}), ...own } };
+      return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, resolveDeep(v, story, inner)]));
+    }
     return value;
   };
   /** A scene map (slug -> scene) resolved, each scene by the story its storyKey names in the manifest; a scene without one resolves by registry ids and unique card keys. */

@@ -1,5 +1,3 @@
-# worklog/entries/ — GENERATED-ONLY human layer
+# worklog/entries/: GENERATED ONLY
 
-> **Do not hand-create or hand-edit files in this directory.**
-> Every Markdown file in this directory is **generated from log.jsonl** by `worklog-index-build.py`.
-> To record a new event, append to `worklog/log.jsonl` and run `python3 ~/Documents/Machine-Norms/bin/worklog-index-build.py <repo>`.
+Every file here is GENERATED from `../log.jsonl` by `scripts/worklog-index.mjs`. The generator creates a missing file and never overwrites one, so you may enrich an entry by hand after it exists. Do not author a new event here: append it to the trail with `scripts/worklog-append.mjs` and regenerate.

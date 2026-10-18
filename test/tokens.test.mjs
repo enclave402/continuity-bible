@@ -45,9 +45,9 @@ test("check passes on the examples and fails on a written-out name, with the tok
   const path = await import("node:path");
   const pass = spawnSync(process.execPath, ["scripts/check.mjs"], { encoding: "utf8" });
   assert.equal(pass.status, 0, pass.stderr);
-  assert.match(pass.stdout, /character registry: pass \(3 entries, 6 labels resolved on 1 surfaces/);
+  assert.match(pass.stdout, /character registry: pass \(4 entries, 7 labels resolved on 2 surfaces/);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-"));
-  fs.cpSync(process.cwd(), dir, { recursive: true, filter: (src) => !src.includes(`${path.sep}.git`) });
+  fs.cpSync(process.cwd(), dir, { recursive: true, filter: (src) => !path.relative(process.cwd(), src).split(path.sep).some((p) => [".git", "node_modules", ".worktrees", ".context", "research"].includes(p)) });
   fs.appendFileSync(path.join(dir, "examples/sample-scene.md"), "\nSam waited.\n");
   const fail = spawnSync(process.execPath, ["scripts/check.mjs"], { cwd: dir, encoding: "utf8" });
   fs.rmSync(dir, { recursive: true, force: true });

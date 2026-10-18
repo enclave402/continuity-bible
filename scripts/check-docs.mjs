@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+/**
+ * check-docs.mjs: the docs registry gate. Every canonical document is registered, every registered path exists, front
+ * matter is present and consistent, and docs/README.md links each one.
+ *
+ *   node scripts/check-docs.mjs [<repo-root>]
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const repo = path.resolve(process.argv[2] || path.join(path.dirname(fileURLToPath(import.meta.url)), ".."));
+const docs = path.join(repo, "docs");
+const errors = [];
+const regFile = path.join(docs, "_registry", "doc_index.json");
+if (!fs.existsSync(regFile)) { console.error("docs gate: missing docs/_registry/doc_index.json"); process.exit(1); }
+const reg = JSON.parse(fs.readFileSync(regFile, "utf8"));
+const readme = fs.existsSync(path.join(docs, "README.md")) ? fs.readFileSync(path.join(docs, "README.md"), "utf8") : "";
+if (!readme) errors.push("missing docs/README.md");
+const fm = (text) => { const m = text.match(/^---\n([\s\S]*?)\n---/); if (!m) return null; return Object.fromEntries(m[1].split("\n").map((l) => l.split(/:\s(.*)/)).filter((p) => p.length > 1).map(([k, v]) => [k.trim(), v.trim()])); };
+const registered = new Map();
+for (const d of reg.docs || []) {
+  registered.set(d.canonical_path, d);
+  const file = path.join(repo, d.canonical_path);
+  if (!fs.existsSync(file)) { errors.push(`registered path missing: ${d.canonical_path} (${d.doc_id})`); continue; }
+  const meta = fm(fs.readFileSync(file, "utf8"));
+  if (!meta) { errors.push(`${d.canonical_path}: no front matter`); continue; }
+  for (const k of ["title", "doc_id", "triadic_leg", "canonical_path", "status", "last_reviewed", "canonical"]) if (!meta[k]) errors.push(`${d.canonical_path}: front matter missing ${k}`);
+  if (meta.doc_id && meta.doc_id !== d.doc_id) errors.push(`${d.canonical_path}: doc_id ${meta.doc_id} differs from registry ${d.doc_id}`);
+  if (meta.canonical_path && meta.canonical_path !== d.canonical_path) errors.push(`${d.canonical_path}: canonical_path in front matter is ${meta.canonical_path}`);
+  if (meta.triadic_leg === "diataxis" && !meta.diataxis_mode) errors.push(`${d.canonical_path}: diataxis docs need diataxis_mode`);
+  if (readme && !readme.includes(d.canonical_path.replace(/^docs\//, ""))) errors.push(`docs/README.md does not link ${d.canonical_path}`);
+}
+const walk = (dir) => fs.readdirSync(dir).flatMap((n) => { const p = path.join(dir, n); return fs.statSync(p).isDirectory() ? walk(p) : [p]; });
+for (const file of walk(docs).filter((f) => f.endsWith(".md"))) {
+  const rel = path.relative(repo, file);
+  const meta = fm(fs.readFileSync(file, "utf8"));
+  if (meta?.canonical === "true" && !registered.has(rel)) errors.push(`${rel} says canonical: true but is not in doc_index.json`);
+  const parts = rel.split("/");
+  if (parts.length > 2 && !["c4", "arc42", "1-tutorials", "2-how-to", "3-reference", "4-explanation", "_registry"].includes(parts[1])) errors.push(`${rel}: not under a known leg (see docs/CONTRIBUTING.md)`);
+}
+if (errors.length) { for (const e of errors) process.stderr.write(`${e}\n`); process.stderr.write(`docs gate: fail (${errors.length})\n`); process.exit(1); }
+console.log(`docs gate: pass (${registered.size} registered doc(s))`);

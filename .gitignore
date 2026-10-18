@@ -1,13 +1,41 @@
+# OS / editor
 .DS_Store
+Thumbs.db
+*.swp
+
+# Node
 node_modules/
-dist/
+npm-debug.log*
 *.log
+
+# Secrets: never committed. Credentials come from the environment or a secret store.
 .env
-.env.local
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local agent and tool state (per-user, never shared)
+.claude/settings.local.json
+.private-terms
+
+# Linked worktrees (one per agent task) live inside the repo but are never tracked
 .worktrees/
 
-# Machine-Norms Context & Worklog Hygiene
+# Build output
+dist/
+build/
+
+# BEGIN repo-context-lifecycle (ephemeral AI scratch; see .context/README-less tiers in .context/_index.md)
 .context/**/*.tmp
 .context/**/.claude-tmp-*
+# any env file that strays into scratch
 .context/**/*.env
+# END repo-context-lifecycle
+
+# Research: derived, regenerable artifacts (npm run research:pack / research:ask -- --build)
+research/.vectors/
+research/retrieval/
+
+# Legacy Markdown worklogs are not a second trail
 WORK_LOG.md

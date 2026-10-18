@@ -1,0 +1,44 @@
+{
+  "_about": "Defaults for the research toolchain (scripts/research/*.mjs). Every value can be overridden by the environment: RESEARCH_LLM_BASE_URL, RESEARCH_LLM_MODEL, RESEARCH_EMBED_BASE_URL, RESEARCH_EMBED_MODEL, RESEARCH_API_KEY, RESEARCH_ROOT. Any OpenAI-compatible chat endpoint works for llm; any Ollama (/api/embed) or OpenAI-compatible (/v1/embeddings) endpoint works for embedding. Nothing here names a machine.",
+  "llm": {
+    "base_url": "http://127.0.0.1:11434/v1",
+    "model": "llama3.1:8b",
+    "api_key_env": "RESEARCH_API_KEY",
+    "temperature": 0,
+    "max_tokens": 1500,
+    "timeout_ms": 240000
+  },
+  "embedding": {
+    "base_url": "http://127.0.0.1:11434",
+    "model": "qwen3-embedding:8b",
+    "batch": 32,
+    "keep_alive": "24h",
+    "query_instruction": "Given a plain-language situation or research question, retrieve the most relevant evidence-based findings, mechanisms and research passages",
+    "overlap_instruction": "Given a section of a research report, retrieve findings that state the same guidance"
+  },
+  "chunking": {
+    "target_tokens": 600,
+    "overlap_tokens": 120,
+    "chars_per_token": 4,
+    "drop_sections": ["works cited", "references", "bibliography"]
+  },
+  "retrieval": {
+    "k": 5,
+    "rrf_k": 60,
+    "min_dense": 0.3,
+    "findings_boost": 1.15
+  },
+  "overlap": {
+    "covered": 0.7,
+    "partial": 0.55
+  },
+  "evidence_domains": {
+    "_about": "Used by card.mjs to suggest an evidence label from a document's works-cited list. Primary = peer-reviewed venues, preprint servers, standards, official docs. Everything else counts as web.",
+    "primary": ["arxiv.org", "doi.org", "thecvf.com", "papers.nips.cc", "proceedings.neurips.cc", "neurips.cc", "openreview.net", "proceedings.mlr.press", "aclanthology.org", "ieee.org", "ieeexplore.ieee.org", "dl.acm.org", "springer.com", "link.springer.com", "nature.com", "science.org", "sciencedirect.com", "mdpi.com", "ecva.net", "pubmed.ncbi.nlm.nih.gov", "ncbi.nlm.nih.gov", "semanticscholar.org", "alphaxiv.org", "ac.uk", ".edu", "w3.org", "ietf.org"]
+  },
+  "extraction": {
+    "min_section_chars": 400,
+    "max_section_chars": 9000,
+    "max_findings_per_section": 6
+  }
+}

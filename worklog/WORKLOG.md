@@ -1,9 +1,21 @@
-# narrative-token-ssot Worklog
+# Worklog index
 
-Generated from `worklog/log.jsonl` by `worklog-index-build.py` — do not hand-edit.
-
-**[Open WORKLOG_INDEX.html](WORKLOG_INDEX.html)**
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 13 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
-- `20:36:47 EDT` [action] Initialized canonical worklog and Machine Norms governance — [entry](entries/2026-10-17_20-36-47_initialized-canonical-worklog-and-machine-norms-governance.md)
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 21:46:53 (UTC-04:00) | fix | product | [Correction: the owner's intent for the drifted lead is the least-regeneration anchor (consistency over endpoint), not canon restoration; ADR-004, the drift how-to, PRODUCT.md and STATE.md now say so](entries/2026-10-17_21-46-53_correction-the-owner-s-intent-for-the-drifted-lead-is-the-le.md) | agent:claude | closed |
+| 20:51:29 (UTC-04:00) | fix | repo/worklog | [Correction: commit 2a5afab carried only the trail; the first-parent lag change had not been applied (edit anchor mismatch). Applied now in scripts/check-worklog.mjs](entries/2026-10-17_20-51-29_correction-commit-2a5afab-carried-only-the-trail-the-first-p.md) | agent:claude | closed |
+| 20:50:45 (UTC-04:00) | fix | repo/worklog | [Worklog gate counts HEAD lag on the first parent only, so a merge from main no longer trips the pre-push hook](entries/2026-10-17_20-50-45_worklog-gate-counts-head-lag-on-the-first-parent-only-so-a-m.md) | agent:claude | closed |
+| 20:50:03 (UTC-04:00) | fix | repo/worklog | [[REMOVAL] Redacted two private names inside trail entry wl-281e96a2 (written by another agent and pushed straight to main) so the public repository carries none; merged main into the branch keeping the self-contained worklog tooling](entries/2026-10-17_20-50-03_removal-redacted-two-private-names-inside-trail-entry-wl-281.md) | agent:claude | closed |
+| 20:36:47 (UTC-04:00) | action | narrative-token-ssot | [Initialized canonical worklog and Machine Norms governance](entries/2026-10-17_20-36-47_initialized-canonical-worklog-and-machine-norms-governance.md) | agent:antigravity | closed |
+| 20:44:56 (UTC-04:00) | decision | product | [Owner direction (evening): layperson-first, browser-flow proof case, canon beats cheapest; recorded in PRODUCT.md. Added the canon anchor policy + canon_tags, carded the continuity-norms research prompt](entries/2026-10-17_20-44-56_owner-direction-evening-layperson-first-browser-flow-proof-c.md) | agent:claude | closed |
+| 20:39:38 (UTC-04:00) | fix | repo | [Correction: entry wl-e9fb3696 was premature; the first commit chain was refused by the pre-commit hook (coverage test read the hook's GIT_DIR). textFiles() now ignores hook env and lists only its own checkout; four commits landed](entries/2026-10-17_20-39-38_correction-entry-wl-e9fb3696-was-premature-the-first-commit-.md) | agent:claude | closed |
+| 20:37:42 (UTC-04:00) | milestone | repo | [Branch ready for review: engine, research, norms and README commits on claude/research-process-and-public-norms; CHANGELOG generated; full gate green](entries/2026-10-17_20-37-42_branch-ready-for-review-engine-research-norms-and-readme-com.md) | agent:claude | closed |
+| 20:35:39 (UTC-04:00) | milestone | research | [35 findings merged from 75 local-model candidates after validation against the card; 15 checked against verified arXiv abstracts, 1 caution, 19 unchecked with line-range refs](entries/2026-10-17_20-35-39_35-findings-merged-from-75-local-model-candidates-after-vali.md) | agent:claude | closed |
+| 20:29:22 (UTC-04:00) | action | engine | [Engine features for the eight continuity issue classes: contextual forms, props by id, forbid_keys, exclusive_markers, coverage report, render.mjs, anchor.mjs; schema v1 extended; 13 new tests](entries/2026-10-17_20-29-22_engine-features-for-the-eight-continuity-issue-classes-conte.md) | agent:claude | closed |
+| 20:29:22 (UTC-04:00) | action | research | [Research toolchain built and the continuity research report ingested end to end on local models](entries/2026-10-17_20-29-22_research-toolchain-built-and-the-continuity-research-report-.md) | agent:claude | closed |
+| 20:29:22 (UTC-04:00) | action | repo/norms | [Public-repo scaffolding: AGENTS/CLAUDE/PRODUCT, .context tiers, worklog spine + appender/index/gate, publication gate, git hooks, hygiene files, docs placement policy, cliff.toml](entries/2026-10-17_20-29-22_public-repo-scaffolding-agents-claude-product-context-tiers-.md) | agent:claude | closed |
+| 20:06:17 (UTC-04:00) | action | repo/norms | [Session open: fast-forwarded main to origin (PR #2 merged), created worktree .worktrees/claude-research-norms on claude/research-process-and-public-norms](entries/2026-10-17_20-06-17_session-open-fast-forwarded-main-to-origin-pr-2-merged-creat.md) | agent:claude | closed |

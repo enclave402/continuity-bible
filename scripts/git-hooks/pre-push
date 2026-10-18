@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# pre-push: the full gate before anything leaves this machine; direct pushes to main are refused.
+# Set ALLOW_MAIN_PUSH=1 only for an explicitly authorised promotion.
+set -u
+ROOT="$(git rev-parse --show-toplevel)"
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main|refs/heads/master)
+      if [ "${ALLOW_MAIN_PUSH:-0}" != "1" ]; then
+        echo "pre-push: direct push to ${remote_ref#refs/heads/} refused. Open a pull request from a feature branch." >&2
+        exit 1
+      fi;;
+  esac
+done
+(cd "$ROOT" && npm run --silent verify) || exit 1
+exit 0

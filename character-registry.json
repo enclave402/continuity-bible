@@ -1,23 +1,59 @@
 {
   "$schema": "./scripts/character-registry.v1.schema.json",
   "_about": {
-    "role": "Single Source of Truth (SSOT) authority file for narrative characters.",
-    "rule": "Source files and prompts must NEVER contain raw literal character names. Use tokens: {{id}}, {{id:first}}, {{id:full}}.",
-    "origin": "Maintained by SloppyXBaby (https://sloppyxbaby.com) & Coach Hype (https://coachhype.com)"
+    "role": "Single Source of Truth (SSOT) authority file for narrative characters, companions and props.",
+    "rule": "Source files and prompts never contain a written-out name or a written-out variant. Use tokens: {{id}}, {{id:first}}, {{id:full}}, {{id:<form>}}.",
+    "example": "This registry is the repository's own example: three people, one prop, one scene file, one art manifest, one token source."
   },
   "registry_version": 1,
   "surfaces": [
     {
       "type": "scenes",
       "file": "examples/scenes.json",
-      "story": "main-story"
+      "story": "main-story",
+      "exclusive_markers": [
+        {
+          "field": "time_of_day",
+          "values": {
+            "morning": ["morning", "sunrise", "dawn", "daylight"],
+            "evening": ["evening", "dusk", "lamplight", "midnight"]
+          },
+          "why": "a scene labelled one time of day may not describe the other; the label and the text are edited by different hands"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "file": "examples/art.json",
+      "story": "main-story",
+      "root": "art",
+      "story_field": "storyKey",
+      "stories": { "main": "main-story" },
+      "forbid_keys": [
+        {
+          "key": "visualDescription",
+          "owner": "examples/scenes.json",
+          "why": "a scene's description lives once, on the scene; the art manifest keeps slot, src and prompt only"
+        }
+      ]
     }
   ],
   "token_sources": [
-    {
-      "file": "examples/*.md"
-    }
+    { "file": "examples/*.md", "why": "scene drafts a builder renders" }
   ],
+  "records": ["worklog/**", "research/**", "CHANGELOG.md"],
+  "coverage": {
+    "ignore": ["README.md", "AGENTS.md", "CLAUDE.md", "PRODUCT.md", "CONTRIBUTING.md", "docs/**", "test/**", "scripts/**", ".context/**", "examples/anchor/**"],
+    "strict": false
+  },
+  "drift_resolution": {
+    "policy": "consensus",
+    "metric": "cosine",
+    "pass_threshold": 0.6,
+    "prune_outliers_z": 2,
+    "max_regeneration_budget": 3,
+    "embeddings": "examples/anchor/embeddings.jsonl"
+  },
   "characters": {
     "chloe-jenkins": {
       "name": "Chloe",
@@ -67,6 +103,24 @@
         "short": "Theo"
       },
       "retired": []
+    },
+    "brass-key": {
+      "name": "the brass key",
+      "kind": "prop",
+      "story": "main-story",
+      "role": "The workshop key Theo carries; a tracked object a scene lists by id, never by matching its name in prose",
+      "prompt_tokens": "a small tarnished brass key on a frayed red thread",
+      "negative_tokens": ["shiny gold key", "keyring"],
+      "forms": {
+        "attitude": {
+          "by": "stage",
+          "values": {
+            "childhood": "clutched like a toy",
+            "adult": "kept in a drawer",
+            "default": "on the side table"
+          }
+        }
+      }
     }
   }
 }

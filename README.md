@@ -95,13 +95,55 @@ Whole words only, never inside an existing token, longest name first. A name two
 npm run check   # every name on every surface resolves to exactly one character, else exit 1
 npm test        # the resolver and migration tests
 ```
-The registry declares which files to check: `surfaces` (here `examples/scenes.json`, where every cast, speaker and line is checked) and `token_sources` (here `examples/*.md`, which may hold tokens but no written-out names). Put `check` in a pre-commit hook or CI, and a name an agent types out fails with the fix:
+The registry declares which files to check: `surfaces` (here `examples/scenes.json`, where every cast, prop, speaker and line is checked, and `examples/art.json`), `token_sources` (here `examples/*.md`, which may hold tokens but no written-out names), `records` (dated history, left alone) and `coverage.ignore` (docs that show names on purpose). Any other tracked file that names a character is reported, so the gate is never silent about a file. Put `check` in a pre-commit hook (`bash scripts/install-git-hooks.sh` does it), and a name an agent types out fails with the fix:
 ```text
-character registry: pass (3 entries, 6 labels resolved on 1 surfaces, 2 token sources, 11 files scanned)
+character registry: pass (4 entries, 7 labels resolved on 2 surfaces, 3 token sources, 12 files scanned)
 
 examples/sample-scene.md: line 9: names "Sam" in a token source. Fix: write {{sam-hayes}}
 character registry: fail (1 problem(s))
 ```
+
+---
+
+## Beyond Names: Props, Variants, Contradictions, Duplicates
+
+The same registry answers the ways a continuity system goes quiet in production ([the eight classes](docs/3-reference/CONTINUITY-ISSUE-CLASSES.md)). Everything is declared in your registry; the engine ships no project vocabulary.
+
+| You declare | The gate does |
+| :--- | :--- |
+| A prop as an entry (`"kind": "prop"`, `prompt_tokens`) and `"props": ["brass-key"]` on the scene | resolves the id; never matches a prop's name inside prose |
+| A contextual form: `"attitude": { "by": "stage", "values": { "childhood": "…", "adult": "…", "default": "…" } }` | `{{brass-key:attitude}}` renders the variant the scene's own `stage` picks; no match and no default fails the build |
+| `exclusive_markers` on a scene file: `time_of_day` → `morning: [sunrise, …]`, `evening: [lamplight, …]` | fails a scene labelled evening whose text says sunrise |
+| `forbid_keys` on a manifest: `visualDescription` is owned by the scene file | fails a manifest entry that still carries its own copy |
+| `token_sources` globs for run notes, pages, manifests | fails a written-out name; `node scripts/render.mjs <src> --out <built>` writes the names into built output |
+
+Field reference: [REGISTRY-FIELDS.md](docs/3-reference/REGISTRY-FIELDS.md). Adoption guide: [HOW-TO-ADOPT-THE-REGISTRY.md](docs/2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md).
+
+## After the Drift: Pick an Anchor
+
+Most tools prevent drift going forward and assume a pristine reference from the first render. When a character has already mutated halfway through a project, `scripts/anchor.mjs` looks backward: feed it one embedding per image from the encoder you trust, choose a policy (`origin`, `terminal`, `consensus`, `mode`, or `canon` when the drift is a defect and the cheapest state must not win), read the regeneration bill, and record the anchor in the registry. Tags written by hand are enough for every policy but `consensus`: no API, no model required.
+
+```bash
+node scripts/anchor.mjs examples/anchor/embeddings.jsonl --policy consensus
+node scripts/anchor.mjs renders/embeddings.jsonl --policy consensus --character sam-hayes --write
+```
+
+Guide: [HOW-TO-RESOLVE-CHARACTER-DRIFT.md](docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md). Decision: [ADR-004](docs/4-explanation/decisions/ADR-004-retrospective-anchor-policy.md).
+
+## Research, Not Vibes
+
+Claims in this repository trace to [`research/`](research/README.md): documents filed verbatim as cards, a generated index, atomic findings with a strength and a caveat, sources verified at their primary location, and a hybrid search over all of it. The toolchain runs on any OpenAI-compatible or Ollama endpoint (defaults are local, nothing is paid):
+
+```bash
+node scripts/research/ask.mjs "how do I keep a prop consistent across panels"
+node scripts/research/card.mjs ~/my-report.md --id my-report --kind owner-research --subjects identity-locking
+```
+
+Guide: [HOW-TO-INGEST-RESEARCH.md](docs/2-how-to/HOW-TO-INGEST-RESEARCH.md). The first card is a 13,600-word report on character and asset consistency in generative pipelines, with 20 of its arXiv sources verified.
+
+## How This Repo Is Run
+
+Public by construction (`scripts/check-private.mjs` refuses anything personal on every commit), nothing hardcoded, any agent and any model, one append-only worklog and one state file, docs by reader intent, local gates (`npm run verify`), one branch per task, humans merge. Read [REPOSITORY-NORMS.md](docs/4-explanation/REPOSITORY-NORMS.md), [AGENTS.md](AGENTS.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
