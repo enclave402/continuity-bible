@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-18 00:20 EDT
-**HEAD:** aca876c
+**Last rewritten:** 2026-10-18 00:06 EDT
+**HEAD:** e20708e
 **Date:** 2026-10-18
 **Session:** integration of pull requests 6 and 7 into pull request 8, so one merge lands all three; loop-closing fixes
 
@@ -18,7 +18,7 @@
 - Layperson pass: README for a non-technical reader, `docs/1-tutorials/START-HERE.md`, `docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md`; every command in them was executed and matched.
 - Research: 2 cards (the continuity report, reviewed; the continuity-norms prompt, not yet run), 35 findings (15 checked, 1 caution, 19 unchecked), 25 recorded sources (20 arXiv through the arXiv API, 5 web pages loaded at their URLs; one refused automated access). Blog sources never make a finding checked.
 - Docs: 17 canonical documents registered.
-- Private consumer repository: issues 1 to 5 and 7 of the owner's log are on its main (props by id and the stage-compiled attitude, one owner per scene description, program data through the registry, a kind on each fix, surface rules as data); issue 6's label contradiction was fixed by relabelling the day, and its gate is being added; issue 8 stays as designed. The corrections to the drift-journey merge request are open there.
+- Private consumer repository: issues 1 to 5 and 7 of the owner's log are on its main (props by id and the stage-compiled attitude, one owner per scene description, program data through the registry, a kind on each fix, surface rules as data); issue 6's label contradiction was fixed by relabelling the day, and its gate is merge request 157 (a story declares its own time words; a day or row names its value; CI fails a contradiction); issue 8 stays as designed. The corrections to the drift-journey merge request are open there.
 
 ## 2. Closed directions, with evidence
 

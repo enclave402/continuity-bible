@@ -1,6 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 38 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 39 entries. Read `STATE.md` first; this is the trail.
+
+## 2026-10-18
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 00:06:11 (UTC-04:00) | fix | repo/worklog | [Correction: STATE's 'Last rewritten' had been written as 00:20, later than the real time; set to the real time; the private repository's issue 6 gate is merge request 157](entries/2026-10-18_00-06-11_correction-state-s-last-rewritten-had-been-written-as-00-20-.md) | agent:claude | closed |
 
 ## 2026-10-17
 
