@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 13 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 14 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 21:15:34 (UTC-04:00) | milestone | docs/layperson | [Pull request 4 opened: layperson README, START-HERE tutorial, browser-chatbot how-to; stacked on pull request 3](entries/2026-10-17_21-15-34_pull-request-4-opened-layperson-readme-start-here-tutorial-b.md) | agent:claude | closed |
 | 21:14:40 (UTC-04:00) | action | docs/layperson | [Layperson pass: README rewritten for a non-technical reader; START-HERE tutorial and browser-chatbot how-to added; anchor CLI says 'no scores' instead of null when rows carry tags only](entries/2026-10-17_21-14-40_layperson-pass-readme-rewritten-for-a-non-technical-reader-s.md) | agent:claude | closed |
 | 20:51:29 (UTC-04:00) | fix | repo/worklog | [Correction: commit 2a5afab carried only the trail; the first-parent lag change had not been applied (edit anchor mismatch). Applied now in scripts/check-worklog.mjs](entries/2026-10-17_20-51-29_correction-commit-2a5afab-carried-only-the-trail-the-first-p.md) | agent:claude | closed |
 | 20:50:45 (UTC-04:00) | fix | repo/worklog | [Worklog gate counts HEAD lag on the first parent only, so a merge from main no longer trips the pre-push hook](entries/2026-10-17_20-50-45_worklog-gate-counts-head-lag-on-the-first-parent-only-so-a-m.md) | agent:claude | closed |
