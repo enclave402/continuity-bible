@@ -28,6 +28,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 ## 4. Understand (`4-explanation/`)
 
 - [Repository norms](4-explanation/REPOSITORY-NORMS.md): how a public SSOT repository is run: nothing private, nothing hardcoded, one trail and one helm, docs by intent, gates at the git boundary, any agent and any model.
+- [Before and after: a drifted lead](4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md): the engine on the published story's own drift, with the pictures: her 85 scenes found by token, the faces tagged by hand, every policy's bill side by side (the cheap one ratifies the drift), the anchor recorded, the first pair redone.
 - Decisions:
   - [ADR-001 Public repository norms](4-explanation/decisions/ADR-001-public-repository-norms.md)
   - [ADR-002 The research process lives in the repo and runs on a local model](4-explanation/decisions/ADR-002-research-process-in-repo.md)
