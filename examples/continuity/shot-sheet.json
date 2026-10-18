@@ -1,0 +1,167 @@
+{
+  "_about": "Shot sheet for main-story: the scenes in reading order, each with its shots in order. Every shot carries the previous shot's state forward (wardrobe, hair, accessories, marks, what each person carries); only a change with a reason alters it. A new story day starts again from the cards. Every scene says where its pictures will be used (surface: a key of the registry's render_surfaces); a product card of a prop is a scene with no story day and no cast. Characters are tokens, props are ids; the compiled block (node scripts/compile-shot.mjs <scene>) writes the words.",
+  "locations": {
+    "porch": {
+      "look": "a narrow front porch at night, one yellow bulb over the door, a dead fern in a pot"
+    },
+    "kitchen": {
+      "look": "a small galley kitchen, chipped green tiles, one lamp over a square table"
+    },
+    "workshop": {
+      "look": "a carpenter's workshop, a long workbench under a hanging bulb, offcuts stacked against the wall"
+    }
+  },
+  "scenes": {
+    "13-the-porch": {
+      "surface": "story-scene",
+      "story_day": "day-1",
+      "time_of_day": "evening",
+      "location": "porch",
+      "stage": "adult",
+      "shots": [
+        {
+          "id": "13a",
+          "size": "wide two-shot",
+          "characters": [
+            {
+              "who": "{{sam-hayes}}",
+              "action": "reads the message again under the bulb",
+              "eyeline": "down at the phone",
+              "position": "left, one step back from the door",
+              "holding": [
+                "cracked-phone"
+              ]
+            },
+            {
+              "who": "{{chloe-jenkins}}",
+              "action": "digs through her bag for her keys",
+              "eyeline": "at the lock",
+              "position": "right, at the door"
+            }
+          ]
+        }
+      ]
+    },
+    "14-read-at-1152": {
+      "surface": "story-scene",
+      "story_day": "day-1",
+      "time_of_day": "evening",
+      "location": "kitchen",
+      "stage": "adult",
+      "shots": [
+        {
+          "id": "14a",
+          "size": "medium two-shot",
+          "changes": [
+            {
+              "who": "{{sam-hayes}}",
+              "wardrobe": {
+                "outer": "none"
+              },
+              "reason": "indoors now; the coat went over the back of her chair between scenes"
+            }
+          ],
+          "characters": [
+            {
+              "who": "{{sam-hayes}}",
+              "action": "sits at the table with the phone face up in front of her",
+              "eyeline": "at the phone",
+              "position": "seated, left",
+              "holding": [
+                "cracked-phone"
+              ]
+            },
+            {
+              "who": "{{chloe-jenkins}}",
+              "action": "fills the kettle at the sink",
+              "eyeline": "half turned toward the table",
+              "position": "standing, right, behind"
+            }
+          ]
+        },
+        {
+          "id": "14b",
+          "size": "close-up",
+          "characters": [
+            {
+              "who": "{{sam-hayes}}",
+              "action": "reads the message one more time, thumb hovering over the keyboard",
+              "eyeline": "down at the phone",
+              "holding": [
+                "cracked-phone"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "14c",
+          "size": "medium two-shot",
+          "changes": [
+            {
+              "who": "{{sam-hayes}}",
+              "hands": "cracked-phone",
+              "to": "{{chloe-jenkins}}",
+              "reason": "\"Send it and see.\" {{chloe-jenkins:first}} takes the phone to type the reply herself"
+            }
+          ],
+          "characters": [
+            {
+              "who": "{{chloe-jenkins}}",
+              "action": "types with both thumbs, glasses pulled down onto her nose",
+              "eyeline": "at the phone",
+              "position": "seated, right",
+              "holding": [
+                "cracked-phone"
+              ]
+            },
+            {
+              "who": "{{sam-hayes}}",
+              "action": "watches with both hands flat on the table",
+              "eyeline": "at the other woman's face",
+              "position": "seated, left"
+            }
+          ]
+        }
+      ]
+    },
+    "15-across-town": {
+      "surface": "story-scene",
+      "story_day": "day-1",
+      "time_of_day": "evening",
+      "location": "workshop",
+      "stage": "adult",
+      "shots": [
+        {
+          "id": "15a",
+          "size": "medium",
+          "characters": [
+            {
+              "who": "{{theo-vance}}",
+              "action": "turns his phone face down on the workbench and goes back to sanding",
+              "eyeline": "down at the work",
+              "position": "centre, side on"
+            }
+          ],
+          "props": [
+            "brass-key"
+          ],
+          "_notes": "the key is in frame on the bench, not in his hand: props lists it, holding does not"
+        }
+      ]
+    },
+    "card-brass-key": {
+      "surface": "product-card",
+      "shots": [
+        {
+          "id": "card-1",
+          "size": "square",
+          "props": [
+            "brass-key"
+          ],
+          "action": "the key alone, its thread coiled beside it",
+          "_notes": "a shop card, not a story scene: no story day, place, time or cast; the surface says what the picture is for"
+        }
+      ]
+    }
+  }
+}

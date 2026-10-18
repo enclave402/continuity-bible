@@ -22,11 +22,12 @@ A rule at the top of the chat ("always keep her hair red") makes this rarer. It 
 
 AI stories without AI slop. Unique art that stays yours. Characters steady enough to make a book.
 
-This is a small, free tool: a folder of scripts that run on your own computer. It does three things.
+This is a small, free tool: a folder of scripts that run on your own computer. It does four things.
 
 1. **Writes each character down once.** Name, full name, how they look. That file is the *registry*.
 2. **Replaces names in your pages with tokens.** You write `{{june-okafor}}` instead of *June*. A *token* is a placeholder in double curly braces that the tool swaps for the real words. Because the words live in one place, the checker can tell you the moment a name or a look was typed by hand somewhere else, and a rename is one edit.
 3. **Picks the reference picture after the AI has already drifted.** It asks you two questions: what about this character must never change, and, for everything else, do you want the fewest redraws, the first look or the last look. It shows what each answer costs, and writes your choice down so nobody has to remember it.
+4. **Carries everything else from one picture to the next.** What each character wears, has on and holds, where they are and what time it is: written once per story day, carried forward shot by shot, with every change recorded with its reason. One block to paste per picture.
 
 It works with whatever AI you already use. A browser chatbot that makes pictures is enough. The scripts never touch the network, nothing is installed beyond Node, and there is no account.
 
@@ -198,6 +199,25 @@ Not recorded. Ask again when you have decided, or add --write to the command.
 
 The first question is answered by the registry: June's dark brown skin is a story fact, so only pictures that have it can be the *anchor*, the one picture every later picture should match, and pictures without it are always redrawn. The second question is yours. *Fewest redraws* keeps the look most pictures already have (here the loose curls the AI drifted to) and costs one redraw. *The first look* keeps the two puffs you asked for and costs three. The tool shows both prices and never decides for you. Answer `y` and the choice is written into the registry. The [tutorial](docs/1-tutorials/START-HERE.md) walks through the whole thing with real pictures.
 
+### Carries wardrobe, props and place from one shot to the next
+
+Write how each character starts the day (a *continuity card*) and your scenes with their shots (a *shot sheet*). Everything carries forward by itself; a change needs a reason; a prop can be held only by whoever has it. One block per shot:
+
+```bash
+node ../scripts/compile-shot.mjs scene-02 --shot 2b
+```
+
+```text
+=== scene-02 · shot 2b (close-up) · day-1: The night the lamp is lit ===
+CHARACTER 1: a nine-year-old girl with dark brown skin and black curls tied in two puffs. WEARING: yellow raincoat over striped jersey, blue dungarees, red boots. HAIR: two puffs, a little loose on the left. IN HAND: a dented tin matchbox with a faded blue label. ACTION: strikes the match, face lit from below. EYELINE: at the flame.
+SHOT: close-up. SETTING: the narrow iron walkway outside the top of the lighthouse, a railing, the sea far below. TIME: night. WEATHER: clear, a cold wind off the sea.
+CHANGED SINCE THE LAST SHOT: nothing.
+KEEP (Picture-book page, landscape, wider than tall): children's picture-book illustration, soft watercolor; the characters exactly as in the anchor pictures; every hand shows five fingers.
+AVOID: lighter, cardboard matchbox, dusk, sunset, orange sky, modern clothes, extra people, speech bubbles, text.
+```
+
+The matchbox is in June's hand because, two shots earlier, the sheet says Abel handed it to her and why. Take that reason out, or write *sunset* into a night shot, and the gate stops with the line to fix. The last two lines come from a *render surface*: where will this picture be used? A page of the book has its own look rules, a sticker has others; each is written once in the registry, every prompt gets the right ones, and a template that retypes a rule is refused. The two files and the whole walk: [How to keep continuity from shot to shot](docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md).
+
 ## For developers
 
 The same engine runs the name build of a published 82-scene graphic novel. Plain Node, zero dependencies, no telemetry. `npm run check` is the gate, `npm test` the tests, `npm run verify` everything.
@@ -213,6 +233,8 @@ The same engine runs the name build of a published 82-scene graphic novel. Plain
 | `exclusive_markers` on a scene file: `time_of_day` → `morning: [sunrise, …]`, `evening: [lamplight, …]` | fails a scene labelled evening whose text says sunrise |
 | `forbid_keys` on a manifest: `visualDescription` is owned by the scene file | fails a manifest entry that still carries its own copy |
 | `canon_tags` (fixed traits) on an entry, `drift_resolution` defaults (`prefer` or `policy`) | `scripts/anchor.mjs` answers two questions over any encoder's embeddings or hand tags: `--keep tag=value` (what must never change; only images carrying every kept tag are eligible, the rest are always billed) and `--prefer fewest-redraws|first-look|last-look|most-common` (`consensus`, `origin`, `terminal`, `mode` among the eligible images; `canon` is keep + consensus). `--ask` asks both on the terminal. The bill is by cosine with embeddings and by tags without (`stats.bill_basis`); `--write` records image, policy, prefer, keep and stats under `characters.<id>.anchor` |
+| A `continuity-cards` surface (how each character starts each story day) and a `shot-sheet` surface (scenes and shots in order) | `carryContinuity()` in `scripts/lib.mjs` carries wardrobe, hair, accessories, marks and carried props shot by shot; the gate fails a change without a reason, a prop in a hand that never received it, a missing card, a contradicted time or place; `scripts/compile-shot.mjs` renders one block per shot, character first, AVOID from the declared vocabularies |
+| `render_surfaces` (where a picture will be used: name, `style_lock`, `must_keep`, `exclude`, `size`, `no_text`, `hands_rule`, `why`) and `render_templates` globs | every shot names its surface; the block ends with KEEP and AVOID compiled from it; a template, prompt or token source that retypes a rule phrase verbatim fails with the file, the phrase and "read it from the surface" |
 
 From the repository root:
 
@@ -223,7 +245,7 @@ node scripts/anchor.mjs examples/anchor/embeddings.jsonl --ask
 node scripts/research/ask.mjs "how do I keep a prop consistent across panels"
 ```
 
-- Adopt it in a repo: [HOW-TO-ADOPT-THE-REGISTRY.md](docs/2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md). Every field: [REGISTRY-FIELDS.md](docs/3-reference/REGISTRY-FIELDS.md). The eight ways a continuity system goes quiet: [CONTINUITY-ISSUE-CLASSES.md](docs/3-reference/CONTINUITY-ISSUE-CLASSES.md).
+- Adopt it in a repo: [HOW-TO-ADOPT-THE-REGISTRY.md](docs/2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md). Every field: [REGISTRY-FIELDS.md](docs/3-reference/REGISTRY-FIELDS.md), [CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md](docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md). The eight ways a continuity system goes quiet: [CONTINUITY-ISSUE-CLASSES.md](docs/3-reference/CONTINUITY-ISSUE-CLASSES.md). Shot-to-shot design and its open loops: [ADR-005](docs/4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md).
 - Drift anchors with real embeddings (encoder families, thresholds, budgets): [HOW-TO-RESOLVE-CHARACTER-DRIFT.md](docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md); decision: [ADR-004](docs/4-explanation/decisions/ADR-004-retrospective-anchor-policy.md).
 - Research, not vibes: claims trace to cards, findings and verified sources in [`research/`](research/README.md); process: [HOW-TO-INGEST-RESEARCH.md](docs/2-how-to/HOW-TO-INGEST-RESEARCH.md). The toolchain runs on any OpenAI-compatible or Ollama endpoint; defaults are local.
 - How this repo is run (public by construction, nothing hardcoded, one worklog, docs by reader intent, local gates, humans merge): [REPOSITORY-NORMS.md](docs/4-explanation/REPOSITORY-NORMS.md), [AGENTS.md](AGENTS.md), [CONTRIBUTING.md](CONTRIBUTING.md), [docs/README.md](docs/README.md).

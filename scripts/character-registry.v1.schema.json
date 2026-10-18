@@ -27,7 +27,7 @@
         "additionalProperties": false,
         "properties": {
           "file": { "type": "string" },
-          "type": { "type": "string", "enum": ["scenes", "names", "headings", "prose"] },
+          "type": { "type": "string", "enum": ["scenes", "names", "headings", "prose", "continuity-cards", "shot-sheet"], "description": "scenes, names, headings, prose: files whose labels must resolve. continuity-cards: how each character starts each story day (scripts/continuity-cards.v1.schema.json). shot-sheet: a story's scenes and shots in reading order, carrying the cards' state shot by shot (scripts/shot-sheet.v1.schema.json); one of each per story." },
           "story": { "type": "string" },
           "root": { "type": "string", "description": "scenes: the key holding the scene map (default scenes)." },
           "filter": {
@@ -58,6 +58,12 @@
             "items": { "type": "string" },
             "description": "headings: exact heading labels that are not characters (a timeline, a table) and are skipped."
           },
+          "required": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "continuity-cards: the card fields every card must fill (default wardrobe). shot-sheet: the header fields every scene must fill (default story_day, location, time_of_day)."
+          },
+          "lead": { "type": "string", "minLength": 1, "description": "shot-sheet: the form that opens each character's line in the compiled block (default look). An entry without that form opens with its name." },
           "story_field": { "type": "string", "description": "prose: the field of each entry under root whose value picks the story through `stories` (default: the entry's key)." },
           "stories": {
             "type": "object",
@@ -101,7 +107,7 @@
                 "why": { "type": "string" }
               }
             },
-            "description": "Declared vocabularies that may not mix: a scene labelled morning may not describe lamplight. Nothing is hardcoded; the words are yours."
+            "description": "Declared vocabularies that may not mix: a scene labelled morning may not describe lamplight. On a shot sheet the other values' words also become the compiled block's AVOID line. Nothing is hardcoded; the words are yours."
           }
         }
       }
@@ -231,7 +237,33 @@
       },
       "description": "Every tracked text file is a surface, a token source, a record, or ignored here. A file that is none of those and names a character is reported, so the gate can never be silent about a file."
     },
-    "drift_resolution": { "$ref": "#/$defs/drift_resolution" }
+    "drift_resolution": { "$ref": "#/$defs/drift_resolution" },
+    "render_surfaces": {
+      "type": "object",
+      "description": "Where a picture will be used, each with its own look rules written once in your words: a story page, a cover, a product card. A shot names one (surface, on the shot or its scene header; required once any surface is declared); scripts/compile-shot.mjs appends KEEP and AVOID lines from it; no template, token source or declared script may retype a phrase of it (see render_templates). The engine ships no rule words.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "description": "Plain-language name: Story scene, Product card." },
+          "style_lock": { "type": "string", "description": "The style that must hold on this surface, in your words. Joins KEEP." },
+          "must_keep": { "description": "Expected a line or a list of lines every picture on this surface must keep; they join KEEP", "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "items": { "type": "string", "minLength": 1 } }] },
+          "exclude": { "description": "Expected a line or a list of things that may not appear on this surface; they join AVOID", "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "items": { "type": "string", "minLength": 1 } }] },
+          "size": { "type": "string", "description": "The size or format in words: 3:2 landscape, 1:1 square. Printed in the KEEP label." },
+          "aspect": { "type": "string", "description": "Alternative to size." },
+          "no_text": { "description": "Expected true (the word text joins AVOID) or your own sentence about lettering (joins KEEP as written)", "anyOf": [{ "type": "boolean" }, { "type": "string", "minLength": 1 }] },
+          "hands_rule": { "type": "string", "description": "Your rule for hands on this surface. Joins KEEP." },
+          "why": { "type": "string", "description": "Why this surface has these rules. Never printed." },
+          "continuity": { "type": "boolean", "description": "False for a surface that carries no story continuity (a product card, a cover): its scenes need no story_day, location or time_of_day, its shots need no cast, and its blocks carry no CHANGED line. Default true." }
+        }
+      }
+    },
+    "render_templates": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Globs of the templates, builders and scripts that assemble prompts. None may retype a render surface phrase verbatim: the gate fails the file and the phrase and says to read it from the surface. A glob that matches no tracked file fails."
+    }
   },
   "$defs": {
     "drift_resolution": {

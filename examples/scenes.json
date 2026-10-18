@@ -1,5 +1,14 @@
 {
   "scenes": {
+    "13-the-porch": {
+      "title": "The porch",
+      "time_of_day": "evening",
+      "stage": "adult",
+      "characters": ["{{sam-hayes}}", "{{chloe-jenkins}}"],
+      "props": ["cracked-phone"],
+      "narration": "{{chloe-jenkins}} dug through her bag for her keys while {{sam-hayes}} read the message again under the porch bulb. Six hours. He had read it at 11:52.",
+      "visualDescription": "two women on a narrow front porch at night, one bent over a phone, one at the door"
+    },
     "14-read-at-1152": {
       "title": "Read at 11:52",
       "time_of_day": "evening",
@@ -13,6 +22,15 @@
       ],
       "narration": "{{theo-vance:full}} signed contracts with his whole name. He signed {{sam-hayes:formal}} with one letter. Across town, {{brass-key}} stayed {{brass-key:attitude}}.",
       "visualDescription": "{{sam-hayes:full}} at a kitchen table under lamplight, phone glowing, contact name '{{theo-vance:full}}' on screen"
+    },
+    "15-across-town": {
+      "title": "Across town",
+      "time_of_day": "evening",
+      "stage": "adult",
+      "characters": ["{{theo-vance}}"],
+      "props": ["brass-key"],
+      "narration": "{{theo-vance}} turned the phone face down on the workbench. {{brass-key}} was {{brass-key:attitude}}, where it always was.",
+      "visualDescription": "a man alone in a workshop under a hanging bulb, phone face down beside him"
     }
   }
 }

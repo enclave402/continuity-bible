@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/shot-sheet.v1.schema.json",
+  "title": "Shot sheet, version 1",
+  "description": "A story's scenes in reading order, each with its shots in order. Every shot inherits the previous shot's state (wardrobe, hair, accessories, marks, what each person carries) from the continuity cards; only a change with a reason alters it; a new story day starts from the cards again. Declared in the registry as a surface of type shot-sheet. Compiled by scripts/compile-shot.mjs. Field reference: docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md. Keys starting with _ are notes anywhere and are never checked.",
+  "type": "object",
+  "required": ["scenes"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "locations": {
+      "type": "object",
+      "description": "Each place written once, keyed by a short id a scene header names. Optional; when present, every scene's location must be a key here.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["look"],
+        "additionalProperties": false,
+        "properties": {
+          "look": { "type": "string", "minLength": 1, "description": "The place as the picture should show it, in one or two lines." }
+        }
+      }
+    },
+    "scenes": {
+      "type": "object",
+      "description": "Scenes in reading order, keyed by slug (the same slug as the story's scene file when the story has one).",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["shots"],
+        "properties": {
+          "story_day": { "type": "string", "minLength": 1, "description": "A key of the cards' story_days." },
+          "location": { "type": "string", "minLength": 1, "description": "A key of locations when the sheet declares any, else a short name." },
+          "time_of_day": { "type": "string", "minLength": 1, "description": "The in-story clock (morning, evening). Declare the words each value owns under the surface's exclusive_markers." },
+          "weather": { "type": "string", "description": "Overrides the story day's weather for this scene." },
+          "scene": { "type": "string", "description": "The slug in the story's scene file when it differs from this key." },
+          "surface": { "type": "string", "minLength": 1, "description": "Where every shot of this scene will be used: a key of the registry's render_surfaces. A shot may name its own. Required on one or the other once any surface is declared." },
+          "shots": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Shots in order. Any other scalar on the scene header (a stage, a season) is context for contextual forms in every shot.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "minLength": 1, "description": "Short and unique within the scene (14a). Defaults to the position." },
+                "surface": { "type": "string", "minLength": 1, "description": "Where this picture will be used, when it differs from the scene's: a key of render_surfaces." },
+                "size": { "type": "string", "description": "Shot size in the usual words: wide, medium, close-up, two-shot, insert." },
+                "characters": {
+                  "type": "array",
+                  "description": "Who is in the shot, in the order the block lists them (CHARACTER 1, 2, ...). A token ({{id}}) or an object with who and that person's action, eyeline, position and holding. May be left out for a shot with nobody in it (a prop on a card).",
+                  "items": {
+                    "anyOf": [
+                      { "type": "string", "minLength": 1 },
+                      {
+                        "type": "object",
+                        "required": ["who"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "who": { "type": "string", "minLength": 1 },
+                          "action": { "type": "string" },
+                          "eyeline": { "type": "string" },
+                          "position": { "type": "string" },
+                          "holding": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Prop ids visibly in hand in this shot. Each must be carried at this moment: given by the card, added, or handed over earlier." }
+                        }
+                      }
+                    ],
+                    "description": "Expected a token such as {{sam-hayes}} or an object { who, action, eyeline, position, holding }"
+                  }
+                },
+                "action": { "type": "string", "description": "The staging of the whole shot, when one line for everyone is clearer than a line per person." },
+                "props": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Prop ids in frame but in nobody's hand (on the table)." },
+                "changes": {
+                  "type": "array",
+                  "description": "The decisions in this shot. Everything not listed here carries forward from the previous shot by itself.",
+                  "items": {
+                    "type": "object",
+                    "required": ["who"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "who": { "type": "string", "minLength": 1 },
+                      "reason": { "type": "string", "description": "Why it changes here. Required by the gate: a change without a reason fails." },
+                      "wardrobe": {
+                        "description": "Expected an object of layers to set (none removes a layer) or one line of text that replaces the whole wardrobe",
+                        "anyOf": [
+                          { "type": "string", "minLength": 1 },
+                          { "type": "object", "additionalProperties": { "type": "string" } }
+                        ]
+                      },
+                      "hair": { "type": "string", "minLength": 1 },
+                      "accessories": { "type": "object", "additionalProperties": false, "properties": { "add": { "type": "array", "items": { "type": "string" } }, "remove": { "type": "array", "items": { "type": "string" } } } },
+                      "marks": { "type": "object", "additionalProperties": false, "properties": { "add": { "type": "array", "items": { "type": "string" } }, "remove": { "type": "array", "items": { "type": "string" } } } },
+                      "carries": { "type": "object", "additionalProperties": false, "properties": { "add": { "type": "array", "items": { "type": "string" } }, "remove": { "type": "array", "items": { "type": "string" } } } },
+                      "hands": { "type": "string", "minLength": 1, "description": "A prop id who hands over; it leaves who and reaches to." },
+                      "to": { "type": "string", "minLength": 1, "description": "Who receives what hands names: a token or id." }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
