@@ -1,9 +1,9 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-18 00:06 EDT
+**Last rewritten:** 2026-10-18 10:37 EDT
 **HEAD:** e20708e
 **Date:** 2026-10-18
-**Session:** integration of pull requests 6 and 7 into pull request 8, so one merge lands all three; loop-closing fixes
+**Session:** integration of pull requests 6 and 7 into pull request 8, so one merge lands all three; loop-closing fixes; the before-and-after handoff from pull request 7 folded in
 
 ## 1. Current verified facts
 
@@ -40,4 +40,12 @@
 
 - [ ] **Next action:** the owner merges pull request 8 (`gh pr merge 8 --merge`), which lands 6 and 7 with it.
 - [ ] Owner, optional: run `research/corpus/prompts/continuity-norms-and-structures-prompt.md` in a deep-research tool and drop the answer in Downloads; it is then carded, mined and verified, and each ADR-005 open loop closes against a finding id.
+- [ ] Before-and-after journey, what remains (handoff 2026-10-18 00:10 EDT; the anchor is confirmed and recorded privately, the page is corrected for the tag mistake):
+  - [ ] Add a style-hold sentence to the redraw prompt (same line work, shading, texture, grain and colour grading as the kept picture). The author's verdict on the first candidates: "Skin feels too different from previous frame. If it was a new scene maybe. Even the art style feels like a change slightly".
+  - [ ] Judge every redraw in reading order: the frames before and after it, the published row against the redrawn row, grouped by scene. Not against the reference alone.
+  - [ ] Redraw the prologue as one scene group (the soap bubble and the three reservoir panels; the antiseptic chignon between them stays). The three reservoir candidates made so far are not approved and are not used.
+  - [ ] Redraw the other five still on the list: the catastrophic projection (lighter), forty-five minutes on read (eyes only), the dream portal, Sam's aha and the epilogue (darker toward the anchor).
+  - [ ] The author answers yes or no on 14 lighter panels never on the list (the diner booth night, the 2061 evening), shown with the face-review sheet.
+  - [ ] For each pair the author keeps: add it to step 8 of the page (published images only), with its scene name.
+  - [ ] Step 7's counts (36 match, 5 darker, 17 lighter) and the cost table (9 plus 14) stay true only until the 14 are answered; update both then.
 - [ ] Each redraw batch the owner approves adds before-and-after pairs to the drift page and lines to the private replacements record.
