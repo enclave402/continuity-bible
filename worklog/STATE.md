@@ -23,8 +23,8 @@ No run record yet — the next worklog-append must carry one.
 - [2026-10-18T00:36:24.373Z] unknown on `none`: worklog-append ERROR: --author agent:<your real name> is required (the agent writing this entry; the human is the owner). Never copy a name from docs or another entry. (run: worklog-checkin.mjs failures)
 <!-- DISPOSITION:END -->
 
-Last rewritten: 2026-10-17 20:36 EDT
-- Git HEAD: 29c7f4c
+Last rewritten: 2026-10-17 20:43:27 EDT
+- Git HEAD: eb547b5
 Session: Initialized repository state with Karpathy state engine model.
 
 ## Session Task List
