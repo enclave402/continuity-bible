@@ -1,0 +1,51 @@
+---
+id: wl-281e96a2-aac4-49d4-a548-e17f37cf9c97
+timestamp: 2026-10-17T20:36:47-04:00
+edited_at: 2026-10-17T20:36:47-04:00
+event_type: action
+scope: narrative-token-ssot
+status: closed
+author: agent:antigravity
+---
+
+# Initialized canonical worklog and Machine Norms governance
+
+**Logged:** 2026-10-17 20:36:47 EDT
+
+Created worklog spine (log.jsonl, STATE.md, README.md, WORKLOG_STANDARD.md), .gitattributes union merge rule, and .context hierarchy
+
+**Tags:** `worklog`, `append`
+
+---
+
+<details><summary>Raw NDJSON</summary>
+
+```json
+{
+  "id": "wl-281e96a2-aac4-49d4-a548-e17f37cf9c97",
+  "timestamp": "2026-10-17T20:36:47-04:00",
+  "edited_at": "2026-10-17T20:36:47-04:00",
+  "event_type": "action",
+  "scope": "narrative-token-ssot",
+  "summary": "Initialized canonical worklog and Machine Norms governance",
+  "details": "Created worklog spine (log.jsonl, STATE.md, README.md, WORKLOG_STANDARD.md), .gitattributes union merge rule, and .context hierarchy",
+  "tags": [
+    "worklog",
+    "append"
+  ],
+  "status": "closed",
+  "author": "agent:antigravity",
+  "run": {
+    "files": "worklog/{log.jsonl,STATE.md,README.md,WORKLOG_STANDARD.md},.context/{_index.md,scratch/,skills/},.gitattributes,.gitignore",
+    "before": "New character drift repo narrative-token-ssot had no worklog or .context hierarchy",
+    "after": "Canonical Machine-Norms worklog spine and .context directories initialized",
+    "removed": "none",
+    "operator_text_touched": "no",
+    "verified_by": "init-repo-norms.sh and sync-worklog-ssot.sh executed with status 0",
+    "next": "Sync worklogs to Google Drive",
+    "operator_intent": "\"I established a new repo it is a character drift repo it goes to GitHub but the work log can I get the work log sinking to my Google drive\""
+  }
+}
+```
+
+</details>

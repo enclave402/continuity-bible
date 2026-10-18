@@ -5,3 +5,9 @@ dist/
 .env
 .env.local
 .worktrees/
+
+# Machine-Norms Context & Worklog Hygiene
+.context/**/*.tmp
+.context/**/.claude-tmp-*
+.context/**/*.env
+WORK_LOG.md
