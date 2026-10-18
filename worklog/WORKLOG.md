@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 50 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 51 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-18
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 18:21:26 (UTC-04:00) | note | integration | [Pull request 13 (question-based helper for a reader's own characters) merged into pull request 11's branch so one merge lands both; only the worklog conflicted (STATE kept both sides' facts and open items, the index rebuilt).](entries/2026-10-18_18-21-26_pull-request-13-question-based-helper-for-a-reader-s-own-cha.md) | agent:claude | closed |
 | 18:15:45 (UTC-04:00) | action | scripts/new-character | [new-character.mjs puts a reader's own characters into the registry by answering questions; START-HERE step 3 and the README quick start offer it with a real transcript; a fresh 13-year-old dry run added a girl and a robot and rendered both](entries/2026-10-18_18-15-45_new-character-mjs-puts-a-reader-s-own-characters-into-the-re.md) | agent:claude | closed |
 | 17:47:49 (UTC-04:00) | note | integration | [[REMOVAL] Merged main (pull requests 10 and 12, merged by the owner) into pull request 11: STATE takes main's facts and test count; this branch adds only the next-session priority; the next action is main's open live run with a real chatbot and on Windows.](entries/2026-10-18_17-47-49_removal-merged-main-pull-requests-10-and-12-merged-by-the-ow.md) | agent:claude | closed |
 | 17:30:46 (UTC-04:00) | fix | docs/layperson | [Third eighth-grade dry run fixed: recorded keep is the next default and a replacing yes is said; wrong tags file named; tag.mjs shows what Enter repeats and re-asks after a note; curly values located; JUNE, empty and command-filled scenes fail](entries/2026-10-18_17-30-46_third-eighth-grade-dry-run-fixed-recorded-keep-is-the-next-d.md) | agent:claude | closed |
