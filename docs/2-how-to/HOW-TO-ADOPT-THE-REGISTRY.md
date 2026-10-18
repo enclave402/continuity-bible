@@ -5,7 +5,7 @@ triadic_leg: diataxis
 diataxis_mode: solve
 canonical_path: docs/2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md
 status: active
-last_reviewed: 2026-10-17
+last_reviewed: 2026-10-18
 canonical: true
 ---
 
@@ -15,11 +15,11 @@ Outcome: every name in your project is written once, every source holds tokens, 
 
 ## 1. Copy the engine
 
-Copy `scripts/names.mjs`, `scripts/lib.mjs`, `scripts/check.mjs`, `scripts/tokenize.mjs`, `scripts/render.mjs`, `scripts/anchor.mjs`, `scripts/tag.mjs` and `scripts/character-registry.v1.schema.json` into your repo (one folder, any name; the scripts find each other relatively). Node 18+, no packages.
+Copy `scripts/names.mjs`, `scripts/lib.mjs`, `scripts/check.mjs`, `scripts/tokenize.mjs`, `scripts/render.mjs`, `scripts/anchor.mjs`, `scripts/tag.mjs`, `scripts/new-character.mjs` and `scripts/character-registry.v1.schema.json` into your repo (one folder, any name; the scripts find each other relatively). Node 18+, no packages.
 
 ## 2. Write the registry
 
-Create `character-registry.json` at your project root (or point `--registry` / `CHARACTER_REGISTRY` at it). One entry per person, companion, voice, group or prop. Write each name once: `name`, `full_name`, `forms`. Put every other spelling a file already uses under `aliases`; put spellings that must never return under `retired`.
+Create `character-registry.json` at your project root (or point `--registry` / `CHARACTER_REGISTRY` at it). One entry per person, companion, voice, group or prop. Write each name once: `name`, `full_name`, `forms`. Put every other spelling a file already uses under `aliases`; put spellings that must never return under `retired`. To add one person at a time without typing JSON, `node scripts/new-character.mjs` asks for the name, full name, id, role, look and fixed traits, checks them against the schema, and adds the entry, leaving every other line of the file as it was.
 
 ```bash
 node scripts/check.mjs --suggest   # prints a stub entry for every label it cannot resolve
