@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 17 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 18 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 22:03:42 (UTC-04:00) | milestone | engine/continuity | [Pull request 6 opened: continuity cards and a shot sheet carry state from shot to shot, compile-shot.mjs, ADR-005; stacked on pull requests 5, 4 and 3](entries/2026-10-17_22-03-42_pull-request-6-opened-continuity-cards-and-a-shot-sheet-carr.md) | agent:claude | closed |
 | 22:02:49 (UTC-04:00) | action | engine/continuity | [Continuity cards (per character, per story day) and a shot sheet (per scene) carry wardrobe, hair, accessories, marks, carried props, place and time from shot to shot; compile-shot.mjs renders one pasteable block per shot; the gate checks both; ADR-005 cites the carded research; the continuity-norms research was not yet run, so its design choices are open loops](entries/2026-10-17_22-02-49_continuity-cards-per-character-per-story-day-and-a-shot-shee.md) | agent:claude | closed |
 | 21:26:20 (UTC-04:00) | milestone | engine/anchor | [Pull request 5 opened: anchor regeneration bill by tags when there are no embeddings; stacked on pull requests 4 and 3](entries/2026-10-17_21-26-20_pull-request-5-opened-anchor-regeneration-bill-by-tags-when-.md) | agent:claude | closed |
 | 21:26:15 (UTC-04:00) | action | engine/anchor | [anchor.mjs bills by tags when there are no embeddings: canon lists every image off canon, mode/origin/terminal every image whose tags differ from the anchor's; ADR-004 amended; tutorial, how-to, README and field reference match the new report](entries/2026-10-17_21-26-15_anchor-mjs-bills-by-tags-when-there-are-no-embeddings-canon-.md) | agent:claude | closed |
