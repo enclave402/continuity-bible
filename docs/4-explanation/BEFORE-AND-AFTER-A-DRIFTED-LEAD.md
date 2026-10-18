@@ -155,7 +155,7 @@ Against the proposed anchor, the pictures a reader would see as different are th
 | the all-night booth, Sam's aha | skin tone fair | September |
 | epilogue, the real work begins | skin tone warm golden-brown | September |
 
-Nothing on this list is redrawn until the author says so, picture by picture. The engine records the anchor (`--write`, or the offer at the end of `--ask`) only after the author confirms it. At the time of writing the proposal is with the author; this page updates as each pair lands.
+Nothing on this list is redrawn until the author says so, picture by picture. The engine records the anchor (`--write`, or the offer at the end of `--ask`) only after the author confirms it. The author confirmed the anchor and the list on 2026-10-17, and the anchor is recorded: the picture, its hash, the two answers and the numbers above now sit on her registry entry.
 
 ## Step 7: redo the pictures, one at a time, with the author's go on each
 
@@ -168,6 +168,15 @@ This pair is instructive. The author redid this scene on the day after it was fi
 | ![Sam: the prosecutor's finger, first version](assets/before-after/the-prosecutors-finger-before.jpg) | ![Sam: the prosecutor's finger, redone the next day](assets/before-after/the-prosecutors-finger-after.jpg) |
 
 Each new pair the author approves is added here with its scene name, so this page is the running record, not a promise.
+
+## Step 8: make the documents agree with the pictures
+
+Once the anchor is adopted, her written description has to say the same thing, or the next prompt will pull her back. Three places changed, and one did not:
+
+- Her profile and the story's character bible now describe her skin as light olive with warm undertones, with a dated note quoting the author's decision.
+- Her continuity card gained a look line, which the story's prompt compiler prints in every scene she is in, and a face block with one sentence that names nobody, so a rename never strands it.
+- Her eye colour, amber-brown, stays written exactly as before. It was the one thing that may never change.
+- Her heritage, one quarter Black on her father's side, stays written exactly as before. It is a fact of the story, not a description of a picture.
 
 ## What this costs and what the other choices cost
 
@@ -187,6 +196,7 @@ The numbers are the point. Whichever you choose, you see every bill before you s
 4. When something looks off, make the face sheet and tag it by hand, with a fixed vocabulary that has a word for "cannot tell". A chatbot may suggest; you decide.
 5. Answer the second question every way and read the comparison line. Every price is there to be chosen with your eyes open.
 6. Record the anchor. Redo within the list, one picture at a time, and keep the pairs.
+7. Rewrite the character's description to match the anchor you adopted, and say in a dated note why. Leave story facts alone.
 
 ## The files behind this page
 
