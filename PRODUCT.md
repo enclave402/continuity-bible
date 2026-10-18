@@ -6,7 +6,7 @@
 
 - **Buyer:** a layperson who wants to tell an illustrated story with AI without the characters drifting: a parent making a picture book, a coach illustrating a short narrative, a hobbyist making a comic, a writer who wants unique art for a book. Secondary: teams and agents running long-form narrative pipelines.
 - **Job:** keep every character the same person from the first picture to the last, keep the story's names, props and continuity straight across every prompt and page, and recover when a character has already drifted; with whatever model the person has, including a browser chatbot driven by copy and paste.
-- **Positioning (owner, 2026-10-17):** completely layperson-friendly and intuitive first. "Want to use AI to tell stories without AI slop? Want unique art, or to make a book?" LLM-agnostic and API-agnostic: the proof case runs through a browser tab, not an expert node graph or an API, and the engine must still hold. Canon beats cheapest: when a character drifts, the engine shows the price of restoring who they are instead of quietly ratifying the drift.
+- **Positioning (owner, 2026-10-17):** completely layperson-friendly and intuitive first. "Want to use AI to tell stories without AI slop? Want unique art, or to make a book?" LLM-agnostic and API-agnostic: the proof case runs through a browser tab, not an expert node graph or an API, and the engine must still hold. Every anchor policy shows its regeneration bill and the person chooses: the proof case takes the least-regeneration state (consistency throughout over any particular endpoint); `canon` is there for whoever needs the drift undone.
 - **Not the job:** image generation itself, hosting, any single vendor's agent harness.
 
 ## Deliverables
@@ -25,7 +25,7 @@
 
 | Piece | What it is | Done when |
 |---|---|---|
-| Before-and-after journey | an expository page that shows the engine on the published story's own drift (a lead who began mixed-race and darker-skinned and drifted toward white over the book): the images, the policies compared, canon restored | the page shows real before and after images, the anchor report that chose them, and the regeneration bill |
+| Before-and-after journey | an expository page that shows the engine on the published story's own drift (a lead who began mixed-race and darker-skinned and drifted lighter over the book): the images, the policies compared, the least-regeneration anchor adopted, the minority regenerated | the page shows real before and after images, the anchor report that chose them, the regeneration bill, and the owner's stated reason for the policy |
 | Shot-to-shot continuity | a continuity card (per character, per story day) and a shot sheet (per scene) that carry wardrobe, props, time of day, location and state from one shot to the next, designed on real norms | the research prompt `research/corpus/prompts/continuity-norms-and-structures-prompt.md` has been run and carded; the cards compile into a copy-pasteable prompt block; the gate checks them |
 
 ## Evidence class

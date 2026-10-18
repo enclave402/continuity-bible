@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-17 21:20 EDT
-**HEAD:** 37dfca3
+**HEAD:** de49ef8
 **Date:** 2026-10-17
 **Session:** layperson pass (branch `claude/layperson-docs-and-tutorial`, branched from `claude/research-process-and-public-norms`, the branch of pull request 3)
 
@@ -37,7 +37,7 @@
 ## 3. Prioritised next steps
 
 - [ ] **Next action:** a human reviews and merges pull request 3, then pull request 4 (the layperson pass).
-- [ ] Before-and-after journey: in the private pipeline, write the lead's `canon_tags` (owner's words, not inferred), tag and embed the story's renders, run the anchor policies, restore canon, and bring the before and after images plus the anchor report into a public expository page here. Same session applies the public mechanisms privately (token sources for program data, `forbid_keys` on the art manifest, prop ids, a contextual form for the stage-dependent prop, time-of-day markers, run-notes rendering).
+- [ ] Before-and-after journey (session running): in the private pipeline, tag and embed the story's renders, run every anchor policy, adopt the least-regeneration anchor (owner's stated goal: fewest regenerations, consistency over endpoint; `consensus` cross-checked by `mode`, no `canon_tags` needed), regenerate the minority with the owner's GO, reconcile the profile prose to the adopted anchor, and bring the before and after images plus the anchor report into a public expository page here. Same session applies the public mechanisms privately (token sources for program data, `forbid_keys` on the art manifest, prop ids, a contextual form for the stage-dependent prop, time-of-day markers, run-notes rendering).
 - [ ] Anchor, tags-only follow-ups found while writing the tutorial: (a) with rows that carry tags and no embeddings, `canon` and `mode` could list the rows whose tags differ from the anchor's as the regeneration list instead of none (an ADR-004 amendment; today the how-to tells the reader to read them off the tags file); (b) `anchor.mjs` and `tokenize.mjs` detect "run as main" by comparing `process.argv[1]` with `import.meta.url`, so invoked through a symlinked folder they print nothing and exit 0; `fs.realpathSync` on the argv path would fix it.
 - [ ] Run `research/corpus/prompts/continuity-norms-and-structures-prompt.md` in a deep-research tool, card the answer, overlap, extract, verify; then design the shot-to-shot continuity card and shot sheet on it.
 - [ ] Verify the conference and vendor sources behind the report's numeric thresholds and promote or correct findings accp-04, -22, -26, -28 (`docs/_registry/open_loops.md`).

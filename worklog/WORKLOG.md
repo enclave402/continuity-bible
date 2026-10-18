@@ -1,11 +1,13 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 14 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 16 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 21:50:56 (UTC-04:00) | action | repo/merge | [Merged origin/claude/research-process-and-public-norms (efe2e46: every policy shows its bill and the person chooses; canon is an option, not the rule) into claude/layperson-docs-and-tutorial](entries/2026-10-17_21-50-56_merged-origin-claude-research-process-and-public-norms-efe2e.md) | agent:claude | closed |
+| 21:46:53 (UTC-04:00) | fix | product | [Correction: the owner's intent for the drifted lead is the least-regeneration anchor (consistency over endpoint), not canon restoration; ADR-004, the drift how-to, PRODUCT.md and STATE.md now say so](entries/2026-10-17_21-46-53_correction-the-owner-s-intent-for-the-drifted-lead-is-the-le.md) | agent:claude | closed |
 | 21:15:34 (UTC-04:00) | milestone | docs/layperson | [Pull request 4 opened: layperson README, START-HERE tutorial, browser-chatbot how-to; stacked on pull request 3](entries/2026-10-17_21-15-34_pull-request-4-opened-layperson-readme-start-here-tutorial-b.md) | agent:claude | closed |
 | 21:14:40 (UTC-04:00) | action | docs/layperson | [Layperson pass: README rewritten for a non-technical reader; START-HERE tutorial and browser-chatbot how-to added; anchor CLI says 'no scores' instead of null when rows carry tags only](entries/2026-10-17_21-14-40_layperson-pass-readme-rewritten-for-a-non-technical-reader-s.md) | agent:claude | closed |
 | 20:51:29 (UTC-04:00) | fix | repo/worklog | [Correction: commit 2a5afab carried only the trail; the first-parent lag change had not been applied (edit anchor mismatch). Applied now in scripts/check-worklog.mjs](entries/2026-10-17_20-51-29_correction-commit-2a5afab-carried-only-the-trail-the-first-p.md) | agent:claude | closed |
