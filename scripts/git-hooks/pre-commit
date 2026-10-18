@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# pre-commit: nothing private or secret enters a public repository; ephemeral scratch never gets committed.
+# Install once: bash scripts/install-git-hooks.sh
+set -u
+ROOT="$(git rev-parse --show-toplevel)"
+node "$ROOT/scripts/cleanup-context-scratch.mjs" >/dev/null 2>&1 || true
+node "$ROOT/scripts/check-private.mjs" --staged || exit 1
+# A registry or example change must still pass the gate and the tests.
+if git diff --cached --name-only | grep -qE '^(character-registry\.json|scripts/|examples/|test/)'; then
+  (cd "$ROOT" && node scripts/check.mjs && node --test) || exit 1
+fi
+exit 0

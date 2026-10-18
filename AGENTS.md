@@ -1,10 +1,10 @@
 # AGENTS.md
 
-For any coding agent (Claude Code, Cursor, Codex, Copilot, others) working in a project that uses this tool.
+How any coding agent (Claude Code, Codex, Cursor, Copilot, Gemini, others) works in this repository. WHAT this repo ships is `PRODUCT.md`. NOW is `worklog/STATE.md`. Routing: `.context/_index.md`.
 
 ## The one rule
 
-Never type a character's name in a scene, prompt or manifest. Write a token instead:
+Never type a character's name in a scene, prompt or manifest. Write a token:
 
 | Write | Becomes |
 | :--- | :--- |
@@ -14,21 +14,27 @@ Never type a character's name in a scene, prompt or manifest. Write a token inst
 | `{{sam-hayes:first}}` | first word of the display name |
 | `{{sam-hayes:initial}}` | S |
 
-Ids live in `character-registry.json`. If the id you need is not there, add the character to the registry first. Never guess an id: an unknown token fails the build on purpose.
+Ids live in `character-registry.json`. An unknown token fails the build on purpose. Never guess an id: add the entry first.
 
-## Files
+## Session
 
-- `character-registry.json`: the only place names are written. Schema: `scripts/character-registry.v1.schema.json`.
-- `scripts/names.mjs`: the resolver (`loadNames(root).resolveTokens(text)`).
-- `scripts/tokenize.mjs`: one-time migration that turns written names into tokens.
-- `scripts/check.mjs`: the gate; the registry's `surfaces` and `token_sources` say which files it checks.
-- `examples/`: a token source (`sample-scene.md`) and a checked surface (`scenes.json`).
+1. Read `worklog/STATE.md`; do its Next action.
+2. Branch `<agent>/<task>` in a worktree at `.worktrees/<agent>-<task>` from `origin/main`. The root tree stays on `main`. Never push to `main`; open a pull request; a human merges.
+3. Stage files by name, never `git add .`. Conventional Commits with an `Agent: <name>` trailer.
+4. Log real beats: `node scripts/worklog-append.mjs --author agent:<name> --event-type action --scope <area> --summary "..."`. Never hand-write `worklog/log.jsonl`. Rewrite `STATE.md` when facts change.
 
 ## Before you finish
 
 ```bash
-npm run check   # exit 1 means a name was typed out or does not resolve; the output names the fix
-npm test
+npm run verify
 ```
 
-Both must pass. Zero dependencies: do not add packages.
+Names gate, tests, publication gate, worklog gate, research index, docs registry. All must pass. Zero dependencies: do not add packages.
+
+## Boundaries
+
+- **Public repository.** No personal data, local paths, credentials or private project names. `scripts/check-private.mjs` is the gate; keep your own words in a gitignored `.private-terms`.
+- **Nothing hardcoded.** Paths, models and endpoints come from config or the environment (`research/research.config.json`, `.env.example`), never from a machine.
+- Never edit a test to pass it. Never invent story data, names or evidence.
+- Docs go under `docs/` by reader intent (`docs/CONTRIBUTING.md`); decisions are ADRs in `docs/4-explanation/decisions/`.
+- A research claim traces to a card in `research/`. Ask `node scripts/research/ask.mjs "<question>"` before opening a card.
