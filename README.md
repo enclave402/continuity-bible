@@ -181,11 +181,14 @@ node ../scripts/anchor.mjs tags-june.jsonl --policy canon --character june-okafo
 
 ```text
 anchor: policy canon: renders/scene-01-01.png (order 1; nearest the centroid of the 1 image(s) matching canon {"skin":"dark brown","hair":"two puffs","coat":"yellow"} (of 4); the cheapest state is not canon's job)
-anchor: 4 image(s), none with an embedding: no similarity scores and no regeneration list (tags alone pick the anchor; embeddings would price the drift)
-anchor: compare: origin=renders/scene-01-01.png (no scores); terminal=renders/scene-01-04.png (no scores); consensus=n/a; mode=renders/scene-01-02.png (no scores); canon=renders/scene-01-01.png (no scores)
+anchor: 4 image(s), none with an embedding; 3 do not match canon -> regenerate (bill by tags, not by similarity)
+  regenerate renders/scene-01-02.png
+  regenerate renders/scene-01-03.png
+  regenerate renders/scene-01-04.png
+anchor: compare: origin=renders/scene-01-01.png (3 to redo, by tags); terminal=renders/scene-01-04.png (1 to redo, by tags); consensus=n/a; mode=renders/scene-01-02.png (1 to redo, by tags); canon=renders/scene-01-01.png (3 to redo, by tags)
 ```
 
-The *policy* is the rule for choosing. `canon` keeps only pictures that match who you said the character is, even when most pictures drifted the other way. `mode` picks the most common look (here the drifted one, three pictures out of four). `origin` is the first picture, `terminal` the last. `consensus` needs numbers from a model (an *embedding*), so with hand-written tags it says `n/a`. Add `--write` to record the choice in the registry. The [tutorial](docs/1-tutorials/START-HERE.md) walks through the whole thing with real pictures.
+The *policy* is the rule for choosing. `canon` keeps only pictures that match who you said the character is, even when most pictures drifted the other way, and lists the three that drifted as the ones to redo. `mode` picks the most common look (here the drifted one, three pictures out of four) and would redo only one picture: the one that actually looks like June. `origin` is the first picture, `terminal` the last. The last line puts every rule and its price side by side. `consensus` needs numbers from a model (an *embedding*), so with hand-written tags it says `n/a`. Add `--write` to record the choice in the registry. The [tutorial](docs/1-tutorials/START-HERE.md) walks through the whole thing with real pictures.
 
 ## For developers
 
@@ -201,7 +204,7 @@ The same engine runs the name build of a published 82-scene graphic novel. Plain
 | A contextual form: `"attitude": { "by": "stage", "values": { "childhood": "…", "adult": "…", "default": "…" } }` | `{{brass-key:attitude}}` renders the variant the scene's own `stage` picks; no match and no default fails the build |
 | `exclusive_markers` on a scene file: `time_of_day` → `morning: [sunrise, …]`, `evening: [lamplight, …]` | fails a scene labelled evening whose text says sunrise |
 | `forbid_keys` on a manifest: `visualDescription` is owned by the scene file | fails a manifest entry that still carries its own copy |
-| `canon_tags` on an entry, `drift_resolution` defaults | `scripts/anchor.mjs` picks and records a visual anchor (`origin`, `terminal`, `consensus`, `mode`, `canon`) over any encoder's embeddings or hand tags; `--write` stores it under `characters.<id>.anchor` |
+| `canon_tags` on an entry, `drift_resolution` defaults | `scripts/anchor.mjs` picks and records a visual anchor (`origin`, `terminal`, `consensus`, `mode`, `canon`) over any encoder's embeddings or hand tags; the regeneration bill is by cosine with embeddings and by tags without (`stats.bill_basis`); `--write` stores it under `characters.<id>.anchor` |
 
 From the repository root:
 

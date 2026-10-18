@@ -56,7 +56,7 @@ Ids: lower-case letters, digits, hyphens.
 | `prompt_tokens`, `negative_tokens[]` | a prop's or companion's look, written once for prompt compilers |
 | `canon_tags{}` | who the character is, as image-readable tags written by the owner; the `canon` anchor policy keeps only images matching every one |
 | `continuity_ids[]`, `sources[]`, `first_appearance`, `born`, `ages{}`, `members[]`, `questions[]`, `prose_only`, `generic`, `notes` | cross-references the gate checks exist and agree |
-| `anchor` | `{ image, sha256?, policy, metric?, order?, chosen_at, embeddings?, stats?, why? }`: the visual anchor chosen after drift; a missing image file is a gap |
+| `anchor` | `{ image, sha256?, policy, metric?, order?, chosen_at, embeddings?, stats?, why? }`: the visual anchor chosen after drift; `stats.bill_basis` says whether the regeneration bill was by `cosine`, by `tags` (hand tags, no embeddings; `stats.tag_mismatches` is the count) or `none`; a missing image file is a gap |
 | `drift_resolution` | per-entry override of the top-level defaults |
 
 ## Tokens

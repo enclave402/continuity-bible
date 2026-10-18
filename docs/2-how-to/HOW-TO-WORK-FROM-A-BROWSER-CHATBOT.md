@@ -81,10 +81,10 @@ A tags file is one line per picture, in order, in a strict format called JSON Li
 
 | Policy | Picks | Right when | With hand tags only |
 |---|---|---|---|
-| `canon` | among the pictures matching every `canon_tags` value, the one nearest their middle | the drift is a mistake and the character has a definition you wrote down | works; with no embeddings the first matching picture is taken |
-| `mode` | the most common tag combination, nearest its middle | a classifier or you can name the states and the common one is the right one | works; with no embeddings the first picture of the common group is taken |
-| `origin` | the first picture | the beginning is right and everything after is drift | works |
-| `terminal` | the last picture | the drift was a deliberate change you want to keep | works |
+| `canon` | among the pictures matching every `canon_tags` value, the one nearest their middle | the drift is a mistake and the character has a definition you wrote down | works; the first matching picture is taken, and the bill lists every picture off canon |
+| `mode` | the most common tag combination, nearest its middle | a classifier or you can name the states and the common one is the right one | works; the first picture of the common group is taken, and the bill lists every picture outside that group |
+| `origin` | the first picture | the beginning is right and everything after is drift | works; the bill lists every picture whose tags differ from the first one's |
+| `terminal` | the last picture | the drift was a deliberate change you want to keep | works; the bill lists every picture whose tags differ from the last one's |
 | `consensus` | the picture nearest the middle of all pictures | you want the fewest corrections and you trust that the middle is the character | needs embeddings: `n/a` |
 
 Default to `canon`. The cheapest choice (`consensus`, or `mode`) keeps whatever most pictures already show, and most pictures show the drift. A lead who began mixed-race and darker-skinned and drifted lighter over a book is cheapest to keep light. That is arithmetic, not a decision. `canon_tags` is where you make the decision, in words you wrote before looking at the pile, and the comparison line prints every policy side by side so nobody picks the cheap one by accident.
@@ -103,15 +103,15 @@ An *embedding* is a long list of numbers a model computes from a picture so that
 
 Without them, in the anchor report:
 
-- There are no similarity scores, so there is no mean, no minimum and no threshold.
-- There is no regeneration list. The tool cannot tell you which pictures are too far from the anchor, because "far" is a number it does not have. With tags only, the pictures to redo are the ones whose tags differ from canon. Read them off the tags file; for four to ten pictures a scene, that takes a minute.
+- There are no similarity scores, so there is no mean, no minimum and no threshold. The tool cannot measure *how far* a picture drifted.
+- The regeneration list is by tags, not by similarity. `canon` lists every picture that does not match `canon_tags`. `mode`, `origin` and `terminal` list every picture whose tags differ from the anchor's. A picture you did not tag is on the list, because nothing shows it matches. The report says `bill by tags, not by similarity`, the comparison line says `to redo, by tags`, and the recorded anchor carries `"bill_basis": "tags"`. A tag bill is exactly as good as your tagging (section 3).
 - `consensus` is unavailable, and outlier pruning (`--prune-outliers`) does nothing.
 - `canon` and `mode` pick the first picture of their group instead of the one nearest the group's middle, since there is no middle to measure.
-- The `budget` in `drift_resolution` is never checked against anything, because the bill is not computed.
+- The `budget` in `drift_resolution` is checked against the tag bill as it would be against a similarity bill.
 
-What tags still give you, with no model at all: a stated policy, a recorded anchor with the file's fingerprint and the reason, and a comparison that shows when the cheap policy would have picked the drift. That is the decision; the API would only price it.
+What tags give you, with no model at all: a stated policy, a recorded anchor with the file's fingerprint and the reason, the list of pictures to redo, and a comparison that shows when the cheap policy would have kept the drift. That is the whole decision. A model would add the measurement: how far each picture is from the anchor, as a number, and with it `consensus` and pruning.
 
-When you do have a model, each tags line gains an `"embedding": [...]` field and everything above switches on: scores, the regeneration list, `consensus`, pruning, the budget. How to produce the rows, which encoder family fits which job, and the licence caveats: [How to resolve character drift after the fact](HOW-TO-RESOLVE-CHARACTER-DRIFT.md).
+When you do have a model, each tags line gains an `"embedding": [...]` field and the report switches to similarity: scores, a threshold, `consensus`, pruning, and a bill by distance instead of by tags. How to produce the rows, which encoder family fits which job, and the licence caveats: [How to resolve character drift after the fact](HOW-TO-RESOLVE-CHARACTER-DRIFT.md).
 
 ## 6. Change a name or a look
 

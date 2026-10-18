@@ -14,6 +14,9 @@
  * embeddings (after optional outlier pruning), the choice that needs the fewest corrections; mode keeps the most frequent
  * tag combination (the state the character spent most of the work in) and, among those images, the one nearest their
  * centroid. The report lists every image below --threshold against the chosen anchor: that is the regeneration bill.
+ * Without embeddings (hand tags from a browser-chatbot workflow) the bill is by tags instead: for canon, every image that
+ * does not match canon_tags; for mode, origin and terminal, every image whose tags differ from the anchor's. stats.bill_basis
+ * says which kind of bill it was ("cosine", "tags" or "none"); a tag count is never presented as a similarity count.
  * --write records the choice under characters.<id>.anchor in the registry (never the vectors), with the policy, the file
  * and the stats, so later prompts condition on one declared image and the decision is auditable.
  * Defaults for threshold, pruning and policy come from the registry's drift_resolution (entry, then top level).
@@ -48,6 +51,9 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
     pool = withVec.filter((r, i) => sd === 0 || (d[i] - m) / sd <= pruneZ);
     pruned = withVec.filter((r) => !pool.includes(r)).map((r) => r.image);
   }
+  const low = (v) => String(v).trim().toLowerCase();
+  const tagKey = (tags) => JSON.stringify(Object.entries(tags || {}).map(([k, v]) => [k, low(v)]).sort());
+  const canonMatch = (r) => Boolean(r.tags) && Object.entries(canon || {}).every(([k, v]) => r.tags[k] !== undefined && low(r.tags[k]) === low(v));
   let anchor, basis;
   if (policy === "origin") { anchor = rows[0]; basis = "first image in order"; }
   else if (policy === "terminal") { anchor = rows[rows.length - 1]; basis = "last image in order"; }
@@ -59,7 +65,7 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
   } else if (policy === "mode") {
     const tagged = rows.filter((r) => r.tags && Object.keys(r.tags).length);
     if (!tagged.length) throw new Error("anchor: mode needs tags on the rows");
-    const key = (r) => JSON.stringify(Object.entries(r.tags).sort());
+    const key = (r) => tagKey(r.tags);
     const counts = new Map();
     for (const r of tagged) counts.set(key(r), (counts.get(key(r)) || 0) + 1);
     const [best, n] = [...counts].sort((a, b) => b[1] - a[1])[0];
@@ -70,8 +76,7 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
     basis = `most frequent tag combination ${best} (${n} of ${tagged.length} images)`;
   } else if (policy === "canon") {
     if (!canon || !Object.keys(canon).length) throw new Error("anchor: canon needs the character's canon_tags in the registry or --canon tag=value");
-    const low = (v) => String(v).trim().toLowerCase();
-    const matches = rows.filter((r) => r.tags && Object.entries(canon).every(([k, v]) => r.tags[k] !== undefined && low(r.tags[k]) === low(v)));
+    const matches = rows.filter(canonMatch);
     if (!matches.length) throw new Error(`anchor: no image matches canon ${JSON.stringify(canon)}: every image has drifted off canon. Fix: recast or regenerate from the master, tag the result, run again`);
     const vec = matches.filter((r) => r.embedding);
     if (vec.length) { const c = centroidOf(vec.map((r) => r.embedding)); anchor = vec.map((r) => [dot(r.embedding, c), r]).sort((a, b) => b[0] - a[0])[0][1]; }
@@ -79,8 +84,19 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
     basis = `nearest the centroid of the ${matches.length} image(s) matching canon ${JSON.stringify(canon)} (of ${rows.length}); the cheapest state is not canon's job`;
   } else throw new Error(`anchor: unknown policy ${policy} (origin, terminal, consensus, mode, canon)`);
   const sims = anchor.embedding ? rows.filter((r) => r.embedding).map((r) => ({ image: r.image, order: r.order, cosine: dot(r.embedding, anchor.embedding) })) : [];
-  const regenerate = sims.filter((s) => s.cosine < threshold).map((s) => s.image);
-  const stats = sims.length ? { n: rows.length, with_embedding: sims.length, pruned: pruned.length, mean_cosine: +mean(sims.map((s) => s.cosine)).toFixed(4), min_cosine: +Math.min(...sims.map((s) => s.cosine)).toFixed(4), threshold, below_threshold: regenerate.length } : { n: rows.length, with_embedding: 0, pruned: 0, threshold, below_threshold: null };
+  let regenerate, stats;
+  if (sims.length) {
+    // the bill by similarity: every image below the threshold against the anchor
+    regenerate = sims.filter((s) => s.cosine < threshold).map((s) => s.image);
+    stats = { n: rows.length, with_embedding: sims.length, pruned: pruned.length, mean_cosine: +mean(sims.map((s) => s.cosine)).toFixed(4), min_cosine: +Math.min(...sims.map((s) => s.cosine)).toFixed(4), threshold, below_threshold: regenerate.length, bill_basis: "cosine" };
+  } else {
+    // no similarity scores (hand tags, no model): the bill is by tags. canon: every image off canon. Otherwise: every image
+    // whose tags differ from the anchor's, an untagged image included (nothing shows it matches). No tags on the anchor: no bill.
+    const anchorTagged = Boolean(anchor.tags) && Object.keys(anchor.tags).length > 0;
+    const mismatch = policy === "canon" ? rows.filter((r) => !canonMatch(r)) : anchorTagged ? rows.filter((r) => tagKey(r.tags) !== tagKey(anchor.tags)) : null;
+    regenerate = mismatch ? mismatch.map((r) => r.image) : [];
+    stats = { n: rows.length, with_embedding: withVec.length, pruned: 0, threshold, below_threshold: null, bill_basis: mismatch ? "tags" : "none", ...(mismatch ? { tag_mismatches: mismatch.length } : {}) };
+  }
   return { policy, basis, anchor: { image: anchor.image, order: anchor.order, sha256: anchor.sha256 }, stats, regenerate, similarities: sims };
 }
 
@@ -88,7 +104,7 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
 export function comparePolicies(rows, opts) {
   const out = {};
   for (const policy of ["origin", "terminal", "consensus", "mode", "canon"]) {
-    try { const r = chooseAnchor(rows, { ...opts, policy }); out[policy] = { image: r.anchor.image, below_threshold: r.stats.below_threshold, mean_cosine: r.stats.mean_cosine }; }
+    try { const r = chooseAnchor(rows, { ...opts, policy }); out[policy] = { image: r.anchor.image, below_threshold: r.stats.below_threshold, mean_cosine: r.stats.mean_cosine, bill_basis: r.stats.bill_basis, to_redo: r.stats.bill_basis === "none" ? null : r.regenerate.length }; }
     catch (e) { out[policy] = { unavailable: e.message.replace(/^anchor: /, "") }; }
   }
   return out;
@@ -122,10 +138,14 @@ if (isMain) {
   if (argv.includes("--json")) { console.log(JSON.stringify({ ...result, compare, chosen_at: chosenAt, budget }, null, 2)); }
   else {
     console.log(`anchor: policy ${policy}: ${result.anchor.image} (order ${result.anchor.order}; ${result.basis})`);
-    if (result.stats.with_embedding) console.log(`anchor: ${result.stats.with_embedding} image(s) scored; mean cosine ${result.stats.mean_cosine}, min ${result.stats.min_cosine}; ${result.regenerate.length} below ${threshold} -> regenerate${budget !== undefined ? ` (budget ${budget}${result.regenerate.length > budget ? ": OVER" : ""})` : ""}`);
-    else console.log(`anchor: ${result.stats.n} image(s), none with an embedding: no similarity scores and no regeneration list (tags alone pick the anchor; embeddings would price the drift)`);
+    const budgetNote = budget !== undefined ? ` (budget ${budget}${result.regenerate.length > budget ? ": OVER" : ""})` : "";
+    const noVec = result.stats.with_embedding ? "the anchor has no embedding" : "none with an embedding";
+    if (result.stats.bill_basis === "cosine") console.log(`anchor: ${result.stats.with_embedding} image(s) scored; mean cosine ${result.stats.mean_cosine}, min ${result.stats.min_cosine}; ${result.regenerate.length} below ${threshold} -> regenerate${budgetNote}`);
+    else if (result.stats.bill_basis === "tags") console.log(`anchor: ${result.stats.n} image(s), ${noVec}; ${result.stats.tag_mismatches} ${policy === "canon" ? (result.stats.tag_mismatches === 1 ? "does not match canon" : "do not match canon") : (result.stats.tag_mismatches === 1 ? "differs from the anchor's tags" : "differ from the anchor's tags")} -> regenerate (bill by tags, not by similarity)${budgetNote}`);
+    else console.log(`anchor: ${result.stats.n} image(s), ${noVec} and no tags on the anchor: no similarity scores and no regeneration list (add tags or embeddings)`);
     for (const img of result.regenerate) console.log(`  regenerate ${img}`);
-    console.log(`anchor: compare: ${Object.entries(compare).map(([p, v]) => `${p}=${v.unavailable ? "n/a" : `${v.image} (${v.below_threshold === null ? "no scores" : `${v.below_threshold} to redo`})`}`).join("; ")}`);
+    const bill = (v) => (v.bill_basis === "cosine" ? `${v.to_redo} to redo` : v.bill_basis === "tags" ? `${v.to_redo} to redo, by tags` : "no scores");
+    console.log(`anchor: compare: ${Object.entries(compare).map(([p, v]) => `${p}=${v.unavailable ? "n/a" : `${v.image} (${bill(v)})`}`).join("; ")}`);
   }
   if (argv.includes("--write")) {
     if (!registry || !id || !registry.characters[id]) { console.error(`anchor: --write needs --character <id> that exists in ${registry?._file || "character-registry.json"}`); process.exit(1); }

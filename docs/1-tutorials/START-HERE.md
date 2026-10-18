@@ -234,7 +234,7 @@ No model, no account and no internet were needed for this step. Your eyes did it
 
 ## 9. Ask for the anchor and read the comparison
 
-The *anchor* is the one picture every later picture should match. Which picture that should be is a decision, so the tool makes you pick a rule, called a *policy*, and shows you what every rule would have picked.
+The *anchor* is the one picture every later picture should match. Which picture that should be is a decision, so the tool makes you pick a rule, called a *policy*, and shows you what every rule would have picked and what each would cost.
 
 Start with `canon`: keep only the pictures that match who June is, as you wrote in `canon_tags`.
 
@@ -244,17 +244,21 @@ node ../scripts/anchor.mjs tags-june.jsonl --policy canon --character june-okafo
 
 ```text
 anchor: policy canon: renders/scene-01-01.png (order 1; nearest the centroid of the 1 image(s) matching canon {"skin":"dark brown","hair":"two puffs","coat":"yellow"} (of 4); the cheapest state is not canon's job)
-anchor: 4 image(s), none with an embedding: no similarity scores and no regeneration list (tags alone pick the anchor; embeddings would price the drift)
-anchor: compare: origin=renders/scene-01-01.png (no scores); terminal=renders/scene-01-04.png (no scores); consensus=n/a; mode=renders/scene-01-02.png (no scores); canon=renders/scene-01-01.png (no scores)
+anchor: 4 image(s), none with an embedding; 3 do not match canon -> regenerate (bill by tags, not by similarity)
+  regenerate renders/scene-01-02.png
+  regenerate renders/scene-01-03.png
+  regenerate renders/scene-01-04.png
+anchor: compare: origin=renders/scene-01-01.png (3 to redo, by tags); terminal=renders/scene-01-04.png (1 to redo, by tags); consensus=n/a; mode=renders/scene-01-02.png (1 to redo, by tags); canon=renders/scene-01-01.png (3 to redo, by tags)
 ```
 
 Read it line by line.
 
 - **Line 1.** Only one of the four pictures matches all three canon tags: the first. So that is the anchor. "Nearest the centroid" means "closest to the middle of the matching group", which with one match is that match.
-- **Line 2.** You gave tags, not numbers. An *embedding* is a long list of numbers a model computes from a picture so that similar pictures get similar numbers. Without embeddings the tool cannot score how far each picture is from the anchor, so it cannot print the list of pictures to redo. With tags only, that list is simply every picture whose tags differ from canon: here pictures 2, 3 and 4 for June.
-- **Line 3.** What each policy would have picked. `origin` is the first picture. `terminal` is the last. `mode` is the most common look, and here the most common look is the drifted one: three of four pictures have loose curls, so `mode` would have made the mistake the reference. `consensus` needs embeddings, so it is `n/a`. `canon` picked the picture that matches who she is.
+- **Line 2.** You gave tags, not numbers. An *embedding* is a long list of numbers a model computes from a picture so that similar pictures get similar numbers. Without embeddings the tool cannot measure how far a picture drifted, so it bills by tags instead: three pictures do not match canon, and those are the ones to redo. The line says so, "bill by tags, not by similarity", so a tag count is never mistaken for a measurement.
+- **The indented lines.** The bill itself: pictures 2, 3 and 4 need to be made again.
+- **Last line.** What each policy would have picked, and what each would cost. `origin` is the first picture. `terminal` is the last. `mode` is the most common look, and here the most common look is the drifted one: three of four pictures have loose curls, so `mode` would make the mistake the reference and redo only one picture, the one that actually looks like June. `consensus` needs embeddings, so it is `n/a`. `canon` picked the picture that matches who she is, and the price is three.
 
-That is the point of the comparison line. The cheapest choice (keep what most pictures already show) is often the wrong one. Run `mode` yourself to see it say so in its own words:
+That is the point of the comparison line. The cheapest choice (keep what most pictures already show) is often the wrong one, and the line puts the price of each choice next to it so you choose with your eyes open. Run `mode` yourself to see it say so in its own words:
 
 ```bash
 node ../scripts/anchor.mjs tags-june.jsonl --policy mode --character june-okafor
@@ -262,8 +266,9 @@ node ../scripts/anchor.mjs tags-june.jsonl --policy mode --character june-okafor
 
 ```text
 anchor: policy mode: renders/scene-01-02.png (order 2; most frequent tag combination [["coat","yellow"],["hair","loose curls"],["skin","dark brown"]] (3 of 4 images))
-anchor: 4 image(s), none with an embedding: no similarity scores and no regeneration list (tags alone pick the anchor; embeddings would price the drift)
-anchor: compare: origin=renders/scene-01-01.png (no scores); terminal=renders/scene-01-04.png (no scores); consensus=n/a; mode=renders/scene-01-02.png (no scores); canon=renders/scene-01-01.png (no scores)
+anchor: 4 image(s), none with an embedding; 1 differs from the anchor's tags -> regenerate (bill by tags, not by similarity)
+  regenerate renders/scene-01-01.png
+anchor: compare: origin=renders/scene-01-01.png (3 to redo, by tags); terminal=renders/scene-01-04.png (1 to redo, by tags); consensus=n/a; mode=renders/scene-01-02.png (1 to redo, by tags); canon=renders/scene-01-01.png (3 to redo, by tags)
 ```
 
 And `consensus`, to see what you cannot do without a model:
@@ -284,11 +289,12 @@ node ../scripts/anchor.mjs tags-abel.jsonl --policy canon --character abel-marsh
 
 ```text
 anchor: policy canon: renders/scene-01-01.png (order 1; nearest the centroid of the 3 image(s) matching canon {"skin":"light brown","beard":"white","sweater":"navy"} (of 4); the cheapest state is not canon's job)
-anchor: 4 image(s), none with an embedding: no similarity scores and no regeneration list (tags alone pick the anchor; embeddings would price the drift)
-anchor: compare: origin=renders/scene-01-01.png (no scores); terminal=renders/scene-01-04.png (no scores); consensus=n/a; mode=renders/scene-01-01.png (no scores); canon=renders/scene-01-01.png (no scores)
+anchor: 4 image(s), none with an embedding; 1 does not match canon -> regenerate (bill by tags, not by similarity)
+  regenerate renders/scene-01-03.png
+anchor: compare: origin=renders/scene-01-01.png (1 to redo, by tags); terminal=renders/scene-01-04.png (1 to redo, by tags); consensus=n/a; mode=renders/scene-01-01.png (1 to redo, by tags); canon=renders/scene-01-01.png (1 to redo, by tags)
 ```
 
-Three of Abel's four pictures match canon. With tags alone the tool takes the first of them. Your pictures and tags will differ from these, and so will the picture it names. That is right: it is reading your judgement, not guessing.
+Three of Abel's four pictures match canon. With tags alone the tool takes the first of them, and the bill is the one picture where his beard went grey. Your pictures and tags will differ from these, and so will the picture it names and the bill. That is right: it is reading your judgement, not guessing.
 
 If every picture has drifted, the tool says so instead of picking the least bad one:
 
@@ -324,12 +330,12 @@ Open `character-registry.json` and look at June. A block like this has appeared 
   "order": 1,
   "chosen_at": "2026-10-18T01:02:16.983Z",
   "embeddings": "tags-june.jsonl",
-  "stats": { "n": 4, "with_embedding": 0, "pruned": 0, "threshold": 0.6, "below_threshold": null },
+  "stats": { "n": 4, "with_embedding": 0, "pruned": 0, "threshold": 0.6, "below_threshold": null, "bill_basis": "tags", "tag_mismatches": 3 },
   "why": "nearest the centroid of the 1 image(s) matching canon {\"skin\":\"dark brown\",\"hair\":\"two puffs\",\"coat\":\"yellow\"} (of 4); the cheapest state is not canon's job"
 }
 ```
 
-Now the registry says not only who June is, but which picture shows it, and why that picture was chosen. The last line suggests `node scripts/check.mjs`; from inside `my-story` that is:
+Now the registry says not only who June is, but which picture shows it, why that picture was chosen, and that the bill of three was counted by tags, not measured by a model. The last line suggests `node scripts/check.mjs`; from inside `my-story` that is:
 
 ```bash
 node ../scripts/check.mjs
@@ -346,7 +352,7 @@ For scene 2, write `scene-02.md` with tokens, render it, and paste the picture p
 - If your chatbot lets you attach a picture, attach `renders/scene-01-01.png` (the anchor named in the registry) and start your message with: *Keep the two characters exactly as in the attached picture.* Then paste the picture prompt.
 - If it does not, paste the picture prompt as before. The words are the same every time, and that is the most a text-only chatbot can be held to.
 
-After every batch: save, name in order, tag, run `anchor` with `--policy canon`. Keep the recorded anchor unless you decide, on purpose, to change it; then run `--write` again. The decision is always in the registry, never in your memory.
+After every batch: save, name in order, tag, run `anchor` with `--policy canon`, and redo the pictures on its `regenerate` lines. Keep the recorded anchor unless you decide, on purpose, to change it; then run `--write` again. The decision is always in the registry, never in your memory.
 
 ## Where to go next
 
