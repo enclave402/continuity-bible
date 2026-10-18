@@ -33,7 +33,7 @@ node scripts/check.mjs --suggest   # prints a stub entry for every label it cann
 | Story-scoped data keyed by story (an art manifest, pack data) | `surfaces[] { type: "prose", root, story_field, stories }` | renders each entry for its story, then scans it |
 | A document with one heading per character | `surfaces[] { type: "headings" }` | resolves each heading label |
 | JSON with name fields at known paths | `surfaces[] { type: "names", paths }` | resolves each value |
-| Pages, partials, templates, manifests, run notes a builder reads | `token_sources[] { file: "<glob>" }` | fails any written-out name or variant, naming the token |
+| Pages, partials, templates, manifests, run notes a builder reads | `token_sources[] { file: "<glob>" }` | fails any written-out name or variant, naming the token, and any token with an unknown id or form or a lookalike (`{{June-okafor}}`); add `other_placeholders: true` for a file whose other `{{...}}` belong to another template tool |
 | Dated history (worklog, transcripts, decision records, past prompt records) | `records: ["<glob>"]` | leaves it alone |
 | Documentation that shows names on purpose (a README's examples, tests) | `coverage.ignore: ["<glob>"]` | leaves it alone |
 

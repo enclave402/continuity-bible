@@ -66,8 +66,35 @@ export function atomicLabels(characters, cards = []) {
   return { list, shared };
 }
 
+/**
+ * JSON.parse with an error a person can act on: the file, the line and column in that file (computed from the parser's
+ * position, so it is right on every Node version and for one line of a .jsonl file), and the usual causes in plain words.
+ * firstLine is the file line the text starts on (a .jsonl row passes its own line number).
+ */
+export function parseJson(text, file = "this file", firstLine = 1) {
+  try { return JSON.parse(text); }
+  catch (e) {
+    const m = String(e.message).match(/position (\d+)/);
+    const pos = m ? Number(m[1]) : null;
+    let line = firstLine, col = 1;
+    if (pos !== null) { const before = text.slice(0, pos); line = firstLine + (before.match(/\n/g) || []).length; col = pos - before.lastIndexOf("\n"); }
+    const lineText = text.split("\n")[line - firstLine] || "";
+    const hints = [];
+    if (/^\s*\{\\rtf/.test(text)) hints.push("it was saved as rich text, not plain text: in TextEdit choose Format, then Make Plain Text, and save it again");
+    else {
+      if (/[\u201c\u201d\u2018\u2019]/.test(lineText)) hints.push("that line has curly quotes (\u201c \u201d); JSON needs straight quotes (\")");
+      if (pos !== null && /,\s*$/.test(text.slice(0, pos)) && /[}\]]/.test(text[pos] || "")) hints.push("there is a comma just before this } or ]; delete that comma");
+      if (!hints.length) hints.push("a missing or extra comma, quote or brace at that spot or just before it");
+    }
+    const err = new Error(`${file}${pos === null ? "" : `: line ${line}, column ${col}`}: this is not valid JSON. Likely cause: ${hints.join("; ")}.`);
+    err.code = "BAD_JSON";
+    err.exitCode = 1;
+    throw err;
+  }
+}
+
 export function loadNames(root) {
-  const read = (f) => JSON.parse(fs.readFileSync(path.join(root, f), "utf8"));
+  const read = (f) => parseJson(fs.readFileSync(path.join(root, f), "utf8"), f);
   const registry = read("character-registry.json");
   const characters = registry.characters || {};
   const cards = new Map();

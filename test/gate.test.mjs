@@ -92,3 +92,78 @@ test("render writes built output with names and contextual variants, never a tok
   assert.equal(t.status, 0, t.stderr);
   assert.match(t.stdout, /Chloe picked up the phone/);
 });
+
+// A token source must not reach a chatbot with a broken token in it: the gate fails it and render refuses it.
+test("the gate fails an unknown id, an unknown form and a token lookalike in a token source, each with the token to write", () => {
+  const dir = copyRepo();
+  const scene = path.join(dir, "examples/sample-scene.md");
+  const original = fs.readFileSync(scene, "utf8");
+  for (const [typed, want] of [
+    ["{{chloe-jenkinz}}", /\{\{chloe-jenkinz\}\} is not a character in the registry\. Fix: check the spelling: did you mean \{\{chloe-jenkins\}\}\?/],
+    ["{{chloe-jenkins:nickame}}", /chloe-jenkins has no form "nickame"\. Fix: use one of .*\{\{chloe-jenkins:nickname\}\}/],
+    ["{{Chloe-jenkins}}", /\{\{Chloe-jenkins\}\} looks like a token but is not one: ids use only lower-case letters, digits and hyphens, with no spaces\. Fix: write \{\{chloe-jenkins\}\}/],
+    ["{{ chloe-jenkins }}", /\{\{ chloe-jenkins \}\} looks like a token but is not one.* Fix: write \{\{chloe-jenkins\}\}/],
+  ]) {
+    fs.writeFileSync(scene, original.replace("{{chloe-jenkins}} picked up", `${typed} picked up`));
+    const r = check(dir);
+    assert.equal(r.status, 1, `${typed} must fail the gate\n${r.stdout}${r.stderr}`);
+    assert.match(r.stderr, want);
+    const rd = spawnSync(process.execPath, [path.join(dir, "scripts/render.mjs"), "examples/sample-scene.md"], { cwd: dir, encoding: "utf8" });
+    assert.equal(rd.status, 1, `${typed} must not render`);
+    assert.match(rd.stderr, want);
+    assert.match(rd.stderr, /render: nothing written/);
+  }
+  // a file that also feeds another template tool may say so; its typed names are still checked
+  fs.writeFileSync(scene, original.replace("{{chloe-jenkins}} picked up", "{{#each pages}} picked up"));
+  assert.equal(check(dir).status, 1, "a lookalike fails until the file says it holds other placeholders");
+  editJson(dir, "character-registry.json", (j) => { j.token_sources[0].other_placeholders = true; });
+  assert.equal(check(dir).status, 0, check(dir).stderr);
+  fs.writeFileSync(scene, original.replace("{{chloe-jenkins}} picked up", "Chloe picked up"));
+  assert.match(check(dir).stderr, /names "Chloe" in a token source/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("render refuses a typed name in a token source, finds the file by its real name, and checks a mis-capitalised one", () => {
+  const dir = copyRepo();
+  const scene = path.join(dir, "examples/sample-scene.md");
+  fs.writeFileSync(scene, fs.readFileSync(scene, "utf8").replace("{{chloe-jenkins}} picked up", "Chloe picked up"));
+  const r = spawnSync(process.execPath, [path.join(dir, "scripts/render.mjs"), "examples/sample-scene.md"], { cwd: dir, encoding: "utf8" });
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /names "Chloe" in a token source\. Fix: write \{\{chloe-jenkins\}\}/);
+  const moved = path.join(dir, "examples/Sample-scene.md");
+  fs.renameSync(scene, moved);
+  const m = spawnSync(process.execPath, [path.join(dir, "scripts/render.mjs"), "examples/Sample-scene.md"], { cwd: dir, encoding: "utf8" });
+  assert.equal(m.status, 1, "a mis-capitalised token source is still checked");
+  assert.match(m.stderr, /its name does not match token_sources "examples\/\*\.md" exactly|names "Chloe" in a token source/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("a registry that is missing, mis-named or not plain JSON gets a plain answer from the gate and from render, never a stack trace", () => {
+  const dir = copyRepo();
+  const reg = path.join(dir, "character-registry.json");
+  const good = fs.readFileSync(reg, "utf8");
+  fs.renameSync(reg, reg + ".txt");
+  for (const script of ["check.mjs", "render.mjs"]) {
+    const r = spawnSync(process.execPath, [path.join(dir, "scripts", script), "examples/sample-scene.md"], { cwd: dir, encoding: "utf8" });
+    assert.equal(r.status, 1, script);
+    assert.match(r.stderr, /registry missing: .*There is "character-registry\.json\.txt" here: rename it to character-registry\.json/, script);
+    assert.doesNotMatch(r.stderr, /node:internal|ENOENT|at Object\./, script);
+  }
+  fs.renameSync(reg + ".txt", reg);
+  for (const [bad, cause] of [
+    [good.replace('"registry_version"', "\u201cregistry_version\u201d"), /curly quotes/],
+    [good.replace(/\}\s*$/, ",\n}\n"), /comma just before this \}/],
+    ["{\\rtf1\\ansi\\deff0 " + good + "}", /saved as rich text, not plain text/],
+  ]) {
+    fs.writeFileSync(reg, bad);
+    for (const script of ["check.mjs", "render.mjs"]) {
+      const r = spawnSync(process.execPath, [path.join(dir, "scripts", script), "examples/sample-scene.md"], { cwd: dir, encoding: "utf8" });
+      assert.equal(r.status, 1, script);
+      assert.match(r.stderr, /character-registry\.json: line \d+, column \d+: this is not valid JSON\. Likely cause: /, script);
+      assert.match(r.stderr, cause, script);
+      assert.doesNotMatch(r.stderr, /node:internal|<anonymous_script>/, script);
+    }
+  }
+  fs.writeFileSync(reg, good);
+  fs.rmSync(dir, { recursive: true, force: true });
+});

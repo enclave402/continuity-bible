@@ -84,7 +84,7 @@ A tags file is one line per picture, in order, in a strict format called JSON Li
 node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --ask
 ```
 
-**Question 1: what about this character must never change?** Zero or more `tag=value` pairs. The registry answers it by default with the character's `canon_tags`; press Enter to accept, or type your own for this run. Only pictures carrying every one of these tags can be the anchor, and pictures without them are always on the redraw list, whatever you answer next. Put here what is a story fact (heritage markers, eye colour, a scar) and nothing that is merely what you asked for.
+**Question 1: what about this character must never change?** Zero or more traits, typed as `skin=dark brown` or `skin: dark brown`, with commas between them; capital letters do not matter. The registry answers it by default with the character's `canon_tags`; press Enter to accept, or type the whole list you want for this run. A typed list replaces the registry's, and the tool says which traits are not kept this time. After each answer it says back what it will use (`Using: skin=dark brown.`); if it cannot read an answer, it says what it could not read and asks again. Only pictures carrying every one of these tags can be the anchor, and pictures without them are always on the redraw list, whatever you answer next. Put here what is a story fact (heritage markers, eye colour, a scar) and nothing that is merely what you asked for.
 
 **Question 2: for everything else, which look do you want?**
 
@@ -140,15 +140,21 @@ Never edit `built/`. Never edit a scene to match a picture. The registry is upst
 
 | Message | Meaning | Do |
 |---|---|---|
-| `registry missing: .../character-registry.json` | you ran the command outside your story folder | `cd` into it |
-| `token_sources "scene-*.md" matches no tracked file` | the registry names scene files that do not exist yet | write the first scene, then run again |
+| `registry missing: .../character-registry.json` | you ran the command outside your story folder, or the file was saved under another name | `cd` into it; if the message names a file such as `character-registry.json.txt`, rename that file |
+| `Cannot find module '.../scripts/check.mjs'` (with a long list of lines under it) | the terminal is not inside `my-story`, or `../` was left off the command | `cd` into `my-story` and type the command exactly as shown |
+| `character-registry.json: line 11, column 7: this is not valid JSON. Likely cause: ...` | the registry has a typing slip; the message says the line and the usual cause (curly quotes, a comma before `}`, a file saved as rich text) | fix that line, or paste the file again (see *How to make a file* in the tutorial) |
+| `token_sources "scene-*.md" matches no tracked file` | the registry names scene files that do not exist yet, or the scene's name differs in a capital letter (`Scene-01.md`) | write the first scene, or rename it to match exactly |
 | `names "June" in a token source. Fix: write {{june-okafor}}` | a name or a look was typed into a scene file | replace it with the token |
-| `unknown token {{june-okafer}}` | a token with a typo, or an id not in the registry | fix the spelling, or add the character |
+| `{{june-okafer}} is not a character in the registry. Fix: check the spelling: did you mean {{june-okafor}}?` | a token with a typo, or an id not in the registry | fix the spelling, or add the character |
+| `{{June-okafor}} looks like a token but is not one` | a capital letter or a space inside a token | write the token it suggests |
+| `june-okafor has no form "looks"` | the part after the colon is not one of the character's forms | use one of the forms it lists |
+| `I could not read: ... Type each trait like skin=dark brown` | an answer to question 1 that is not a trait | type it as `trait=value`, or press Enter |
+| `Note: renders/scene-01-02.png is not in this folder` | the tags file names a picture that is not there, often because of its ending (`.jpg`, `.webp`) | rename the picture or fix the name in the tags file |
 | `None of the pictures has what must never change (...)` (or, on one line, `no image keeps {...}: every image has drifted off what must never change`) | nothing you tagged carries every fixed trait | paste the sheet again, tag the new pictures, ask again |
 | `unknown --prefer ...` | a misspelled answer on the command line | one of `fewest-redraws`, `first-look`, `last-look`, `most-common` |
 | `N picture(s) could not be judged on that (tagged unknown); they are not counted as drift.` | you tagged a fixed trait `unknown` on those pictures | nothing to fix: they are left out of the anchor choice and the bill for that trait |
 | `consensus needs embeddings or tags on the rows` | the pictures have neither embeddings nor tags | tag them (section 3) |
 | `canon needs the character's canon_tags in the registry or --canon tag=value` | the old `--policy canon` spelling without fixed traits | use `--ask`, or `--keep tag=value` |
 | `--write needs --character <id> that exists in .../character-registry.json` | `--write` without a character, or an id that is not in the registry | add `--character <id>` with the id as written in the registry |
-| `SyntaxError: ... JSON at position N` | a broken line in a tags file | fix the quotes or commas on that line |
+| `tags-june.jsonl: line 2, column 104: this is not valid JSON.` | a broken line in a tags file | fix the quotes or commas on that line |
 | `gap: <id>.anchor.image ... is not on disk here` | the registry names an anchor picture the folder no longer holds | restore the file, or re-run `--write` |

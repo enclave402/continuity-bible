@@ -254,3 +254,79 @@ test("--ask returns the prompt on its own when stdin stays open, on every exit p
   assert.equal(decline.code + record.code + writeFlag.code + noCharacter.code, 0);
   for (const p of paths) fs.rmSync(p.dir, { recursive: true, force: true });
 });
+
+// What a beginner types at the two questions: read it, or say what could not be read and ask again; never guess silently.
+test("readKeep reads colons, any capital letters and 'and' between traits, and hands back what is not a trait", async () => {
+  const { readKeep, readLook, keepsAll } = await import("../scripts/anchor.mjs");
+  assert.deepEqual(readKeep("skin: dark brown, hair: two puffs").keep, { skin: "dark brown", hair: "two puffs" });
+  assert.deepEqual(readKeep("Skin=Dark Brown").keep, { skin: "Dark Brown" });
+  assert.deepEqual(readKeep("skin=dark brown and hair=two puffs").keep, { skin: "dark brown", hair: "two puffs" });
+  assert.deepEqual(readKeep("hair=salt and pepper").keep, { hair: "salt and pepper" }, "an 'and' inside a value stays");
+  assert.deepEqual(readKeep("time=10:30").keep, { time: "10:30" }, "the first = wins over a colon in the value");
+  assert.deepEqual(readKeep("dark brown skin and two puffs").unread, ["dark brown skin and two puffs"]);
+  assert.equal(readKeep("none").none, true);
+  assert.ok(keepsAll({ tags: { skin: "dark brown" } }, { Skin: "Dark Brown" }), "trait names match whatever their case");
+  for (const [a, want] of [["1", "consensus"], ["fewest redraws", "consensus"], ["2", "origin"], ["the first look", "origin"], ["1st", "origin"], ["3", "terminal"], ["the last one", "terminal"], ["first or last", null], ["12", null], ["yes", null]]) assert.equal(readLook(a), want, a);
+});
+
+test("--ask says back what it will use, re-asks what it cannot read, and says when a typed list replaces the registry's", async () => {
+  const [colon, unreadable, words, capital, replace] = await Promise.all([
+    askOnOpenStdin({ args: ["tags.jsonl", "--ask"], answers: "skin: dark brown, hair: two puffs\n\n", files: askFiles }),
+    askOnOpenStdin({ args: ["tags.jsonl", "--ask"], answers: "dark brown skin and two puffs\nhair=two puffs\n\n", files: askFiles }),
+    askOnOpenStdin({ args: ["tags.jsonl", "--ask"], answers: "\nthe first look\n", files: askFiles }),
+    askOnOpenStdin({ args: ["tags.jsonl", "--ask"], answers: "Skin=Dark Brown\n\n", files: askFiles }),
+    askOnOpenStdin({ args: ["tags.jsonl", "--character", "june-okafor", "--ask"], answers: "hair=two puffs\n\n\n", files: askFiles }),
+  ]);
+  assert.match(colon.out, /Using: skin=dark brown, hair=two puffs\./);
+  assert.match(colon.out, /Keep renders\/a\.png as the one true picture/, "the colon answer is used, so only the two-puffs picture is eligible");
+  assert.match(unreadable.out, /I could not read: dark brown skin and two puffs\. Type each trait like skin=dark brown/);
+  assert.match(unreadable.out, /Using: hair=two puffs\./, "the second, readable answer is used");
+  assert.match(words.out, /Using: the first look\./);
+  assert.match(words.out, /Keep renders\/a\.png/);
+  assert.match(capital.out, /Using: skin=Dark Brown\./);
+  assert.doesNotMatch(capital.out, /None of the pictures/, "a capital letter in a trait's name is not drift");
+  assert.match(replace.out, /The registry says: skin=dark brown\. Press Enter to keep that, or type the whole list you want instead\./);
+  assert.match(replace.out, /That replaces the registry's list, so skin=dark brown is not kept this time\./);
+  assert.match(replace.out, /Record this as June's anchor in the registry\? Type y and press Enter to record it, or just press Enter to skip\./);
+  for (const r of [colon, unreadable, words, capital, replace]) { assert.ok(r.exitedByItself, r.out + r.err); fs.rmSync(r.dir, { recursive: true, force: true }); }
+});
+
+test("when the answers run out, --ask uses the defaults and says so; a missing anchor picture is pointed out", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-ask-eof-"));
+  for (const [n, t] of Object.entries(askFiles)) fs.writeFileSync(path.join(dir, n), t);
+  const r = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--character", "june-okafor", "--ask"], { cwd: dir, encoding: "utf8", input: "" });
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /Using: skin=dark brown\./);
+  assert.match(r.stdout, /Using: fewest redraws\./);
+  assert.match(r.stdout, /Note: renders\/b\.png is not in this folder\. Check the picture's file name and its ending/);
+  assert.match(r.stdout, /Not recorded\./);
+  fs.mkdirSync(path.join(dir, "renders"));
+  for (const n of ["a", "b", "c"]) fs.writeFileSync(path.join(dir, "renders", `${n}.png`), n);
+  const ok = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--character", "june-okafor", "--ask"], { cwd: dir, encoding: "utf8", input: "\n\n\n" });
+  assert.doesNotMatch(ok.stdout, /is not in this folder/, "no note when the picture is there");
+  const w = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--character", "june-okafor", "--prefer", "fewest-redraws", "--write"], { cwd: dir, encoding: "utf8" });
+  assert.doesNotMatch(w.stdout, /warning/);
+  fs.rmSync(path.join(dir, "renders"), { recursive: true });
+  const w2 = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--character", "june-okafor", "--prefer", "fewest-redraws", "--write"], { cwd: dir, encoding: "utf8" });
+  assert.match(w2.stdout, /anchor: warning: the anchor picture renders\/b\.png is not on disk here, so no fingerprint is recorded/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("a broken tags line or registry is reported with the file, the real line and a plain cause, never ignored", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-bad-json-"));
+  for (const [n, t] of Object.entries(askFiles)) fs.writeFileSync(path.join(dir, n), t);
+  fs.writeFileSync(path.join(dir, "tags.jsonl"), askTags.split("\n").map((l, i) => (i === 1 ? l.replace('"loose curls"', '"loose curls') : l)).join("\n"));
+  const t = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--prefer", "fewest-redraws"], { cwd: dir, encoding: "utf8" });
+  assert.equal(t.status, 1);
+  assert.match(t.stderr, /^tags\.jsonl: line 2, column \d+: this is not valid JSON\./, "the line in the file, not line 1 of one row");
+  assert.doesNotMatch(t.stderr, /at JSON\.parse|node:internal/);
+  fs.writeFileSync(path.join(dir, "tags.jsonl"), askTags);
+  fs.writeFileSync(path.join(dir, "character-registry.json"), askRegistry.replace('"name":"June"', "\u201cname\u201d:\u201cJune\u201d"));
+  const r = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags.jsonl", "--character", "june-okafor", "--prefer", "fewest-redraws"], { cwd: dir, encoding: "utf8" });
+  assert.equal(r.status, 1, "a registry that cannot be read stops the command instead of being skipped");
+  assert.match(r.stderr, /character-registry\.json: line 1, column \d+: this is not valid JSON\. Likely cause: that line has curly quotes/);
+  fs.writeFileSync(path.join(dir, "character-registry.json"), askRegistry);
+  const missing = spawnSync(process.execPath, [path.resolve("scripts/anchor.mjs"), "tags-junee.jsonl"], { cwd: dir, encoding: "utf8" });
+  assert.match(missing.stderr, /anchor: tags-junee\.jsonl is not in this folder/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});

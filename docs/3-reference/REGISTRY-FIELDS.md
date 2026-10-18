@@ -19,7 +19,7 @@ canonical: true
 |---|---|---|
 | `registry_version` | integer | required, 1 |
 | `surfaces[]` | list | files whose labels must resolve: see below |
-| `token_sources[]` | `{ file, skip_keys?, why? }` | a written-out registry label in the file fails, naming the token; a glob that matches no tracked file fails |
+| `token_sources[]` | `{ file, skip_keys?, other_placeholders?, why? }` | a written-out registry label in the file fails, naming the token; so does a token whose id is not in the registry (with the closest id suggested), a form the entry does not have, and a lookalike such as `{{June-okafor}}` or `{{ june-okafor }}`; `other_placeholders: true` exempts a file that also feeds another template tool from the token checks (typed names are still checked); a glob that matches no tracked file fails. `render.mjs` runs the same checks on a token source before it writes anything |
 | `records[]` | globs | dated history: not scanned at all |
 | `coverage` | `{ ignore[], strict? }` | a tracked text file that is no surface, token source, record or ignored path and names a character is a gap (`strict`: a failure) |
 | `species` | `{ name: [words] }` | a story's text may name only species of companions allowed in it; a companion called by another species' word fails |

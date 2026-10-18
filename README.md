@@ -31,30 +31,49 @@ This is a small, free tool: a folder of scripts that run on your own computer. I
 
 It works with whatever AI you already use. A browser chatbot that makes pictures is enough. Every script in this guide only reads and writes files on your computer and never goes on the internet. Nothing is installed beyond Node, and there is no account.
 
+## The quickest win, no setup
+
+Keep the one picture where your character looks right. Attach it to every new request, and start your message with: *Keep the characters exactly as in the attached picture.* That alone helps a lot. It still depends on you describing the character the same way every time, and on you noticing when the AI slips. The tool below does both for you.
+
 ## Quick start
 
-You need two things: [Node](https://nodejs.org) (free; version 18 or newer) and a browser chatbot that can make pictures.
+You need three things:
+
+- **Node**, a free program that runs the tool's scripts, version 18 or newer. Go to [nodejs.org](https://nodejs.org), download the version marked *LTS*, and run the installer.
+- **A terminal**, a window where you type a command and press Enter. On a Mac: press Cmd and Space, type `Terminal`, press Enter. On Windows: press the Windows key, type `PowerShell`, press Enter.
+- **A browser chatbot that can make pictures.** Any one you already use.
+
+**How to make a file.** Below, each file's text is in a grey box. Press the copy button on the box, then make the file from the terminal, so nothing can change the text on the way:
+
+```text
+Mac:      pbpaste > character-registry.json
+Windows:  Get-Clipboard | Set-Content character-registry.json
+```
+
+Use the file name the step gives you. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. These steps were tested on a Mac.
 
 ### 1. Get the folder
 
+On the [project page](https://github.com/enclave402/narrative-token-ssot) press **Code**, then **Download ZIP**, and open the ZIP to unzip it. In the terminal, type `cd ` with a space after it, drag the unzipped folder onto the terminal window, and press Enter. If you use git, `git clone https://github.com/enclave402/narrative-token-ssot.git` and `cd narrative-token-ssot` do the same.
+
+Check that Node is installed:
+
 ```bash
-git clone https://github.com/enclave402/narrative-token-ssot.git
-cd narrative-token-ssot
 node --version
 ```
 
-No git? On the GitHub page press **Code**, then **Download ZIP**, unzip it, and open a terminal in that folder. `node --version` should print `v18` or higher.
+It should print `v18` or higher.
 
 ### 2. Write one character and one scene
 
-Make a folder for your story inside the one you just downloaded, and put two files in it.
+Make a folder for your story inside the one you just downloaded, and make two files in it (see *How to make a file* above).
 
 ```bash
 mkdir my-story
 cd my-story
 ```
 
-`my-story/character-registry.json` is the registry. Copy it exactly:
+`my-story/character-registry.json` is the registry. Copy this into a file of that name:
 
 ```json
 {
@@ -116,7 +135,7 @@ Avoid: text, letters, extra people, modern clothes.
 
 Copy the lines under **Picture prompt** into your chatbot and ask for the picture. For the next scene, write the tokens again. The look comes out word for word the same, because it exists in exactly one place.
 
-**Next:** [Start here](docs/1-tutorials/START-HERE.md) adds a second character, saves the pictures, and shows what to do when the AI drifts anyway.
+**Next:** [Start here](docs/1-tutorials/START-HERE.md) adds a second character, saves the pictures, and shows what to do when the AI drifts anyway. You already have the folder and `my-story`, so start it at step 3.
 
 ## What it does, one command each
 
@@ -139,7 +158,7 @@ scene-02.md: line 5: names "June" in a token source. Fix: write {{june-okafor}}
 character registry: fail (1 problem(s))
 ```
 
-A token with a typo fails too: `{{june-okafer}}` prints `unknown token {{june-okafer}}` instead of guessing a name. The rest of the docs call this checker the *gate*.
+A token with a typo fails too, and the checker names the one you meant: `{{june-okafer}}` gets `is not a character in the registry. Fix: check the spelling: did you mean {{june-okafor}}?`. So does a token with a capital letter or a space in it, like `{{June-okafor}}`, which would otherwise reach the chatbot as written. The rest of the docs call this checker the *gate*.
 
 ### Renames a character everywhere at once
 
@@ -181,19 +200,22 @@ node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --ask
 ```
 
 ```text
-What about June must never change? Type tag=value pairs separated by commas, or press Enter for none.
-  The registry says: skin=dark brown. Press Enter to keep that, or type your own.
+What about June must never change? Type each trait like skin=dark brown, with commas between them.
+  The registry says: skin=dark brown. Press Enter to keep that, or type the whole list you want instead.
 > 
+  Using: skin=dark brown.
 For everything else, which look do you want?
   1. fewest redraws (default)
   2. the first look
   3. the last look
 > 
+  Using: fewest redraws.
 Keep renders/scene-01-02.png as the one true picture of June.
 Redraw 1 picture: renders/scene-01-01.png.
   Counted by your tags, not measured by a model.
 If you answered differently: the first look would keep renders/scene-01-01.png and redraw 3; the last look would keep renders/scene-01-04.png and redraw 1.
-Record this as June's anchor in the registry? [y/N] n
+Record this as June's anchor in the registry? Type y and press Enter to record it, or just press Enter to skip.
+> n
 Not recorded. Ask again when you have decided, or add --write to the command.
 ```
 
@@ -222,7 +244,7 @@ The matchbox is in June's hand because, two shots earlier, the sheet says Abel h
 
 The same engine runs the name build of a published 82-scene graphic novel. Plain Node, zero dependencies, no telemetry. Only the optional research tools under `scripts/research/` use the network, and only at the endpoints in `research/research.config.json`. `npm run check` is the gate, `npm test` the tests, `npm run verify` everything.
 
-**Tokens.** `{{id}}` display name, `{{id:first}}` first word, `{{id:full}}` full name, `{{id:initial}}` first letter, `{{id:<form>}}` any key under `forms` (a string, or a contextual form `{ "by": "<field>", "values": {...} }` picked by the scene's own field). An unknown token throws: a build never prints a token and never guesses a name. Resolver: `scripts/names.mjs` (`loadNames(root).resolveTokens(text)`).
+**Tokens.** `{{id}}` display name, `{{id:first}}` first word, `{{id:full}}` full name, `{{id:initial}}` first letter, `{{id:<form>}}` any key under `forms` (a string, or a contextual form `{ "by": "<field>", "values": {...} }` picked by the scene's own field). An unknown id, an unknown form or a token lookalike such as `{{June-okafor}}` fails the gate and `render.mjs` for every declared token source, so a build never prints a token there and never guesses a name; `other_placeholders: true` on a `token_sources` entry exempts a file that also feeds another template tool. Resolver: `scripts/names.mjs` (`loadNames(root).resolveTokens(text)`).
 
 **The registry declares what the gate checks.** `surfaces` (scene files, art manifests, heading documents, name paths: every label must resolve to exactly one entry allowed in that story), `token_sources` (files that may hold tokens but no written-out name), `records` (dated history, left alone) and `coverage.ignore` (docs that show names on purpose). Any other tracked file that names a character is reported, so the gate is never silent about a file.
 
