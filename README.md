@@ -1,12 +1,14 @@
 # Narrative Token SSOT
 
 > Keep your characters the same people from the first picture to the last. One file says who they are. Your story pages and picture prompts point at that file instead of repeating it. A checker catches the slip before you paste.
+>
+> *SSOT* stands for single source of truth: one place where each fact about your story lives.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-pink.svg)](LICENSE)
 [![Used in: rel8r.me](https://img.shields.io/badge/Used_in-rel8r.me-ff1484.svg)](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
 [![Ecosystem: SloppyXBaby](https://img.shields.io/badge/Developer_Kits-sloppyxbaby.com-black.svg)](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
 
-**[Start here (about 30 minutes)](docs/1-tutorials/START-HERE.md)** · **[Work from a browser chatbot](docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md)** · **[See it live](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[For developers](#for-developers)** · **[Using an AI coding agent? Read AGENTS.md](AGENTS.md)**
+**[Start here (about an hour)](docs/1-tutorials/START-HERE.md)** · **[Work from a browser chatbot](docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md)** · **[See it live](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[For developers](#for-developers)** · **[Using an AI coding agent? Read AGENTS.md](AGENTS.md)**
 
 ---
 
@@ -20,7 +22,7 @@ A rule at the top of the chat ("always keep her hair red") makes this rarer. It 
 
 ## The promise
 
-AI stories without AI slop. Unique art that stays yours. Characters steady enough to make a book.
+AI stories without AI slop, the generic pictures that change from page to page. Unique art that stays yours. Characters steady enough to make a book.
 
 This is a small, free tool: a folder of scripts that run on your own computer. It does four things.
 
@@ -31,30 +33,51 @@ This is a small, free tool: a folder of scripts that run on your own computer. I
 
 It works with whatever AI you already use. A browser chatbot that makes pictures is enough. Every script in this guide only reads and writes files on your computer and never goes on the internet. Nothing is installed beyond Node, and there is no account.
 
+## The quickest win, no setup
+
+Keep the one picture where your character looks right. Attach it to every new request, and start your message with: *Keep the characters exactly as in the attached picture.* That alone helps a lot. It still depends on you describing the character the same way every time, and on you noticing when the AI slips. The tool below does both for you.
+
 ## Quick start
 
-You need two things: [Node](https://nodejs.org) (free; version 18 or newer) and a browser chatbot that can make pictures.
+You need three things:
+
+- **Node**, a free program that runs the tool's scripts, version 18 or newer. Go to [nodejs.org](https://nodejs.org), download the version marked *LTS*, and run the installer. On a Mac it asks for the computer's password, so you may need a parent's help. School computers often block installing programs; use a home computer if so.
+- **A terminal**, a window where you type a command and press Enter. On a Mac: press Cmd and Space, type `Terminal`, press Enter. On Windows: press the Windows key, type `PowerShell`, press Enter.
+- **A browser chatbot that can make pictures.** Any one you already use.
+
+**How to make a file.** Below, each file's text is in a grey box.
+
+1. Press the copy button on the box, or select all of its text and copy it.
+2. In the terminal, *type* the command shown under the box and press Enter. Do not copy that command: copying it would replace the text you just copied. It prints nothing: that means it worked.
+
+On a Mac the command is `pbpaste >` and the file name. On Windows it is `Get-Clipboard | Set-Content` and the file name. This way nothing can change the text on the way. You can copy the other commands on these pages, like `mkdir my-story`; only the `pbpaste` line has to be typed. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. If you use TextEdit anyway, choose Format, then Make Plain Text, before you paste. These steps were tested on a Mac.
+
+**Coming back another day?** Open a terminal, type `cd ` with a space after it, drag your `my-story` folder onto the terminal window, and press Enter.
 
 ### 1. Get the folder
 
+On the [project page](https://github.com/enclave402/narrative-token-ssot) press **Code**, then **Download ZIP**, and open the ZIP to unzip it. In the terminal, type `cd ` with a space after it, drag the unzipped folder onto the terminal window, and press Enter. If you use git, `git clone https://github.com/enclave402/narrative-token-ssot.git` and `cd narrative-token-ssot` do the same.
+
+Check that Node is installed:
+
 ```bash
-git clone https://github.com/enclave402/narrative-token-ssot.git
-cd narrative-token-ssot
 node --version
 ```
 
-No git? On the GitHub page press **Code**, then **Download ZIP**, unzip it, and open a terminal in that folder. `node --version` should print `v18` or higher.
+It should print `v18` or higher.
 
 ### 2. Write one character and one scene
 
-Make a folder for your story inside the one you just downloaded, and put two files in it.
+Make a folder for your story inside the one you just downloaded, and make two files in it (see *How to make a file* above).
 
 ```bash
 mkdir my-story
 cd my-story
 ```
 
-`my-story/character-registry.json` is the registry. Copy it exactly:
+Before you paste, type `pwd` and press Enter. The last part must be `my-story`; if it is not, type `cd my-story` first, or the file lands in the wrong folder.
+
+`my-story/character-registry.json` is the registry. Copy this box:
 
 ```json
 {
@@ -78,7 +101,9 @@ cd my-story
 }
 ```
 
-`my-story/scene-01.md` is your scene. Names and looks are tokens:
+Then, in the terminal, type `pbpaste > character-registry.json` on a Mac, or `Get-Clipboard | Set-Content character-registry.json` on Windows, and press Enter.
+
+`my-story/scene-01.md` is your scene. Names and looks are tokens. Copy this box:
 
 ```markdown
 # Scene 1: The ladder
@@ -93,6 +118,8 @@ Children's picture-book illustration, soft watercolor, warm dusk light. Inside t
 {{june-okafor:look}}, holding the bottom of a wooden ladder, looking up.
 Avoid: text, letters, extra people, modern clothes.
 ```
+
+Then, in the terminal, type `pbpaste > scene-01.md` on a Mac, or `Get-Clipboard | Set-Content scene-01.md` on Windows, and press Enter.
 
 ### 3. Turn the tokens into words, then paste
 
@@ -116,7 +143,7 @@ Avoid: text, letters, extra people, modern clothes.
 
 Copy the lines under **Picture prompt** into your chatbot and ask for the picture. For the next scene, write the tokens again. The look comes out word for word the same, because it exists in exactly one place.
 
-**Next:** [Start here](docs/1-tutorials/START-HERE.md) adds a second character, saves the pictures, and shows what to do when the AI drifts anyway.
+**Next:** [Start here](docs/1-tutorials/START-HERE.md) adds a second character, saves the pictures, and shows what to do when the AI drifts anyway. You already have the folder and `my-story`, so start it at step 3.
 
 ## What it does, one command each
 
@@ -139,7 +166,7 @@ scene-02.md: line 5: names "June" in a token source. Fix: write {{june-okafor}}
 character registry: fail (1 problem(s))
 ```
 
-A token with a typo fails too: `{{june-okafer}}` prints `unknown token {{june-okafer}}` instead of guessing a name. The rest of the docs call this checker the *gate*.
+A token with a typo fails too. For `{{june-okafer}}` the checker says `did you mean {{june-okafor}}?`. A capital letter or a space inside a token, like `{{June-okafor}}`, fails as well. Otherwise it would reach the chatbot as written. The rest of the docs call this checker the *gate*.
 
 ### Renames a character everywhere at once
 
@@ -174,26 +201,29 @@ Drop `--dry-run` to write the change. A name that two characters share is skippe
 
 ### Picks the reference picture after the AI drifts
 
-Save the pictures the chatbot gave you, look at each one, and write down in a small text file what you see (skin, hair, coat), one line per picture. Then ask. The tool asks you two questions and answers in plain words. With the four example pictures from the tutorial, where the AI lost June's two puffs after the first try:
+Save the pictures the chatbot gave you in a `renders` folder. Then `node ../scripts/tag.mjs june-okafor` asks what you see in each one (skin, hair, coat) and writes it down for you. Then ask. The tool asks you two questions and answers in plain words. With the four example pictures from the tutorial, where the AI lost June's two puffs after the first try:
 
 ```bash
 node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --ask
 ```
 
 ```text
-What about June must never change? Type tag=value pairs separated by commas, or press Enter for none.
-  The registry says: skin=dark brown. Press Enter to keep that, or type your own.
+What about June must never change? Type each trait like skin=dark brown, with commas between them.
+  The registry says: skin=dark brown. Press Enter to keep that, or type the whole list you want instead.
 > 
+  Using: skin=dark brown.
 For everything else, which look do you want?
   1. fewest redraws (default)
   2. the first look
   3. the last look
 > 
+  Using: fewest redraws.
 Keep renders/scene-01-02.png as the one true picture of June.
 Redraw 1 picture: renders/scene-01-01.png.
   Counted by your tags, not measured by a model.
 If you answered differently: the first look would keep renders/scene-01-01.png and redraw 3; the last look would keep renders/scene-01-04.png and redraw 1.
-Record this as June's anchor in the registry? [y/N] n
+Record this as June's anchor in the registry? Type y and press Enter to record it, or just press Enter to skip.
+> n
 Not recorded. Ask again when you have decided, or add --write to the command.
 ```
 
@@ -222,7 +252,7 @@ The matchbox is in June's hand because, two shots earlier, the sheet says Abel h
 
 The same engine runs the name build of a published 82-scene graphic novel. Plain Node, zero dependencies, no telemetry. Only the optional research tools under `scripts/research/` use the network, and only at the endpoints in `research/research.config.json`. `npm run check` is the gate, `npm test` the tests, `npm run verify` everything.
 
-**Tokens.** `{{id}}` display name, `{{id:first}}` first word, `{{id:full}}` full name, `{{id:initial}}` first letter, `{{id:<form>}}` any key under `forms` (a string, or a contextual form `{ "by": "<field>", "values": {...} }` picked by the scene's own field). An unknown token throws: a build never prints a token and never guesses a name. Resolver: `scripts/names.mjs` (`loadNames(root).resolveTokens(text)`).
+**Tokens.** `{{id}}` display name, `{{id:first}}` first word, `{{id:full}}` full name, `{{id:initial}}` first letter, `{{id:<form>}}` any key under `forms` (a string, or a contextual form `{ "by": "<field>", "values": {...} }` picked by the scene's own field). An unknown id, an unknown form or a token lookalike such as `{{June-okafor}}` fails the gate and `render.mjs` for every declared token source, so a build never prints a token there and never guesses a name; `other_placeholders: true` on a `token_sources` entry exempts a file that also feeds another template tool. Resolver: `scripts/names.mjs` (`loadNames(root).resolveTokens(text)`).
 
 **The registry declares what the gate checks.** `surfaces` (scene files, art manifests, heading documents, name paths: every label must resolve to exactly one entry allowed in that story), `token_sources` (files that may hold tokens but no written-out name), `records` (dated history, left alone) and `coverage.ignore` (docs that show names on purpose). Any other tracked file that names a character is reported, so the gate is never silent about a file.
 

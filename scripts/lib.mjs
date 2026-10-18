@@ -9,7 +9,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadNames, TOKEN, atomicLabels, labelRegExp } from "./names.mjs";
+import { loadNames, TOKEN, atomicLabels, labelRegExp, parseJson } from "./names.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const SCHEMA_PATH = path.join(HERE, "character-registry.v1.schema.json");
@@ -18,7 +18,8 @@ export const DEFAULT_SPLIT = ["&", "+", " and "];
 export const DEFAULT_HEADING = "^###\\s+(?:\\d+\\.\\s+)?([^(\\n]+?)\\s*\\(";
 
 export function readJson(file) {
-  return JSON.parse(fs.readFileSync(file, "utf8"));
+  const shown = path.relative(process.cwd(), file);
+  return parseJson(fs.readFileSync(file, "utf8"), shown && !shown.startsWith("..") ? shown : file);
 }
 
 function flag(argv, name) {
@@ -35,13 +36,22 @@ export function registryPath(argv = process.argv, env = process.env, cwd = proce
 
 export function loadRegistry(file) {
   if (!fs.existsSync(file)) {
-    const error = new Error(`registry missing: ${file}. Fix: create character-registry.json there (see the README), or pass --registry <path>`);
+    // the usual beginner causes: the editor added an ending (.txt, .rtf), or the command was run from the wrong folder
+    const dir = path.dirname(file), base = path.basename(file), stem = base.toLowerCase().replace(/\.json$/, "");
+    const near = fs.existsSync(dir) ? [...new Set([...nearbyFiles(file), ...fs.readdirSync(dir).filter((n) => n !== base && n.toLowerCase().startsWith(stem))])] : [];
+    const hint = near.length
+      ? ` There is ${near.map((n) => `"${n}"`).join(" and ")} here: rename it to ${base}; your editor added an ending.`
+      : ` If you saved it with another ending (.txt, .rtf), rename it to ${base}. If you are in the wrong folder, cd into your story folder first.`;
+    const error = new Error(`registry missing: ${file}.${hint} Fix: create ${base} there (see the README), or pass --registry <path>`);
     error.exitCode = 1;
     throw error;
   }
-  const registry = readJson(file);
-  registry._file = file;
-  registry._root = path.dirname(file);
+  let real = file;
+  try { real = path.join(path.dirname(file), path.basename(fs.realpathSync.native(file))); } catch {}
+  const registry = readJson(real);
+  registry._file = real;
+  registry._root = path.dirname(real);
+  if (path.basename(real) !== path.basename(file)) registry._caseNote = `note: the registry file is named ${path.basename(real)}. Rename it to ${path.basename(file)}: other computers count capital letters and will not find it`;
   return registry;
 }
 
@@ -423,14 +433,54 @@ function scanRepo(registry, surfaceFiles = []) {
  * fails, with the token to write. Keys starting with _, $schema, a card's scene_name (the label it defines) and a
  * source's declared skip_keys are exempt. Built output and dated records are not token sources.
  */
-function tokenSourceProblems(registry, surfaces, root) {
+/** The edit distance between two short strings, to suggest the id a typo was meant to be. */
+export function editDistance(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+const BUILT_IN_FORMS = ["first", "short", "full", "initial"];
+/** The ids a mistyped id was most likely meant to be: the same id in another case, ids it starts, then near spellings. */
+export function closestIds(typed, idsIn) {
+  const ids = idsIn.filter((k) => /^[a-z0-9][a-z0-9-]*$/.test(k));
+  const t = String(typed).trim().toLowerCase().replace(/\s+/g, "-");
+  const exact = ids.filter((k) => k.toLowerCase() === t);
+  if (exact.length) return exact;
+  const starts = ids.filter((k) => k.startsWith(t) || t.startsWith(k));
+  if (starts.length) return starts.slice(0, 2);
+  return ids.map((k) => [editDistance(t, k), k]).sort((a, b) => a[0] - b[0]).filter(([d]) => d <= Math.max(2, Math.floor(t.length / 3))).slice(0, 2).map(([, k]) => k);
+}
+/** Files next to `file` that are probably it under another name: an ending an editor added (.txt, .rtf), or other capital letters. */
+/** Files next to `file` that are it with an ending the person left off (scene-01 for scene-01.md). */
+export function withEnding(file) {
+  const dir = path.dirname(path.resolve(file)), base = path.basename(file).toLowerCase();
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter((n) => n.toLowerCase().startsWith(base + ".") && !/\.(txt|rtf)$/i.test(n.slice(base.length)));
+}
+export function nearbyFiles(file) {
+  const dir = path.dirname(path.resolve(file)), base = path.basename(file).toLowerCase();
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter((n) => n !== path.basename(file) && (n.toLowerCase() === base || n.toLowerCase().replace(/(\.(txt|rtf))+$/, "") === base));
+}
+const WHOLE_TOKEN = /^[a-z0-9][a-z0-9-]*(?::[a-z]+)?$/;
+const PLACEHOLDER = /\{\{([^{}\n]*)\}\}/g;
+
+/**
+ * What the gate needs to judge token sources: the labels that may not be typed, the ids and card keys a token may name, and
+ * every declared token source (abs path -> { rel, skip, explicit, other }). explicit: listed under token_sources (a page, a
+ * scene draft, a prompt sheet), so every {{...}} in it must be a token of this registry unless the entry says
+ * other_placeholders: true (the file also feeds another template tool). Surfaces (scene files, cards, prose data) are token
+ * sources too; their tokens are already resolved by the surface checks, so only typed names are checked here.
+ */
+function tokenSourceContext(registry, surfaces, root) {
   const failures = [];
   const characters = registry.characters || {};
   const cards = surfaces.filter((s) => s.type === "continuity" && !s.error).map((s) => fromRoot(root, s.file)).filter((f) => fs.existsSync(f)).map((f) => { try { return readJson(f); } catch { return null; } }).filter(Boolean);
   const { list } = atomicLabels(characters, cards);
-  if (!list.length) return { failures, sources: 0 };
-  const sources = new Map(); // abs file -> { rel, skip: Set }
-  const declare = (rel, skip = []) => { const abs = fromRoot(root, rel); if (fs.existsSync(abs) && fs.statSync(abs).isFile()) sources.set(abs, { rel, skip: new Set(skip) }); };
+  const cardKeys = new Set(cards.flatMap((c) => Object.keys(c?.characters || {})));
+  const sources = new Map();
+  const declare = (rel, skip = [], explicit = false, other = false) => { const abs = fromRoot(root, rel); if (fs.existsSync(abs) && fs.statSync(abs).isFile()) sources.set(abs, { rel, skip: new Set(skip), explicit: explicit || sources.get(abs)?.explicit || false, other }); };
   for (const s of surfaces) {
     if (s.error) continue;
     if (s.type === "scenes") declare(s.file, s.skip_keys || []);
@@ -442,29 +492,119 @@ function tokenSourceProblems(registry, surfaces, root) {
   for (const t of registry.token_sources || []) {
     const re = globToRegExp(t.file);
     const hits = tracked.filter((rel) => re.test(rel));
-    if (!hits.length && !fs.existsSync(fromRoot(root, t.file))) failures.push(`${registry._file}: token_sources "${t.file}" matches no tracked file. Fix: correct the path or remove it`);
-    for (const rel of hits.length ? hits : [t.file]) declare(rel, t.skip_keys || []);
+    if (!hits.length && !fs.existsSync(fromRoot(root, t.file))) {
+      const ci = new RegExp(re.source, re.flags.includes("i") ? re.flags : re.flags + "i");
+      const almost = tracked.filter((rel) => ci.test(rel) || re.test(rel.replace(/(\.(txt|rtf))+$/i, "")) || ci.test(rel.replace(/(\.(txt|rtf))+$/i, "")));
+      const near = almost.length ? ` There is ${almost.slice(0, 3).map((n) => `"${n}"`).join(", ")} here: rename it so it matches exactly (an editor may have added .txt, or a capital letter crept in).` : "";
+      failures.push(`${registry._file}: token_sources "${t.file}" matches no tracked file.${near} File names must match exactly, capital letters included (scene-01.md, not Scene-01.md), and in a git checkout the file must be added to git. Fix: rename the file, or correct the path in ${path.basename(registry._file)}`);
+    }
+    for (const rel of hits.length ? hits : [t.file]) declare(rel, t.skip_keys || [], true, t.other_placeholders === true);
   }
-  const problemsIn = (text, where, out) => {
-    const bare = String(text).replace(TOKEN, " ");
-    for (const [label, token] of list) if (labelRegExp(label, "").test(bare)) out.push(`${where}: names "${label}" in a token source. Fix: write ${token}`);
-  };
-  const walkStrings = (value, skip, where, out) => {
-    if (typeof value === "string") return problemsIn(value, where, out);
-    if (Array.isArray(value)) return value.forEach((v, i) => walkStrings(v, skip, `${where}[${i}]`, out));
-    if (value && typeof value === "object") for (const [k, v] of Object.entries(value)) { if (k.startsWith("_") || k === "$schema" || skip.has(k)) continue; walkStrings(v, skip, where ? `${where}.${k}` : k, out); }
-  };
-  for (const [abs, { rel, skip }] of sources) {
-    const out = [];
-    const text = fs.readFileSync(abs, "utf8");
-    if (rel.endsWith(".json")) { let json; try { json = JSON.parse(text); } catch { continue; } walkStrings(json, skip, "", out); }
-    else text.split("\n").forEach((line, i) => problemsIn(line, `line ${i + 1}`, out));
-    const seen = new Set();
-    const unique = out.filter((o) => !seen.has(o) && seen.add(o));
-    for (const o of unique.slice(0, 8)) failures.push(`${rel}: ${o}`);
-    if (unique.length > 8) failures.push(`${rel}: ${unique.length - 8} more written-out name(s) in a token source. Fix: node scripts/tokenize.mjs ${rel} [--text] [--story <id>]`);
+  return { failures, characters, list, cardKeys, sources };
+}
+
+/** The problems in one string of a token source: typed names always; in an explicit token source, also unknown ids, unknown
+ *  forms and things that look like a token but are not one (they would reach a chatbot as written). */
+function tokenProblemsIn(text, where, ctx, { explicit = false, other = false } = {}) {
+  const out = [];
+  const str = String(text);
+  const bare = str.replace(TOKEN, " ");
+  for (const [label, token] of ctx.list) {
+    if (labelRegExp(label, "").test(bare)) out.push(`${where}: names "${label}" in a token source. Fix: write ${token}`);
+    else if (label.replace(/[^A-Za-z]/g, "").length >= 3 && label !== label.toUpperCase() && labelRegExp(label.toUpperCase(), "").test(bare)) out.push(`${where}: names "${label.toUpperCase()}" in a token source. Fix: write ${token}; the name is printed the way the registry spells it`);
   }
-  return { failures, sources: sources.size };
+  if (!explicit || other) return out;
+  const ids = Object.keys(ctx.characters).filter((k) => /^[a-z0-9][a-z0-9-]*$/.test(k));
+  const closest = (id) => closestIds(id, ids);
+  const known = (inner) => { const id = inner.trim().toLowerCase().replace(/\s*:\s*/g, ":").replace(/\s+/g, "-").split(":")[0]; return Boolean(ctx.characters[id] || ctx.cardKeys.has(id)); };
+  const tidy = (inner) => inner.trim().toLowerCase().replace(/\s*:\s*/g, ":").replace(/\s+/g, "-");
+  // braces that are almost a token: three in a row, one missing, or single braces around a character's id
+  if (/\{{3,}|\}{3,}/.test(str)) out.push(`${where}: has three braces in a row, as in {{${ids[0] || "id"}}}}. Fix: a token has exactly two braces on each side`);
+  const rest = str.replace(PLACEHOLDER, (m) => " ".repeat(m.length));
+  if (!/\{{3,}|\}{3,}/.test(str) && /\{\{|\}\}/.test(rest)) out.push(`${where}: has a {{ without a matching }}, or the other way round. Fix: a token has two braces on each side, like {{${ids[0] || "id"}}}`);
+  for (const m of rest.matchAll(/(?<!\{)\{([^{}\n]+)\}(?!\})/g)) if (known(m[1])) out.push(`${where}: {${m[1]}} has single braces, so it is not a token. Fix: write {{${tidy(m[1])}}}`);
+  for (const m of str.matchAll(PLACEHOLDER)) {
+    const whole = m[0], inner = m[1];
+    if (!WHOLE_TOKEN.test(inner)) {
+      const guess = inner.trim().toLowerCase().replace(/\s*:\s*/g, ":").replace(/\s+/g, "-");
+      const fix = WHOLE_TOKEN.test(guess) && (ctx.characters[guess.split(":")[0]] || ctx.cardKeys.has(guess.split(":")[0])) ? `write {{${guess}}}` : `ids use only lower-case letters, digits and hyphens; the ids in your registry are ${ids.join(", ") || "none yet"}`;
+      out.push(`${where}: ${whole} looks like a token but is not one: ids use only lower-case letters, digits and hyphens, with no spaces. Fix: ${fix}`);
+      continue;
+    }
+    const [id, form] = inner.split(":");
+    const entry = ctx.characters[id];
+    if (!entry && !ctx.cardKeys.has(id)) {
+      const near = closest(id);
+      out.push(`${where}: ${whole} is not a character in the registry. Fix: ${near.length ? `check the spelling: did you mean ${near.map((k) => `{{${k}${form ? `:${form}` : ""}}}`).join(" or ")}?` : `add ${id} to the registry first, or use one of ${ids.join(", ") || "its ids"}`}`);
+      continue;
+    }
+    if (form) {
+      const forms = [...new Set([...Object.keys(entry?.forms || {}), ...BUILT_IN_FORMS])];
+      if (!forms.includes(form)) out.push(`${where}: ${whole}: ${id} has no form "${form}". Fix: use one of ${forms.map((x) => `{{${id}:${x}}}`).join(", ")}`);
+    }
+  }
+  return out;
+}
+
+/** Every problem in one token-source file, labelled with the file. Strings in JSON are walked (keys starting with _ and the
+ *  source's skip keys are exempt); other files are read line by line. */
+function tokenSourceFileProblems(ctx, abs, info, text = fs.readFileSync(abs, "utf8")) {
+  const out = [];
+  if (/^\s*\{\\rtf/.test(text)) return ["was saved as rich text, not plain text, so its words are full of formatting codes. Fix: in TextEdit choose Format, then Make Plain Text, and save it again, or paste it again from the terminal"];
+  if (info.explicit && !text.trim()) return ["is empty. Fix: copy the grey box with the scene's text, then type the command that makes the file"];
+  if (info.explicit && (/^\s*(pbpaste|get-clipboard)\b/i.test(text) || /^\s*(mac|windows):/im.test(text))) return ["holds a command instead of the scene's text. Fix: copy the grey box with the scene's text first, then type the command yourself; copying the command replaces the text you copied"];
+  const walkStrings = (value, where) => {
+    if (typeof value === "string") return out.push(...tokenProblemsIn(value, where, ctx, info));
+    if (Array.isArray(value)) return value.forEach((v, i) => walkStrings(v, `${where}[${i}]`));
+    if (value && typeof value === "object") for (const [k, v] of Object.entries(value)) { if (k.startsWith("_") || k === "$schema" || info.skip.has(k)) continue; walkStrings(v, where ? `${where}.${k}` : k); }
+  };
+  if (info.rel.endsWith(".json")) { let json; try { json = JSON.parse(text); } catch { return out; } walkStrings(json, ""); }
+  else text.split("\n").forEach((line, i) => out.push(...tokenProblemsIn(line, `line ${i + 1}`, ctx, info)));
+  const seen = new Set();
+  return out.filter((o) => !seen.has(o) && seen.add(o));
+}
+
+/**
+ * For render.mjs: the problems the gate would report for one file about to be rendered, or [] when the file is no declared
+ * token source. A token source must not reach a chatbot with a typed name or a broken token in it, whether or not the
+ * person ran the gate first.
+ */
+export function checkTokenSourceFile(registry, file, text) {
+  const root = registry._root;
+  const ctx = tokenSourceContext(registry, surfacesOf(registry), root);
+  // the name as it is on disk: a case-insensitive disk (macOS, Windows) opens Scene-01.md for a file saved as scene-01.md
+  const real = (p) => { try { return fs.realpathSync.native(p); } catch { return p; } };
+  const abs = real(path.resolve(file));
+  let info = ctx.sources.get(abs) || [...ctx.sources].find(([k]) => real(k) === abs)?.[1];
+  const extra = [];
+  if (!info) {
+    // a file that would be a token source but for its capital letters (Scene-01.md for scene-*.md): check it anyway, and say why the gate did not
+    const rel = path.relative(root, abs).split(path.sep).join("/");
+    const t = (registry.token_sources || []).find((x) => { const re = globToRegExp(x.file); return new RegExp(re.source, re.flags.includes("i") ? re.flags : re.flags + "i").test(rel); });
+    if (!t) return [];
+    info = { rel, skip: new Set(t.skip_keys || []), explicit: true, other: t.other_placeholders === true };
+    const dir = path.posix.dirname(rel);
+    extra.push(`${rel}: its name does not match token_sources "${t.file}" exactly, because capital letters count, so the gate does not check it. Fix: rename it to ${dir === "." ? "" : dir + "/"}${path.posix.basename(rel).toLowerCase()}`);
+  }
+  return [...extra, ...tokenSourceFileProblems(ctx, abs, info, text).map((o) => `${info.rel}: ${o}`)];
+}
+
+/**
+ * Token sources: a scene file, a card, a prose data file and every file the registry lists under `token_sources` write no
+ * character's name. They hold {{id}} / {{id:form}} tokens and a builder renders the names (names.mjs). A written-out
+ * registry label in one of them fails, with the token to write; in a listed token source an unknown id, an unknown form or a
+ * token lookalike fails too. Keys starting with _, $schema, a card's scene_name (the label it defines) and a source's
+ * declared skip_keys are exempt. Built output and dated records are not token sources.
+ */
+function tokenSourceProblems(registry, surfaces, root) {
+  const ctx = tokenSourceContext(registry, surfaces, root);
+  const failures = [...ctx.failures];
+  for (const [abs, info] of ctx.sources) {
+    const unique = tokenSourceFileProblems(ctx, abs, info);
+    for (const o of unique.slice(0, 8)) failures.push(`${info.rel}: ${o}`);
+    if (unique.length > 8) failures.push(`${info.rel}: ${unique.length - 8} more problem(s) in a token source. Fix: node scripts/tokenize.mjs ${info.rel} [--text] [--story <id>] for typed names, then run the gate again`);
+  }
+  return { failures, sources: ctx.sources.size };
 }
 
 /**
@@ -497,7 +637,7 @@ function coverageProblems(registry, surfaces, root) {
     const hit = lines.map((line, i) => { const bare = line.replace(TOKEN, " "); const l = list.find(([label]) => labelRegExp(label, "").test(bare)); return l ? { label: l[0], line: i + 1 } : null; }).find(Boolean);
     if (!hit) continue;
     unclassified += 1;
-    problems.push(`${rel}:${hit.line}: names "${hit.label}" but is no surface, token source or record. Fix: list it under token_sources (a builder renders it), surfaces (the gate resolves its labels), records (dated history) or coverage.ignore (documentation that may show names), in ${path.basename(registry._file)}`);
+    problems.push(`${rel}:${hit.line}: names "${hit.label}" but is no surface, token source or record. Fix: list it under token_sources (a builder renders it), surfaces (the gate resolves its labels), records (dated history) or coverage.ignore (documentation that may show names), in ${path.basename(registry._file)}. If this is your own notes file, you can ignore this line`);
   }
   return { problems, unclassified };
 }
@@ -843,7 +983,18 @@ export function checkRegistry(registry) {
   const root = registry._root;
   const schema = readJson(SCHEMA_PATH);
   const bare = Object.fromEntries(Object.entries(registry).filter(([k]) => !k.startsWith("_") || k === "_about"));
-  for (const problem of validate(schema, bare)) failures.push(`${registry._file}: ${problem}`);
+  const plainSchema = (p) => {
+    const bad = p.match(/^\$\.characters: unknown field (.+?) \(ids are lower-case, digits and hyphens\)$/);
+    if (bad) {
+      const fixed = bad[1].trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      return `character id "${bad[1]}" is not allowed: an id uses only lower-case letters, digits and hyphens. Fix: change it to "${fixed}" in the registry, and write {{${fixed}}} in your scenes`;
+    }
+    const m = p.match(/^\$\.characters\.([^.\[]+)\.([A-Za-z_]+): (.*)$/);
+    if (!m) return p;
+    const hint = m[2] === "kind" ? ' Most characters are "person", animals and robots included; "companion" also needs a species list in the registry' : "";
+    return `character "${m[1]}", field "${m[2]}": ${m[3]}.${hint}`;
+  };
+  for (const problem of validate(schema, bare)) failures.push(`${registry._file}: ${plainSchema(problem)}`);
   const characters = registry.characters || {};
   const { index, failures: indexFailures, retired } = buildIndex(registry);
   failures.push(...indexFailures);

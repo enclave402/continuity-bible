@@ -15,7 +15,7 @@ Outcome: every name in your project is written once, every source holds tokens, 
 
 ## 1. Copy the engine
 
-Copy `scripts/names.mjs`, `scripts/lib.mjs`, `scripts/check.mjs`, `scripts/tokenize.mjs`, `scripts/render.mjs`, `scripts/anchor.mjs` and `scripts/character-registry.v1.schema.json` into your repo (one folder, any name; the scripts find each other relatively). Node 18+, no packages.
+Copy `scripts/names.mjs`, `scripts/lib.mjs`, `scripts/check.mjs`, `scripts/tokenize.mjs`, `scripts/render.mjs`, `scripts/anchor.mjs`, `scripts/tag.mjs` and `scripts/character-registry.v1.schema.json` into your repo (one folder, any name; the scripts find each other relatively). Node 18+, no packages.
 
 ## 2. Write the registry
 
@@ -33,7 +33,7 @@ node scripts/check.mjs --suggest   # prints a stub entry for every label it cann
 | Story-scoped data keyed by story (an art manifest, pack data) | `surfaces[] { type: "prose", root, story_field, stories }` | renders each entry for its story, then scans it |
 | A document with one heading per character | `surfaces[] { type: "headings" }` | resolves each heading label |
 | JSON with name fields at known paths | `surfaces[] { type: "names", paths }` | resolves each value |
-| Pages, partials, templates, manifests, run notes a builder reads | `token_sources[] { file: "<glob>" }` | fails any written-out name or variant, naming the token |
+| Pages, partials, templates, manifests, run notes a builder reads | `token_sources[] { file: "<glob>" }` | fails any written-out name or variant, naming the token, and any token with an unknown id or form or a lookalike (`{{June-okafor}}`); add `other_placeholders: true` for a file whose other `{{...}}` belong to another template tool |
 | Dated history (worklog, transcripts, decision records, past prompt records) | `records: ["<glob>"]` | leaves it alone |
 | Documentation that shows names on purpose (a README's examples, tests) | `coverage.ignore: ["<glob>"]` | leaves it alone |
 
