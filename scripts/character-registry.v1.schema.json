@@ -152,7 +152,7 @@
             "canon_tags": {
               "type": "object",
               "additionalProperties": { "type": "string", "minLength": 1 },
-              "description": "Who this character is, as tags a tagger or a person can read off an image (skin_tone, heritage, hair_color, build). The canon anchor policy keeps only images that match every one of them. Written by the owner, never inferred from the drifted images."
+              "description": "Fixed traits: what must never change about this character, as tags a person or a tagger can read off an image (eyes, a scar, heritage markers, a signature garment). The answer to the first drift question: only images carrying every one of them are eligible to be the anchor, and images without them are always on the redraw list. Written by the owner, never inferred from the drifted images."
             },
             "prompt_tokens": { "type": "string", "description": "prop or companion: the look a prompt writer compiles from this entry, written once here." },
             "negative_tokens": { "type": "array", "items": { "type": "string" }, "description": "prop or companion: what a prompt must avoid for this object." },
@@ -164,6 +164,8 @@
                 "image": { "type": "string", "minLength": 1, "description": "The reference image every later generation conditions on, relative to the registry." },
                 "sha256": { "type": "string" },
                 "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "canon", "manual"] },
+                "prefer": { "type": "string", "enum": ["fewest-redraws", "first-look", "last-look", "most-common"], "description": "The plain-named answer to the second drift question that the policy spells out." },
+                "keep": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 }, "description": "The fixed traits the choice was made within: what must never change, as answered when the anchor was chosen." },
                 "metric": { "type": "string" },
                 "order": { "type": "integer" },
                 "chosen_at": { "type": "string" },
@@ -236,14 +238,15 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "canon"], "description": "origin: the first generated image; terminal: the last; consensus: the image nearest the centroid of all embeddings; mode: the most frequent attribute combination (tags), nearest the centroid among those; canon: only images whose tags match the entry's canon_tags, nearest their centroid (cheapest never outvotes canon)." },
+        "policy": { "type": "string", "enum": ["origin", "terminal", "consensus", "mode", "canon"], "description": "The developer spelling of the second drift question, applied to the images that keep the fixed traits: origin: the first; terminal: the last; consensus: nearest the centroid (the most frequent tag combination when there are no embeddings); mode: the most frequent tag combination, nearest its centroid; canon: keep + consensus (an alias)." },
+        "prefer": { "type": "string", "enum": ["fewest-redraws", "first-look", "last-look", "most-common"], "description": "The plain spelling of the second drift question: fewest-redraws (consensus), first-look (origin), last-look (terminal), most-common (mode). Either prefer or policy; prefer wins when both are set and --policy is not passed." },
         "metric": { "type": "string", "description": "Name of the embedding the file holds (arcface, clip, dinov2, aura, ...). Informational; vectors from two encoders are never mixed." },
         "pass_threshold": { "type": "number", "description": "Cosine similarity to the anchor below which an image is listed for regeneration." },
         "prune_outliers_z": { "type": "number", "description": "Drop images whose distance to the centroid is more than this many standard deviations before choosing." },
         "max_regeneration_budget": { "type": "integer", "description": "How many regenerations you are willing to pay for; the report compares policies against it." },
         "embeddings": { "type": "string", "description": "Default embeddings file for scripts/anchor.mjs, relative to the registry." }
       },
-      "description": "How a visual anchor is picked after a character has drifted (docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md). Registry-level defaults; an entry may override."
+      "description": "How a visual anchor is picked after a character has drifted (docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): two questions, what must never change (the entry's canon_tags) and, for everything else, which look (prefer). Registry-level defaults; an entry may override."
     }
   }
 }

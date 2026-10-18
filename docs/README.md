@@ -12,10 +12,10 @@ One registry file holds every character's name once; every source holds `{{id}}`
 
 ## 2. Solve (`2-how-to/`)
 
-- [Work from a browser chatbot](2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md): the copy-paste loop in detail: names out of pasted prompts, file naming by scene and order, hand-tag conventions, canon versus consensus, what the engine cannot do without embeddings.
+- [Work from a browser chatbot](2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md): the copy-paste loop in detail: names out of pasted prompts, file naming by scene and order, hand-tag conventions, the two drift questions (what must never change; fewest redraws, first look or last look), what the engine cannot do without embeddings.
 - [Adopt the registry in your repo](2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md): surfaces, token sources, records, coverage, props by id, contextual forms, exclusive markers, forbidden duplicate fields, rendering built output.
 - [Ingest research](2-how-to/HOW-TO-INGEST-RESEARCH.md): card a document, index it, pack it, extract candidates with a local model, verify sources, merge findings, ask.
-- [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, choose an anchor policy, record the anchor, size the regeneration bill.
+- [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, answer the two drift questions (or name a policy), record the anchor, size the regeneration bill.
 
 ## 3. Look up (`3-reference/`)
 

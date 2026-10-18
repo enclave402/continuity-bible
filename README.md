@@ -26,7 +26,7 @@ This is a small, free tool: a folder of scripts that run on your own computer. I
 
 1. **Writes each character down once.** Name, full name, how they look. That file is the *registry*.
 2. **Replaces names in your pages with tokens.** You write `{{june-okafor}}` instead of *June*. A *token* is a placeholder in double curly braces that the tool swaps for the real words. Because the words live in one place, the checker can tell you the moment a name or a look was typed by hand somewhere else, and a rename is one edit.
-3. **Picks the reference picture after the AI has already drifted.** You tell it, in plain tags, who the character is. It picks the picture to match from now on by a rule you choose, and writes the choice down so nobody has to remember it.
+3. **Picks the reference picture after the AI has already drifted.** It asks you two questions: what about this character must never change, and, for everything else, do you want the fewest redraws, the first look or the last look. It shows what each answer costs, and writes your choice down so nobody has to remember it.
 
 It works with whatever AI you already use. A browser chatbot that makes pictures is enough. The scripts never touch the network, nothing is installed beyond Node, and there is no account.
 
@@ -71,7 +71,7 @@ cd my-story
       "forms": {
         "look": "a nine-year-old girl with dark brown skin, black curls tied in two puffs, a yellow raincoat and red boots"
       },
-      "canon_tags": { "skin": "dark brown", "hair": "two puffs", "coat": "yellow" }
+      "canon_tags": { "skin": "dark brown" }
     }
   }
 }
@@ -173,22 +173,30 @@ Drop `--dry-run` to write the change. A name that two characters share is skippe
 
 ### Picks the reference picture after the AI drifts
 
-Save the pictures the chatbot gave you, look at each one, and write down in a small text file what you see for the three `canon_tags` (skin, hair, coat), one line per picture. Then ask for the *anchor*: the one picture every later picture should match. With the four example pictures from the tutorial, where the AI lost June's two puffs after the first try:
+Save the pictures the chatbot gave you, look at each one, and write down in a small text file what you see (skin, hair, coat), one line per picture. Then ask. The tool asks you two questions and answers in plain words. With the four example pictures from the tutorial, where the AI lost June's two puffs after the first try:
 
 ```bash
-node ../scripts/anchor.mjs tags-june.jsonl --policy canon --character june-okafor
+node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --ask
 ```
 
 ```text
-anchor: policy canon: renders/scene-01-01.png (order 1; nearest the centroid of the 1 image(s) matching canon {"skin":"dark brown","hair":"two puffs","coat":"yellow"} (of 4); the cheapest state is not canon's job)
-anchor: 4 image(s), none with an embedding; 3 do not match canon -> regenerate (bill by tags, not by similarity)
-  regenerate renders/scene-01-02.png
-  regenerate renders/scene-01-03.png
-  regenerate renders/scene-01-04.png
-anchor: compare: origin=renders/scene-01-01.png (3 to redo, by tags); terminal=renders/scene-01-04.png (1 to redo, by tags); consensus=n/a; mode=renders/scene-01-02.png (1 to redo, by tags); canon=renders/scene-01-01.png (3 to redo, by tags)
+What about June must never change? Type tag=value pairs separated by commas, or press Enter for none.
+  The registry says: skin=dark brown. Press Enter to keep that, or type your own.
+> 
+For everything else, which look do you want?
+  1. fewest redraws (default)
+  2. the first look
+  3. the last look
+> 
+Keep renders/scene-01-02.png as the one true picture of June.
+Redraw 1 picture: renders/scene-01-01.png.
+  Counted by your tags, not measured by a model.
+If you answered differently: the first look would keep renders/scene-01-01.png and redraw 3; the last look would keep renders/scene-01-04.png and redraw 1.
+Record this as June's anchor in the registry? [y/N] n
+Not recorded. Ask again when you have decided, or add --write to the command.
 ```
 
-The *policy* is the rule for choosing. `canon` keeps only pictures that match who you said the character is, even when most pictures drifted the other way, and lists the three that drifted as the ones to redo. `mode` picks the most common look (here the drifted one, three pictures out of four) and would redo only one picture: the one that actually looks like June. `origin` is the first picture, `terminal` the last. The last line puts every rule and its price side by side. `consensus` needs numbers from a model (an *embedding*), so with hand-written tags it says `n/a`. Add `--write` to record the choice in the registry. The [tutorial](docs/1-tutorials/START-HERE.md) walks through the whole thing with real pictures.
+The first question is answered by the registry: June's dark brown skin is a story fact, so only pictures that have it can be the *anchor*, the one picture every later picture should match, and pictures without it are always redrawn. The second question is yours. *Fewest redraws* keeps the look most pictures already have (here the loose curls the AI drifted to) and costs one redraw. *The first look* keeps the two puffs you asked for and costs three. The tool shows both prices and never decides for you. Answer `y` and the choice is written into the registry. The [tutorial](docs/1-tutorials/START-HERE.md) walks through the whole thing with real pictures.
 
 ## For developers
 
@@ -204,13 +212,14 @@ The same engine runs the name build of a published 82-scene graphic novel. Plain
 | A contextual form: `"attitude": { "by": "stage", "values": { "childhood": "…", "adult": "…", "default": "…" } }` | `{{brass-key:attitude}}` renders the variant the scene's own `stage` picks; no match and no default fails the build |
 | `exclusive_markers` on a scene file: `time_of_day` → `morning: [sunrise, …]`, `evening: [lamplight, …]` | fails a scene labelled evening whose text says sunrise |
 | `forbid_keys` on a manifest: `visualDescription` is owned by the scene file | fails a manifest entry that still carries its own copy |
-| `canon_tags` on an entry, `drift_resolution` defaults | `scripts/anchor.mjs` picks and records a visual anchor (`origin`, `terminal`, `consensus`, `mode`, `canon`) over any encoder's embeddings or hand tags; the regeneration bill is by cosine with embeddings and by tags without (`stats.bill_basis`); `--write` stores it under `characters.<id>.anchor` |
+| `canon_tags` (fixed traits) on an entry, `drift_resolution` defaults (`prefer` or `policy`) | `scripts/anchor.mjs` answers two questions over any encoder's embeddings or hand tags: `--keep tag=value` (what must never change; only images carrying every kept tag are eligible, the rest are always billed) and `--prefer fewest-redraws|first-look|last-look|most-common` (`consensus`, `origin`, `terminal`, `mode` among the eligible images; `canon` is keep + consensus). `--ask` asks both on the terminal. The bill is by cosine with embeddings and by tags without (`stats.bill_basis`); `--write` records image, policy, prefer, keep and stats under `characters.<id>.anchor` |
 
 From the repository root:
 
 ```bash
-node scripts/anchor.mjs examples/anchor/embeddings.jsonl --policy consensus
-node scripts/anchor.mjs examples/anchor/embeddings.jsonl --policy canon --canon "hair=copper red"
+node scripts/anchor.mjs examples/anchor/embeddings.jsonl --prefer fewest-redraws
+node scripts/anchor.mjs examples/anchor/embeddings.jsonl --keep "hair=copper red" --prefer first-look
+node scripts/anchor.mjs examples/anchor/embeddings.jsonl --ask
 node scripts/research/ask.mjs "how do I keep a prop consistent across panels"
 ```
 

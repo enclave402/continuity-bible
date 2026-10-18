@@ -1,11 +1,15 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 19 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 23 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 22:03:40 (UTC-04:00) | action | engine/anchor | [Two questions replace five policy names: anchor.mjs gains keep (what must never change), prefer (fewest-redraws, first-look, last-look, most-common) and --ask; canon is keep + consensus; tutorial, README, both how-tos, field reference, PRODUCT and ADR-004 rewritten around the questions](entries/2026-10-17_22-03-40_two-questions-replace-five-policy-names-anchor-mjs-gains-kee.md) | agent:claude | closed |
+| 21:51:29 (UTC-04:00) | action | repo/merge | [Merged claude/layperson-docs-and-tutorial (carrying efe2e46, the owner's correction: every policy shows its bill and the person chooses) into claude/anchor-tags-only-bill](entries/2026-10-17_21-51-29_merged-claude-layperson-docs-and-tutorial-carrying-efe2e46-t.md) | agent:claude | closed |
+| 21:50:56 (UTC-04:00) | action | repo/merge | [Merged origin/claude/research-process-and-public-norms (efe2e46: every policy shows its bill and the person chooses; canon is an option, not the rule) into claude/layperson-docs-and-tutorial](entries/2026-10-17_21-50-56_merged-origin-claude-research-process-and-public-norms-efe2e.md) | agent:claude | closed |
+| 21:46:53 (UTC-04:00) | fix | product | [Correction: the owner's intent for the drifted lead is the least-regeneration anchor (consistency over endpoint), not canon restoration; ADR-004, the drift how-to, PRODUCT.md and STATE.md now say so](entries/2026-10-17_21-46-53_correction-the-owner-s-intent-for-the-drifted-lead-is-the-le.md) | agent:claude | closed |
 | 22:26:46 (UTC-04:00) | action | docs/journey | [Journey page retold by the author's decision: one trait in canon (eyes), the rest by consensus, story facts in prose; proposed anchor and 21-picture list](entries/2026-10-17_22-26-46_journey-page-retold-by-the-author-s-decision-one-trait-in-ca.md) | agent:claude | open |
 | 22:07:33 (UTC-04:00) | milestone | docs/journey | [Pull request 7 opened: before-and-after journey page for the published story's drifted lead](entries/2026-10-17_22-07-33_pull-request-7-opened-before-and-after-journey-page-for-the-.md) | agent:claude | closed |
 | 22:05:42 (UTC-04:00) | action | docs/journey | [Before-and-after journey page: the engine on the published story's lead, real pictures, every policy's bill, the first pair](entries/2026-10-17_22-05-42_before-and-after-journey-page-the-engine-on-the-published-st.md) | agent:claude | open |
