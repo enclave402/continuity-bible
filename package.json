@@ -11,6 +11,7 @@
     "tokenize": "node scripts/tokenize.mjs",
     "render": "node scripts/render.mjs",
     "anchor": "node scripts/anchor.mjs",
+    "tag": "node scripts/tag.mjs",
     "verify": "node scripts/check.mjs && node --test && node scripts/check-private.mjs && node scripts/check-worklog.mjs && node scripts/research/index.mjs --check && node scripts/check-docs.mjs",
     "private": "node scripts/check-private.mjs",
     "hooks": "bash scripts/install-git-hooks.sh",

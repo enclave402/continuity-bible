@@ -167,3 +167,52 @@ test("a registry that is missing, mis-named or not plain JSON gets a plain answe
   fs.writeFileSync(reg, good);
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test("near-tokens fail too: single braces around an id, a missing or extra brace, and a scene saved as rich text", () => {
+  const dir = copyRepo();
+  const scene = path.join(dir, "examples/sample-scene.md");
+  const original = fs.readFileSync(scene, "utf8");
+  for (const [typed, want] of [
+    ["{chloe-jenkins}", /\{chloe-jenkins\} has single braces, so it is not a token\. Fix: write \{\{chloe-jenkins\}\}/],
+    ["{chloe-jenkins:nickname}", /has single braces.* Fix: write \{\{chloe-jenkins:nickname\}\}/],
+    ["{{chloe-jenkins}", /has a \{\{ without a matching \}\}, or the other way round/],
+    ["{{chloe-jenkins}}}", /has three braces in a row/],
+  ]) {
+    fs.writeFileSync(scene, original.replace("{{chloe-jenkins}} picked up", `${typed} picked up`));
+    const r = check(dir);
+    assert.equal(r.status, 1, `${typed}\n${r.stdout}${r.stderr}`);
+    assert.match(r.stderr, want, typed);
+  }
+  fs.writeFileSync(scene, "{\\rtf1\\ansi\\deff0 " + original + "}");
+  const rtf = check(dir);
+  assert.equal(rtf.status, 1);
+  assert.match(rtf.stderr, /examples\/sample-scene\.md: was saved as rich text, not plain text/);
+  fs.writeFileSync(scene, original.replace("Across the table", "Across the {table}"));
+  assert.equal(check(dir).status, 0, "ordinary braces around words that are no character are left alone");
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("a scene saved with .txt on the end is named by the gate and by render; the gate run one folder up says which registry it checked", () => {
+  const dir = copyRepo();
+  const story = path.join(dir, "my-story");
+  fs.mkdirSync(story);
+  fs.writeFileSync(path.join(story, "character-registry.json"), JSON.stringify({ registry_version: 1, token_sources: [{ file: "scene-*.md" }], characters: { "june-okafor": { name: "June", kind: "person", story: "s", role: "r", prose_only: true } } }));
+  fs.writeFileSync(path.join(story, "scene-01.md.txt"), "{{june-okafor}} held the ladder.\n");
+  const g = spawnSync(process.execPath, [path.join(dir, "scripts/check.mjs")], { cwd: story, encoding: "utf8" });
+  assert.equal(g.status, 1);
+  assert.match(g.stderr, /matches no tracked file\. There is "scene-01\.md\.txt" here: rename it so it matches exactly/);
+  const rd = spawnSync(process.execPath, [path.join(dir, "scripts/render.mjs"), "scene-01.md"], { cwd: story, encoding: "utf8" });
+  assert.match(rd.stderr, /render: scene-01\.md is not in this folder\. There is "scene-01\.md\.txt" here: rename it to scene-01\.md\./);
+  const up = check(dir);
+  assert.match(up.stdout, /note: this checked character-registry\.json in this folder\. my-story\/ has its own registry: to check your story, cd my-story and run node \.\.\/scripts\/check\.mjs/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("a registry field with the wrong value is said in plain words, with what most characters use", () => {
+  const dir = copyRepo();
+  editJson(dir, "character-registry.json", (j) => { j.characters["sam-hayes"].kind = "robot"; });
+  const r = check(dir);
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /character "sam-hayes", field "kind": must be one of person, companion, voice, group, prop\. Most characters are "person", animals and robots included/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});

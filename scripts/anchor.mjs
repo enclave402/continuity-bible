@@ -32,7 +32,7 @@ import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import { createHash } from "node:crypto";
-import { registryPath, loadRegistry, writeJsonLike } from "./lib.mjs";
+import { registryPath, loadRegistry, writeJsonLike, closestIds, nearbyFiles } from "./lib.mjs";
 import { parseJson } from "./names.mjs";
 
 export const norm = (v) => { const n = Math.hypot(...v) || 1; return v.map((x) => x / n); };
@@ -215,6 +215,14 @@ async function main() {
   catch (e) { if (fs.existsSync(registryFile)) { console.error(e.message); process.exit(1); } registry = null; }
   const id = flag("--character");
   const entry = id ? registry?.characters?.[id] : null;
+  if (id && !entry) {
+    const ids = Object.keys(registry?.characters || {});
+    const near = closestIds(id, ids);
+    console.error(registry
+      ? `anchor: there is no character "${id}" in ${path.basename(registry._file)}. ${near.length ? `Did you mean ${near.join(" or ")}? ` : ""}Fix: use the id exactly as the registry writes it${ids.length ? ` (${ids.join(", ")})` : ""}`
+      : `anchor: --character ${id} needs a character-registry.json in this folder. Fix: cd into your story folder first`);
+    process.exit(1);
+  }
   const defaults = { ...(registry?.drift_resolution || {}), ...(entry?.drift_resolution || {}) };
   // the words a person writes when they cannot tell: --unreadable a,b wins, else the registry's, else the default
   const unreadable = flag("--unreadable") ? flag("--unreadable").split(",").map((v) => v.trim()).filter(Boolean) : defaults.unreadable || DEFAULT_UNREADABLE;
@@ -227,7 +235,7 @@ async function main() {
   let policy = flag("--policy") || (preferFlag ? PREFER[preferFlag] : "") || defaults.policy || "consensus";
   const source = file || (defaults.embeddings ? path.join(registry._root, defaults.embeddings) : "");
   if (!source) { console.error("usage: node scripts/anchor.mjs <embeddings.jsonl|.json> [--character <id>] [--ask] [--keep tag=value ...] [--prefer fewest-redraws|first-look|last-look|most-common] [--policy origin|terminal|consensus|mode|canon] [--canon tag=value ...] [--threshold 0.6] [--prune-outliers 2] [--write] [--json]"); process.exit(2); }
-  if (!fs.existsSync(source)) { console.error(`anchor: ${source} is not in this folder. Fix: check the file name (capital letters count) and run the command from the folder that holds it`); process.exit(1); }
+  if (!fs.existsSync(source)) { const near = nearbyFiles(source); console.error(`anchor: ${source} is not in this folder.${near.length ? ` There is ${near.map((n) => `"${n}"`).join(" and ")} here: rename it to ${path.basename(source)}.` : " Fix: check the file name (capital letters count) and run the command from the folder that holds it"}`); process.exit(1); }
   const raw = fs.readFileSync(source, "utf8");
   let rows;
   try {
@@ -244,6 +252,17 @@ async function main() {
   const pairs = (m) => Object.entries(m || {}).map(([k, v]) => `${k}=${v}`).join(", ");
   const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
+  // what the tags actually say, trait by trait: to check an answer against, and to explain why nothing keeps it
+  const seen = new Map();
+  for (const r of rows) for (const [k, v] of Object.entries(r.tags || {})) { const kk = low(k), vv = low(v); if (!seen.has(kk)) seen.set(kk, new Map()); const m = seen.get(kk); m.set(vv, { shown: String(v), count: (m.get(vv)?.count || 0) + 1 }); }
+  const tagsSay = (k) => { const m = seen.get(low(k)); return m ? [...m.values()].map((x) => `${low(k)}=${x.shown} (${plural(x.count, "picture")})`).join(", ") : ""; };
+  const mismatches = (kp) => Object.entries(kp || {}).flatMap(([k, v]) => {
+    const m = seen.get(low(k));
+    if (!m) return [`no picture's tags have a trait called "${k}"; the traits in your tags are ${[...seen.keys()].join(", ") || "none yet"}`];
+    if (!m.has(low(v))) return [`no picture's tags say ${low(k)}=${v}; your tags say ${tagsSay(k)}`];
+    return [];
+  });
+
   let question = null;
   if (ask) {
     // the two questions, in plain words, on the terminal; piped answers work too
@@ -255,12 +274,23 @@ async function main() {
     console.log(`What about ${name} must never change? Type each trait like skin=dark brown, with commas between them.`);
     if (fromRegistry) console.log(`  The registry says: ${pairs(fromRegistry)}. Press Enter to keep that, or type the whole list you want instead.`);
     else console.log("  Press Enter if nothing has to stay the same.");
+    let warned = null;
     for (let tries = 1; ; tries++) {
       const a1 = await question("> ");
-      if (a1 === null || !a1.trim()) { keep = fromRegistry; break; }
-      const r = readKeep(a1);
-      if (r.unread.length && tries < 5) { console.log(`  I could not read: ${r.unread.join("; ")}. Type each trait like skin=dark brown, with commas between them, or press Enter to keep ${fromRegistry ? "what the registry says" : "nothing fixed"}.`); continue; }
-      keep = Object.keys(r.keep).length ? r.keep : null;
+      const said = a1 === null ? "" : a1.trim();
+      const r = readKeep(said);
+      if (said && r.unread.length && tries < 5) { console.log(`  I could not read: ${r.unread.join("; ")}. Type each trait like skin=dark brown, with commas between them, or press Enter to keep ${fromRegistry ? "what the registry says" : "nothing fixed"}.`); continue; }
+      const candidate = said ? (Object.keys(r.keep).length ? r.keep : null) : fromRegistry;
+      // a trait or value that no picture's tags have is usually a typo; say what the tags have, and accept it if typed again
+      const probs = mismatches(candidate);
+      if (probs.length && a1 !== null && said !== warned && tries < 5) {
+        warned = said;
+        for (const p of probs) console.log(`  Check this: ${p}.`);
+        console.log(`  Type it the way your tags say it, or ${said ? "type the same answer again" : "press Enter again"} to keep it anyway.`);
+        continue;
+      }
+      if (!said) { keep = fromRegistry; break; }
+      keep = candidate;
       const dropped = fromRegistry && keep ? Object.keys(fromRegistry).filter((k) => !Object.keys(keep).some((x) => low(x) === low(k))) : [];
       if (dropped.length) console.log(`  That replaces the registry's list, so ${dropped.map((k) => `${k}=${fromRegistry[k]}`).join(", ")} is not kept this time.`);
       break;
@@ -285,8 +315,9 @@ async function main() {
   let result;
   try { result = chooseAnchor(rows, { policy, threshold, pruneZ, keep, canon: policy === "canon" ? keep : null, unreadable }); }
   catch (e) {
-    if (ask && /drifted off/.test(e.message)) console.error(`None of the pictures has what must never change (${pairs(keep)}). Paste the prompt sheet again, tag the new pictures, and ask again.`);
-    else console.error(e.message);
+    const theySay = Object.keys(keep || {}).map(tagsSay).filter(Boolean).join("; ");
+    if (ask && /drifted off/.test(e.message)) console.error(`None of the pictures has what must never change (${pairs(keep)}).${theySay ? ` Your tags say: ${theySay}.` : ""} If your tags mean the same thing, write it the same way in both places. If the pictures really drifted, paste the prompt sheet again, tag the new pictures, and ask again.`);
+    else console.error(`${e.message}${/drifted off/.test(e.message) && theySay ? `. Your tags say: ${theySay}` : ""}`);
     process.exit(1);
   }
   const compare = comparePolicies(rows, { threshold, pruneZ, keep, canon: keep, unreadable });
@@ -307,7 +338,10 @@ async function main() {
     const others = ["consensus", "origin", "terminal"].filter((p) => p !== result.method).map((p) => { const v = compare[p]; return v.unavailable ? `${PLAIN[p]} is not possible here (${v.unavailable})` : `${PLAIN[p]} would keep ${v.image} and redraw ${v.to_redo ?? "?"}`; });
     console.log(`If you answered differently: ${others.join("; ")}.`);
     if (id && entry && !write) {
-      console.log(`Record this as ${name}'s anchor in the registry? Type y and press Enter to record it, or just press Enter to skip.`);
+      const missing = !fs.existsSync(path.resolve(path.dirname(path.resolve(source)), result.anchor.image));
+      console.log(missing
+        ? `Record this as ${name}'s anchor anyway? Its picture, ${result.anchor.image}, is not in this folder, so fix its name first if you can. Type y and press Enter to record it, or just press Enter to skip.`
+        : `Record this as ${name}'s anchor in the registry? Type y and press Enter to record it, or just press Enter to skip.`);
       const a3 = ((await question("> ")) || "").trim().toLowerCase();
       write = /^y/.test(a3);
       if (!write) console.log("Not recorded. Ask again when you have decided, or add --write to the command.");

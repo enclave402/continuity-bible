@@ -14,7 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { loadNames } from "./names.mjs";
-import { registryPath, loadRegistry, checkTokenSourceFile } from "./lib.mjs";
+import { registryPath, loadRegistry, checkTokenSourceFile, nearbyFiles } from "./lib.mjs";
 
 const argv = process.argv.slice(2);
 const flag = (n) => { const i = argv.indexOf(n); return i === -1 ? "" : argv[i + 1] || ""; };
@@ -26,7 +26,7 @@ const fail = (lines) => { for (const l of [].concat(lines)) console.error(l); co
 let registry, names;
 try { registry = loadRegistry(registryPath(process.argv)); names = loadNames(registry._root); }
 catch (e) { fail(e.message); }
-if (!fs.existsSync(source)) fail(`render: ${source} is not in this folder. Fix: check the file name (capital letters count, scene-01.md is not Scene-01.md) and run the command from the folder that holds it`);
+if (!fs.existsSync(source)) { const near = nearbyFiles(source); fail(`render: ${source} is not in this folder.${near.length ? ` There is ${near.map((n) => `"${n}"`).join(" and ")} here: rename it to ${path.basename(source)}.` : " Fix: check the file name (capital letters count, scene-01.md is not Scene-01.md) and run the command from the folder that holds it"}`); }
 const story = flag("--story") || undefined;
 const raw = fs.readFileSync(source, "utf8");
 const problems = checkTokenSourceFile(registry, source, raw);

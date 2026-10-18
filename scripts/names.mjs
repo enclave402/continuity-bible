@@ -80,7 +80,12 @@ export function parseJson(text, file = "this file", firstLine = 1) {
     if (pos !== null) { const before = text.slice(0, pos); line = firstLine + (before.match(/\n/g) || []).length; col = pos - before.lastIndexOf("\n"); }
     const lineText = text.split("\n")[line - firstLine] || "";
     const hints = [];
-    if (/^\s*\{\\rtf/.test(text)) hints.push("it was saved as rich text, not plain text: in TextEdit choose Format, then Make Plain Text, and save it again");
+    const trimmed = text.trim();
+    if (!trimmed) hints.push("the file is empty. Copy the grey box with the file's text, then type the command that makes the file");
+    else if (/^(pbpaste|get-clipboard)\b/i.test(trimmed) || /^\s*(mac|windows):/im.test(trimmed)) hints.push("the file holds a command instead of the file's text. Copy the grey box with the file's text first, then type the command yourself; copying the command replaces the text you copied");
+    else if (/^```/.test(trimmed)) hints.push("the file starts with ``` from the page. Copy only the text inside the grey box");
+    else if (/^\s*\{\\rtf/.test(text)) hints.push("it was saved as rich text, not plain text: in TextEdit choose Format, then Make Plain Text, and save it again");
+    else if (/end of (json )?input/i.test(e.message)) hints.push("the file stops too early, as if part of it is missing. Copy the whole grey box again");
     else {
       if (/[\u201c\u201d\u2018\u2019]/.test(lineText)) hints.push("that line has curly quotes (\u201c \u201d); JSON needs straight quotes (\")");
       if (pos !== null && /,\s*$/.test(text.slice(0, pos)) && /[}\]]/.test(text[pos] || "")) hints.push("there is a comma just before this } or ]; delete that comma");

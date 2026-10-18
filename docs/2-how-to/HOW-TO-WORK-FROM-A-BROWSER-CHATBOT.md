@@ -61,6 +61,8 @@ renders/scene-02-01.png
 
 ## 3. Hand-tag conventions
 
+The easy way is `node ../scripts/tag.mjs <id>`: it lists the pictures in `renders/`, asks which traits to track, and asks what you see in each picture, then writes the file below for you. From the second picture on, Enter repeats the answer for the picture before. It writes a fixed trait's value exactly as the registry spells it, and says so when what you saw differs.
+
 A tags file is one line per picture, in order, in a strict format called JSON Lines:
 
 ```json
@@ -149,6 +151,12 @@ Never edit `built/`. Never edit a scene to match a picture. The registry is upst
 | `{{June-okafor}} looks like a token but is not one` | a capital letter or a space inside a token | write the token it suggests |
 | `june-okafor has no form "looks"` | the part after the colon is not one of the character's forms | use one of the forms it lists |
 | `I could not read: ... Type each trait like skin=dark brown` | an answer to question 1 that is not a trait | type it as `trait=value`, or press Enter |
+| `Check this: no picture's tags say hair=two puff; your tags say ...` | a trait or value in your answer that no picture's tags have, usually a typo | type it the way the tags say it; type the same answer again to keep it anyway |
+| `None of the pictures has what must never change (...). Your tags say: ...` | the tags and the fixed traits do not match anywhere | if they mean the same thing, write it the same way in both places; if the pictures drifted, make new ones |
+| `there is no character "June-okafor" ... Did you mean june-okafor?` | `--character` (or `tag.mjs`) was given an id that is not in the registry | use the id exactly as the registry writes it |
+| `{june-okafor} has single braces`, `has a {{ without a matching }}`, `has three braces in a row` | a token typed with the wrong number of braces | two braces on each side: `{{june-okafor}}` |
+| `was saved as rich text, not plain text` | a scene saved by a word processor | in TextEdit choose Format, then Make Plain Text, or paste it again from the terminal |
+| `note: this checked character-registry.json in this folder. my-story/ has its own registry` | the checker was run one folder above your story | `cd my-story` and run `node ../scripts/check.mjs` |
 | `Note: renders/scene-01-02.png is not in this folder` | the tags file names a picture that is not there, often because of its ending (`.jpg`, `.webp`) | rename the picture or fix the name in the tags file |
 | `None of the pictures has what must never change (...)` (or, on one line, `no image keeps {...}: every image has drifted off what must never change`) | nothing you tagged carries every fixed trait | paste the sheet again, tag the new pictures, ask again |
 | `unknown --prefer ...` | a misspelled answer on the command line | one of `fewest-redraws`, `first-look`, `last-look`, `most-common` |

@@ -1,12 +1,14 @@
 # Narrative Token SSOT
 
 > Keep your characters the same people from the first picture to the last. One file says who they are. Your story pages and picture prompts point at that file instead of repeating it. A checker catches the slip before you paste.
+>
+> *SSOT* stands for single source of truth: one place where each fact about your story lives.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-pink.svg)](LICENSE)
 [![Used in: rel8r.me](https://img.shields.io/badge/Used_in-rel8r.me-ff1484.svg)](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
 [![Ecosystem: SloppyXBaby](https://img.shields.io/badge/Developer_Kits-sloppyxbaby.com-black.svg)](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
 
-**[Start here (about 30 minutes)](docs/1-tutorials/START-HERE.md)** · **[Work from a browser chatbot](docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md)** · **[See it live](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[For developers](#for-developers)** · **[Using an AI coding agent? Read AGENTS.md](AGENTS.md)**
+**[Start here (about an hour)](docs/1-tutorials/START-HERE.md)** · **[Work from a browser chatbot](docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md)** · **[See it live](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[For developers](#for-developers)** · **[Using an AI coding agent? Read AGENTS.md](AGENTS.md)**
 
 ---
 
@@ -20,7 +22,7 @@ A rule at the top of the chat ("always keep her hair red") makes this rarer. It 
 
 ## The promise
 
-AI stories without AI slop. Unique art that stays yours. Characters steady enough to make a book.
+AI stories without AI slop, the generic pictures that change from page to page. Unique art that stays yours. Characters steady enough to make a book.
 
 This is a small, free tool: a folder of scripts that run on your own computer. It does four things.
 
@@ -39,18 +41,18 @@ Keep the one picture where your character looks right. Attach it to every new re
 
 You need three things:
 
-- **Node**, a free program that runs the tool's scripts, version 18 or newer. Go to [nodejs.org](https://nodejs.org), download the version marked *LTS*, and run the installer.
+- **Node**, a free program that runs the tool's scripts, version 18 or newer. Go to [nodejs.org](https://nodejs.org), download the version marked *LTS*, and run the installer. On a Mac it asks for the computer's password, so you may need a parent's help. School computers often block installing programs; use a home computer if so.
 - **A terminal**, a window where you type a command and press Enter. On a Mac: press Cmd and Space, type `Terminal`, press Enter. On Windows: press the Windows key, type `PowerShell`, press Enter.
 - **A browser chatbot that can make pictures.** Any one you already use.
 
-**How to make a file.** Below, each file's text is in a grey box. Press the copy button on the box, then make the file from the terminal, so nothing can change the text on the way:
+**How to make a file.** Below, each file's text is in a grey box.
 
-```text
-Mac:      pbpaste > character-registry.json
-Windows:  Get-Clipboard | Set-Content character-registry.json
-```
+1. Press the copy button on the box, or select all of its text and copy it.
+2. In the terminal, *type* the command shown under the box and press Enter. Do not copy the command: copying it would replace the text you just copied.
 
-Use the file name the step gives you. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. These steps were tested on a Mac.
+On a Mac the command is `pbpaste >` and the file name. On Windows it is `Get-Clipboard | Set-Content` and the file name. This way nothing can change the text on the way. A word processor such as TextEdit can turn quotes curly, save rich text, or add `.txt` to the name, and any of those breaks the file. If you use TextEdit anyway, choose Format, then Make Plain Text, before you paste. These steps were tested on a Mac.
+
+**Coming back another day?** Open a terminal, type `cd ` with a space after it, drag your `my-story` folder onto the terminal window, and press Enter.
 
 ### 1. Get the folder
 
@@ -73,7 +75,7 @@ mkdir my-story
 cd my-story
 ```
 
-`my-story/character-registry.json` is the registry. Copy this into a file of that name:
+`my-story/character-registry.json` is the registry. Copy this box:
 
 ```json
 {
@@ -97,7 +99,9 @@ cd my-story
 }
 ```
 
-`my-story/scene-01.md` is your scene. Names and looks are tokens:
+Then, in the terminal, type `pbpaste > character-registry.json` on a Mac, or `Get-Clipboard | Set-Content character-registry.json` on Windows, and press Enter.
+
+`my-story/scene-01.md` is your scene. Names and looks are tokens. Copy this box:
 
 ```markdown
 # Scene 1: The ladder
@@ -112,6 +116,8 @@ Children's picture-book illustration, soft watercolor, warm dusk light. Inside t
 {{june-okafor:look}}, holding the bottom of a wooden ladder, looking up.
 Avoid: text, letters, extra people, modern clothes.
 ```
+
+Then, in the terminal, type `pbpaste > scene-01.md` on a Mac, or `Get-Clipboard | Set-Content scene-01.md` on Windows, and press Enter.
 
 ### 3. Turn the tokens into words, then paste
 
@@ -158,7 +164,7 @@ scene-02.md: line 5: names "June" in a token source. Fix: write {{june-okafor}}
 character registry: fail (1 problem(s))
 ```
 
-A token with a typo fails too, and the checker names the one you meant: `{{june-okafer}}` gets `is not a character in the registry. Fix: check the spelling: did you mean {{june-okafor}}?`. So does a token with a capital letter or a space in it, like `{{June-okafor}}`, which would otherwise reach the chatbot as written. The rest of the docs call this checker the *gate*.
+A token with a typo fails too. For `{{june-okafer}}` the checker says `did you mean {{june-okafor}}?`. A capital letter or a space inside a token, like `{{June-okafor}}`, fails as well. Otherwise it would reach the chatbot as written. The rest of the docs call this checker the *gate*.
 
 ### Renames a character everywhere at once
 
@@ -193,7 +199,7 @@ Drop `--dry-run` to write the change. A name that two characters share is skippe
 
 ### Picks the reference picture after the AI drifts
 
-Save the pictures the chatbot gave you, look at each one, and write down in a small text file what you see (skin, hair, coat), one line per picture. Then ask. The tool asks you two questions and answers in plain words. With the four example pictures from the tutorial, where the AI lost June's two puffs after the first try:
+Save the pictures the chatbot gave you in a `renders` folder. Then `node ../scripts/tag.mjs june-okafor` asks what you see in each one (skin, hair, coat) and writes it down for you. Then ask. The tool asks you two questions and answers in plain words. With the four example pictures from the tutorial, where the AI lost June's two puffs after the first try:
 
 ```bash
 node ../scripts/anchor.mjs tags-june.jsonl --character june-okafor --ask

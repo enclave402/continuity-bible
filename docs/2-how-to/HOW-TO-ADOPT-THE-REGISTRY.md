@@ -15,7 +15,7 @@ Outcome: every name in your project is written once, every source holds tokens, 
 
 ## 1. Copy the engine
 
-Copy `scripts/names.mjs`, `scripts/lib.mjs`, `scripts/check.mjs`, `scripts/tokenize.mjs`, `scripts/render.mjs`, `scripts/anchor.mjs` and `scripts/character-registry.v1.schema.json` into your repo (one folder, any name; the scripts find each other relatively). Node 18+, no packages.
+Copy `scripts/names.mjs`, `scripts/lib.mjs`, `scripts/check.mjs`, `scripts/tokenize.mjs`, `scripts/render.mjs`, `scripts/anchor.mjs`, `scripts/tag.mjs` and `scripts/character-registry.v1.schema.json` into your repo (one folder, any name; the scripts find each other relatively). Node 18+, no packages.
 
 ## 2. Write the registry
 

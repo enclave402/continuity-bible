@@ -38,7 +38,7 @@ export function loadRegistry(file) {
   if (!fs.existsSync(file)) {
     // the usual beginner causes: the editor added an ending (.txt, .rtf), or the command was run from the wrong folder
     const dir = path.dirname(file), base = path.basename(file), stem = base.toLowerCase().replace(/\.json$/, "");
-    const near = fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => n !== base && n.toLowerCase().startsWith(stem)) : [];
+    const near = fs.existsSync(dir) ? [...new Set([...nearbyFiles(file), ...fs.readdirSync(dir).filter((n) => n !== base && n.toLowerCase().startsWith(stem))])] : [];
     const hint = near.length
       ? ` There is ${near.map((n) => `"${n}"`).join(" and ")} here: rename it to ${base}; your editor added an ending.`
       : ` If you saved it with another ending (.txt, .rtf), rename it to ${base}. If you are in the wrong folder, cd into your story folder first.`;
@@ -431,13 +431,28 @@ function scanRepo(registry, surfaceFiles = []) {
  * source's declared skip_keys are exempt. Built output and dated records are not token sources.
  */
 /** The edit distance between two short strings, to suggest the id a typo was meant to be. */
-function editDistance(a, b) {
+export function editDistance(a, b) {
   const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
   for (let j = 1; j <= b.length; j++) d[0][j] = j;
   for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
   return d[a.length][b.length];
 }
 const BUILT_IN_FORMS = ["first", "short", "full", "initial"];
+/** The ids a mistyped id was most likely meant to be: the same id in another case, ids it starts, then near spellings. */
+export function closestIds(typed, ids) {
+  const t = String(typed).trim().toLowerCase().replace(/\s+/g, "-");
+  const exact = ids.filter((k) => k.toLowerCase() === t);
+  if (exact.length) return exact;
+  const starts = ids.filter((k) => k.startsWith(t) || t.startsWith(k));
+  if (starts.length) return starts.slice(0, 2);
+  return ids.map((k) => [editDistance(t, k), k]).sort((a, b) => a[0] - b[0]).filter(([d]) => d <= Math.max(2, Math.floor(t.length / 3))).slice(0, 2).map(([, k]) => k);
+}
+/** Files next to `file` that are probably it under another name: an ending an editor added (.txt, .rtf), or other capital letters. */
+export function nearbyFiles(file) {
+  const dir = path.dirname(path.resolve(file)), base = path.basename(file).toLowerCase();
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter((n) => n !== path.basename(file) && (n.toLowerCase() === base || n.toLowerCase().replace(/(\.(txt|rtf))+$/, "") === base));
+}
 const WHOLE_TOKEN = /^[a-z0-9][a-z0-9-]*(?::[a-z]+)?$/;
 const PLACEHOLDER = /\{\{([^{}\n]*)\}\}/g;
 
@@ -467,7 +482,12 @@ function tokenSourceContext(registry, surfaces, root) {
   for (const t of registry.token_sources || []) {
     const re = globToRegExp(t.file);
     const hits = tracked.filter((rel) => re.test(rel));
-    if (!hits.length && !fs.existsSync(fromRoot(root, t.file))) failures.push(`${registry._file}: token_sources "${t.file}" matches no tracked file. File names must match exactly, capital letters included (scene-01.md, not Scene-01.md), and in a git checkout the file must be added to git. Fix: rename the file, or correct the path in ${path.basename(registry._file)}`);
+    if (!hits.length && !fs.existsSync(fromRoot(root, t.file))) {
+      const ci = new RegExp(re.source, re.flags.includes("i") ? re.flags : re.flags + "i");
+      const almost = tracked.filter((rel) => ci.test(rel) || re.test(rel.replace(/(\.(txt|rtf))+$/i, "")) || ci.test(rel.replace(/(\.(txt|rtf))+$/i, "")));
+      const near = almost.length ? ` There is ${almost.slice(0, 3).map((n) => `"${n}"`).join(", ")} here: rename it so it matches exactly (an editor may have added .txt, or a capital letter crept in).` : "";
+      failures.push(`${registry._file}: token_sources "${t.file}" matches no tracked file.${near} File names must match exactly, capital letters included (scene-01.md, not Scene-01.md), and in a git checkout the file must be added to git. Fix: rename the file, or correct the path in ${path.basename(registry._file)}`);
+    }
     for (const rel of hits.length ? hits : [t.file]) declare(rel, t.skip_keys || [], true, t.other_placeholders === true);
   }
   return { failures, characters, list, cardKeys, sources };
@@ -482,7 +502,14 @@ function tokenProblemsIn(text, where, ctx, { explicit = false, other = false } =
   for (const [label, token] of ctx.list) if (labelRegExp(label, "").test(bare)) out.push(`${where}: names "${label}" in a token source. Fix: write ${token}`);
   if (!explicit || other) return out;
   const ids = Object.keys(ctx.characters);
-  const closest = (id) => ids.map((k) => [editDistance(id, k), k]).sort((a, b) => a[0] - b[0]).filter(([d]) => d <= Math.max(2, Math.floor(id.length / 3))).slice(0, 2).map(([, k]) => k);
+  const closest = (id) => closestIds(id, ids);
+  const known = (inner) => { const id = inner.trim().toLowerCase().replace(/\s*:\s*/g, ":").replace(/\s+/g, "-").split(":")[0]; return Boolean(ctx.characters[id] || ctx.cardKeys.has(id)); };
+  const tidy = (inner) => inner.trim().toLowerCase().replace(/\s*:\s*/g, ":").replace(/\s+/g, "-");
+  // braces that are almost a token: three in a row, one missing, or single braces around a character's id
+  if (/\{{3,}|\}{3,}/.test(str)) out.push(`${where}: has three braces in a row, as in {{${ids[0] || "id"}}}}. Fix: a token has exactly two braces on each side`);
+  const rest = str.replace(PLACEHOLDER, (m) => " ".repeat(m.length));
+  if (!/\{{3,}|\}{3,}/.test(str) && /\{\{|\}\}/.test(rest)) out.push(`${where}: has a {{ without a matching }}, or the other way round. Fix: a token has two braces on each side, like {{${ids[0] || "id"}}}`);
+  for (const m of rest.matchAll(/(?<!\{)\{([^{}\n]+)\}(?!\})/g)) if (known(m[1])) out.push(`${where}: {${m[1]}} has single braces, so it is not a token. Fix: write {{${tidy(m[1])}}}`);
   for (const m of str.matchAll(PLACEHOLDER)) {
     const whole = m[0], inner = m[1];
     if (!WHOLE_TOKEN.test(inner)) {
@@ -510,6 +537,7 @@ function tokenProblemsIn(text, where, ctx, { explicit = false, other = false } =
  *  source's skip keys are exempt); other files are read line by line. */
 function tokenSourceFileProblems(ctx, abs, info, text = fs.readFileSync(abs, "utf8")) {
   const out = [];
+  if (/^\s*\{\\rtf/.test(text)) return ["was saved as rich text, not plain text, so its words are full of formatting codes. Fix: in TextEdit choose Format, then Make Plain Text, and save it again, or paste it again from the terminal"];
   const walkStrings = (value, where) => {
     if (typeof value === "string") return out.push(...tokenProblemsIn(value, where, ctx, info));
     if (Array.isArray(value)) return value.forEach((v, i) => walkStrings(v, `${where}[${i}]`));
@@ -594,7 +622,7 @@ function coverageProblems(registry, surfaces, root) {
     const hit = lines.map((line, i) => { const bare = line.replace(TOKEN, " "); const l = list.find(([label]) => labelRegExp(label, "").test(bare)); return l ? { label: l[0], line: i + 1 } : null; }).find(Boolean);
     if (!hit) continue;
     unclassified += 1;
-    problems.push(`${rel}:${hit.line}: names "${hit.label}" but is no surface, token source or record. Fix: list it under token_sources (a builder renders it), surfaces (the gate resolves its labels), records (dated history) or coverage.ignore (documentation that may show names), in ${path.basename(registry._file)}`);
+    problems.push(`${rel}:${hit.line}: names "${hit.label}" but is no surface, token source or record. Fix: list it under token_sources (a builder renders it), surfaces (the gate resolves its labels), records (dated history) or coverage.ignore (documentation that may show names), in ${path.basename(registry._file)} If this is your own notes file, you can ignore this line`);
   }
   return { problems, unclassified };
 }
@@ -940,7 +968,13 @@ export function checkRegistry(registry) {
   const root = registry._root;
   const schema = readJson(SCHEMA_PATH);
   const bare = Object.fromEntries(Object.entries(registry).filter(([k]) => !k.startsWith("_") || k === "_about"));
-  for (const problem of validate(schema, bare)) failures.push(`${registry._file}: ${problem}`);
+  const plainSchema = (p) => {
+    const m = p.match(/^\$\.characters\.([^.\[]+)\.([A-Za-z_]+): (.*)$/);
+    if (!m) return p;
+    const hint = m[2] === "kind" ? ' Most characters are "person", animals and robots included; "companion" also needs a species list in the registry' : "";
+    return `character "${m[1]}", field "${m[2]}": ${m[3]}.${hint}`;
+  };
+  for (const problem of validate(schema, bare)) failures.push(`${registry._file}: ${plainSchema(problem)}`);
   const characters = registry.characters || {};
   const { index, failures: indexFailures, retired } = buildIndex(registry);
   failures.push(...indexFailures);
