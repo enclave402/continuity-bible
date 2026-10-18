@@ -41,9 +41,9 @@ The report names the chosen image, the mean and minimum cosine to it, every imag
 - **mode**: the most frequent attribute combination, nearest its own centroid. Right when a classifier can name the states and one dominates.
 - **canon**: only images whose tags match the character's declared `canon_tags`, nearest their centroid. Right whenever the drift is a defect rather than an evolution.
 
-## When cheapest is wrong
+## Cheapest or canon: a decision, not arithmetic
 
-The cheapest anchor is often the drifted one. A lead who began mixed-race and darker-skinned and drifted lighter for most of a book is "cheapest" to keep light: `mode` and `consensus` will both say so, and the regeneration list will be short. That is arithmetic, not a decision. Write who the character is into the registry (`canon_tags`, by the owner, never read off the drifted images), run `--policy canon`, and read the longer regeneration list as the price of the drift. The comparison line prints every policy side by side so nobody chooses the cheap one by accident.
+The cheapest anchor is often the drifted one. A lead who began mixed-race and darker-skinned and drifted lighter for most of a book is "cheapest" to keep light: `mode` and `consensus` will both say so, and the regeneration list will be short. Both answers are legitimate; they serve different goals. If the goal is consistency throughout and the endpoint does not matter (the author of this repository's own proof case chose this: fewest regenerations, lighter or darker as long as she is the same person on every page), take `consensus` and cross-check with `mode`. If the look is a story fact that must not move, write it into the registry as `canon_tags` (by the owner, never read off the drifted images), run `--policy canon`, and read the longer regeneration list as the price of the drift. The comparison line prints every policy side by side so the choice is made on purpose.
 
 Set `drift_resolution` in the registry (policy, threshold, pruning, budget, default embeddings file) so the defaults are declared, not remembered. An entry may override the registry.
 

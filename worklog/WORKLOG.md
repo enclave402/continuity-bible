@@ -1,11 +1,14 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 16 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 19 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 21:51:29 (UTC-04:00) | action | repo/merge | [Merged claude/layperson-docs-and-tutorial (carrying efe2e46, the owner's correction: every policy shows its bill and the person chooses) into claude/anchor-tags-only-bill](entries/2026-10-17_21-51-29_merged-claude-layperson-docs-and-tutorial-carrying-efe2e46-t.md) | agent:claude | closed |
+| 21:50:56 (UTC-04:00) | action | repo/merge | [Merged origin/claude/research-process-and-public-norms (efe2e46: every policy shows its bill and the person chooses; canon is an option, not the rule) into claude/layperson-docs-and-tutorial](entries/2026-10-17_21-50-56_merged-origin-claude-research-process-and-public-norms-efe2e.md) | agent:claude | closed |
+| 21:46:53 (UTC-04:00) | fix | product | [Correction: the owner's intent for the drifted lead is the least-regeneration anchor (consistency over endpoint), not canon restoration; ADR-004, the drift how-to, PRODUCT.md and STATE.md now say so](entries/2026-10-17_21-46-53_correction-the-owner-s-intent-for-the-drifted-lead-is-the-le.md) | agent:claude | closed |
 | 21:26:20 (UTC-04:00) | milestone | engine/anchor | [Pull request 5 opened: anchor regeneration bill by tags when there are no embeddings; stacked on pull requests 4 and 3](entries/2026-10-17_21-26-20_pull-request-5-opened-anchor-regeneration-bill-by-tags-when-.md) | agent:claude | closed |
 | 21:26:15 (UTC-04:00) | action | engine/anchor | [anchor.mjs bills by tags when there are no embeddings: canon lists every image off canon, mode/origin/terminal every image whose tags differ from the anchor's; ADR-004 amended; tutorial, how-to, README and field reference match the new report](entries/2026-10-17_21-26-15_anchor-mjs-bills-by-tags-when-there-are-no-embeddings-canon-.md) | agent:claude | closed |
 | 21:15:34 (UTC-04:00) | milestone | docs/layperson | [Pull request 4 opened: layperson README, START-HERE tutorial, browser-chatbot how-to; stacked on pull request 3](entries/2026-10-17_21-15-34_pull-request-4-opened-layperson-readme-start-here-tutorial-b.md) | agent:claude | closed |
