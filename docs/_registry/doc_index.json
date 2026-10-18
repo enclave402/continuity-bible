@@ -3,9 +3,11 @@
   "repository": "narrative-token-ssot",
   "updated_at": "2026-10-17",
   "docs": [
+    { "doc_id": "tutorial-start-here", "title": "Start here: one scene, two characters, a browser chatbot", "triadic_leg": "diataxis", "diataxis_mode": "learn", "canonical_path": "docs/1-tutorials/START-HERE.md", "status": "active" },
     { "doc_id": "how-to-adopt-the-registry", "title": "How to adopt the registry in your repo", "triadic_leg": "diataxis", "diataxis_mode": "solve", "canonical_path": "docs/2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md", "status": "active" },
     { "doc_id": "how-to-ingest-research", "title": "How to ingest research", "triadic_leg": "diataxis", "diataxis_mode": "solve", "canonical_path": "docs/2-how-to/HOW-TO-INGEST-RESEARCH.md", "status": "active" },
     { "doc_id": "how-to-resolve-character-drift", "title": "How to resolve character drift after the fact", "triadic_leg": "diataxis", "diataxis_mode": "solve", "canonical_path": "docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md", "status": "active" },
+    { "doc_id": "how-to-work-from-a-browser-chatbot", "title": "How to work from a browser chatbot", "triadic_leg": "diataxis", "diataxis_mode": "solve", "canonical_path": "docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md", "status": "active" },
     { "doc_id": "ref-registry-fields", "title": "Registry fields", "triadic_leg": "diataxis", "diataxis_mode": "lookup", "canonical_path": "docs/3-reference/REGISTRY-FIELDS.md", "status": "active" },
     { "doc_id": "ref-continuity-issue-classes", "title": "Continuity issue classes", "triadic_leg": "diataxis", "diataxis_mode": "lookup", "canonical_path": "docs/3-reference/CONTINUITY-ISSUE-CLASSES.md", "status": "active" },
     { "doc_id": "ref-research-layers", "title": "Research layers", "triadic_leg": "diataxis", "diataxis_mode": "lookup", "canonical_path": "docs/3-reference/RESEARCH-LAYERS.md", "status": "active" },

@@ -19,12 +19,12 @@
 | Drift anchor policy | `scripts/anchor.mjs`, `examples/anchor/` | origin, terminal, consensus, mode and canon policies over any encoder's embeddings or hand tags alone; the chosen anchor is recorded in the registry; the comparison line shows every policy's regeneration bill |
 | Research process | `research/`, `scripts/research/*.mjs`, `research/research.config.json` | card → index → retrieval pack → local-model candidates → verified sources → findings → ask; every endpoint and model configurable |
 | Repository norms | `AGENTS.md`, `.context/`, `worklog/`, `docs/`, `scripts/check-private.mjs`, `scripts/git-hooks/` | `npm run verify` green on a clean clone; nothing private in the tree |
+| Layperson pass | `README.md`, `docs/1-tutorials/START-HERE.md`, `docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md` | a first-time, non-technical reader makes one consistent two-character scene with a browser chatbot from the docs alone; every command in them runs as written; hand tags drive `origin`, `terminal`, `mode` and `canon` with no API |
 
 ## Planned (owner direction 2026-10-17; not yet built)
 
 | Piece | What it is | Done when |
 |---|---|---|
-| Layperson pass | README and a "start here" walkthrough written for a non-technical reader; a browser-flow how-to (copy-paste prompt sheets, hand-written tags, no API) | a first-time reader can make one consistent two-character scene from the docs alone |
 | Before-and-after journey | an expository page that shows the engine on the published story's own drift (a lead who began mixed-race and darker-skinned and drifted toward white over the book): the images, the policies compared, canon restored | the page shows real before and after images, the anchor report that chose them, and the regeneration bill |
 | Shot-to-shot continuity | a continuity card (per character, per story day) and a shot sheet (per scene) that carry wardrobe, props, time of day, location and state from one shot to the next, designed on real norms | the research prompt `research/corpus/prompts/continuity-norms-and-structures-prompt.md` has been run and carded; the cards compile into a copy-pasteable prompt block; the gate checks them |
 
