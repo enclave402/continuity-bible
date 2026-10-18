@@ -77,6 +77,8 @@ This is every readable face, in generation order, cropped from the published pic
 | eyes light (one lit blue by a phone, one grey) | 2 |
 | eyes not readable | 15 |
 
+These skin-tone tags turned out to be wrong for a good part of the book. Step 7 shows how the first redraw found that out, and what replaced them.
+
 Two tools helped and one did not:
 
 - A face detector found every face in every picture and cut it out, so the person tagging looked at faces, not at whole pages. A chatbot can do the same if you ask it to crop the woman on the left.
@@ -157,11 +159,33 @@ Against the proposed anchor, the pictures a reader would see as different are th
 
 Nothing on this list is redrawn until the author says so, picture by picture. The engine records the anchor (`--write`, or the offer at the end of `--ask`) only after the author confirms it. The author confirmed the anchor and the list on 2026-10-17, and the anchor is recorded: the picture, its hash, the two answers and the numbers above now sit on her registry entry.
 
-## Step 7: redo the pictures, one at a time, with the author's go on each
+## Step 7: the first redraw found a mistake in the tags
 
-Nothing here replaces a picture by itself. For each picture on the list, a template builds one edit request: image 1 is the kept picture, image 2 is the anchor, the text says change only her face, skin and hair to match image 2, keep the eyes amber-brown, keep everything else. The author looks at the result beside the old one and says keep or redo. One picture at a time, through the same browser chat the book was made in.
+The first picture redrawn was the corner café on Madison. The redraw came back darker, the opposite of the goal. Put side by side at face size, the reason was plain: the picture before the redraw already matched the anchor. Under the same warm lamplight, the face tagged "warm golden-brown" and the anchor tagged "light olive" were the same skin.
 
-This pair is instructive. The author redid this scene on the day after it was first made, and the redo moved her warmer. Under the anchor the book settles on, the scene is on the list again. Both pictures are real; the lesson is that a redo without a declared anchor is a coin toss, and the declared anchor is what stops the next one.
+The skin tags had been written while looking at small thumbnails, in absolute colour words, across pictures lit by sun, candles, neon and rain. Lighting defeats colour names. So every one of the 58 faces was checked again, cut out at face size, next to the anchor's close-up, under each picture's own light, with three relative words instead: matches, darker, lighter.
+
+![Faces judged against the anchor (outlined) at face size: darker, matching, lighter](assets/before-after/sam-face-review.jpg)
+
+| Against the anchor | Pictures |
+|---|---|
+| matches | 36 |
+| darker | 5 |
+| lighter | 17 |
+
+That changed the list:
+
+- **Nine** pictures on the confirmed list really do differ and are redrawn: the soap bubble, the three reservoir panels and the catastrophic projection (darker), the two light-eyed pictures, and Sam's aha and the epilogue (lighter).
+- **Twelve** pictures on the confirmed list match the anchor and are dropped. Twelve renders not spent.
+- **Fourteen** pictures differ but were never on the list: the diner booth sequence and the evening at sixty, which read lighter and pinker than the anchor. They wait for the author's yes, because the author confirmed a list and these were not on it.
+
+The redraw that failed was never used. The lesson for your own story: tag at face size, next to the reference, under the picture's own light, with relative words.
+
+## Step 8: redo the pictures, one at a time, with the author's go on each
+
+Nothing here replaces a picture by itself. For each picture on the list, a template builds one edit request: image 1 is the kept picture, named by its scene; image 2 is a close-up of her cut from the anchor; the text says which way her skin must move, change only her face, skin and hair to match image 2, keep the eyes amber-brown, keep everything else, and ignore every earlier picture in the chat. That last line was added after a redraw came back as a rework of the previous picture instead of the one attached. The author looks at the result beside the old one and says keep or redo. One picture at a time, through the same browser chat the book was made in.
+
+This pair is instructive. The author redid this scene on the day after it was first made, and the redo moved her warmer. Checked at face size against the anchor, the redone version matches it, so it stays. Both pictures are real; the lesson is that a redo without a declared anchor is a coin toss, and the declared anchor is what makes the next one predictable.
 
 | 2026-10-15 | 2026-10-16 |
 |---|---|
@@ -169,7 +193,7 @@ This pair is instructive. The author redid this scene on the day after it was fi
 
 Each new pair the author approves is added here with its scene name, so this page is the running record, not a promise.
 
-## Step 8: make the documents agree with the pictures
+## Step 9: make the documents agree with the pictures
 
 Once the anchor is adopted, her written description has to say the same thing, or the next prompt will pull her back. Three places changed, and one did not:
 
@@ -182,7 +206,7 @@ Once the anchor is adopted, her written description has to say the same thing, o
 
 | | Pictures to redo | What the book says afterwards |
 |---|---|---|
-| Eyes fixed, fewest redraws for the rest (chosen) | 21 | she is one consistent woman with amber-brown eyes, at the look most of the book already had |
+| Eyes fixed, fewest redraws for the rest (chosen) | 9, plus 14 waiting for the author's yes | she is one consistent woman with amber-brown eyes, at the look most of the book already had |
 | Skin tone and hair kept as well | 40 | she is the woman of the first pictures everywhere |
 | The last look, everything matched to the newest pictures | 46 by tags | the whole book is redrawn to the October look |
 
@@ -193,7 +217,7 @@ The numbers are the point. Whichever you choose, you see every bill before you s
 1. Write the character's token into every scene from the first day. The engine can then find her pictures.
 2. Name every download with its number. Order is evidence you cannot get back.
 3. Answer the first question before the first picture if you can: what may never change goes under `canon_tags`, and only that. Story facts go in prose, not in tags.
-4. When something looks off, make the face sheet and tag it by hand, with a fixed vocabulary that has a word for "cannot tell". A chatbot may suggest; you decide.
+4. When something looks off, make the face sheet and tag it by hand at face size, next to the reference, with relative words (matches, darker, lighter) and a word for "cannot tell". A chatbot may suggest; you decide.
 5. Answer the second question every way and read the comparison line. Every price is there to be chosen with your eyes open.
 6. Record the anchor. Redo within the list, one picture at a time, and keep the pairs.
 7. Rewrite the character's description to match the anchor you adopted, and say in a dated note why. Leave story facts alone.

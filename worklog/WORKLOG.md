@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 25 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 26 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 23:46:50 (UTC-04:00) | correction | docs/journey | [Journey page corrected: the thumbnail skin tags were wrong for much of the book; a face-size review replaces them and changes the list](entries/2026-10-17_23-46-50_journey-page-corrected-the-thumbnail-skin-tags-were-wrong-fo.md) | agent:claude | open |
 | 23:09:43 (UTC-04:00) | action | docs/journey | [Journey page: anchor confirmed and recorded; step 8, the documents agree with the pictures](entries/2026-10-17_23-09-43_journey-page-anchor-confirmed-and-recorded-step-8-the-docume.md) | agent:claude | open |
 | 22:33:06 (UTC-04:00) | action | docs/journey | [Merged main (pull requests 3, 4, 5) into the journey branch; the page now speaks the engine's two questions](entries/2026-10-17_22-33-06_merged-main-pull-requests-3-4-5-into-the-journey-branch-the-.md) | agent:claude | closed |
 | 22:03:40 (UTC-04:00) | action | engine/anchor | [Two questions replace five policy names: anchor.mjs gains keep (what must never change), prefer (fewest-redraws, first-look, last-look, most-common) and --ask; canon is keep + consensus; tutorial, README, both how-tos, field reference, PRODUCT and ADR-004 rewritten around the questions](entries/2026-10-17_22-03-40_two-questions-replace-five-policy-names-anchor-mjs-gains-kee.md) | agent:claude | closed |
