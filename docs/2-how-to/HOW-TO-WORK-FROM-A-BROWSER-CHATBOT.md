@@ -5,7 +5,7 @@ triadic_leg: diataxis
 diataxis_mode: solve
 canonical_path: docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md
 status: active
-last_reviewed: 2026-10-17
+last_reviewed: 2026-10-18
 canonical: true
 ---
 
@@ -15,7 +15,7 @@ Outcome: you make every picture for a story by pasting into a chatbot tab, and t
 
 ## The loop
 
-1. Characters live in `character-registry.json`: id, name, `forms.look`, `canon_tags` (the fixed traits: what must never change).
+1. Characters live in `character-registry.json`: id, name, `forms.look`, `canon_tags` (the fixed traits: what must never change). `node ../scripts/new-character.mjs` adds one by asking questions.
 2. Each scene is a file with tokens (`scene-NN.md`): story text and a picture prompt.
 3. `node ../scripts/check.mjs` passes.
 4. `node ../scripts/render.mjs scene-NN.md --out built/scene-NN.md` makes the prompt sheet.

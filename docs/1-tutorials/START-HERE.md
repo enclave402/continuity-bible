@@ -5,7 +5,7 @@ triadic_leg: diataxis
 diataxis_mode: learn
 canonical_path: docs/1-tutorials/START-HERE.md
 status: active
-last_reviewed: 2026-10-17
+last_reviewed: 2026-10-18
 canonical: true
 ---
 
@@ -72,9 +72,52 @@ Every command from here on runs inside `my-story`. The scripts live one folder u
 
 The *registry* is one file that says who each character is. It is the only place a name or a look is ever written.
 
-Use your own characters if you like. Change only these words: the two ids (`june-okafor`, `abel-marsh`), and for each character its `name`, `full_name`, `role`, `look` and `canon_tags`. Keep every quote, colon, comma and brace. An *id* uses only lower-case letters, digits and hyphens: `mika-tanaka`, not `Mika Tanaka`. Keep `kind` as `person` for any character, animals and robots included; the other kinds are for special cases, in [Registry fields](../3-reference/REGISTRY-FIELDS.md). Then use your ids in the scene's tokens. If you did the README's quick start, this file replaces the one you made there.
+First type `pwd` and press Enter. The last part must be `my-story`; if it is not, type `cd my-story` first, or the file lands in the wrong folder.
 
-Before you paste, type `pwd` and press Enter. The last part must be `my-story`; if it is not, type `cd my-story` first, or the file lands in the wrong folder.
+There are two ways to write it. For **your own characters**, a helper asks about each one and writes the file for you. For **this page's June and Abel**, you copy one box. The rest of this page uses June and Abel; if you made your own, use your ids wherever it says `june-okafor` or `abel-marsh`.
+
+### Your own characters: answer the questions
+
+Run this once for each character:
+
+```bash
+node ../scripts/new-character.mjs
+```
+
+It asks one question at a time: type the answer and press Enter. This is the run that made June; your answers will be about your character. A line that shows only `> ` is where Enter was pressed alone:
+
+```text
+There is no character-registry.json here yet, so this makes one, with your character in it. Answer each question and press Enter.
+What is your story called? A few words, like The Lighthouse.
+> The Lighthouse
+  Using: the-lighthouse.
+What does the story call this character? Type the name you use most, like Mika.
+> June
+What is June's full name? Press Enter if it is just June.
+> June Okafor
+June's id will be june-okafor. You write it in scenes, like {{june-okafor}}. Press Enter to use it, or type another id.
+> 
+  Using: june-okafor.
+Who is June, in one line? Like: Ten-year-old who builds robots in the garage.
+> Nine-year-old who wants to see the lamp lit
+How does June look? One line, in the words a picture prompt should use, like: a ten-year-old girl with brown skin, short black hair, round glasses and a green hoodie.
+> a nine-year-old girl with dark brown skin, black curls tied in two puffs, a yellow raincoat and red boots
+What about June must never change, in any picture? Type each trait like skin=dark brown, with commas between them. Press Enter for none.
+> skin=dark brown
+  Using: skin=dark brown.
+Made character-registry.json with june-okafor in it, in the story the-lighthouse.
+In your scenes, write these instead of June's name or look:
+  {{june-okafor}}       becomes  June
+  {{june-okafor:full}}  becomes  June Okafor
+  {{june-okafor:look}}  becomes  a nine-year-old girl with dark brown skin, black curls tied in two puffs, a yellow raincoat and red boots
+To add another character, run this again. Next: write your scene with these tokens, then check it with node ../scripts/check.mjs
+```
+
+The *id* is how every scene will refer to the character. The helper makes it from the full name, and Enter takes it. If you type your own, use only lower-case letters, digits and hyphens (`mika-tanaka`, not `Mika Tanaka`); the helper says so and asks again if it cannot use what you typed. What must never change are the character's *fixed traits*: short things you can read off a picture, like `skin=dark brown`. Write what the character *is*, never what the AI happened to draw; step 9 shows why. If the look does not mention a fixed trait, the helper points it out, because a picture prompt only asks for what the look says.
+
+Now run the same command again for your second character. It does not ask for the story again: it uses the one your first character is in. Robots, animals and everyone else are written the same way. If you did the README's quick start, the helper adds your characters to that file, next to June. Nothing is written until the last answer, so if you get stuck, press Ctrl and C together and start again.
+
+### June and Abel: copy the box
 
 Create `my-story/character-registry.json` (see *How to make a file*) with this text:
 
@@ -116,15 +159,17 @@ Create `my-story/character-registry.json` (see *How to make a file*) with this t
 }
 ```
 
-Then, in the terminal, type `pbpaste > character-registry.json` on a Mac, or `Get-Clipboard | Set-Content character-registry.json` on Windows, and press Enter.
+Then, in the terminal, type `pbpaste > character-registry.json` on a Mac, or `Get-Clipboard | Set-Content character-registry.json` on Windows, and press Enter. If you did the README's quick start, this file replaces the one you made there.
 
-What each part means:
+### What each part means
+
+Either way, the registry has these parts. The helper writes the same ones with your words in them, spread over more lines.
 
 | Part | Meaning |
 |---|---|
 | `june-okafor`, `abel-marsh` | The *id*: how you will refer to the character in every scene. Lower-case letters, digits and hyphens. Pick it once and never change it. |
 | `name`, `full_name` | What the words come out as. `name` is what the story usually calls them. |
-| `kind`, `story`, `role` | Required bookkeeping: a person, which story they belong to, one line on who they are. |
+| `kind`, `story`, `role` | Required bookkeeping: `person` for any character, animals and robots included (the other kinds are for special cases, in [Registry fields](../3-reference/REGISTRY-FIELDS.md)), which story they belong to, one line on who they are. |
 | `prose_only` | Tells the checker these characters live in written scenes, not in a scene table, so it does not ask where they are listed. |
 | `forms.look` | How the character looks, written once. The picture prompt will ask for it with `{{june-okafor:look}}`. You can add other forms (`nickname`, `formal`) the same way. |
 | `canon_tags` | The character's *fixed traits*: what must never change, as short tags you can read off a picture. June's dark brown skin is a story fact. Her hairstyle and coat are left out on purpose; step 9 shows why. Write what the character *is*, never what the AI happened to draw. |
@@ -155,6 +200,8 @@ Avoid: text, letters, extra people, modern clothes.
 ```
 
 Then, in the terminal, type `pbpaste > scene-01.md` on a Mac, or `Get-Clipboard | Set-Content scene-01.md` on Windows, and press Enter.
+
+**Made your own characters?** Make the file from the box all the same. Then open it with `open -e scene-01.md` and change every `june-okafor` to your first character's id and every `abel-marsh` to your second's, the ids the helper printed. Keep the `{{` and `}}` around them. Change the other words to fit your story if you like, then save.
 
 Notice that the picture prompt never says *June* or *Abel*. An image model does not know your characters by name. It knows them by look, and the look comes from the registry.
 
