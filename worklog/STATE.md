@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-17 23:05 EDT
-**HEAD:** 250609f
+**Last rewritten:** 2026-10-18 00:10 EDT
+**HEAD:** d176d3c
 **Date:** 2026-10-17
 **Session:** before-and-after journey (branch `claude/before-and-after-journey`, branched from `claude/anchor-tags-only-bill`, the branch of pull request 5, which stacks on pull requests 4 and 3)
 
@@ -42,7 +42,14 @@
 ## 3. Prioritised next steps
 
 - [ ] **Next action:** a human reviews and merges pull request 7 (the before-and-after journey); pull requests 3, 4 and 5 merged on 2026-10-18 UTC.
-- [ ] Before-and-after journey, what remains: the author confirms the proposed anchor (the sacred confession) and the 21-picture list, or strikes pictures; then `anchor.mjs --write` records it privately; then one anchor fix per picture, each with the author's go, each pair added to the page; then the private profile prose for skin tone and hair is reconciled to the adopted anchor (eye colour and heritage lines stay) and her continuity card gets a face and look block.
+- [ ] Before-and-after journey, what remains (handoff 2026-10-18 00:10 EDT; the anchor is confirmed and recorded privately, the page is corrected for the tag mistake):
+  - [ ] Add a style-hold sentence to the redraw prompt (same line work, shading, texture, grain and colour grading as the kept picture). The author's verdict on the first candidates: "Skin feels too different from previous frame. If it was a new scene maybe. Even the art style feels like a change slightly".
+  - [ ] Judge every redraw in reading order: the frames before and after it, the published row against the redrawn row, grouped by scene. Not against the reference alone.
+  - [ ] Redraw the prologue as one scene group (the soap bubble and the three reservoir panels; the antiseptic chignon between them stays). The three reservoir candidates made so far are not approved and are not used.
+  - [ ] Redraw the other five still on the list: the catastrophic projection (lighter), forty-five minutes on read (eyes only), the dream portal, Sam's aha and the epilogue (darker toward the anchor).
+  - [ ] The author answers yes or no on 14 lighter panels never on the list (the diner booth night, the 2061 evening), shown with the face-review sheet.
+  - [ ] For each pair the author keeps: add it to step 8 of the page (published images only), with its scene name.
+  - [ ] Step 7's counts (36 match, 5 darker, 17 lighter) and the cost table (9 plus 14) stay true only until the 14 are answered; update both then.
 - [ ] `canon` treats a tag the person could not read (eyes closed) as off canon; a value that means "cannot tell" should never fail the filter, and the how-to should show a one-key canon plus consensus as the normal shape (put in canon only what may never change).
 - [ ] `tokenize.mjs` rewrites a card's `scene_name` unless `--label-fields scene_name` is passed (found 2026-10-17 on a continuity card; four labels restored by hand). Skip label-defining fields by default and show the card command in the how-to.
 - [ ] A zero-dependency contact sheet (`scripts/sheet.mjs`: one HTML page of every picture of one character, in order, with its tags) so a layperson sees the drift without a Python image library; and a `replacements` record (scene, before, after, anchor, date) so "this picture replaced that one" is on the record, not only in a worklog line.

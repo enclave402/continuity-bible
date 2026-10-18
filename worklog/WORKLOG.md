@@ -1,6 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 26 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 27 entries. Read `STATE.md` first; this is the trail.
+
+## 2026-10-18
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 00:05:43 (UTC-04:00) | handoff | docs/journey | [Session handoff: the before-and-after journey; what remains, step by step](entries/2026-10-18_00-05-43_session-handoff-the-before-and-after-journey-what-remains-st.md) | agent:claude | open |
 
 ## 2026-10-17
 
