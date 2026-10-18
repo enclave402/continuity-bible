@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 15 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 16 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-17
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 21:26:20 (UTC-04:00) | milestone | engine/anchor | [Pull request 5 opened: anchor regeneration bill by tags when there are no embeddings; stacked on pull requests 4 and 3](entries/2026-10-17_21-26-20_pull-request-5-opened-anchor-regeneration-bill-by-tags-when-.md) | agent:claude | closed |
 | 21:26:15 (UTC-04:00) | action | engine/anchor | [anchor.mjs bills by tags when there are no embeddings: canon lists every image off canon, mode/origin/terminal every image whose tags differ from the anchor's; ADR-004 amended; tutorial, how-to, README and field reference match the new report](entries/2026-10-17_21-26-15_anchor-mjs-bills-by-tags-when-there-are-no-embeddings-canon-.md) | agent:claude | closed |
 | 21:15:34 (UTC-04:00) | milestone | docs/layperson | [Pull request 4 opened: layperson README, START-HERE tutorial, browser-chatbot how-to; stacked on pull request 3](entries/2026-10-17_21-15-34_pull-request-4-opened-layperson-readme-start-here-tutorial-b.md) | agent:claude | closed |
 | 21:14:40 (UTC-04:00) | action | docs/layperson | [Layperson pass: README rewritten for a non-technical reader; START-HERE tutorial and browser-chatbot how-to added; anchor CLI says 'no scores' instead of null when rows carry tags only](entries/2026-10-17_21-14-40_layperson-pass-readme-rewritten-for-a-non-technical-reader-s.md) | agent:claude | closed |
