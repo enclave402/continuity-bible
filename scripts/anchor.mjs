@@ -123,8 +123,9 @@ if (isMain) {
   else {
     console.log(`anchor: policy ${policy}: ${result.anchor.image} (order ${result.anchor.order}; ${result.basis})`);
     if (result.stats.with_embedding) console.log(`anchor: ${result.stats.with_embedding} image(s) scored; mean cosine ${result.stats.mean_cosine}, min ${result.stats.min_cosine}; ${result.regenerate.length} below ${threshold} -> regenerate${budget !== undefined ? ` (budget ${budget}${result.regenerate.length > budget ? ": OVER" : ""})` : ""}`);
+    else console.log(`anchor: ${result.stats.n} image(s), none with an embedding: no similarity scores and no regeneration list (tags alone pick the anchor; embeddings would price the drift)`);
     for (const img of result.regenerate) console.log(`  regenerate ${img}`);
-    console.log(`anchor: compare: ${Object.entries(compare).map(([p, v]) => `${p}=${v.unavailable ? "n/a" : `${v.image} (${v.below_threshold} to redo)`}`).join("; ")}`);
+    console.log(`anchor: compare: ${Object.entries(compare).map(([p, v]) => `${p}=${v.unavailable ? "n/a" : `${v.image} (${v.below_threshold === null ? "no scores" : `${v.below_threshold} to redo`})`}`).join("; ")}`);
   }
   if (argv.includes("--write")) {
     if (!registry || !id || !registry.characters[id]) { console.error(`anchor: --write needs --character <id> that exists in ${registry?._file || "character-registry.json"}`); process.exit(1); }

@@ -2,6 +2,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { chooseAnchor, comparePolicies } from "../scripts/anchor.mjs";
 
@@ -58,4 +60,18 @@ test("the CLI reads the registry defaults and refuses --write without a characte
   const w = spawnSync(process.execPath, ["scripts/anchor.mjs", "examples/anchor/embeddings.jsonl", "--write"], { encoding: "utf8" });
   assert.equal(w.status, 1);
   assert.match(w.stderr, /--write needs --character/);
+});
+
+test("with hand tags and no embeddings, the CLI picks the anchor and says there are no scores instead of printing null", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-anchor-"));
+  const file = path.join(dir, "tags.jsonl");
+  fs.writeFileSync(file, rows.map(({ image, order, tags }) => JSON.stringify({ image, order, tags })).join("\n") + "\n");
+  const r = spawnSync(process.execPath, ["scripts/anchor.mjs", file, "--policy", "canon", "--canon", "hair=copper red"], { encoding: "utf8" });
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /policy canon: renders\/ch01-p01\.png/);
+  assert.match(r.stdout, /none with an embedding: no similarity scores/);
+  assert.match(r.stdout, /canon=renders\/ch01-p01\.png \(no scores\)/);
+  assert.doesNotMatch(r.stdout, /null/);
+  assert.match(r.stdout, /consensus=n\/a/);
+  fs.rmSync(dir, { recursive: true, force: true });
 });

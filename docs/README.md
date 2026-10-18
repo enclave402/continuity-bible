@@ -6,8 +6,13 @@ Human front door to this repository's documentation. Placement policy: [CONTRIBU
 
 One registry file holds every character's name once; every source holds `{{id}}` tokens; a gate fails drift before it ships. Around that core: a research process any agent can run on a local model, and a policy engine for choosing a visual anchor after a character has already drifted. WHAT: [`../PRODUCT.md`](../PRODUCT.md). HOW: [`../AGENTS.md`](../AGENTS.md). NOW: [`../worklog/STATE.md`](../worklog/STATE.md).
 
+## 1. Learn (`1-tutorials/`)
+
+- [Start here: one scene, two characters, a browser chatbot](1-tutorials/START-HERE.md): write two characters into the registry, write a scene with tokens, render the prompt sheet, paste it into a chatbot, name and tag the pictures by hand, run the anchor policies, record the anchor. No API, no model.
+
 ## 2. Solve (`2-how-to/`)
 
+- [Work from a browser chatbot](2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md): the copy-paste loop in detail: names out of pasted prompts, file naming by scene and order, hand-tag conventions, canon versus consensus, what the engine cannot do without embeddings.
 - [Adopt the registry in your repo](2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md): surfaces, token sources, records, coverage, props by id, contextual forms, exclusive markers, forbidden duplicate fields, rendering built output.
 - [Ingest research](2-how-to/HOW-TO-INGEST-RESEARCH.md): card a document, index it, pack it, extract candidates with a local model, verify sources, merge findings, ask.
 - [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, choose an anchor policy, record the anchor, size the regeneration bill.
@@ -29,4 +34,4 @@ One registry file holds every character's name once; every source holds `{{id}}`
 
 ## Not here
 
-`1-tutorials/`, `c4/` and `arc42/` are empty until a document earns them. The research corpus itself lives in [`../research/`](../research/README.md), not under docs.
+`c4/` and `arc42/` are empty until a document earns them. The research corpus itself lives in [`../research/`](../research/README.md), not under docs.
