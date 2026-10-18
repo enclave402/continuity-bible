@@ -96,6 +96,8 @@ if (isMain) main().catch((e) => { console.error(e.message); process.exitCode = 1
 
 async function main() {
   const stop = (msg) => { console.error(msg); process.exit(1); };
+  // npm run new-character runs in the package's folder; the story folder is the one npm was typed in
+  if (process.env.npm_lifecycle_event === "new-character" && process.env.INIT_CWD) process.chdir(process.env.INIT_CWD);
   const file = registryPath(process.argv);
   const flagged = process.argv.includes("--registry") || Boolean(process.env.CHARACTER_REGISTRY);
   // run from the tool's own folder, it would add to the project's example registry instead of the story's

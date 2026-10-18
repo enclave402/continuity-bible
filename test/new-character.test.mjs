@@ -137,6 +137,13 @@ test("it exits by itself with stdin left open, and refuses to write into the too
   assert.equal(own.status, 1);
   assert.match(own.stderr, /this is the tool's own folder, not your story folder\. Fix: .*cd my-story/);
   assert.equal(fs.readFileSync("character-registry.json", "utf8"), before);
+  // npm run new-character starts in the package's folder and says where it was typed in INIT_CWD: that is the story folder
+  const story = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-npm-"));
+  const npm = spawnSync(process.execPath, ["scripts/new-character.mjs"], { encoding: "utf8", input: JUNE, env: { ...process.env, npm_lifecycle_event: "new-character", INIT_CWD: story } });
+  assert.equal(npm.status, 0, npm.stderr);
+  assert.ok(JSON.parse(read(story)).characters["june-okafor"], "written in the folder npm was typed in");
+  assert.equal(fs.readFileSync("character-registry.json", "utf8"), before);
+  fs.rmSync(story, { recursive: true, force: true });
 });
 
 test("idFrom and insertEntry: accents dropped, the file's own indent and line endings, null for a one-line characters", () => {

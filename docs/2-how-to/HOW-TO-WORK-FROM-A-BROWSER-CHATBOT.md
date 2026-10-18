@@ -160,6 +160,11 @@ Never edit `built/`. Never edit a scene to match a picture. The registry is upst
 | `names "JUNE" in a token source` | a name typed in capital letters | write the token; the name is printed the way the registry spells it |
 | `Did you mean scene-01.md?` | the file's ending was left off the command | type the whole name |
 | `character id "Mika Tanaka" is not allowed` | an id with capitals or spaces | use the id it suggests, in the registry and in the tokens |
+| `"Mika Tanaka" is not an id` (from `new-character.mjs`) | an id typed with capitals or spaces | type the id it suggests, or press Enter for the one it offered |
+| `The registry already has june-okafor (June Okafor)` or `already has a character called June` | that id or name belongs to a character who is already in | type another one; if it is the same character, it is already in: press Ctrl-C |
+| `Noted: the look does not say "white"` | a fixed trait the look never mentions, so the picture prompt would never ask for it | type the whole look again with it, or press Enter to keep the look |
+| `this is the tool's own folder, not your story folder` | `new-character.mjs` was run in the downloaded folder | `mkdir my-story`, `cd my-story`, and run `node ../scripts/new-character.mjs` |
+| `the answers stopped before the end, so nothing was written` | `new-character.mjs` or `tag.mjs` ended before the last question | run it again; nothing was changed |
 | `Check your tags: hair has both "loose curl" and "loose curls"` | one look written two ways in a tags file | write it the same way everywhere |
 | `These tags have no beard at all, so they are probably not Abel's tags` | `--character` and the tags file are for different characters | use the character's own tags file |
 | `Last time you recorded: ...` / `This replaces the anchor you recorded before` | you are asking again after recording | Enter keeps what you recorded; a `y` that would change it is said first |
