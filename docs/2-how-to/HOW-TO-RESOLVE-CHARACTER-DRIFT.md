@@ -77,3 +77,25 @@ The regeneration list is the bill. If it exceeds `max_regeneration_budget`, try 
 ## 5. Keep it from happening again
 
 The research behind this repository (ask `node scripts/research/ask.mjs "drift gates"`) points to the same three habits: cast one high-resolution master with named asymmetries before production; condition every later generation on that master rather than on the previous output; gate every output with a similarity check against the anchor and send failures back automatically. The anchor you just recorded is the input to all three.
+
+## When you cannot tell
+
+Some pictures cannot be judged on a trait: her eyes are closed, his face is turned away. Tag that trait `unknown` instead of guessing (or name your own word in the registry: `"drift_resolution": { "unreadable": ["unknown", "closed"] }`). A picture you could not judge is never counted as drift: it cannot become the anchor, and it is not put on the redraw list for that trait. It still goes on the list if something you could see has drifted.
+
+## See it on one page
+
+```bash
+node scripts/sheet.mjs examples/anchor/embeddings.jsonl --out sheet.html
+```
+
+Open `sheet.html` in a browser. Every picture appears in the order it was made, with its tags. Green is the anchor, red is on the redraw list, amber could not be judged, grey stays as it is. The page uses the same rules as the report, so the two never disagree. Nothing to install.
+
+## Keep a record of what you replaced
+
+Each time a redrawn picture replaces an old one, add one line to a replacements file and name it in the registry (`"drift_resolution": { "replacements": "replacements.jsonl" }`):
+
+```json
+{"scene": "chapter 1, page 2", "before": "renders/ch01-p02.png", "after": "renders/ch01-p02-redo.png", "anchor": "renders/ch01-p10.png", "date": "2026-10-17"}
+```
+
+The sheet shows every line as a before-and-after pair, and marks the old picture purple: replaced.

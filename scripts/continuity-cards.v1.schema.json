@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/continuity-cards.v1.schema.json",
+  "title": "Continuity cards, version 1",
+  "description": "How each character starts each story day. A story day is a day inside the story, not a day of work. The shot sheet (shot-sheet.v1.schema.json) carries a card's state from shot to shot and records every change with its reason. Declared in the registry as a surface of type continuity-cards. Field reference: docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md. Keys starting with _ are notes anywhere and are never checked.",
+  "type": "object",
+  "required": ["story_days", "cards"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "story_days": {
+      "type": "object",
+      "description": "The days inside the story, in order, keyed by a short id (day-1). A scene header names one of them.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label"],
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string", "minLength": 1, "description": "One line a person reads: The night of the text." },
+          "weather": { "type": "string", "description": "The day's weather, carried into every scene of the day unless a scene header says otherwise." }
+        }
+      }
+    },
+    "cards": {
+      "type": "object",
+      "description": "One card per character per story day: cards.<registry id>.<story day>.",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "wardrobe": {
+                "description": "Expected one line of text or an object of layers (outer, top, bottom, shoes; any other key is kept). A layer whose value is none is left out. Required unless the surface says otherwise.",
+                "anyOf": [
+                  { "type": "string", "minLength": 1 },
+                  { "type": "object", "additionalProperties": { "type": "string" } }
+                ]
+              },
+              "hair": { "type": "string", "description": "How the hair is worn today (pinned up, loose, under a cap). Who the character is, hair colour included, belongs in the registry's look form." },
+              "accessories": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Worn things: a pendant, glasses, a watch on the left wrist. Carried until a change takes one off." },
+              "marks": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Injuries, dirt, wet, smudged makeup: anything on the body that must stay until a change says it is gone. Marks that end a day and are missing from the next day's card are reported." },
+              "carries": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Registry ids of props (kind prop) the character has with them today: in hand, pocket or bag. A shot may show in hand only what is carried at that moment." }
+            }
+          }
+        }
+      }
+    }
+  }
+}

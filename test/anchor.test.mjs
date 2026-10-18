@@ -171,3 +171,39 @@ test("--ask asks the two questions in plain words and answers in plain words, fr
   assert.doesNotMatch(dflt.stdout, /anchor: policy/, "plain words only in --ask mode");
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test("a kept tag the person could not read is never drift: not eligible, not billed for it", async () => {
+  const { chooseAnchor, keepState } = await import("../scripts/anchor.mjs");
+  const tagged = [
+    { image: "a.png", order: 1, tags: { eyes: "amber-brown", skin: "olive" } },
+    { image: "b.png", order: 2, tags: { eyes: "amber-brown", skin: "olive" } },
+    { image: "c.png", order: 3, tags: { eyes: "unknown", skin: "olive" } },
+    { image: "d.png", order: 4, tags: { eyes: "grey", skin: "olive" } },
+    { image: "e.png", order: 5, tags: { eyes: "unknown", skin: "golden-brown" } },
+  ];
+  assert.equal(keepState(tagged[2], { eyes: "amber-brown" }), "cannot-tell");
+  assert.equal(keepState(tagged[3], { eyes: "amber-brown" }), "off");
+  const r = chooseAnchor(tagged, { policy: "consensus", keep: { eyes: "amber-brown" } });
+  assert.match(r.anchor.image, /^[ab]\.png$/);
+  assert.equal(r.stats.cannot_tell, 2);
+  assert.deepEqual(r.regenerate, ["d.png", "e.png"], "grey eyes are drift; closed eyes are not, but a different skin still is");
+  const custom = chooseAnchor(tagged.map((t) => (t.tags.eyes === "unknown" ? { ...t, tags: { ...t.tags, eyes: "closed" } } : t)), { policy: "consensus", keep: { eyes: "amber-brown" }, unreadable: ["closed"] });
+  assert.equal(custom.stats.cannot_tell, 2, "the registry's own word for cannot-tell works the same");
+});
+
+test("sheet.mjs writes one page agreeing with the anchor report, with the replacement record as pairs", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const fs = await import("node:fs");
+  const os = await import("node:os");
+  const path = await import("node:path");
+  const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-sheet-")), "sheet.html");
+  const r = spawnSync(process.execPath, ["scripts/sheet.mjs", "examples/anchor/embeddings.jsonl", "--out", out], { encoding: "utf8" });
+  assert.equal(r.status, 0, r.stderr);
+  const html = fs.readFileSync(out, "utf8");
+  const a = spawnSync(process.execPath, ["scripts/anchor.mjs", "examples/anchor/embeddings.jsonl", "--json"], { encoding: "utf8" });
+  const report = JSON.parse(a.stdout);
+  assert.match(html, new RegExp(`class="card anchor"><img[^>]+alt="${report.anchor.image.replace(/[.]/g, "\\.")}"`));
+  assert.equal((html.match(/class="card redraw"/g) || []).length + (html.match(/class="card replaced"/g) || []).length, report.regenerate.length);
+  assert.match(html, /Replaced so far/);
+  assert.doesNotMatch(html, /<script/i, "a static page: no scripts");
+});

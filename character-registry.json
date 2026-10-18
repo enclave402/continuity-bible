@@ -3,7 +3,7 @@
   "_about": {
     "role": "Single Source of Truth (SSOT) authority file for narrative characters, companions and props.",
     "rule": "Source files and prompts never contain a written-out name or a written-out variant. Use tokens: {{id}}, {{id:first}}, {{id:full}}, {{id:<form>}}.",
-    "example": "This registry is the repository's own example: three people, one prop, one scene file, one art manifest, one token source."
+    "example": "This registry is the repository's own example: three people, two props, one scene file, one art manifest, one token source, continuity cards, a shot sheet, two render surfaces and a prompt template."
   },
   "registry_version": 1,
   "surfaces": [
@@ -15,8 +15,18 @@
         {
           "field": "time_of_day",
           "values": {
-            "morning": ["morning", "sunrise", "dawn", "daylight"],
-            "evening": ["evening", "dusk", "lamplight", "midnight"]
+            "morning": [
+              "morning",
+              "sunrise",
+              "dawn",
+              "daylight"
+            ],
+            "evening": [
+              "evening",
+              "dusk",
+              "lamplight",
+              "midnight"
+            ]
           },
           "why": "a scene labelled one time of day may not describe the other; the label and the text are edited by different hands"
         }
@@ -28,7 +38,9 @@
       "story": "main-story",
       "root": "art",
       "story_field": "storyKey",
-      "stories": { "main": "main-story" },
+      "stories": {
+        "main": "main-story"
+      },
       "forbid_keys": [
         {
           "key": "visualDescription",
@@ -36,14 +48,99 @@
           "why": "a scene's description lives once, on the scene; the art manifest keeps slot, src and prompt only"
         }
       ]
+    },
+    {
+      "type": "continuity-cards",
+      "file": "examples/continuity/cards.json",
+      "story": "main-story",
+      "required": [
+        "wardrobe",
+        "hair"
+      ]
+    },
+    {
+      "type": "shot-sheet",
+      "file": "examples/continuity/shot-sheet.json",
+      "story": "main-story",
+      "lead": "look",
+      "exclusive_markers": [
+        {
+          "field": "time_of_day",
+          "values": {
+            "morning": [
+              "morning",
+              "sunrise",
+              "dawn",
+              "daylight"
+            ],
+            "evening": [
+              "evening",
+              "dusk",
+              "lamplight",
+              "midnight"
+            ]
+          },
+          "fields": [
+            "shots[].action",
+            "shots[].characters[].action",
+            "shots[].characters[].eyeline"
+          ],
+          "why": "a shot planned for the evening may not describe daylight; the other values' words become the block's AVOID line"
+        },
+        {
+          "field": "location",
+          "values": {
+            "porch": [
+              "porch",
+              "doorstep",
+              "front door"
+            ],
+            "kitchen": [
+              "kitchen",
+              "stove",
+              "fridge",
+              "kettle"
+            ],
+            "workshop": [
+              "workshop",
+              "workbench",
+              "sawdust"
+            ]
+          },
+          "fields": [
+            "shots[].action",
+            "shots[].characters[].action",
+            "shots[].characters[].eyeline"
+          ],
+          "why": "a shot planned in the kitchen may not describe the workbench"
+        }
+      ]
     }
   ],
   "token_sources": [
-    { "file": "examples/*.md", "why": "scene drafts a builder renders" }
+    {
+      "file": "examples/*.md",
+      "why": "scene drafts a builder renders"
+    }
   ],
-  "records": ["worklog/**", "research/**", "CHANGELOG.md"],
+  "records": [
+    "worklog/**",
+    "research/**",
+    "CHANGELOG.md"
+  ],
   "coverage": {
-    "ignore": ["README.md", "AGENTS.md", "CLAUDE.md", "PRODUCT.md", "CONTRIBUTING.md", "docs/**", "test/**", "scripts/**", ".context/**", "examples/anchor/**"],
+    "ignore": [
+      "README.md",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "PRODUCT.md",
+      "CONTRIBUTING.md",
+      "docs/**",
+      "test/**",
+      "scripts/**",
+      ".context/**",
+      "examples/anchor/**"
+    ],
     "strict": false
   },
   "drift_resolution": {
@@ -52,8 +149,53 @@
     "pass_threshold": 0.6,
     "prune_outliers_z": 2,
     "max_regeneration_budget": 3,
-    "embeddings": "examples/anchor/embeddings.jsonl"
+    "embeddings": "examples/anchor/embeddings.jsonl",
+    "replacements": "examples/anchor/replacements.jsonl"
   },
+  "render_surfaces": {
+    "story-scene": {
+      "name": "Story scene",
+      "style_lock": "painted graphic-novel panel, muted palette, visible brush texture, one light source",
+      "must_keep": [
+        "faces as in the anchor pictures",
+        "props exactly as described, nothing added to them"
+      ],
+      "exclude": [
+        "packaging",
+        "blister pack",
+        "price tags",
+        "logos",
+        "speech bubbles",
+        "panel borders"
+      ],
+      "size": "3:2 landscape",
+      "no_text": true,
+      "hands_rule": "every hand shows all five fingers, none extra, none merged",
+      "why": "a page of the story: nothing on it may look like merchandise, and the letterer places every word later"
+    },
+    "product-card": {
+      "name": "Product card",
+      "style_lock": "studio product photograph on a white sweep, soft even light",
+      "must_keep": [
+        "the prop sealed in a clear blister pack on a printed cardboard backing",
+        "the prop centred, nothing else in frame"
+      ],
+      "exclude": [
+        "people",
+        "hands",
+        "scenery",
+        "shadows that hide the prop"
+      ],
+      "size": "1:1 square",
+      "no_text": "no text except the card's own printed label",
+      "hands_rule": "no hands in frame",
+      "why": "a shop card for the prop: here the packaging is the point, and the story's rules do not apply",
+      "continuity": false
+    }
+  },
+  "render_templates": [
+    "examples/templates/**"
+  ],
   "characters": {
     "chloe-jenkins": {
       "name": "Chloe",
@@ -68,7 +210,8 @@
       ],
       "forms": {
         "formal": "Ms. Jenkins",
-        "nickname": "Chlo"
+        "nickname": "Chlo",
+        "look": "a Black woman in her late thirties with deep brown skin and a close-cropped natural cut"
       },
       "retired": []
     },
@@ -84,7 +227,8 @@
       ],
       "forms": {
         "formal": "Samantha",
-        "short": "Sam"
+        "short": "Sam",
+        "look": "a mixed-race woman in her early thirties with warm brown skin, dark curly hair and a small scar through her left eyebrow"
       },
       "retired": []
     },
@@ -100,7 +244,8 @@
       ],
       "forms": {
         "formal": "Theodore",
-        "short": "Theo"
+        "short": "Theo",
+        "look": "a tall white man in his thirties with sandy hair, a short beard and a chipped front tooth"
       },
       "retired": []
     },
@@ -110,7 +255,10 @@
       "story": "main-story",
       "role": "The workshop key Theo carries; a tracked object a scene lists by id, never by matching its name in prose",
       "prompt_tokens": "a small tarnished brass key on a frayed red thread",
-      "negative_tokens": ["shiny gold key", "keyring"],
+      "negative_tokens": [
+        "shiny gold key",
+        "keyring"
+      ],
       "forms": {
         "attitude": {
           "by": "stage",
@@ -121,6 +269,17 @@
           }
         }
       }
+    },
+    "cracked-phone": {
+      "name": "the cracked phone",
+      "kind": "prop",
+      "story": "main-story",
+      "role": "Sam's phone, the object the kitchen scene turns on; listed by id on scenes and cards, held by whoever the shot sheet says",
+      "prompt_tokens": "a black phone with a cracked corner in a clear case",
+      "negative_tokens": [
+        "pristine phone",
+        "a second phone"
+      ]
     }
   }
 }

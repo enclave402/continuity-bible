@@ -25,7 +25,9 @@ canonical: true
 | `species` | `{ name: [words] }` | a story's text may name only species of companions allowed in it; a companion called by another species' word fails |
 | `known[]` | `{ file, text, owner, task, date, why? }` | a matching failure prints as a gap while listed; a listed problem that no longer occurs asks to be removed |
 | `visual_continuity`, `skip_stories` | path, map | a sibling continuity manifest whose stories' scene and card files become surfaces |
-| `drift_resolution` | object | defaults for `scripts/anchor.mjs`: `prefer` (`fewest-redraws`, `first-look`, `last-look`, `most-common`) or its developer spelling `policy` (`consensus`, `origin`, `terminal`, `mode`, `canon`), `metric`, `pass_threshold`, `prune_outliers_z`, `max_regeneration_budget`, `embeddings` |
+| `render_surfaces` | `{ id: { name, style_lock?, must_keep?, exclude?, size? or aspect?, no_text?, hands_rule?, why?, continuity? } }` | where a picture will be used, each place's look rules written once in the author's words; a shot-sheet shot names one (`surface`), required once any is declared, an unknown one fails; `scripts/compile-shot.mjs` appends KEEP and AVOID from it; a template, token source or structured surface that retypes a phrase of two or more words verbatim fails with the file, the phrase and "read it from the surface". Fields: [CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md](CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md) |
+| `render_templates` | globs | the templates, builders and scripts that assemble prompts; scanned for retyped surface phrases; a glob matching no tracked file fails |
+| `drift_resolution` | object | defaults for `scripts/anchor.mjs`: `prefer` (`fewest-redraws`, `first-look`, `last-look`, `most-common`) or its developer spelling `policy` (`consensus`, `origin`, `terminal`, `mode`, `canon`), `metric`, `pass_threshold`, `prune_outliers_z`, `max_regeneration_budget`, `embeddings`; `unreadable` (words that mean the person could not tell; default `unknown`); `replacements` (a JSON-lines record of pictures replaced, shown by `scripts/sheet.mjs`) |
 
 ## Surfaces
 
@@ -38,7 +40,9 @@ Common: `file`, `type`, `story`, `split[]` (extra label separators), `skip_keys[
 | `names` | `paths[]` | each string at the paths resolves |
 | `headings` | `pattern`, `within`, `ignore[]` | each heading label resolves |
 | any of `scenes`, `prose` | `forbid_keys[] { key, owner, why? }` | an entry holding the key fails: the field lives once, in `owner` |
-| `scenes` | `exclusive_markers[] { field, values{ value: [words] }, fields[]?, required?, why? }` | a scene whose text uses a word of another value than its own fails; a scene without the field is skipped, or fails with `required` |
+| `scenes`, `shot-sheet` | `exclusive_markers[] { field, values{ value: [words] }, fields[]?, required?, why? }` | a scene whose text uses a word of another value than its own fails; a scene without the field is skipped, or fails with `required`; on a shot sheet the other values' words become the compiled block's AVOID line |
+| `continuity-cards` | `required[]` (default `wardrobe`) | how each character starts each story day (`scripts/continuity-cards.v1.schema.json`); every card fills the required fields, every day is a key of `story_days`, `carries` lists prop ids; one per story. Fields: [CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md](CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md) |
+| `shot-sheet` | `required[]` (default `story_day`, `location`, `time_of_day`), `lead` (default `look`) | scenes and shots in reading order (`scripts/shot-sheet.v1.schema.json`); state carries from the cards shot by shot; every change needs a reason; a character holds only what they carry; the header agrees with the story's scene file; compiled by `scripts/compile-shot.mjs`; one per story, paired with the story's `continuity-cards` surface |
 
 ## Entries (`characters.<id>`)
 
@@ -65,4 +69,4 @@ Ids: lower-case letters, digits, hyphens.
 
 ## Exit codes
 
-`check.mjs`: 0 with `character registry: pass (...)`; 1 with one line per failure and the fix. Gaps print on stdout and do not fail. `render.mjs`, `tokenize.mjs`, `anchor.mjs`: 0 on success, 1 on a named problem, 2 on usage.
+`check.mjs`: 0 with `character registry: pass (...)`; 1 with one line per failure and the fix. Gaps print on stdout and do not fail. `render.mjs`, `tokenize.mjs`, `anchor.mjs`, `compile-shot.mjs`: 0 on success, 1 on a named problem, 2 on usage. `compile-shot.mjs` runs the whole gate first and compiles nothing when it fails.

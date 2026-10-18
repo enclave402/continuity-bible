@@ -402,6 +402,66 @@
    "abstract_excerpt": "Training-free story visualization without reference images must preserve recurring entities across frames while scaling to long narratives. Existing methods typically maintain consistency by conditioning each frame on other frames of the same story, coupling generation time, VRAM, or both to story length. We introduce ELECT, which instead settles cross-frame identity before final rendering through",
    "checked_how": "arxiv-api",
    "checked_at": "2026-10-18T00:15:16.638Z"
+  },
+  "cite16-blog-segmind-com": {
+   "kind": "url",
+   "id": "https://blog.segmind.com/easy-flux-lora-training-guide/",
+   "url": "https://blog.segmind.com/easy-flux-lora-training-guide/",
+   "title": "Easy Flux LoRA Training Guide for Beginners in 2026",
+   "authors": [],
+   "year": "",
+   "venue": "blog.segmind.com",
+   "abstract_excerpt": "Master Flux LoRA training in 2026 with this easy, step-by-step guide for high-quality AI image generation.",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-18T02:30:30.058Z"
+  },
+  "cite17-dev-to": {
+   "kind": "url",
+   "id": "https://dev.to/qcrao/character-consistency-in-ai-comics-3-tricks-that-beat-lora-training-for-me-3ad7",
+   "url": "https://dev.to/qcrao/character-consistency-in-ai-comics-3-tricks-that-beat-lora-training-for-me-3ad7",
+   "title": "Character consistency in AI comics: 3 tricks that beat LoRA training for me - DEV Community",
+   "authors": [],
+   "year": "",
+   "venue": "dev.to",
+   "abstract_excerpt": "The single thing that breaks an AI-generated comic isn't the art style or the prompt — it's the... Tagged with ai, comics, machinelearning, sideprojects.",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-18T02:28:26.573Z"
+  },
+  "cite3-selfielabstudio-com": {
+   "kind": "url",
+   "id": "https://selfielabstudio.com/blog/flux-2-max-custom-character-loras-full-guide-20260312",
+   "url": "https://selfielabstudio.com/blog/flux-2-max-custom-character-loras-full-guide-20260312",
+   "title": "Flux 2 Max Custom Character LoRAs: Full Guide | selfielab blog | selfielab",
+   "authors": [],
+   "year": "",
+   "venue": "selfielabstudio.com",
+   "abstract_excerpt": "Master Flux 2 Max Custom Character LoRAs for game devs and writers—no art skills required. Train unique, consistent characters in minutes. Start free at Selfielab.me today.",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-18T02:30:29.812Z"
+  },
+  "cite48-comfy-icu": {
+   "kind": "url",
+   "id": "https://comfy.icu/node/FaceSimilarityNode",
+   "url": "https://comfy.icu/node/FaceSimilarityNode",
+   "title": "Face Similarity (InsightFace) - ComfyUI Cloud",
+   "authors": [],
+   "year": "",
+   "venue": "comfy.icu",
+   "abstract_excerpt": "Face Similarity (InsightFace) is a ComfyUI node in the Face Analysis category from ComfyUI_Face_similarity. Inputs: reference_image, generated_image, model…",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-18T02:28:27.059Z"
+  },
+  "cite55-comfy-icu": {
+   "kind": "url",
+   "id": "https://comfy.icu/node/FaceEmbedDistance",
+   "url": "https://comfy.icu/node/FaceEmbedDistance",
+   "title": "Face Embeds Distance - ComfyUI Cloud",
+   "authors": [],
+   "year": "",
+   "venue": "comfy.icu",
+   "abstract_excerpt": "Face Embeds Distance is a ComfyUI node in the FaceAnalysis category from Face Analysis for ComfyUI. Inputs: analysis_models, reference, image…",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-18T02:28:27.373Z"
   }
  }
 }

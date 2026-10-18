@@ -1,0 +1,80 @@
+# node scripts/anchor.mjs embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer fewest-redraws --threshold 0.35
+anchor: policy consensus: drf_the_sacred_confession.png (order 9; nearest the centroid of 41 embedding(s) among the 41 image(s) that keep {"eyes":"amber-brown"} (of 58))
+anchor: keep {"eyes":"amber-brown"}: 41 of 58 image(s) keep it; 17 do not and are always on the bill
+anchor: 58 image(s) scored; mean cosine 0.562, min 0.104; 6 below 0.35; 20 to redo in all -> regenerate
+  regenerate drf_the_madison_avenue_steps.png
+  regenerate drf_the_hallway_limbo.png
+  regenerate drf_forty_five_minutes_on_read.png
+  regenerate drf_the_peer_tribunal_over_coffee.png
+  regenerate drf_symmetrical_heartbreak.png
+  regenerate drf_the_two_masters_of_their_craft.png
+  regenerate drf_the_lost_symphony.png
+  regenerate drf_the_knee_in_the_torrent.png
+  regenerate drf_the_ring_toss_and_the_mortar.png
+  regenerate drf_the_roommate_bob_barker_and_chloe.png
+  regenerate drf_that_same_night_the_sovereign_drawer.png
+  regenerate drf_the_real_timeline_chloes_apology.png
+  regenerate drf_the_dream_portal_what_if_they_had_the_tools.png
+  regenerate drf_the_fire_escape_the_last_inch.png
+  regenerate drf_the_fire_escape_heat_on_the_iron.png
+  regenerate drf_the_brushed_knuckles_threshold.png
+  regenerate drf_the_sentinel_and_the_watch.png
+  regenerate drf_the_soap_bubble_rupture.png
+  regenerate drf_the_reservoir_the_pass.png
+  regenerate drf_the_reservoir_translucent_gaze.png
+anchor: compare: origin=drf_the_conservation_table.png (22 to redo); terminal=drf_the_reservoir_agog.png (30 to redo); consensus=drf_the_sacred_confession.png (20 to redo); mode=drf_the_all_night_booth_the_hyperactivation_cycle.png (20 to redo); canon=drf_the_sacred_confession.png (20 to redo)
+
+# node scripts/anchor.mjs embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer first-look --threshold 0.35
+anchor: policy origin: drf_the_conservation_table.png (order 1; first image in order among the 41 image(s) that keep {"eyes":"amber-brown"} (of 58))
+anchor: keep {"eyes":"amber-brown"}: 41 of 58 image(s) keep it; 17 do not and are always on the bill
+anchor: 58 image(s) scored; mean cosine 0.469, min 0.1448; 9 below 0.35; 22 to redo in all -> regenerate
+anchor: compare: origin=drf_the_conservation_table.png (22 to redo); terminal=drf_the_reservoir_agog.png (30 to redo); consensus=drf_the_sacred_confession.png (20 to redo); mode=drf_the_all_night_booth_the_hyperactivation_cycle.png (20 to redo); canon=drf_the_sacred_confession.png (20 to redo)
+
+# node scripts/anchor.mjs embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer last-look --threshold 0.35
+anchor: policy terminal: drf_the_reservoir_agog.png (order 84; last image in order among the 41 image(s) that keep {"eyes":"amber-brown"} (of 58))
+anchor: keep {"eyes":"amber-brown"}: 41 of 58 image(s) keep it; 17 do not and are always on the bill
+anchor: 58 image(s) scored; mean cosine 0.4351, min 0.1509; 19 below 0.35; 30 to redo in all -> regenerate
+anchor: compare: origin=drf_the_conservation_table.png (22 to redo); terminal=drf_the_reservoir_agog.png (30 to redo); consensus=drf_the_sacred_confession.png (20 to redo); mode=drf_the_all_night_booth_the_hyperactivation_cycle.png (20 to redo); canon=drf_the_sacred_confession.png (20 to redo)
+
+# node scripts/anchor.mjs embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer most-common --threshold 0.35
+anchor: policy mode: drf_the_all_night_booth_the_hyperactivation_cycle.png (order 44; most frequent tag combination [["eyes","amber-brown"],["hair","textured curls"],["heritage","white"],["skin_tone","light olive"]] (28 of 41 images) among the 41 image(s) that keep {"eyes":"amber-brown"} (of 58))
+anchor: keep {"eyes":"amber-brown"}: 41 of 58 image(s) keep it; 17 do not and are always on the bill
+anchor: 58 image(s) scored; mean cosine 0.5409, min 0.0951; 7 below 0.35; 20 to redo in all -> regenerate
+anchor: compare: origin=drf_the_conservation_table.png (22 to redo); terminal=drf_the_reservoir_agog.png (30 to redo); consensus=drf_the_sacred_confession.png (20 to redo); mode=drf_the_all_night_booth_the_hyperactivation_cycle.png (20 to redo); canon=drf_the_sacred_confession.png (20 to redo)
+
+# the same rows with tags only (no embeddings): the bill by what a reader sees
+# node scripts/anchor.mjs tags.jsonl --character sam-hayes --keep eyes=amber-brown --prefer fewest-redraws
+anchor: policy consensus: drf_the_conservation_table.png (order 1; no embeddings, so the most frequent tag combination [["eyes","amber-brown"],["hair","textured curls"],["heritage","white"],["skin_tone","light olive"]] (28 of 41 images) among the 41 image(s) that keep {"eyes":"amber-brown"} (of 58))
+anchor: keep {"eyes":"amber-brown"}: 41 of 58 image(s) keep it; 17 do not and are always on the bill
+anchor: 58 image(s), none with an embedding; 30 to redo (17 lack a kept tag, 13 differ from the anchor's tags) -> regenerate (bill by tags, not by similarity)
+anchor: compare: origin=drf_the_conservation_table.png (30 to redo, by tags); terminal=drf_the_reservoir_agog.png (46 to redo, by tags); consensus=drf_the_conservation_table.png (30 to redo, by tags); mode=drf_the_conservation_table.png (30 to redo, by tags); canon=drf_the_conservation_table.png (30 to redo, by tags)
+
+# node scripts/anchor.mjs tags.jsonl --character sam-hayes --keep none --prefer most-common   (nothing kept: what the book mostly looks like)
+anchor: policy mode: drf_the_conservation_table.png (order 1; most frequent tag combination [["eyes","amber-brown"],["hair","textured curls"],["heritage","white"],["skin_tone","light olive"]] (28 of 58 images))
+anchor: 58 image(s), none with an embedding; 30 differ from the anchor's tags -> regenerate (bill by tags, not by similarity)
+anchor: compare: origin=drf_the_conservation_table.png (30 to redo, by tags); terminal=drf_the_reservoir_agog.png (46 to redo, by tags); consensus=drf_the_conservation_table.png (30 to redo, by tags); mode=drf_the_conservation_table.png (30 to redo, by tags); canon=n/a
+
+# the person's list against the-sacred-confession, by what a reader sees: eyes drifted, or skin tone or hair differ from the anchor's (eyes 'not readable' is not drift)
+to redraw: 21
+  s00 the-soap-bubble-rupture                          skin tone warm golden-brown      made 2026-10-16  cosine 0.61
+  s01 the-antiseptic-chignon                           skin tone warm golden-brown      made 2026-10-16  cosine 0.58
+  s02 the-reservoir-the-pass                           skin tone warm golden-brown      made 2026-10-16  cosine 0.29
+  s03 the-reservoir-translucent-gaze                   skin tone warm golden-brown      made 2026-10-16  cosine 0.33
+  s04 the-reservoir-agog                               skin tone warm golden-brown      made 2026-10-16  cosine 0.54
+  s11 the-brushed-knuckles-threshold                   skin tone warm golden-brown      made 2026-10-15  cosine 0.63
+  s12 the-corner-cafe-on-madison                       skin tone warm golden-brown      made 2026-09-30  cosine 0.59
+  s15 the-sentinel-and-the-watch                       skin tone warm golden-brown      made 2026-10-15  cosine 0.51
+  s16 the-knight-in-the-nolita-night                   skin tone warm golden-brown      made 2026-09-30  cosine 0.66
+  s17 the-fire-escape-the-load-rating                  skin tone warm golden-brown      made 2026-10-14  cosine 0.61
+  s18 the-fire-escape-the-last-inch                    skin tone warm golden-brown      made 2026-10-14  cosine 0.28
+  s19 the-fire-escape-heat-on-the-iron                 skin tone warm golden-brown      made 2026-10-14  cosine 0.10
+  s20 the-fire-escape-the-flinch                       skin tone warm golden-brown      made 2026-10-14  cosine 0.58
+  s25 forty-five-minutes-on-read                       eyes light                       made 2026-09-30  cosine 0.58
+  s28 the-catastrophic-projection-the-reaching-hand    skin tone warm golden-brown      made 2026-10-14  cosine 0.69
+  s34 the-prosecutors-finger                           skin tone warm golden-brown      made 2026-10-16  cosine 0.69
+  s60 the-somatic-recoil-extreme                       skin tone warm golden-brown      made 2026-10-15  cosine 0.44
+  s67 the-lost-symphony                                skin tone warm golden-brown      made 2026-09-30  cosine 0.56
+  s68 the-dream-portal-what-if-they-had-the-tools      eyes light                       made 2026-10-12  cosine 0.69
+  s74 the-all-night-booth-sams-aha                     skin tone fair                   made 2026-09-30  cosine 0.65
+  s93 epilogue-the-real-work-begins                    skin tone warm golden-brown      made 2026-09-30  cosine 0.46
+eyes not readable, otherwise matching the anchor (the engine bills them; the person does not): 9

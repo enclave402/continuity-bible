@@ -1,0 +1,19 @@
+# Render surfaces are a declared structure: registry.render_surfaces (name, style_lock, must_keep, exclude, size, no_text, hands_rule, why, continuity) and render_templates globs; every shot names its surface; compile-shot.mjs appends KEEP and AVOID from it; the gate refuses any template, token source or structured surface that retypes a surface phrase, with the file, the phrase and the fix
+
+- **Logged:** 2026-10-17T22:25:46-04:00
+- **Type:** action · **Scope:** engine/continuity · **Status:** closed
+- **Author:** agent:claude · **HEAD:** e8a4102 · **Id:** `wl-3b0971c5-20d1-41c6-a8f7-a1d9d5a930ac`
+- **Tags:** continuity, render-surfaces, engine, adr, docs, schema
+
+## Details
+
+Owner's instruction relayed by the parent session: a private restage template was found hardcoding a sentence of style rules that already lived in the render program, while another surface of the same program (a product card) is deliberately packaging; 'we shouldn't be using hardcoding, it's brittle' and 'this must be a structure in the deliverable'. Built generically: the surface fields mirror the shape the private project adopts the same night; the shot sheet gains surface (scene header or shot; required once any surface is declared; unknown fails; named with none declared fails); a surface with continuity: false (product card) needs no story day, place, time or cast and prints no CHANGED line; compile-shot prints KEEP (<name>, <size>) from style_lock, must_keep, hands_rule and a no_text sentence, and extends AVOID with exclude and the word text when no_text is true, holding no rule phrase itself. The inverted gate: a phrase is two or more words (a single word such as hands is AVOID vocabulary and prose may use it), matched verbatim and case-insensitively across render_templates files, structured surfaces and token sources; message names file, line or key, phrase, render_surfaces.<id>.<field>, and says to read it from the surface. The example registry declares story-scene and product-card, and the brass key compiles to a panel without packaging and to a card that is packaging. The sentence joiner dropped a stray false; the location marker is no longer required in the example because a product card has no location; props in hands count as labels (35). In the how-to walk the gate found the tutorial's own picture prompt retyping the page surface's style and two exclusions, which became the walk's teaching step.
+
+## Run record
+
+- **files:** scripts/lib.mjs, scripts/compile-shot.mjs, scripts/check.mjs, scripts/character-registry.v1.schema.json, scripts/shot-sheet.v1.schema.json, character-registry.json, examples/continuity/shot-sheet.json, examples/templates/redo-prompt.md, test/continuity.test.mjs, test/tokens.test.mjs, docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md, docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md, docs/3-reference/REGISTRY-FIELDS.md, docs/4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md, docs/_registry/open_loops.md, PRODUCT.md, README.md
+- **before:** look rules for a kind of picture lived in whoever typed the prompt or template; nothing said where a shot would be used
+- **after:** two example surfaces; every shot names one; KEEP and AVOID compiled from it; a retyped rule in a template or a scene prompt fails with the phrase and its source field; 47 tests
+- **removed:** none
+- **verified by:** npm run verify green (names gate 5 entries, 35 labels, 4 surfaces, 2 render surfaces, 1 template; 47 tests; publication, worklog, research index, docs gates); the June and Abel walk re-run in a scratch story folder with two surfaces and a template, outputs pasted verbatim including the gate finding the tutorial prompt's retyped rules
+- **next:** rewrite STATE.md, commit, push; pull request 6 updates itself; report the field list and the two compiled blocks to the parent session

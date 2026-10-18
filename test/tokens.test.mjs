@@ -45,7 +45,7 @@ test("check passes on the examples and fails on a written-out name, with the tok
   const path = await import("node:path");
   const pass = spawnSync(process.execPath, ["scripts/check.mjs"], { encoding: "utf8" });
   assert.equal(pass.status, 0, pass.stderr);
-  assert.match(pass.stdout, /character registry: pass \(4 entries, 7 labels resolved on 2 surfaces/);
+  assert.match(pass.stdout, /character registry: pass \(5 entries, 35 labels resolved on 4 surfaces/); // three people, two props; scenes, art, cards, shot sheet with a product card
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-"));
   fs.cpSync(process.cwd(), dir, { recursive: true, filter: (src) => !path.relative(process.cwd(), src).split(path.sep).some((p) => [".git", "node_modules", ".worktrees", ".context", "research"].includes(p)) });
   fs.appendFileSync(path.join(dir, "examples/sample-scene.md"), "\nSam waited.\n");
@@ -53,4 +53,12 @@ test("check passes on the examples and fails on a written-out name, with the tok
   fs.rmSync(dir, { recursive: true, force: true });
   assert.equal(fail.status, 1);
   assert.match(fail.stderr, /names "Sam" in a token source\. Fix: write \{\{sam-hayes\}\}/);
+});
+
+test("tokenize never rewrites a card's own label (scene_name) unless told to", async () => {
+  const { tokenizeValue } = await import("../scripts/tokenize.mjs");
+  const card = { characters: { "sam-hayes": { scene_name: "Sam", note: "Sam wears the watch" } } };
+  const out = tokenizeValue(card, "");
+  assert.equal(out.characters["sam-hayes"].scene_name, "Sam");
+  assert.equal(out.characters["sam-hayes"].note, "{{sam-hayes}} wears the watch");
 });

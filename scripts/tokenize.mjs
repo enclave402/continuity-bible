@@ -21,7 +21,8 @@ import { loadNames, TOKEN, atomicLabels as atomicLabelsOf, labelRegExp } from ".
 
 const ROOT = process.cwd(); // the project root, where character-registry.json lives (as build.mjs and check.mjs read it)
 const argv = process.argv.slice(2);
-const isMain = process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+// run as a command (also through a symlinked folder): compare real paths, not the spelling of argv[1]
+const isMain = (() => { try { return fs.realpathSync(process.argv[1]) === fs.realpathSync(new URL(import.meta.url)); } catch { return false; } })();
 const flag = (n) => { const i = argv.indexOf(n); return i === -1 ? "" : argv[i + 1] || ""; };
 const VALUE_FLAGS = new Set(["--story", "--story-key-field", "--skip", "--label-fields", "--holder"]);
 const file = argv.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(argv[i - 1]));
@@ -29,7 +30,8 @@ if (isMain && (!file || file.startsWith("--"))) { console.error("usage: node tok
 const story = flag("--story") || "";
 const storyKeyField = flag("--story-key-field") || "";
 const skip = new Set((flag("--skip") || "").split(",").filter(Boolean));
-const labelFields = new Set((flag("--label-fields") || "").split(",").filter(Boolean));
+// fields that define a unit's own label are never rewritten: scene_name always, plus any --label-fields you add
+const labelFields = new Set(["scene_name", ...(flag("--label-fields") || "").split(",").filter(Boolean)]);
 const holderKey = flag("--holder") || "scenes"; // the map of units a --story-key-field is read on (scenes, art)
 const dry = argv.includes("--dry-run");
 

@@ -1,0 +1,229 @@
+---
+title: Before and after: a drifted lead
+doc_id: explain-before-and-after-a-drifted-lead
+triadic_leg: diataxis
+diataxis_mode: understand
+canonical_path: docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md
+status: active
+last_reviewed: 2026-10-17
+canonical: true
+---
+
+# Before and after: a drifted lead
+
+This page shows the engine on a real problem, with real pictures, and shows the work. The pictures are from the published story *Dating Red Flags* at rel8r.me. The method is the one in [How to resolve character drift after the fact](../2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md). The decision behind it is [ADR-004](decisions/ADR-004-retrospective-anchor-policy.md).
+
+## What happened
+
+Sam is the lead of the story. The book has 99 pictures and she is in 85 of them. She did not stay the same woman across them. Most of the book shows a woman with light olive skin. The first pictures of the book, and a handful elsewhere, show her with warm golden-brown skin, because the author redid those scenes in October and the rest were drawn in September and never redone. In two pictures her eyes, amber-brown everywhere else, come out light.
+
+The author's decision, in the author's words, was this: it does not matter whether she matches the beginning or the end; the goal is the least amount of regeneration; a lighter or darker skin tone is acceptable as long as she is consistent throughout; and "eye color stays". Her heritage, one quarter Black on her father's side, is a fact of the story and stays in the story's text whatever the pictures do.
+
+That decision has three parts, and the engine asks exactly two questions to hold them. What must never change? That is `canon_tags`, and for Sam it is her eye colour. For everything else, which look? The author's answer is *fewest redraws*, the most central picture among those that keep the fixed trait. A story fact stays in prose and is never a tag. This page is how that played out, with the numbers.
+
+## What you would have, if this were your story
+
+You do not need what this run had. You need:
+
+- A folder of pictures, one per scene, named so you can tell their order.
+- Your scene list with the character's token in it (`{{sam-hayes}}`), so the engine knows which scenes show her.
+- Her registry entry, with the one or two things about her that may never change under `canon_tags`.
+- A browser chatbot that can look at a picture when you paste it, or just your own eyes.
+- This repository: `scripts/anchor.mjs`, no API key, no model.
+
+This run also had a face detector and a small local vision model on the author's own computer. They are optional. The sections below say what each one did, and what it did not do.
+
+## Step 1: find her pictures
+
+The scene file holds `{{sam-hayes}}` in the cast of 85 scenes. The engine lists those scenes; nobody reads 99 pictures to find her. This is the sheet, in reading order. The bar above each picture is the hand tag from step 3: tan for light olive skin, brown for warm golden-brown, pale for fair, grey where her face is not readable.
+
+![Every picture that names Sam, in reading order](assets/before-after/sam-panels-in-reading-order.jpg)
+
+Read the bars left to right. The first row is brown. Then the book goes tan and stays tan, with a few brown pictures where the author had already redone a scene.
+
+## Step 2: put them in the order they were made
+
+The policies care about order: `origin` keeps the first picture, `terminal` the last. Reading order is not generation order.
+
+The original pictures were made in late September and the repository recorded them in one batch on 2026-09-30. The author then redid some scenes in October, and the repository holds the date of each. Nothing else dates the originals: the files were copied, so their file dates are copy dates, and the one true record is the chat history where they were made.
+
+So the generation order used here is: every September original in reading order, then each October picture by its date. The file that holds the rows carries both numbers, the generation order and the place in the story. If you keep one habit from this page, keep this one: name every picture with its number the day you download it.
+
+## Step 3: look at each face and write four words
+
+Each picture was tagged by a person looking at her face. Four keys with a fixed vocabulary, so the words can match:
+
+| Key | Allowed values |
+|---|---|
+| `skin_tone` | fair, light olive, warm golden-brown, medium brown, dark brown |
+| `heritage` | what the picture reads as: white, mixed-race, Black, Asian, other |
+| `hair` | texture only: textured curls, wavy, straight, other |
+| `eyes` | amber-brown, dark brown, light, not readable |
+
+Hair is texture, not colour, on purpose. At sixty Sam has silver in her curls. That is the story, not drift, so it must not count against her. "Not readable" is for eyes that are closed or turned away: a picture that cannot be read is not evidence either way.
+
+58 pictures show her face well enough to tag. 27 do not: she is seen from behind, or far away, or only her hands are in frame, or the picture is a photograph on a wall. Those are not judged.
+
+This is every readable face, in generation order, cropped from the published pictures. The bar is the skin tone tag.
+
+![Sam's face in every readable picture, in the order they were made](assets/before-after/sam-faces-in-generation-order.jpg)
+
+| Tag | Pictures |
+|---|---|
+| light olive skin, textured curls | 39 |
+| warm golden-brown skin, textured curls | 18 |
+| fair skin, textured curls | 1 |
+| eyes amber-brown | 41 |
+| eyes light (one lit blue by a phone, one grey) | 2 |
+| eyes not readable | 15 |
+
+These skin-tone tags turned out to be wrong for a good part of the book. Step 7 shows how the first redraw found that out, and what replaced them.
+
+Two tools helped and one did not:
+
+- A face detector found every face in every picture and cut it out, so the person tagging looked at faces, not at whole pages. A chatbot can do the same if you ask it to crop the woman on the left.
+- The same detector produced a number per face (a face embedding). `consensus` uses it to find the most central picture. Its limit is in step 5.
+- A small vision model on the author's computer was asked the same questions about the same 58 crops. It agreed with the person on 3 of them. It read most faces lit by lamplight as dark brown and Black, and two pale faces at night as Asian with straight hair. Its answers are kept in the evidence files as a caution. The person's tags are the record. If you let a model tag your pictures, look at every answer.
+
+## Step 4: answer the first question: what must never change?
+
+The engine never reads this off the pictures. The author writes it, on the registry entry, in the same vocabulary as the tags. For Sam that is one key, and the second answer sits beside it:
+
+```json
+"sam-hayes": {
+  "name": "Sam",
+  "canon_tags": { "eyes": "amber-brown" },
+  "drift_resolution": { "prefer": "fewest-redraws", "pass_threshold": 0.35,
+                        "embeddings": "drift/sam-hayes/embeddings.jsonl" }
+}
+```
+
+Her heritage is not in there. It is a story fact, written in her profile, and no picture tag can change it. Her skin tone and hair are not in there either, because the author decided those may follow the pictures. Put in `canon_tags` only what may never change. Everything else is the second question's job.
+
+## Step 5: answer the second question and read the comparison line
+
+One command per answer. Every run prints the same last line, the comparison, so every price is visible next to the chosen one. `--ask` asks both questions in plain words; these are the one-line spellings.
+
+```bash
+node scripts/anchor.mjs drift/sam-hayes/embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer fewest-redraws
+node scripts/anchor.mjs drift/sam-hayes/embeddings.jsonl --character sam-hayes --keep eyes=amber-brown --prefer first-look
+node scripts/anchor.mjs drift/sam-hayes/tags.jsonl --character sam-hayes --keep none --prefer most-common
+```
+
+The full output is in [anchor-report.txt](assets/before-after/anchor-report.txt). With eyes kept, 41 of 58 pictures are eligible and 17 are on the bill before any answer is given: the 2 light-eyed pictures, plus 15 where her eyes are closed or turned away. This is what the second question says, answer by answer:
+
+| Answer to "which look?" | Which eligible picture it keeps as the anchor | Eligible faces below the threshold | The engine's bill in all |
+|---|---|---|---|
+| fewest redraws (chosen) | the sacred confession, September, light olive, amber eyes | 6 | 20 |
+| the first look | the conservation table, September, light olive | 9 | 22 |
+| the last look | the reservoir run, October, warm golden-brown | 19 | 30 |
+| the most common look | the all-night booth: 28 of 41 eligible pictures share its four tags | 7 | 20 |
+
+Four things to read off that table.
+
+**With one trait fixed, the fewest-redraws answer is an untouched original.** The most central of the 41 amber-eyed pictures is also the most central of all 58. The author's own first idea of her face is the one the whole book settles on.
+
+**The bill counts what a person cannot read.** Fifteen of the 17 pictures that "lack" the kept tag have her eyes closed or turned away. Closed eyes are not drift. The engine cannot tell the difference yet, so the person splits the list by hand, below, and the engine's 20 becomes the person's 21.
+
+**The face similarity column is not about skin tone.** A face embedding is built to recognise the same face across lighting and shading. Against the anchor, 52 of 58 faces score as "the same face" and only 6 fall below the threshold, four of them among the warm golden-brown redos and two small or laughing faces. Similarity catches a different face. Tags catch a different look. For a skin-tone question the tags decide, and the similarity flags are a face check.
+
+**The other choice had a price, and the author saw it before choosing.** The first dry run of this set put skin tone and hair into the first question as well. That run billed 40 pictures. Keeping her consistent at the look most of the book already has, with only eyes fixed, bills 21. The author chose 21 with both numbers on the table. That is the engine's whole job here: not to pick, but to make sure nobody picks blind.
+
+## Step 6: the list, proposed before anything is redrawn
+
+Against the proposed anchor, the pictures a reader would see as different are the 19 whose skin tone differs from it (the October redos, the corner café, the knight in the Nolita night, the lost symphony, the epilogue, and one fair-skinned picture) plus the 2 whose eyes came out light. The engine's own list of 20 overlaps it in 8 and adds the 15 unreadable-eyes pictures; the person keeps the 21 and drops those 15. Twenty-one pictures, each named with its reason:
+
+| Scene | Why | Made |
+|---|---|---|
+| the soap bubble rupture | skin tone warm golden-brown | October |
+| the antiseptic chignon | skin tone warm golden-brown | October |
+| the reservoir, the pass | skin tone warm golden-brown | October |
+| the reservoir, translucent gaze | skin tone warm golden-brown | October |
+| the reservoir, agog | skin tone warm golden-brown | October |
+| the brushed-knuckles threshold | skin tone warm golden-brown | October |
+| the corner café on Madison | skin tone warm golden-brown | September |
+| the sentinel and the watch | skin tone warm golden-brown | October |
+| the knight in the Nolita night | skin tone warm golden-brown | September |
+| the fire escape, the load rating | skin tone warm golden-brown | October |
+| the fire escape, the last inch | skin tone warm golden-brown | October |
+| the fire escape, heat on the iron | skin tone warm golden-brown | October |
+| the fire escape, the flinch | skin tone warm golden-brown | October |
+| forty-five minutes on read | eyes light (phone glow) | September |
+| the catastrophic projection, the reaching hand | skin tone warm golden-brown | October |
+| the prosecutor's finger | skin tone warm golden-brown | October |
+| the somatic recoil | skin tone warm golden-brown | October |
+| the lost symphony | skin tone warm golden-brown | September |
+| the dream portal | eyes light | October |
+| the all-night booth, Sam's aha | skin tone fair | September |
+| epilogue, the real work begins | skin tone warm golden-brown | September |
+
+Nothing on this list is redrawn until the author says so, picture by picture. The engine records the anchor (`--write`, or the offer at the end of `--ask`) only after the author confirms it. The author confirmed the anchor and the list on 2026-10-17, and the anchor is recorded: the picture, its hash, the two answers and the numbers above now sit on her registry entry.
+
+## Step 7: the first redraw found a mistake in the tags
+
+The first picture redrawn was the corner café on Madison. The redraw came back darker, the opposite of the goal. Put side by side at face size, the reason was plain: the picture before the redraw already matched the anchor. Under the same warm lamplight, the face tagged "warm golden-brown" and the anchor tagged "light olive" were the same skin.
+
+The skin tags had been written while looking at small thumbnails, in absolute colour words, across pictures lit by sun, candles, neon and rain. Lighting defeats colour names. So every one of the 58 faces was checked again, cut out at face size, next to the anchor's close-up, under each picture's own light, with three relative words instead: matches, darker, lighter.
+
+![Faces judged against the anchor (outlined) at face size: darker, matching, lighter](assets/before-after/sam-face-review.jpg)
+
+| Against the anchor | Pictures |
+|---|---|
+| matches | 36 |
+| darker | 5 |
+| lighter | 17 |
+
+That changed the list:
+
+- **Nine** pictures on the confirmed list really do differ and are redrawn: the soap bubble, the three reservoir panels and the catastrophic projection (darker), the two light-eyed pictures, and Sam's aha and the epilogue (lighter).
+- **Twelve** pictures on the confirmed list match the anchor and are dropped. Twelve renders not spent.
+- **Fourteen** pictures differ but were never on the list: the diner booth sequence and the evening at sixty, which read lighter and pinker than the anchor. They wait for the author's yes, because the author confirmed a list and these were not on it.
+
+The redraw that failed was never used. The lesson for your own story: tag at face size, next to the reference, under the picture's own light, with relative words.
+
+## Step 8: redo the pictures, one at a time, with the author's go on each
+
+Nothing here replaces a picture by itself. For each picture on the list, a template builds one edit request: image 1 is the kept picture, named by its scene; image 2 is a close-up of her cut from the anchor; the text says which way her skin must move, change only her face, skin and hair to match image 2, keep the eyes amber-brown, keep everything else, and ignore every earlier picture in the chat. That last line was added after a redraw came back as a rework of the previous picture instead of the one attached. The author looks at the result beside the old one and says keep or redo. One picture at a time, through the same browser chat the book was made in.
+
+This pair is instructive. The author redid this scene on the day after it was first made, and the redo moved her warmer. Checked at face size against the anchor, the redone version matches it, so it stays. Both pictures are real; the lesson is that a redo without a declared anchor is a coin toss, and the declared anchor is what makes the next one predictable.
+
+| 2026-10-15 | 2026-10-16 |
+|---|---|
+| ![Sam: the prosecutor's finger, first version](assets/before-after/the-prosecutors-finger-before.jpg) | ![Sam: the prosecutor's finger, redone the next day](assets/before-after/the-prosecutors-finger-after.jpg) |
+
+Each new pair the author approves is added here with its scene name, so this page is the running record, not a promise.
+
+## Step 9: make the documents agree with the pictures
+
+Once the anchor is adopted, her written description has to say the same thing, or the next prompt will pull her back. Three places changed, and one did not:
+
+- Her profile and the story's character bible now describe her skin as light olive with warm undertones, with a dated note quoting the author's decision.
+- Her continuity card gained a look line, which the story's prompt compiler prints in every scene she is in, and a face block with one sentence that names nobody, so a rename never strands it.
+- Her eye colour, amber-brown, stays written exactly as before. It was the one thing that may never change.
+- Her heritage, one quarter Black on her father's side, stays written exactly as before. It is a fact of the story, not a description of a picture.
+
+## What this costs and what the other choices cost
+
+| | Pictures to redo | What the book says afterwards |
+|---|---|---|
+| Eyes fixed, fewest redraws for the rest (chosen) | 9, plus 14 waiting for the author's yes | she is one consistent woman with amber-brown eyes, at the look most of the book already had |
+| Skin tone and hair kept as well | 40 | she is the woman of the first pictures everywhere |
+| The last look, everything matched to the newest pictures | 46 by tags | the whole book is redrawn to the October look |
+
+The numbers are the point. Whichever you choose, you see every bill before you spend anything, with the pictures behind each one.
+
+## Do this for your own story
+
+1. Write the character's token into every scene from the first day. The engine can then find her pictures.
+2. Name every download with its number. Order is evidence you cannot get back.
+3. Answer the first question before the first picture if you can: what may never change goes under `canon_tags`, and only that. Story facts go in prose, not in tags.
+4. When something looks off, make the face sheet and tag it by hand at face size, next to the reference, with relative words (matches, darker, lighter) and a word for "cannot tell". A chatbot may suggest; you decide.
+5. Answer the second question every way and read the comparison line. Every price is there to be chosen with your eyes open.
+6. Record the anchor. Redo within the list, one picture at a time, and keep the pairs.
+7. Rewrite the character's description to match the anchor you adopted, and say in a dated note why. Leave story facts alone.
+
+## The files behind this page
+
+- [`anchor-report.txt`](assets/before-after/anchor-report.txt): the engine's own output for the runs above.
+- The row files (`embeddings.jsonl`, `tags.jsonl`), the face picks and the proposed list live in the story's private repository, because they hold the story's working files. Their shape is the one in [examples/anchor](../../examples/anchor/README.md): image, order, tags, hash, and for the embedding file one vector per face.
+- The engine: [`scripts/anchor.mjs`](../../scripts/anchor.mjs). Field reference: [Registry fields](../3-reference/REGISTRY-FIELDS.md).

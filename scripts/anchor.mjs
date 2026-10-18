@@ -49,6 +49,23 @@ const low = (v) => String(v).trim().toLowerCase();
 const tagKey = (tags) => JSON.stringify(Object.entries(tags || {}).map(([k, v]) => [k, low(v)]).sort());
 /** True when the row carries every kept tag with the same value (case-insensitive). A row without tags keeps nothing. */
 export const keepsAll = (row, keep) => Boolean(row.tags) && Object.entries(keep || {}).every(([k, v]) => row.tags[k] !== undefined && low(row.tags[k]) === low(v));
+/** The values a person writes when they cannot tell (eyes closed, face turned away). Default "unknown"; the registry's
+ *  drift_resolution.unreadable or --unreadable a,b replaces it. Never part of the engine's vocabulary beyond this default. */
+export const DEFAULT_UNREADABLE = ["unknown"];
+/** For one row against the kept tags: "keeps" (every kept tag readable and equal), "cannot-tell" (none differs, at least one is
+ *  unreadable) or "off" (a kept tag is missing or readably different). Cannot-tell is never drift: such a row is not eligible
+ *  to be the anchor and is not billed for the kept tags. */
+export function keepState(row, keep, unreadable = DEFAULT_UNREADABLE) {
+  const u = new Set(unreadable.map(low));
+  let unsure = false;
+  for (const [k, v] of Object.entries(keep || {})) {
+    const have = row.tags?.[k];
+    if (have === undefined) return "off";
+    if (u.has(low(have))) { unsure = true; continue; }
+    if (low(have) !== low(v)) return "off";
+  }
+  return unsure ? "cannot-tell" : "keeps";
+}
 /** "tag=value, tag=value" -> { tag: value }; "none" or empty -> {}. */
 export const parseKeep = (text) => Object.fromEntries(String(text || "").split(/[,;\n]/).map((kv) => kv.split(/=(.*)/s)).filter((p) => p[0] && p[0].trim() && p[1] !== undefined && !/^none$/i.test(p[0].trim())).map(([k, v]) => [k.trim(), v.trim()]));
 
@@ -57,7 +74,10 @@ export const parseKeep = (text) => Object.fromEntries(String(text || "").split(/
  * keep: { tag: value } that must never change; only rows carrying all of them are eligible, the rest are always billed.
  * canon: the alias's tags, used only when policy is "canon" and keep is not given (policy canon = keep + consensus).
  */
-export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pruneZ = 0, canon = null, keep = null } = {}) {
+export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pruneZ = 0, canon = null, keep = null, unreadable = DEFAULT_UNREADABLE } = {}) {
+  const unread = new Set((unreadable || []).map(low));
+  // two looks differ when a tag both readably carry differs; a value one side could not read never counts as a difference
+  const sameLook = (a, b) => { for (const k of new Set([...Object.keys(a || {}), ...Object.keys(b || {})])) { const x = a?.[k], y = b?.[k]; if (x !== undefined && unread.has(low(x))) continue; if (y !== undefined && unread.has(low(y))) continue; if (x === undefined || y === undefined || low(x) !== low(y)) return false; } return true; };
   const rows = rowsIn.map((r, i) => ({ ...r, order: r.order ?? i, embedding: r.embedding ? norm(r.embedding) : undefined })).sort((a, b) => a.order - b.order);
   if (!rows.length) throw new Error("anchor: no rows");
   let fixed = keep && Object.keys(keep).length ? keep : null;
@@ -69,8 +89,10 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
   }
   if (!METHODS.includes(method)) throw new Error(`anchor: unknown policy ${policy} (origin, terminal, consensus, mode, canon)`);
   // question 1: what must never change. Eligible rows keep every fixed tag; the others are always on the bill.
-  const eligible = fixed ? rows.filter((r) => keepsAll(r, fixed)) : rows;
-  const excluded = fixed ? rows.filter((r) => !keepsAll(r, fixed)) : [];
+  const stateOf = (r) => (fixed ? keepState(r, fixed, [...unread]) : "keeps");
+  const eligible = rows.filter((r) => stateOf(r) === "keeps");
+  const excluded = rows.filter((r) => stateOf(r) === "off");
+  const cannotTell = rows.filter((r) => stateOf(r) === "cannot-tell");
   if (!eligible.length) {
     if (policy === "canon") throw new Error(`anchor: no image matches canon ${JSON.stringify(fixed)}: every image has drifted off canon. Fix: recast or regenerate from the master, tag the result, run again`);
     throw new Error(`anchor: no image keeps ${JSON.stringify(fixed)}: every image has drifted off what must never change. Fix: recast or regenerate from the master, tag the result, run again`);
@@ -115,7 +137,7 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
   // the bill: every excluded image, plus the eligible images too far from the anchor (by cosine, else by tags)
   const sims = anchor.embedding ? rows.filter((r) => r.embedding).map((r) => ({ image: r.image, order: r.order, cosine: dot(r.embedding, anchor.embedding) })) : [];
   const excludedSet = new Set(excluded.map((r) => r.image));
-  const base = { n: rows.length, with_embedding: rows.filter((r) => r.embedding).length, pruned: pruned.length, threshold, ...(fixed ? { kept: eligible.length, excluded: excluded.length } : {}) };
+  const base = { n: rows.length, with_embedding: rows.filter((r) => r.embedding).length, pruned: pruned.length, threshold, ...(fixed ? { kept: eligible.length, excluded: excluded.length, cannot_tell: cannotTell.length } : {}) };
   let regenerate, stats;
   if (sims.length) {
     const below = new Set(sims.filter((s) => s.cosine < threshold).map((s) => s.image));
@@ -125,7 +147,7 @@ export function chooseAnchor(rowsIn, { policy = "consensus", threshold = 0.6, pr
     // no similarity scores (hand tags, no model): eligible images whose tags differ from the anchor's are billed, an untagged
     // image included (nothing shows it matches). No tags on the anchor and nothing kept: no bill.
     const anchorTagged = Boolean(anchor.tags) && Object.keys(anchor.tags).length > 0;
-    const differ = new Set(anchorTagged ? eligible.filter((r) => tagKey(r.tags) !== tagKey(anchor.tags)).map((r) => r.image) : []);
+    const differ = new Set(anchorTagged ? [...eligible, ...cannotTell].filter((r) => !sameLook(r.tags, anchor.tags)).map((r) => r.image) : []);
     const hasBill = anchorTagged || Boolean(fixed);
     regenerate = hasBill ? rows.filter((r) => excludedSet.has(r.image) || differ.has(r.image)).map((r) => r.image) : [];
     stats = { ...base, below_threshold: null, bill_basis: hasBill ? "tags" : "none", ...(hasBill ? { tag_mismatches: regenerate.length, tag_differ: differ.size } : {}) };
@@ -143,19 +165,22 @@ export function comparePolicies(rows, opts) {
   return out;
 }
 
-const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+// run as a command (also through a symlinked folder): compare real paths, not the spelling of argv[1]
+const isMain = (() => { try { return fs.realpathSync(process.argv[1]) === fs.realpathSync(new URL(import.meta.url)); } catch { return false; } })();
 if (isMain) main().catch((e) => { console.error(e.message); process.exit(1); });
 
 async function main() {
   const argv = process.argv.slice(2);
   const flag = (n) => { const i = argv.indexOf(n); return i === -1 ? "" : argv[i + 1] || ""; };
-  const VALUE_FLAGS = new Set(["--policy", "--prefer", "--character", "--threshold", "--prune-outliers", "--registry", "--canon", "--keep"]);
+  const VALUE_FLAGS = new Set(["--policy", "--prefer", "--character", "--threshold", "--prune-outliers", "--registry", "--canon", "--keep", "--unreadable"]);
   const file = argv.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(argv[i - 1]));
   let registry = null;
   try { registry = loadRegistry(registryPath(process.argv)); } catch { registry = null; }
   const id = flag("--character");
   const entry = id ? registry?.characters?.[id] : null;
   const defaults = { ...(registry?.drift_resolution || {}), ...(entry?.drift_resolution || {}) };
+  // the words a person writes when they cannot tell: --unreadable a,b wins, else the registry's, else the default
+  const unreadable = flag("--unreadable") ? flag("--unreadable").split(",").map((v) => v.trim()).filter(Boolean) : defaults.unreadable || DEFAULT_UNREADABLE;
   // question 1: --keep tag=value (repeatable; --canon is its alias) wins, else the character's canon_tags
   const keepFlags = argv.flatMap((a, i) => ((a === "--keep" || a === "--canon") && argv[i + 1] ? [argv[i + 1]] : []));
   let keep = keepFlags.length ? parseKeep(keepFlags.join(",")) : entry?.canon_tags || null;
@@ -196,13 +221,13 @@ async function main() {
   if (keep && !Object.keys(keep).length) keep = null;
   // policy canon with kept tags is keep + fewest redraws; the alias keeps its name in the report
   let result;
-  try { result = chooseAnchor(rows, { policy, threshold, pruneZ, keep, canon: policy === "canon" ? keep : null }); }
+  try { result = chooseAnchor(rows, { policy, threshold, pruneZ, keep, canon: policy === "canon" ? keep : null, unreadable }); }
   catch (e) {
     if (ask && /drifted off/.test(e.message)) console.error(`None of the pictures has what must never change (${pairs(keep)}). Paste the prompt sheet again, tag the new pictures, and ask again.`);
     else console.error(e.message);
     process.exit(1);
   }
-  const compare = comparePolicies(rows, { threshold, pruneZ, keep, canon: keep });
+  const compare = comparePolicies(rows, { threshold, pruneZ, keep, canon: keep, unreadable });
   const chosenAt = new Date().toISOString();
   const prefer = Object.keys(PREFER).find((k) => PREFER[k] === result.method);
   const over = budget !== undefined && result.regenerate.length > budget;
@@ -213,6 +238,7 @@ async function main() {
     if (result.regenerate.length) console.log(`Redraw ${plural(result.regenerate.length, "picture")}: ${result.regenerate.join(", ")}.`);
     else console.log("Nothing to redraw.");
     if (result.keep && result.stats.excluded) console.log(`  ${plural(result.stats.excluded, "picture")} ${result.stats.excluded === 1 ? "lacks" : "lack"} what must never change (${pairs(result.keep)}) and ${result.stats.excluded === 1 ? "is" : "are"} always redrawn.`);
+    if (result.keep && result.stats.cannot_tell) console.log(`  ${plural(result.stats.cannot_tell, "picture")} could not be judged on that (tagged ${unreadable.join(" or ")}); ${result.stats.cannot_tell === 1 ? "it is" : "they are"} not counted as drift.`);
     if (result.stats.bill_basis === "tags") console.log("  Counted by your tags, not measured by a model.");
     if (over) console.log(`  That is over your budget of ${budget}.`);
     const others = ["consensus", "origin", "terminal"].filter((p) => p !== result.method).map((p) => { const v = compare[p]; return v.unavailable ? `${PLAIN[p]} is not possible here (${v.unavailable})` : `${PLAIN[p]} would keep ${v.image} and redraw ${v.to_redo ?? "?"}`; });
@@ -225,6 +251,7 @@ async function main() {
   } else {
     console.log(`anchor: policy ${result.policy}: ${result.anchor.image} (order ${result.anchor.order}; ${result.basis})`);
     if (result.keep) console.log(`anchor: keep ${JSON.stringify(result.keep)}: ${result.stats.kept} of ${result.stats.n} image(s) keep it; ${result.stats.excluded} ${result.stats.excluded === 1 ? "does not and is" : "do not and are"} always on the bill`);
+    if (result.keep && result.stats.cannot_tell) console.log(`anchor: ${result.stats.cannot_tell} image(s) could not be judged on the kept tags (${unreadable.join(", ")}): not eligible as the anchor, not billed for the kept tags`);
     const budgetNote = budget !== undefined ? ` (budget ${budget}${over ? ": OVER" : ""})` : "";
     const noVec = result.stats.with_embedding ? "the anchor has no embedding" : "none with an embedding";
     const k = result.regenerate.length;
