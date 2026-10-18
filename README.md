@@ -29,7 +29,7 @@ This is a small, free tool: a folder of scripts that run on your own computer. I
 3. **Picks the reference picture after the AI has already drifted.** It asks you two questions: what about this character must never change, and, for everything else, do you want the fewest redraws, the first look or the last look. It shows what each answer costs, and writes your choice down so nobody has to remember it.
 4. **Carries everything else from one picture to the next.** What each character wears, has on and holds, where they are and what time it is: written once per story day, carried forward shot by shot, with every change recorded with its reason. One block to paste per picture.
 
-It works with whatever AI you already use. A browser chatbot that makes pictures is enough. The scripts never touch the network, nothing is installed beyond Node, and there is no account.
+It works with whatever AI you already use. A browser chatbot that makes pictures is enough. Every script in this guide only reads and writes files on your computer and never goes on the internet. Nothing is installed beyond Node, and there is no account.
 
 ## Quick start
 
@@ -201,7 +201,7 @@ The first question is answered by the registry: June's dark brown skin is a stor
 
 ### Carries wardrobe, props and place from one shot to the next
 
-Write how each character starts the day (a *continuity card*) and your scenes with their shots (a *shot sheet*). Everything carries forward by itself; a change needs a reason; a prop can be held only by whoever has it. One block per shot:
+Write how each character starts the day (a *continuity card*) and your scenes with their shots (a *shot sheet*). Everything carries forward by itself; a change needs a reason; a prop can be held only by whoever has it. One block per shot. The command below needs those two files, and the last two lines need the render surface described after the block. The [shot-to-shot how-to](docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md) has you write all of it one step at a time, so the command will not run in a folder that does not have them yet. Here is what it prints at the end of that walk:
 
 ```bash
 node ../scripts/compile-shot.mjs scene-02 --shot 2b
@@ -220,7 +220,7 @@ The matchbox is in June's hand because, two shots earlier, the sheet says Abel h
 
 ## For developers
 
-The same engine runs the name build of a published 82-scene graphic novel. Plain Node, zero dependencies, no telemetry. `npm run check` is the gate, `npm test` the tests, `npm run verify` everything.
+The same engine runs the name build of a published 82-scene graphic novel. Plain Node, zero dependencies, no telemetry. Only the optional research tools under `scripts/research/` use the network, and only at the endpoints in `research/research.config.json`. `npm run check` is the gate, `npm test` the tests, `npm run verify` everything.
 
 **Tokens.** `{{id}}` display name, `{{id:first}}` first word, `{{id:full}}` full name, `{{id:initial}}` first letter, `{{id:<form>}}` any key under `forms` (a string, or a contextual form `{ "by": "<field>", "values": {...} }` picked by the scene's own field). An unknown token throws: a build never prints a token and never guesses a name. Resolver: `scripts/names.mjs` (`loadNames(root).resolveTokens(text)`).
 

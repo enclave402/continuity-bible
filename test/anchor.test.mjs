@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { chooseAnchor, comparePolicies } from "../scripts/anchor.mjs";
 
 const rows = fs.readFileSync("examples/anchor/embeddings.jsonl", "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
@@ -206,4 +206,51 @@ test("sheet.mjs writes one page agreeing with the anchor report, with the replac
   assert.equal((html.match(/class="card redraw"/g) || []).length + (html.match(/class="card replaced"/g) || []).length, report.regenerate.length);
   assert.match(html, /Replaced so far/);
   assert.doesNotMatch(html, /<script/i, "a static page: no scripts");
+});
+
+// --ask on a real terminal: the answers arrive on a stdin that stays open, as a terminal's does. The tests above feed `input:`,
+// which ends stdin and lets the process exit whether or not it closes its reader; that is how a hang once shipped unseen.
+function askOnOpenStdin({ args, answers, files }) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-ask-open-"));
+  for (const [name, text] of Object.entries(files)) fs.writeFileSync(path.join(dir, name), text);
+  return new Promise((resolve) => {
+    const child = spawn(process.execPath, [path.resolve("scripts/anchor.mjs"), ...args], { cwd: dir, stdio: ["pipe", "pipe", "pipe"] });
+    let out = "", err = "";
+    child.stdout.on("data", (d) => { out += d; });
+    child.stderr.on("data", (d) => { err += d; });
+    let exited = false;
+    const timer = setTimeout(() => { if (!exited) child.kill("SIGKILL"); }, 4000);
+    child.on("exit", (code) => {
+      exited = true;
+      clearTimeout(timer);
+      resolve({ exitedByItself: code !== null && !child.killed, code, out, err, dir });
+    });
+    child.stdin.write(answers);   // deliberately no child.stdin.end(): a terminal does not end its input after the last answer
+  });
+}
+const askRegistry = JSON.stringify({ registry_version: 1, characters: { "june-okafor": { name: "June", kind: "person", story: "s", role: "r", prose_only: true, canon_tags: { skin: "dark brown" } } } });
+const askTags = [
+  { image: "renders/a.png", order: 1, tags: { skin: "dark brown", hair: "two puffs" } },
+  { image: "renders/b.png", order: 2, tags: { skin: "dark brown", hair: "loose curls" } },
+  { image: "renders/c.png", order: 3, tags: { skin: "dark brown", hair: "loose curls" } },
+].map((r) => JSON.stringify(r)).join("\n") + "\n";
+const askFiles = { "character-registry.json": askRegistry, "tags.jsonl": askTags };
+
+test("--ask returns the prompt on its own when stdin stays open, on every exit path", async () => {
+  const paths = await Promise.all([
+    askOnOpenStdin({ args: ["tags.jsonl", "--character", "june-okafor", "--ask"], answers: "\n\nn\n", files: askFiles }),
+    askOnOpenStdin({ args: ["tags.jsonl", "--character", "june-okafor", "--ask"], answers: "\n\ny\n", files: askFiles }),
+    askOnOpenStdin({ args: ["tags.jsonl", "--character", "june-okafor", "--ask", "--write"], answers: "\n\n", files: askFiles }),
+    askOnOpenStdin({ args: ["tags.jsonl", "--ask"], answers: "\n\n", files: askFiles }),
+  ]);
+  const [decline, record, writeFlag, noCharacter] = paths;
+  assert.ok(decline.exitedByItself, "declining to record must end the command\n" + decline.out + decline.err);
+  assert.match(decline.out, /Not recorded\./);
+  assert.ok(record.exitedByItself, "recording must end the command\n" + record.out + record.err);
+  assert.match(record.out, /Recorded in character-registry\.json/);
+  assert.ok(JSON.parse(fs.readFileSync(path.join(record.dir, "character-registry.json"), "utf8")).characters["june-okafor"].anchor, "the anchor was written");
+  assert.ok(writeFlag.exitedByItself, "--write skips the third question and must still end the command\n" + writeFlag.out + writeFlag.err);
+  assert.ok(noCharacter.exitedByItself, "no --character means no third question and must still end the command\n" + noCharacter.out + noCharacter.err);
+  assert.equal(decline.code + record.code + writeFlag.code + noCharacter.code, 0);
+  for (const p of paths) fs.rmSync(p.dir, { recursive: true, force: true });
 });
