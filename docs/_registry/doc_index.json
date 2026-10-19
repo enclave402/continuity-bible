@@ -186,6 +186,14 @@
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md",
       "status": "active"
+    },
+    {
+      "doc_id": "lessons",
+      "title": "Lessons",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/LESSONS.md",
+      "status": "active"
     }
   ]
 }

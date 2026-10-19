@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-19 13:10 EDT
-**HEAD:** 48c648f
+**HEAD:** f0c7bf4
 **Date:** 2026-10-19
 **Session:** the edit round trip and the owner's-words boundary (pull request from `claude/edit-round-trip`): named variants of the text, an apply step with a round-trip gate, slots; state after pull request 14 merged
 
