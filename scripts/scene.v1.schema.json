@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/scene.v1.schema.json",
   "title": "Scene records, version 1",
-  "description": "A story as data: one record per scene, keyed by slug, in one file. A scene has no number; where it falls in the reading order is the job of an edition (edition.v1.schema.json), so a scene can be moved, told from another character first, or retired without touching a page. Every string is a token source: names are {{id}} tokens, never written out. Loaded by scripts/story.mjs, which derives each spread's number from its position in an edition and fails on an unknown slug, a slug listed twice, or a scene neither placed nor retired. Field reference: docs/3-reference/SCENE-AND-EDITION-FIELDS.md. Keys starting with _ are notes anywhere and are never checked.",
+  "description": "A story as data: one record per scene, keyed by slug, in one file. A scene has no number; where it falls in the reading order is the job of an edition (edition.v1.schema.json), so a scene can be moved, told from another character first, or retired without touching a page. Every string is a token source: names are {{id}} tokens, never written out. Loaded by scripts/story.mjs, which derives each spread's number from its position in an edition and fails on an unknown slug, a slug listed twice, or a scene neither placed nor retired. Field reference: docs/3-reference/SCENE-AND-EDITION-FIELDS.md. A key starting with new- is a slot: a spread the story needs and the author has not written yet (scripts/story-variants.mjs makes one from a tested draft); it holds notes only (_draft, _slot), is placed or retired in every edition like any scene, and the loader refuses one whose paragraphs, dialogue or other fields are filled in (ADR-007). Keys starting with _ are notes anywhere and are never checked.",
   "type": "object",
   "required": ["title", "story", "layouts", "scenes"],
   "additionalProperties": false,
@@ -27,10 +27,16 @@
     },
     "scenes": {
       "type": "object",
-      "description": "One record per scene, keyed by slug (lower-case letters, digits and hyphens). The slug is the scene's identity in every edition and in its picture file names.",
+      "description": "One record per scene, keyed by slug (lower-case letters, digits and hyphens). The slug is the scene's identity in every edition and in its picture file names. A slug starting with new- is a slot and holds notes only.",
       "additionalProperties": false,
       "patternProperties": {
-        "^[a-z0-9][a-z0-9-]*$": {
+        "^new-[a-z0-9-]+$": {
+          "type": "object",
+          "description": "A slot: a spread the author has not written yet. No field is allowed; the tested draft is a note under _draft and the slot's origin under _slot (both ignored here, like every key starting with _). The author claims the spread by renaming it to a slug without new- and filling in the fields of a scene.",
+          "additionalProperties": false,
+          "properties": {}
+        },
+        "^(?!new-)[a-z0-9][a-z0-9-]*$": {
           "type": "object",
           "required": ["title", "picture", "time", "layout", "art"],
           "additionalProperties": false,

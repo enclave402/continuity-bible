@@ -23,7 +23,7 @@ export function check(story) {
   const art = artState(story);
   const referenced = story.referencedArt();
   const loadedBy = new Map();
-  for (const slug of story.placed()) for (const name of story.scenes[slug].art) { if (!loadedBy.has(name)) loadedBy.set(name, []); loadedBy.get(name).push(slug); }
+  for (const slug of story.placed()) for (const name of story.scenes[slug].art || []) { if (!loadedBy.has(name)) loadedBy.set(name, []); loadedBy.get(name).push(slug); }
   if (!art.inGit) notes.push(`${art.shown} is not inside a git checkout, so "tracked" is not checked here; a picture counts as present when it is on disk`);
 
   // rule 1: references exist

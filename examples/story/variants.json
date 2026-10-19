@@ -1,0 +1,57 @@
+{
+  "$schema": "../../scripts/variants.v1.schema.json",
+  "_about": "Named edits to the example story's text, to test before they are made. A variant is applied to the rendered text of an edition (node scripts/story-variants.mjs render examples/story sam-first <name>), never to the records; the winner is written back as tokens by node scripts/story-variants.mjs apply. Names here are tokens, like everywhere else; they are resolved before the phrase is looked for. Names join with + on the command line.",
+  "variants": {
+    "night-in-the-time-line": {
+      "about": "every evening TIME line says night, so a reader who skims the time lines still knows when they are",
+      "steps": [
+        { "replace": "Thursday, ", "with": "Thursday night, ", "in": "every spread" }
+      ]
+    },
+    "shorter-porch": {
+      "about": "the porch opens with a shorter second sentence",
+      "steps": [
+        { "replace": "It was the fourth time since the cab.", "with": "The fourth time since the cab.", "in": "the-porch" }
+      ]
+    },
+    "a-bill-not-invoices": {
+      "about": "{{theo-vance}} reads the text the way he reads a bill, not invoices; one spread holds the phrase",
+      "steps": [
+        { "replace": "the way he read invoices", "with": "the way he read a bill", "in": "one spread" }
+      ]
+    },
+    "rest-the-workshop": {
+      "about": "the reader meets {{theo-vance}} for the first time in the morning, not in the workshop at night",
+      "steps": [
+        { "drop": ["across-town"] }
+      ]
+    },
+    "a-note-first": {
+      "about": "one line to the reader before the first spread",
+      "steps": [
+        { "banner": "Read it in one sitting if you can: the whole story is six hours and the morning after." }
+      ]
+    },
+    "the-hallway": {
+      "about": "a spread between the porch and the kitchen, where {{sam-hayes}} still has not looked up; a draft to test, and a slot if it wins",
+      "steps": [
+        {
+          "add": "new-the-hallway",
+          "after": "the-porch",
+          "draft": {
+            "title": "The hallway",
+            "part": "Part one: six hours",
+            "picture": "A narrow hallway at night, {{sam-hayes}} with one shoe off and the phone still lit in her hand, {{chloe-jenkins}} ahead of her at the kitchen door.",
+            "time": "Thursday, 11:54 PM",
+            "paragraphs": [
+              "In the hallway {{sam-hayes}} took her shoes off one-handed. The phone stayed in the other hand, and she did not look up from it."
+            ],
+            "dialogue": [
+              { "speaker": "{{chloe-jenkins}}", "text": "Kitchen. Tea. Then the phone." }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

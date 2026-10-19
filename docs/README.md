@@ -4,7 +4,7 @@ Human front door to this repository's documentation. Placement policy: [CONTRIBU
 
 ## What this repo is
 
-One registry file holds every character's name once; every source holds `{{id}}` tokens; a gate fails drift before it ships. Around that core: the story itself as one record per scene and one list per reading order, so a spread moves, is told from another character first, or is retired without a page being touched or a picture lost; continuity cards and a shot sheet that carry wardrobe, props, marks, place and time from one shot to the next and compile into a pasteable block; a research process any agent can run on a local model; and a policy engine for choosing a visual anchor after a character has already drifted. WHAT: [`../PRODUCT.md`](../PRODUCT.md). HOW: [`../AGENTS.md`](../AGENTS.md). NOW: [`../worklog/STATE.md`](../worklog/STATE.md).
+One registry file holds every character's name once; every source holds `{{id}}` tokens; a gate fails drift before it ships. Around that core: the story itself as one record per scene and one list per reading order, so a spread moves, is told from another character first, or is retired without a page being touched or a picture lost; a change to the words tested as a named variant of the text and written back as tokens by the machine that measured it, with a new spread left as a slot for the author; continuity cards and a shot sheet that carry wardrobe, props, marks, place and time from one shot to the next and compile into a pasteable block; a research process any agent can run on a local model; and a policy engine for choosing a visual anchor after a character has already drifted. WHAT: [`../PRODUCT.md`](../PRODUCT.md). HOW: [`../AGENTS.md`](../AGENTS.md). NOW: [`../worklog/STATE.md`](../worklog/STATE.md).
 
 ## 1. Learn (`1-tutorials/`)
 
@@ -17,6 +17,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Ingest research](2-how-to/HOW-TO-INGEST-RESEARCH.md): card a document, index it, pack it, extract candidates with a local model, verify sources, merge findings, ask.
 - [Keep continuity from shot to shot](2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md): two continuity cards and one shot sheet; what carries forward by itself and what you decide with a reason; one block to paste per shot; the gate catching a missing reason, a prop in the wrong hand, a contradicted time.
 - [Retire a spread without losing it, and tell the same story in two orders](2-how-to/HOW-TO-REORDER-AND-RETIRE-SPREADS.md): the story as records and editions; move a slug, rebuild, park the picture with a reason; a second telling is one new file; a deleted picture needs the author's note.
+- [Test a change to the words before you make it, and let the machine write the winner back](2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md): a named variant of the text to put in front of readers; the diff; the apply step that writes the winner into the records as tokens and proves the records render as the tested text; a spread the tests want becomes a slot the author fills; what an AI may never write into a story.
 - [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, answer the two drift questions (or name a policy), record the anchor, size the regeneration bill.
 
 ## 3. Look up (`3-reference/`)
@@ -25,6 +26,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Continuity issue classes](3-reference/CONTINUITY-ISSUE-CLASSES.md): the eight ways a continuity system goes silent, and the mechanism that answers each.
 - [Continuity card and shot sheet fields](3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md): every field of the cards file and the shot sheet, the two surface declarations, every gate check, the compiled block line by line.
 - [Scene and edition fields](3-reference/SCENE-AND-EDITION-FIELDS.md): every field of the scene file, an edition and the parked-art manifest; the built text line by line; the commands; the three gates and what each refuses.
+- [Variant names and the applied record](3-reference/VARIANTS-AND-THE-APPLIED-RECORD.md): the variants file, the four step shapes and every refusal, the commands, what apply does in order, the slot record, the banner, the applied record field by field.
 - [Research layers](3-reference/RESEARCH-LAYERS.md): card front matter, findings schema, sources schema, retrieval pack contract, configuration.
 
 ## 4. Understand (`4-explanation/`)
@@ -38,6 +40,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
   - [ADR-004 Retrospective anchor policy for drifted characters](4-explanation/decisions/ADR-004-retrospective-anchor-policy.md)
   - [ADR-005 Continuity cards and a shot sheet carry state from shot to shot](4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md)
   - [ADR-006 The story is records and editions, and a retirement is never a deletion](4-explanation/decisions/ADR-006-story-as-records-and-editions.md)
+  - [ADR-007 A change to the words is a named variant of the rendered text, written back by the machine that measured it; a new spread is a slot whose words are the author's](4-explanation/decisions/ADR-007-variants-round-trip-and-owners-words.md)
 
 ## Not here
 

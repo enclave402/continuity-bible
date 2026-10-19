@@ -14,6 +14,7 @@
     "tag": "node scripts/tag.mjs",
     "new-character": "node scripts/new-character.mjs",
     "story": "node scripts/story.mjs",
+    "variants": "node scripts/story-variants.mjs",
     "check:story": "node scripts/story.mjs check examples/story",
     "verify": "node scripts/check.mjs && node --test && node scripts/story.mjs check examples/story && node scripts/check-private.mjs && node scripts/check-worklog.mjs && node scripts/research/index.mjs --check && node scripts/check-docs.mjs",
     "private": "node scripts/check-private.mjs",

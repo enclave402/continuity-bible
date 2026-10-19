@@ -31,7 +31,7 @@ export function check(story) {
 
   // the record and the pictures of a retired scene stay
   for (const slug of retired) {
-    for (const name of story.scenes[slug].art) {
+    for (const name of story.scenes[slug].art || []) {
       if (art.onDisk.has(name)) continue;
       if (noted.has(name)) { notes.push(`${art.shown}/${name} (retired scene ${slug}) was removed with a note: ${noted.get(name)}`); continue; }
       failures.push(`${art.shown}/${name} is gone, but ${slug} is retired, not deleted: a retirement keeps the record and the picture. Fix: put the picture back in ${art.shown}/ (parked with a reason), or, if it must go, add it to removed in ${manifest.shown} with a note saying who decided and why`);
@@ -41,7 +41,7 @@ export function check(story) {
   // a deleted story picture needs the owner's note, whichever scene it belonged to
   if (art.inGit) {
     for (const name of [...art.deleted].sort()) {
-      if (noted.has(name)) { if (!retired.some((slug) => story.scenes[slug].art.includes(name))) notes.push(`${art.shown}/${name} was removed with a note: ${noted.get(name)}`); continue; }
+      if (noted.has(name)) { if (!retired.some((slug) => (story.scenes[slug].art || []).includes(name))) notes.push(`${art.shown}/${name} was removed with a note: ${noted.get(name)}`); continue; }
       failures.push(`${art.shown}/${name} is deleted in git (${art.onDisk.has(name) ? "staged for deletion" : "gone from the working tree"}) with no note. Story pictures are never deleted silently. Fix: git restore --staged --worktree -- ${art.shown}/${name}, or add { "file": "${name}", "note": "<who decided, when, and why>" } under removed in ${manifest.shown}`);
     }
   } else {
@@ -52,7 +52,7 @@ export function check(story) {
   for (const [name, note] of noted) {
     if (!note.trim()) continue; // already reported by readParked
     if (art.onDisk.has(name) && !art.deleted.has(name)) failures.push(`${manifest.shown}: removed says ${name} was removed, but it is still in ${art.shown}/. Fix: delete the picture, or drop the note (a kept picture is parked, not removed)`);
-    if (referenced.has(name)) failures.push(`${manifest.shown}: removed lists ${name}, but ${[...story.placed()].filter((s) => story.scenes[s].art.includes(name)).join(", ")} still loads it. Fix: change the scene's art line first; a reader never meets a missing picture`);
+    if (referenced.has(name)) failures.push(`${manifest.shown}: removed lists ${name}, but ${[...story.placed()].filter((s) => (story.scenes[s].art || []).includes(name)).join(", ")} still loads it. Fix: change the scene's art line first; a reader never meets a missing picture`);
   }
 
   const summary = `${retired.length} scene(s) retired in every edition with their records and pictures kept, ${noted.size} picture(s) removed with a note, ${art.inGit ? art.deleted.size : 0} deletion(s) in git`;
