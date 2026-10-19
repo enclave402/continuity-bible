@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "narrative-token-ssot",
-  "updated_at": "2026-10-18",
+  "updated_at": "2026-10-19",
   "docs": [
     {
       "doc_id": "tutorial-start-here",
@@ -33,6 +33,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "solve",
       "canonical_path": "docs/2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "how-to-reorder-and-retire-spreads",
+      "title": "How to retire a spread without losing it, and tell the same story in two orders",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-REORDER-AND-RETIRE-SPREADS.md",
       "status": "active"
     },
     {
@@ -73,6 +81,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "lookup",
       "canonical_path": "docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-scene-and-edition-fields",
+      "title": "Scene and edition fields",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/SCENE-AND-EDITION-FIELDS.md",
       "status": "active"
     },
     {
@@ -129,6 +145,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "adr-006-story-as-records-and-editions",
+      "title": "ADR-006 The story is records and editions, and a retirement is never a deletion",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/decisions/ADR-006-story-as-records-and-editions.md",
       "status": "active"
     },
     {

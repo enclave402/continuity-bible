@@ -3,7 +3,7 @@
   "_about": {
     "role": "Single Source of Truth (SSOT) authority file for narrative characters, companions and props.",
     "rule": "Source files and prompts never contain a written-out name or a written-out variant. Use tokens: {{id}}, {{id:first}}, {{id:full}}, {{id:<form>}}.",
-    "example": "This registry is the repository's own example: three people, two props, one scene file, one art manifest, one token source, continuity cards, a shot sheet, two render surfaces and a prompt template."
+    "example": "This registry is the repository's own example: three people, two props, one scene file, one art manifest, one token source, continuity cards, a shot sheet, two render surfaces, a prompt template, and a story folder (examples/story: scene records, two editions, parked art, built output)."
   },
   "registry_version": 1,
   "surfaces": [
@@ -115,12 +115,32 @@
           "why": "a shot planned in the kitchen may not describe the workbench"
         }
       ]
+    },
+    {
+      "type": "scenes",
+      "file": "examples/story/scenes.json",
+      "story": "main-story",
+      "fields": [
+        "characters",
+        "props",
+        "narrator",
+        "margin_author",
+        "dialogue[].speaker"
+      ]
     }
   ],
   "token_sources": [
     {
       "file": "examples/*.md",
       "why": "scene drafts a builder renders"
+    },
+    {
+      "file": "examples/story/editions/*.json",
+      "why": "reading orders hold slugs only; a reason or note that names a character writes a token"
+    },
+    {
+      "file": "examples/story/parked-art.json",
+      "why": "the parked and removed lists hold file names and reasons; never a typed name"
     }
   ],
   "records": [
@@ -139,7 +159,8 @@
       "test/**",
       "scripts/**",
       ".context/**",
-      "examples/anchor/**"
+      "examples/anchor/**",
+      "examples/story/built/**"
     ],
     "strict": false
   },

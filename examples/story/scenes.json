@@ -1,0 +1,128 @@
+{
+  "$schema": "../../scripts/scene.v1.schema.json",
+  "_about": "The repository's worked example of story element continuity: six spreads of the same three people as the rest of the examples, as records. A spread has no number here; its place is in editions/*.json. Names are tokens; the pictures in art/ are placeholders named after their spreads; parked-art.json accounts for every picture nothing loads; built/ is output written by node scripts/story.mjs build examples/story and never edited.",
+  "title": "Six Hours",
+  "story": "main-story",
+  "art_folder": "art",
+  "art_prefix": "main_",
+  "layouts": {
+    "single": { "pictures": 1, "about": "one picture above the text" },
+    "triptych": { "pictures": 3, "about": "three pictures in a row above the text" }
+  },
+  "scenes": {
+    "the-porch": {
+      "title": "The porch",
+      "part": "Part one: six hours",
+      "narrator": "{{chloe-jenkins}}",
+      "characters": ["{{sam-hayes}}", "{{chloe-jenkins}}"],
+      "props": ["cracked-phone"],
+      "paragraphs": [
+        "{{chloe-jenkins}} dug through her bag for her keys while {{sam-hayes}} read the message again under the porch bulb. It was the fourth time since the cab.",
+        "Six hours. He had opened it at 11:52 and said nothing. {{sam-hayes}} knew the minute the way you know a birthday."
+      ],
+      "dialogue": [
+        { "speaker": "{{sam-hayes}}", "text": "He read it. Look, it says read." },
+        { "speaker": "{{chloe-jenkins}}", "text": "I see it. Come inside." }
+      ],
+      "margin_note": "I counted the hours like they were evidence. They were not evidence. They were hours.",
+      "margin_author": "{{sam-hayes}} (looking back)",
+      "picture": "Two women on a narrow front porch at night, one bent over a glowing phone, one at the door with her keys out.",
+      "time": "Thursday, 11:50 PM",
+      "layout": "single",
+      "art": ["main_the-porch.png"]
+    },
+    "read-at-1152": {
+      "title": "Read at 11:52",
+      "part": "Part one: six hours",
+      "narrator": "{{chloe-jenkins}}",
+      "characters": ["{{sam-hayes}}", "{{chloe-jenkins}}", "{{theo-vance}}"],
+      "props": ["cracked-phone"],
+      "paragraphs": [
+        "At the kitchen table {{sam-hayes:formal}} laid the phone face up between the mugs, like a card she had been dealt and could not put down.",
+        "{{theo-vance:full}} signed his contracts with his whole name. He signed her with one letter."
+      ],
+      "dialogue": [
+        { "speaker": "{{sam-hayes}}", "text": "{{chloe-jenkins:nickname}}, is this a red flag?" },
+        { "speaker": "{{chloe-jenkins}}", "text": "It is a text. Read me what it says." },
+        { "speaker": "{{theo-vance}}", "text": "Running late. Talk tmrw. –{{theo-vance:initial}}" }
+      ],
+      "margin_note": "One letter can hold a whole person, or hide one. I did not know yet which.",
+      "margin_author": "{{chloe-jenkins}}",
+      "footnote": "A read receipt says a screen was open. It does not say a person was ready.",
+      "picture": "{{sam-hayes:full}} at a kitchen table under lamplight, {{cracked-phone}} glowing between two mugs, {{chloe-jenkins}} across from her.",
+      "time": "Thursday, 11:58 PM",
+      "layout": "single",
+      "art": ["main_read-at-1152.png"]
+    },
+    "the-napkin-timeline": {
+      "title": "The napkin timeline",
+      "part": "Part one: six hours",
+      "narrator": "{{chloe-jenkins}}",
+      "characters": ["{{sam-hayes}}", "{{chloe-jenkins}}"],
+      "props": ["cracked-phone"],
+      "paragraphs": [
+        "{{chloe-jenkins}} drew the evening on a napkin: the message at 5:40, the read at 11:52, the long flat line between them.",
+        "{{sam-hayes}} looked at the line as if it might say something the phone had not."
+      ],
+      "picture": "A paper napkin on a kitchen table with a timeline drawn in pen, two pairs of hands at its edges.",
+      "time": "Friday, 12:05 AM",
+      "layout": "single",
+      "art": ["main_the-napkin-timeline.png"]
+    },
+    "across-town": {
+      "title": "Across town",
+      "part": "Part one: six hours",
+      "narrator": "{{chloe-jenkins}}",
+      "characters": ["{{theo-vance}}"],
+      "props": ["brass-key"],
+      "paragraphs": [
+        "Across town {{theo-vance}} turned his phone face down on the workbench and picked up the plane again. The board did not need planing.",
+        "On its nail by the door hung {{brass-key}}, where it always hung. He had not locked up. He was not leaving yet."
+      ],
+      "margin_note": "I was not ignoring her. I was ignoring the part of me that wanted to answer.",
+      "margin_author": "{{theo-vance}} (looking back)",
+      "picture": "A man alone in a carpenter's workshop under a hanging bulb, a phone face down beside the plane, a brass key on a nail by the door.",
+      "time": "Thursday, 11:55 PM",
+      "layout": "single",
+      "art": ["main_across-town.png"]
+    },
+    "morning-at-the-workbench": {
+      "title": "Morning at the workbench",
+      "part": "Part two: morning",
+      "narrator": "{{chloe-jenkins}}",
+      "characters": ["{{theo-vance}}"],
+      "props": ["brass-key"],
+      "paragraphs": [
+        "At six {{theo-vance}} wrote a reply, read it twice, and deleted it. Then he wrote a shorter one and deleted that.",
+        "He took {{brass-key}} off its nail and locked the shop behind him, which he had never once forgotten to do."
+      ],
+      "margin_note": "Deleting a sentence felt safer than sending one. It was not safer. It was just quieter.",
+      "margin_author": "{{theo-vance}} (looking back)",
+      "picture": "{{theo-vance}} in the workshop doorway at dawn, {{brass-key}} in his hand, grey light on the sawdust.",
+      "time": "Friday, 6:10 AM",
+      "layout": "single",
+      "art": ["main_morning-at-the-workbench.png"]
+    },
+    "the-text-sent": {
+      "title": "The text, sent",
+      "part": "Part two: morning",
+      "narrator": "{{chloe-jenkins}}",
+      "characters": ["{{sam-hayes}}", "{{theo-vance}}"],
+      "props": ["cracked-phone"],
+      "paragraphs": [
+        "{{sam-hayes}} typed it on the porch where she had read his, so the two messages would at least share a place.",
+        "Nine miles away a phone turned face up on a workbench. {{theo-vance}} read it standing, the way he read invoices."
+      ],
+      "dialogue": [
+        { "speaker": "{{sam-hayes}}", "text": "I'd like to know where I stand. You can tell me tonight, or you can tell me now." }
+      ],
+      "margin_note": "I sent the thing I was afraid of. The fear came along. It did not get to drive.",
+      "margin_author": "{{sam-hayes}} (looking back)",
+      "footnote": "Saying where you stand is not a demand. It is a map with your own position marked on it.",
+      "picture": "Three pictures in a row: a thumb over the send button of a cracked phone; the sent message alone on a screen; {{theo-vance}} reading it standing at the workbench.",
+      "time": "Friday, 7:30 AM",
+      "layout": "triptych",
+      "art": ["main_the-text-sent-1.png", "main_the-text-sent-2.png", "main_the-text-sent-3.png"]
+    }
+  }
+}

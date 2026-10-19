@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/scene.v1.schema.json",
+  "title": "Scene records, version 1",
+  "description": "A story as data: one record per scene, keyed by slug, in one file. A scene has no number; where it falls in the reading order is the job of an edition (edition.v1.schema.json), so a scene can be moved, told from another character first, or retired without touching a page. Every string is a token source: names are {{id}} tokens, never written out. Loaded by scripts/story.mjs, which derives each spread's number from its position in an edition and fails on an unknown slug, a slug listed twice, or a scene neither placed nor retired. Field reference: docs/3-reference/SCENE-AND-EDITION-FIELDS.md. Keys starting with _ are notes anywhere and are never checked.",
+  "type": "object",
+  "required": ["title", "story", "layouts", "scenes"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "title": { "type": "string", "minLength": 1, "description": "The story's title, printed at the top of every built edition." },
+    "story": { "type": "string", "minLength": 1, "description": "The registry story id the characters belong to; tokens resolve against it." },
+    "art_folder": { "type": "string", "minLength": 1, "description": "The folder, relative to this file, that holds every picture of the story (default art)." },
+    "art_prefix": { "type": "string", "description": "A prefix every picture file name starts with (main_). After it, the file name starts with the scene's slug, so a parked picture can always be traced to its page." },
+    "layouts": {
+      "type": "object",
+      "description": "The page shapes this story uses, keyed by a short id a scene names: how many pictures a spread of that shape carries.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["pictures"],
+        "additionalProperties": false,
+        "properties": {
+          "pictures": { "type": "integer", "minimum": 1, "description": "How many picture files a scene of this layout lists under art." },
+          "about": { "type": "string", "description": "One line for a person: one picture above the text; three pictures in a row." }
+        }
+      }
+    },
+    "scenes": {
+      "type": "object",
+      "description": "One record per scene, keyed by slug (lower-case letters, digits and hyphens). The slug is the scene's identity in every edition and in its picture file names.",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "type": "object",
+          "required": ["title", "picture", "time", "layout", "art"],
+          "additionalProperties": false,
+          "properties": {
+            "title": { "type": "string", "minLength": 1, "description": "The spread's title as the reader sees it." },
+            "part": { "type": "string", "description": "The part, act or chapter the spread belongs to, printed above the title when present." },
+            "narrator": { "type": "string", "description": "Whose voice tells this spread: a token such as {{chloe-jenkins}}. Must resolve to a character of the story." },
+            "characters": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Who is in the spread, as tokens. Each must resolve to one character allowed in the story." },
+            "props": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Registry ids of props (kind prop) in the spread; never a prop's name." },
+            "paragraphs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "The narration, one paragraph per item, tokens inside. A spread needs paragraphs or dialogue, or both." },
+            "dialogue": {
+              "type": "array",
+              "description": "Spoken lines or a text thread, in order.",
+              "items": {
+                "type": "object",
+                "required": ["speaker", "text"],
+                "additionalProperties": false,
+                "properties": {
+                  "speaker": { "type": "string", "minLength": 1, "description": "A token such as {{sam-hayes}}; must resolve to one character of the story." },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "margin_note": { "type": "string", "description": "A short note printed in the margin, usually a line looking back." },
+            "margin_author": { "type": "string", "description": "Who the margin note is by: a token." },
+            "footnote": { "type": "string", "description": "A note under the spread: a definition, a source, a thing the reader may want to know." },
+            "picture": { "type": "string", "minLength": 1, "description": "What the picture shows, in one sentence, tokens inside. The words of the spread may not contradict it; the built edition prints it as the PICTURE line so a reader of the text knows what is on the page." },
+            "time": { "type": "string", "minLength": 1, "description": "When in the story this spread happens, in the story's own words: Thursday, 11:50 PM; the next morning." },
+            "layout": { "type": "string", "minLength": 1, "description": "A key of layouts: the page shape, which says how many pictures the spread carries." },
+            "art": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "description": "The picture file names inside art_folder, in reading order, as many as the layout's pictures. Each starts with art_prefix and then the scene's slug." }
+          }
+        }
+      }
+    }
+  }
+}
