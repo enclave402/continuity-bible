@@ -1,0 +1,11 @@
+{
+  "readers": [
+    {
+      "id": "reader-a",
+      "read": true,
+      "quotes": [
+        { "spread": 1, "text": "Six hours. He had opened it at 11:52 and said nothing." }
+      ]
+    }
+  ]
+}

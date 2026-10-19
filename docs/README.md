@@ -18,6 +18,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Keep continuity from shot to shot](2-how-to/HOW-TO-KEEP-CONTINUITY-SHOT-TO-SHOT.md): two continuity cards and one shot sheet; what carries forward by itself and what you decide with a reason; one block to paste per shot; the gate catching a missing reason, a prop in the wrong hand, a contradicted time.
 - [Retire a spread without losing it, and tell the same story in two orders](2-how-to/HOW-TO-REORDER-AND-RETIRE-SPREADS.md): the story as records and editions; move a slug, rebuild, park the picture with a reason; a second telling is one new file; a deleted picture needs the author's note.
 - [Test a change to the words before you make it, and let the machine write the winner back](2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md): a named variant of the text to put in front of readers; the diff; the apply step that writes the winner into the records as tokens and proves the records render as the tested text; a spread the tests want becomes a slot the author fills; what an AI may never write into a story.
+- [Check a simulated reader panel](2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md): a quote must be verbatim in the spread it names; a no-read control throws the quiz out when it scores; the paired difference is written by the script and checked by recomputing it; simulated answers are not a human audience, and the script does not pick the winner.
 - [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, answer the two drift questions (or name a policy), record the anchor, size the regeneration bill.
 
 ## 3. Look up (`3-reference/`)
@@ -41,6 +42,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
   - [ADR-005 Continuity cards and a shot sheet carry state from shot to shot](4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md)
   - [ADR-006 The story is records and editions, and a retirement is never a deletion](4-explanation/decisions/ADR-006-story-as-records-and-editions.md)
   - [ADR-007 A change to the words is a named variant of the rendered text, written back by the machine that measured it; a new spread is a slot whose words are the author's](4-explanation/decisions/ADR-007-variants-round-trip-and-owners-words.md)
+  - [ADR-008 Simulated panel checks verify quotes, a no-read control and a paired difference, and do not decide the winner](4-explanation/decisions/ADR-008-simulated-panel-checks.md)
 
 ## Not here
 
