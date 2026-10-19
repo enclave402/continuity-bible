@@ -1,6 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 51 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 52 entries. Read `STATE.md` first; this is the trail.
+
+## 2026-10-19
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 12:28:53 (UTC-04:00) | action | story | [Story element continuity: the story as one record per scene and one list per reading order, with a retired list, parked art and three gates (ADR-006); the first extraction from the private system's reusable-framework capture](entries/2026-10-19_12-28-53_story-element-continuity-the-story-as-one-record-per-scene-a.md) | agent:claude | closed |
 
 ## 2026-10-18
 

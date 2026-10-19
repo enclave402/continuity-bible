@@ -1,0 +1,16 @@
+{
+  "$schema": "../../../scripts/edition.v1.schema.json",
+  "_about": "The reading order that opens on the porch. Position in order is the spread number; nothing is numbered by hand.",
+  "title": "Six Hours, {{sam-hayes}} first",
+  "order": [
+    "the-porch",
+    "read-at-1152",
+    "across-town",
+    "morning-at-the-workbench",
+    "the-text-sent"
+  ],
+  "_about_retired": "the-napkin-timeline was retired from both editions on 2026-10-19: it stalled the kitchen scene. Its record stays in scenes.json and its picture stays in art/, parked in parked-art.json with that reason.",
+  "retired": [
+    "the-napkin-timeline"
+  ]
+}

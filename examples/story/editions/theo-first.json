@@ -1,0 +1,15 @@
+{
+  "$schema": "../../../scripts/edition.v1.schema.json",
+  "_about": "The same six records read from the workshop first. The porch, spread 1 in the other edition, is spread 3 here; no record changed.",
+  "title": "Six Hours, {{theo-vance}} first",
+  "order": [
+    "across-town",
+    "morning-at-the-workbench",
+    "the-porch",
+    "read-at-1152",
+    "the-text-sent"
+  ],
+  "retired": [
+    "the-napkin-timeline"
+  ]
+}

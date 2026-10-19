@@ -1,0 +1,14 @@
+{
+  "_about": "Every picture in art/ that no spread of any edition loads is listed under parked with a reason, so nothing is kept by accident and nothing vanishes by accident. node scripts/check-story-art.mjs examples/story --park --reason \"...\" writes this list; node scripts/check-story-art.mjs examples/story checks it. A picture may leave the folder only with a note under removed, which node scripts/check-story-retired.mjs reads; a deleted story picture without one fails.",
+  "parked": [
+    {
+      "file": "main_read-at-1152-first-try.png",
+      "reason": "the first render of the kitchen table; the lamp was in the wrong place; kept for the before-and-after"
+    },
+    {
+      "file": "main_the-napkin-timeline.png",
+      "reason": "its spread was retired from both editions on 2026-10-19 (it stalled the kitchen scene); the record and the picture stay"
+    }
+  ],
+  "removed": []
+}

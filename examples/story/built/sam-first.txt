@@ -1,0 +1,79 @@
+SIX HOURS (Six Hours, Sam first): 5 spreads, read in order.
+Each spread has a picture; the PICTURE line says what it shows.
+
+=== SPREAD 1 OF 5 ===
+PART: Part one: six hours
+TITLE: The porch
+PICTURE: Two women on a narrow front porch at night, one bent over a glowing phone, one at the door with her keys out.
+TIME: Thursday, 11:50 PM
+
+Chloe dug through her bag for her keys while Sam read the message again under the porch bulb. It was the fourth time since the cab.
+
+Six hours. He had opened it at 11:52 and said nothing. Sam knew the minute the way you know a birthday.
+
+DIALOGUE:
+  Sam: He read it. Look, it says read.
+  Chloe: I see it. Come inside.
+
+MARGIN NOTE: I counted the hours like they were evidence. They were not evidence. They were hours. — Sam (looking back)
+
+=== SPREAD 2 OF 5 ===
+PART: Part one: six hours
+TITLE: Read at 11:52
+PICTURE: Samantha Hayes at a kitchen table under lamplight, the cracked phone glowing between two mugs, Chloe across from her.
+TIME: Thursday, 11:58 PM
+
+At the kitchen table Samantha laid the phone face up between the mugs, like a card she had been dealt and could not put down.
+
+Theodore Vance signed his contracts with his whole name. He signed her with one letter.
+
+DIALOGUE:
+  Sam: Chlo, is this a red flag?
+  Chloe: It is a text. Read me what it says.
+  Theo: Running late. Talk tmrw. –T
+
+MARGIN NOTE: One letter can hold a whole person, or hide one. I did not know yet which. — Chloe
+
+FOOTNOTE: A read receipt says a screen was open. It does not say a person was ready.
+
+=== SPREAD 3 OF 5 ===
+PART: Part one: six hours
+TITLE: Across town
+PICTURE: A man alone in a carpenter's workshop under a hanging bulb, a phone face down beside the plane, a brass key on a nail by the door.
+TIME: Thursday, 11:55 PM
+
+Across town Theo turned his phone face down on the workbench and picked up the plane again. The board did not need planing.
+
+On its nail by the door hung the brass key, where it always hung. He had not locked up. He was not leaving yet.
+
+MARGIN NOTE: I was not ignoring her. I was ignoring the part of me that wanted to answer. — Theo (looking back)
+
+=== SPREAD 4 OF 5 ===
+PART: Part two: morning
+TITLE: Morning at the workbench
+PICTURE: Theo in the workshop doorway at dawn, the brass key in his hand, grey light on the sawdust.
+TIME: Friday, 6:10 AM
+
+At six Theo wrote a reply, read it twice, and deleted it. Then he wrote a shorter one and deleted that.
+
+He took the brass key off its nail and locked the shop behind him, which he had never once forgotten to do.
+
+MARGIN NOTE: Deleting a sentence felt safer than sending one. It was not safer. It was just quieter. — Theo (looking back)
+
+=== SPREAD 5 OF 5 ===
+PART: Part two: morning
+TITLE: The text, sent
+PICTURE: Three pictures in a row: a thumb over the send button of a cracked phone; the sent message alone on a screen; Theo reading it standing at the workbench.
+TIME: Friday, 7:30 AM
+
+Sam typed it on the porch where she had read his, so the two messages would at least share a place.
+
+Nine miles away a phone turned face up on a workbench. Theo read it standing, the way he read invoices.
+
+DIALOGUE:
+  Sam: I'd like to know where I stand. You can tell me tonight, or you can tell me now.
+
+MARGIN NOTE: I sent the thing I was afraid of. The fear came along. It did not get to drive. — Sam (looking back)
+
+FOOTNOTE: Saying where you stand is not a demand. It is a map with your own position marked on it.
+
