@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft-2020-12/schema",
+  "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/variants.v1.schema.json",
+  "title": "Variants, version 1",
+  "description": "Named, composable edits to a story's text, kept in the story folder as variants.json. A variant is applied to the rendered text of an edition (what a reader meets), never to the records, so the text a test saw is reproducible from the variant's name; scripts/story-variants.mjs renders it, shows the difference, and writes the winner back into the records as tokens (apply). Every string is a token source: a name is {{id}}, and it is resolved before the phrase is looked for in the text. Field reference: docs/3-reference/VARIANTS-AND-THE-APPLIED-RECORD.md. Keys starting with _ are notes anywhere and are never checked.",
+  "type": "object",
+  "required": ["variants"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "variants": {
+      "type": "object",
+      "description": "Variants keyed by name (lower-case letters, digits and hyphens). The name base is reserved: it means the text as the records render it. Names compose on the command line with +: rest-the-workshop+night-in-the-time-line applies the steps of the first, then the second.",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(?!base$)[a-z0-9][a-z0-9-]*$": {
+          "type": "object",
+          "required": ["about", "steps"],
+          "additionalProperties": false,
+          "properties": {
+            "about": { "type": "string", "minLength": 1, "description": "One line for a person: what this variant tests." },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "description": "The edits, in order. Each step is one of: { \"replace\": \"<phrase>\", \"with\": \"<phrase>\", \"in\": \"<slug>\" | \"every spread\" | \"one spread\" }; { \"drop\": [\"<slug>\", ...] }; { \"banner\": \"<one line>\" }; { \"add\": \"new-<slug>\", \"after\" | \"before\": \"<slug>\", \"draft\": { title, picture, time, paragraphs, dialogue, part, margin_note, margin_author, footnote } }. The loader checks each step's shape and says what is wrong.",
+              "items": { "type": "object" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

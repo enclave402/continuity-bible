@@ -141,6 +141,10 @@
     {
       "file": "examples/story/parked-art.json",
       "why": "the parked and removed lists hold file names and reasons; never a typed name"
+    },
+    {
+      "file": "examples/story/variants*.json",
+      "why": "a test edit names a character by token and is resolved before the text is searched; the applied record quotes drafts as tokens"
     }
   ],
   "records": [

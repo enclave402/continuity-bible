@@ -44,6 +44,14 @@
       "status": "active"
     },
     {
+      "doc_id": "how-to-test-a-change-before-you-make-it",
+      "title": "How to test a change to the words before you make it, and let the machine write the winner back",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md",
+      "status": "active"
+    },
+    {
       "doc_id": "how-to-resolve-character-drift",
       "title": "How to resolve character drift after the fact",
       "triadic_leg": "diataxis",
@@ -89,6 +97,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "lookup",
       "canonical_path": "docs/3-reference/SCENE-AND-EDITION-FIELDS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-variants-and-the-applied-record",
+      "title": "Variant names and the applied record",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/VARIANTS-AND-THE-APPLIED-RECORD.md",
       "status": "active"
     },
     {
@@ -153,6 +169,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/decisions/ADR-006-story-as-records-and-editions.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "adr-007-variants-round-trip-and-owners-words",
+      "title": "ADR-007 A change to the words is a named variant of the rendered text, written back by the machine that measured it; a new spread is a slot whose words are the author's",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/decisions/ADR-007-variants-round-trip-and-owners-words.md",
       "status": "active"
     },
     {

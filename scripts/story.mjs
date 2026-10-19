@@ -20,6 +20,11 @@
  * forgotten. The renderer prints each spread with its title, the PICTURE line (what the picture shows), the paragraphs,
  * the dialogue, the margin note and the footnote, names resolved through names.mjs, so built output can be diffed against
  * the source. Exit 1 on a named problem, 2 on usage.
+ *
+ * A slug that starts with new- is a slot: a spread the story needs and the author has not written (scripts/story-variants.mjs
+ * makes one from a tested draft). A slot holds notes only (keys starting with _, such as _draft); it is placed or retired in
+ * every edition like any scene, renders as a SLOT block, and the loader refuses one whose words (paragraphs, dialogue) or
+ * other fields are filled in: the words of a spread are the author's, and the author claims them by renaming the slot.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -32,6 +37,10 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const SCENE_SCHEMA_PATH = path.join(HERE, "scene.v1.schema.json");
 export const EDITION_SCHEMA_PATH = path.join(HERE, "edition.v1.schema.json");
 export const SLUG = /^[a-z0-9][a-z0-9-]*$/;
+/** A slug that starts with new- names a slot: a spread the author has not written yet, holding notes only. */
+export const isSlot = (slug) => typeof slug === "string" && slug.startsWith("new-");
+/** The fields of a scene record that the built text prints and the round trip reads back, in print order. */
+export const TEXT_FIELDS = ["part", "title", "picture", "time", "paragraphs", "dialogue", "margin_note", "margin_author", "footnote"];
 
 /** The error a story that cannot be loaded throws: one line per problem under `problems`, the file named in each. */
 export class StoryError extends Error {
@@ -57,7 +66,22 @@ export function loadStory(dir, { registry: registryFile } = {}) {
   if (!fs.existsSync(sceneFile)) throw new StoryError([`${shown}/scenes.json is missing. Fix: the story folder holds scenes.json (the records) and editions/ (the reading orders)`]);
   const scenesJson = readJson(sceneFile);
   const sceneShown = `${shown}/scenes.json`;
-  for (const p of validate(readJson(SCENE_SCHEMA_PATH), stripNotes(scenesJson))) problems.push(`${sceneShown}: ${plainSchema(p)}`);
+  // a slot (new-*) holds notes only; it is checked here in plain words, and the schema sees the scenes without it
+  const slotProblems = [];
+  const allScenes = scenesJson.scenes && typeof scenesJson.scenes === "object" && !Array.isArray(scenesJson.scenes) ? scenesJson.scenes : {};
+  for (const [slug, scene] of Object.entries(allScenes)) {
+    if (!isSlot(slug) || !scene || typeof scene !== "object" || Array.isArray(scene)) continue;
+    const fields = Object.keys(scene).filter((k) => !k.startsWith("_"));
+    if (!fields.length) continue;
+    const words = fields.filter((k) => k === "paragraphs" || k === "dialogue");
+    const claim = `give the spread its real name: rename ${slug} to a slug without new- here and in every edition, and fill in title, picture, time, layout and art`;
+    if (words.length) slotProblems.push(`${sceneShown}: ${slug} is a slot (its slug starts with new-), and a slot's words are the author's, but ${words.join(" and ")} ${words.length === 1 ? "is" : "are"} filled in. Fix: if the words are yours, ${claim}; if they are a draft, keep it under _draft and take ${words.join(" and ")} out`);
+    else slotProblems.push(`${sceneShown}: ${slug} is a slot (its slug starts with new-): it holds notes only (keys starting with _), but it has ${fields.join(", ")}. Fix: when the spread is written, ${claim}; until then keep notes only`);
+  }
+  const forSchema = stripNotes(scenesJson);
+  if (forSchema.scenes && typeof forSchema.scenes === "object") forSchema.scenes = Object.fromEntries(Object.entries(forSchema.scenes).filter(([slug]) => !isSlot(slug)));
+  for (const p of validate(readJson(SCENE_SCHEMA_PATH), forSchema)) problems.push(`${sceneShown}: ${plainSchema(p)}`);
+  problems.push(...slotProblems);
   if (problems.length) throw new StoryError(problems);
 
   const layouts = scenesJson.layouts || {};
@@ -66,6 +90,7 @@ export function loadStory(dir, { registry: registryFile } = {}) {
   const artPrefix = scenesJson.art_prefix || "";
   const scenes = scenesJson.scenes || {};
   for (const [slug, scene] of Object.entries(scenes)) {
+    if (isSlot(slug)) continue;
     const at = `${sceneShown}: ${slug}`;
     const layout = layouts[scene.layout];
     if (!layout) problems.push(`${at}: layout "${scene.layout}" is not a key of layouts (${Object.keys(layouts).join(", ") || "none declared"}). Fix: use one of them, or declare it`);
@@ -106,7 +131,7 @@ export function loadStory(dir, { registry: registryFile } = {}) {
     }
     const missing = slugs.filter((s) => !seen.has(s) && !retired.has(s));
     if (missing.length) problems.push(`${edShown}: ${missing.length === 1 ? "a scene is" : "scenes are"} neither placed nor retired: ${missing.join(", ")}. Fix: add ${missing.length === 1 ? "it" : "each"} to order where it is read, or to retired if it is read in no spread of this edition`);
-    editions[id] = { id, file: path.join(editionsDir, file), title: json.title, order: [...json.order], retired: [...retired] };
+    editions[id] = { id, file: path.join(editionsDir, file), title: json.title, banner: json.banner, order: [...json.order], retired: [...retired] };
   }
   if (problems.length) throw new StoryError(problems);
 
@@ -116,13 +141,18 @@ export function loadStory(dir, { registry: registryFile } = {}) {
   const storyId = scenesJson.story;
   const resolved = {};
   for (const [slug, scene] of Object.entries(scenes)) {
+    // a slot renders as a SLOT block; its notes (the tested draft) are never resolved, never printed
+    if (isSlot(slug)) { resolved[slug] = { slot: slug }; continue; }
     try { resolved[slug] = names.resolveDeep(scene, storyId); }
     catch (e) { problems.push(`${sceneShown}: ${slug}: ${e.message.replace(/^names: /, "")}`); }
   }
-  // an edition's title is a token source too ("{{sam-hayes}} first"); the reader meets the name
+  // an edition's title and banner are token sources too ("{{sam-hayes}} first"); the reader meets the name
   for (const edition of Object.values(editions)) {
-    try { edition.title = names.resolveTokens(edition.title, storyId); }
-    catch (e) { problems.push(`${rel(process.cwd(), edition.file)}: title: ${e.message.replace(/^names: /, "")}`); }
+    for (const key of ["title", "banner"]) {
+      if (edition[key] === undefined) continue;
+      try { edition[key] = names.resolveTokens(edition[key], storyId); }
+      catch (e) { problems.push(`${rel(process.cwd(), edition.file)}: ${key}: ${e.message.replace(/^names: /, "")}`); }
+    }
   }
   if (problems.length) throw new StoryError(problems);
 
@@ -130,6 +160,7 @@ export function loadStory(dir, { registry: registryFile } = {}) {
     dir: folder,
     shown,
     file: sceneFile,
+    raw: scenesJson,
     title: scenesJson.title,
     story: storyId,
     artFolder,
@@ -140,12 +171,14 @@ export function loadStory(dir, { registry: registryFile } = {}) {
     editions,
     names,
     registry,
+    registryFile: registryAbs,
   };
   story.spreads = (editionId) => spreadsOf(story, editionId);
   story.positions = () => positionsOf(story);
   story.placed = () => new Set(Object.values(editions).flatMap((e) => e.order));
   story.retiredEverywhere = () => slugs.filter((s) => !story.placed().has(s));
-  story.referencedArt = () => new Set([...story.placed()].flatMap((slug) => scenes[slug].art));
+  story.slots = () => slugs.filter(isSlot);
+  story.referencedArt = () => new Set([...story.placed()].flatMap((slug) => scenes[slug].art || []));
   return story;
 }
 
@@ -170,9 +203,13 @@ export function positionsOf(story) {
   return out;
 }
 
+/** The line a slot prints under its SLOT line: the one sentence that says whose the words are. */
+export const SLOT_LINE = "This spread is not written yet: its words are the author's. The draft that was tested is a note on its record, and nothing of it is printed.";
+
 /** One spread the way a reader meets it: the header, then what is on the page, in reading order, names resolved. */
 export function renderSpread(spread) {
   const lines = [`=== SPREAD ${spread.number} OF ${spread.of} ===`];
+  if (spread.slot) { lines.push(`SLOT: ${spread.slot}`, SLOT_LINE, ""); return lines.join("\n"); }
   if (spread.part) lines.push(`PART: ${spread.part}`);
   lines.push(`TITLE: ${spread.title}`, `PICTURE: ${spread.picture}`, `TIME: ${spread.time}`, "");
   for (const p of spread.paragraphs || []) lines.push(p, "");
@@ -186,15 +223,23 @@ export function renderSpread(spread) {
   return lines.join("\n");
 }
 
-/** One edition as a reader meets it: a header line, then every spread in order. Deterministic: the built-output gate diffs it. */
-export function renderEdition(story, editionId) {
-  const spreads = spreadsOf(story, editionId);
-  const edition = story.editions[editionId];
-  const header = `${story.title.toUpperCase()} (${edition.title}): ${spreads.length} spread${spreads.length === 1 ? "" : "s"}, read in order.\nEach spread has a picture; the PICTURE line says what it shows.\n\n`;
-  const body = header + spreads.map(renderSpread).join("\n") + "\n";
+/** The lines above the first spread: the story and edition titles with the spread count, a fixed line, the banner when the edition has one, a blank line. */
+export function renderHeader(story, edition, count, banner = edition.banner) {
+  return `${story.title.toUpperCase()} (${edition.title}): ${count} spread${count === 1 ? "" : "s"}, read in order.\nEach spread has a picture; the PICTURE line says what it shows.\n${banner ? `BANNER: ${banner}\n` : ""}\n`;
+}
+
+/** The header and spread texts joined the way built output is written; throws if a token survived rendering. */
+export function joinEdition(story, editionId, header, spreadTexts) {
+  const body = header + spreadTexts.join("\n") + "\n";
   const left = [...new Set([...body.matchAll(/\{\{[^{}\n]*\}\}/g)].map((m) => m[0]))];
   if (left.length) throw new StoryError([`${story.shown}: edition ${editionId} still holds ${left.slice(0, 3).join(", ")} after rendering. Fix: ids use only lower-case letters, digits and hyphens; check the registry`]);
   return body;
+}
+
+/** One edition as a reader meets it: a header line, then every spread in order. Deterministic: the built-output gate diffs it. */
+export function renderEdition(story, editionId) {
+  const spreads = spreadsOf(story, editionId);
+  return joinEdition(story, editionId, renderHeader(story, story.editions[editionId], spreads.length), spreads.map(renderSpread));
 }
 
 /** Built output written for every edition; stale files for editions that no longer exist are removed (built/ is output). */
@@ -269,7 +314,8 @@ function plainSchema(problem) {
     .replace(/^: /, "");
 }
 
-function closest(typed, ids) {
+/** " (did you mean ...?)" for a typed slug near one the story has, else an empty string. */
+export function closest(typed, ids) {
   const near = ids.filter((id) => id.includes(typed) || typed.includes(id) || distance(id, typed) <= 2).slice(0, 2);
   return near.length ? ` (did you mean ${near.map((n) => `"${n}"`).join(" or ")}?)` : "";
 }
@@ -315,7 +361,7 @@ if (process.argv[1] && fs.realpathSync(process.argv[1]) === fileURLToPath(import
       const width = Math.max(4, ...Object.keys(story.scenes).map((s) => s.length));
       const cols = ids.map((id) => Math.max(id.length, 7));
       console.log(["slug".padEnd(width), ...ids.map((id, i) => id.padEnd(cols[i])), "title"].join("  "));
-      for (const [slug, at] of positions) console.log([slug.padEnd(width), ...ids.map((id, i) => String(at[id] ?? "").padEnd(cols[i])), story.scenes[slug].title].join("  "));
+      for (const [slug, at] of positions) console.log([slug.padEnd(width), ...ids.map((id, i) => String(at[id] ?? "").padEnd(cols[i])), isSlot(slug) ? "(slot: not written yet; the words are the author's)" : story.scenes[slug].title].join("  "));
     } else if (command === "render") {
       if (!editionId) usage();
       process.stdout.write(renderEdition(story, editionId));
