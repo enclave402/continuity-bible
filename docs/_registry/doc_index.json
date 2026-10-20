@@ -52,6 +52,14 @@
       "status": "active"
     },
     {
+      "doc_id": "how-to-check-a-simulated-panel",
+      "title": "How to check a simulated reader panel",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md",
+      "status": "active"
+    },
+    {
       "doc_id": "how-to-resolve-character-drift",
       "title": "How to resolve character drift after the fact",
       "triadic_leg": "diataxis",
@@ -177,6 +185,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/decisions/ADR-007-variants-round-trip-and-owners-words.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "adr-008-simulated-panel-checks",
+      "title": "ADR-008 Simulated panel checks verify quotes, a no-read control and a paired difference, and do not decide the winner",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/decisions/ADR-008-simulated-panel-checks.md",
       "status": "active"
     },
     {

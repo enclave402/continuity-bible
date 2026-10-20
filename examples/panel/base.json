@@ -1,0 +1,6 @@
+{
+  "readers": [
+    { "id": "reader-a", "satisfaction": 2 },
+    { "id": "reader-b", "satisfaction": 3 }
+  ]
+}

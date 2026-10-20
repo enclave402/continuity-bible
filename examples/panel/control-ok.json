@@ -1,0 +1,6 @@
+{
+  "readers": [
+    { "id": "no-read", "read": false, "quiz_correct": 0 },
+    { "id": "reader-a", "read": true, "quiz_correct": 3 }
+  ]
+}
