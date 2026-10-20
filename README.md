@@ -4,11 +4,20 @@
 >
 > *SSOT* stands for single source of truth: one place where each fact about your story lives.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-pink.svg)](LICENSE)
-[![Used in: rel8r.me](https://img.shields.io/badge/Used_in-rel8r.me-ff1484.svg)](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
-[![Ecosystem: SloppyXBaby](https://img.shields.io/badge/Developer_Kits-sloppyxbaby.com-black.svg)](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)
+This is the problem, in one real pair from the published story *Dating Red Flags*: the same scene, asked for twice, a day apart.
 
-**[Start here (about an hour)](docs/1-tutorials/START-HERE.md)** · **[Work from a browser chatbot](docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md)** · **[See it live](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[For developers](#for-developers)** · **[Using an AI coding agent? Read AGENTS.md](AGENTS.md)**
+<p align="center">
+  <a href="https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-hero&utm_campaign=narrative-token-ssot"><img src="docs/4-explanation/assets/before-after/the-prosecutors-finger-before.jpg" width="300" alt="First version: the story's lead, dark curls and light olive skin, in a dark coat at a marble café table, while her friend points at the phone between them."></a>
+  <a href="https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-hero&utm_campaign=narrative-token-ssot"><img src="docs/4-explanation/assets/before-after/the-prosecutors-finger-after.jpg" width="300" alt="Redone the next day: the same moment, but the room is now a sunny kitchen table with croissants, the lead wears a cream knit sweater, and her skin reads warmer."></a>
+</p>
+
+<p align="center"><em>Left: 2026-10-15. Right: the author's redo on 2026-10-16. The redo changed her skin, her clothes and the room. Both are real pictures from the book. Checked afterwards at face size against the one picture this tool helped pick as her reference, the redo matches it, so it stays. A redo with no declared reference is a coin toss; this tool is how the next one stops being one. The whole case, with every number: <a href="docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md">Before and after: a drifted lead</a>.</em></p>
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-pink.svg)](LICENSE)
+
+**[Start here (about an hour)](docs/1-tutorials/START-HERE.md)** · **[Work from a browser chatbot](docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md)** · **[See it live at rel8r.me](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[Made by Coach Hype](https://coachhype.com/?utm_source=github&utm_medium=readme-nav&utm_campaign=narrative-token-ssot)** · **[For developers](#for-developers)** · **[Using an AI coding agent? Read AGENTS.md](AGENTS.md)**
+
+The tool is free and complete under the MIT license: no account, no email, nothing held back. It is made by Coach Hype, who also makes [rel8r.me](https://rel8r.me/?utm_source=github&utm_medium=readme-disclosure&utm_campaign=narrative-token-ssot), where *Dating Red Flags* is published and where every picture on this page comes from. Coach Hype sells rel8r.me and the [Antidote Kit](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme-disclosure&utm_campaign=narrative-token-ssot), guardrails for coding agents. You never need either to use this.
 
 ---
 
@@ -19,6 +28,13 @@ You ask an AI for a picture of your hero. It is wonderful. On page 3 her hair is
 Names slip too. Samantha turns into Sam, then Sammy, then the AI gives her a new last name. If you ever rename someone, you hunt through every page and every prompt and hope you caught them all.
 
 A rule at the top of the chat ("always keep her hair red") makes this rarer. It does not make it impossible, because nothing checks.
+
+## Why this and not what you do now
+
+- **Pasting the full description every time.** It holds until one paste differs, and nothing tells you it did. A rename means editing every copy by hand.
+- **A rule at the top of the chat.** It makes slips rarer. Nothing checks that the AI kept it.
+- **Your image tool's own character reference.** It helps that one tool hold a face. It does not keep the names in your story text, or what each character wears and holds from one picture to the next, and it does not tell you when something slipped.
+- **What this costs you instead:** you write a token like `{{june-okafor}}` where you would type a name, and you run one command before you paste. In return a checker catches the slip, and a rename is one edit.
 
 ## The promise
 
@@ -327,6 +343,15 @@ dropped: across-town (was spread 3 of 5; retired in every edition when applied)
 
 `render` prints each version for your readers; when one wins, `apply` writes exactly it into the records, names as tokens, and proves the records render as the tested text, or puts every file back. A spread an AI drafted and the readers liked is not written: it becomes a labelled empty place in the book, draft beside it, until you write it. The loop, and the three rules an AI is held to: [How to test a change to the words before you make it](docs/2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md).
 
+## When not to use this
+
+- **It checks words, not pictures.** It keeps every prompt saying the same thing. The image model can still draw it differently, so you still look at each picture.
+- **It does not make or repair pictures.** You redraw with your own image tool.
+- **Picking the reference picture counts your own tags**, or compares the number lists (*embeddings*) an image model gives you. It makes no accuracy claim for any model.
+- **You need Node 18 or newer and a terminal.** There is no app and no web version. The steps were tested on a Mac only.
+- **Skip it for a single picture**, or when your image tool's own character reference already holds your character and you never rename anyone.
+- **Shot-to-shot continuity is the newest part.** It was built before its research on professional continuity norms was run. The open questions are listed in [ADR-005](docs/4-explanation/decisions/ADR-005-continuity-card-and-shot-sheet.md#open-loops-the-continuity-norms-research-should-confirm-or-correct).
+
 ## For developers
 
 The same engine runs the name build of a published 82-scene graphic novel. Plain Node, zero dependencies, no telemetry. Only the optional research tools under `scripts/research/` use the network, and only at the endpoints in `research/research.config.json`. `npm run check` is the gate, `npm test` the tests, `npm run check:story` the story gates, `npm run verify` everything.
@@ -366,16 +391,19 @@ node scripts/research/ask.mjs "how do I keep a prop consistent across panels"
 
 ## Where it's used
 
-It came out of, and still runs, the build for:
+It came out of, and still runs, the build for a story by the same maker:
 
-- **[Dating Red Flags](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)**: an illustrated graphic novel on [rel8r.me](https://rel8r.me/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot), an on-device relationship self-regulation tool.
+- **[Dating Red Flags](https://rel8r.me/reader.html?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot)**: an illustrated graphic novel on [rel8r.me](https://rel8r.me/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot), Coach Hype's on-device relationship self-regulation tool.
 - **82 illustrated scenes** across two dual-narrative editions (Sam-first and Theo-first), with every character name resolved from one registry file.
 
 ---
 
-## Related
+## What Coach Hype sells
 
-This repo is free and MIT licensed. I'm packaging the rest of the guardrails I use with coding agents (git worktree isolation, repo rules that hold up across sessions) as the paid [Antidote Kit](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme&utm_campaign=narrative-token-ssot).
+This repository is free and stays complete. Nothing in it needs a purchase.
+
+- **[rel8r.me](https://rel8r.me/?utm_source=github&utm_medium=readme-paid&utm_campaign=narrative-token-ssot)**: the on-device relationship self-regulation tool where *Dating Red Flags* is published, the story every picture on this page comes from.
+- **[The Antidote Kit](https://sloppyxbaby.com/?utm_source=github&utm_medium=readme-paid&utm_campaign=narrative-token-ssot)**: the rest of the guardrails Coach Hype uses with coding agents, as a paid kit: git worktree isolation, and repo rules that hold up across sessions.
 
 ---
 
