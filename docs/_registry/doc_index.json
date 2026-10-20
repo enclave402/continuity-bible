@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "narrative-token-ssot",
-  "updated_at": "2026-10-19",
+  "updated_at": "2026-10-20",
   "docs": [
     {
       "doc_id": "tutorial-start-here",
@@ -121,6 +121,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "lookup",
       "canonical_path": "docs/3-reference/RESEARCH-LAYERS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-launch-readiness-2026-10-20",
+      "title": "Launch readiness, 2026-10-20",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/LAUNCH-READINESS-2026-10-20.md",
       "status": "active"
     },
     {

@@ -25,6 +25,14 @@ Open a pull request. A maintainer merges; nobody pushes to `main`.
 
 [Conventional Commits](https://www.conventionalcommits.org): `feat(scope): ...`, `fix: ...`, `docs: ...`, `test: ...`, `chore: ...`. If an agent wrote the commit, add an `Agent: <name>` trailer. `CHANGELOG.md` is generated with `git cliff`.
 
+## AI-assisted contributions
+
+Pull requests written with an AI tool are welcome on three conditions:
+
+1. Say in the pull request which tools you used and for what.
+2. A human opens the pull request, owns the change, and can explain and defend every line of it.
+3. `npm run verify` passes on your branch.
+
 ## Where things go
 
 - Code: `scripts/`. Tests: `test/` (Node's built-in runner). Examples: `examples/`.
