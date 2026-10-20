@@ -9,6 +9,18 @@
 - **Positioning (owner, 2026-10-17):** completely layperson-friendly and intuitive first. "Want to use AI to tell stories without AI slop? Want unique art, or to make a book?" LLM-agnostic and API-agnostic: the proof case runs through a browser tab, not an expert node graph or an API, and the engine must still hold. Every anchor policy shows its regeneration bill and the person chooses: the proof case takes the least-regeneration state (consistency throughout over any particular endpoint); `canon` is there for whoever needs the drift undone. Drift resolution is two questions: what must never change, and for everything else fewest redraws, first look or last look.
 - **Not the job:** image generation itself, hosting, any single vendor's agent harness.
 
+## Why this exists: two masters
+
+The framework is sold because its methods were proven first on a product, with measured simulated-reader numbers. Those runs showed what works. This repository writes the methods down so a layperson can get the same kind of output in an easier way.
+
+Master 1 is the product. It is the story a reader follows, finishes, and remembers, and the price they would gladly have paid. Nothing in this repository changes that story or its price.
+
+Master 2 is the framework. It is the process: how a change is tested, how a lesson is kept, and how the next person can run it. The lessons are in `docs/LESSONS.md`. Each one names the framework element the lesson itself names, and that element's public state.
+
+Today the eleven elements stand at the counts the feed printed: `public states: shipped 2, partial 1, to extract 8`. Shipped means the piece is already in this repository. Partial means part of it is here. To extract means the method was proven on the product and is not here yet.
+
+Wherever this page mentions the product's numbers, they are simulated-reader numbers. They are not a count of a human audience.
+
 ## Deliverables
 
 | Piece | Files | Done when |
