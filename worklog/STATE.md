@@ -1,9 +1,9 @@
 # STATE: narrative-token-ssot
 
-**Last rewritten:** 2026-10-19 16:10 EDT
-**HEAD:** f0c7bf4
-**Date:** 2026-10-19
-**Session:** simulated panel checks (branch `grok/panel-checks`): verbatim quotes, a no-read control, a recomputed paired difference. Pull request 15 merged the edit round trip.
+**Last rewritten:** 2026-10-21 EDT
+**HEAD:** 7531f00
+**Date:** 2026-10-21
+**Session:** continuity actions 1 to 3 (branch `claude/continuity-actions-1-3`): garment layers in compile-shot, batch backwards-phone check, turnaround model sheet on the picture sheet.
 
 ## 1. Current verified facts
 
@@ -19,6 +19,7 @@
 - Before-and-after journey (from pull request 7): `docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md` shows the engine on the published story's lead with real pictures, every answer's anchor and bill, and the owner's reason (eyes kept, fewest redraws for the rest, heritage in prose). The owner confirmed the anchor and the 21-picture list; the anchor is recorded privately; redraws run privately and are shown to the owner in batches; each approved pair is added to the page.
 - Layperson pass: README for a non-technical reader, `docs/1-tutorials/START-HERE.md`, `docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md`; every command in them was executed from their own code blocks and matched. Three eighth-grade dry runs on 2026-10-18 and their fixes are on main (pull request 12); `scripts/new-character.mjs` (pull request 13) puts a reader's own character into the registry by answering questions. Tested on a Mac only.
 - Launch packaging (branch `sdk/s2-01-continuity-lead-magnet`, 2026-10-20): the README opens with a real before-and-after pair shown as the drift problem, has a Why section and a When-not-to-use section, and states the maker and the paid offers in plain words instead of advert badges; CONTRIBUTING states the AI-contribution stance; `package.json` description and keywords are in layperson words. `docs/3-reference/LAUNCH-READINESS-2026-10-20.md` holds the proposed About text and topics, the launch steps in order, and the owner decisions (art license, hosted check, which pairs go public, whether rel8r.me is paid, the 82/85/99 numbers and the "Unique art that stays yours" line).
+- Continuity actions 1 to 3 (branch `claude/continuity-actions-1-3`, 2026-10-21; not yet merged): `compile-shot.mjs` writes clothes as layers (coat with its hood, top, outfit, trousers, shoes, cloth). A card that names an outfit id from the wardrobe file its continuity-cards surface links (`wardrobe` key) gets every layer, and the outfit's `negative_tokens` go into AVOID. `check-affordance.mjs --batch <folder or pattern>` prints a PASS/FAIL table from each picture's saved vision answer (`<picture>.affordance.json`) or an `--inspector` command. A picture with no answer counts as FAIL, and any FAIL exits 1. `sheet.mjs` opens with "Turnaround Model Sheet (360° Continuity Ground Truth)" when the entry has `turnaround` (or `--turnaround` is given). `npm run verify` is green with 134 tests.
 - Research: 2 cards (the continuity report, reviewed; the continuity-norms prompt, not yet run), 35 findings (15 checked, 1 caution, 19 unchecked), 25 recorded sources. Blog sources never make a finding checked.
 - Docs: 25 canonical documents registered (this branch adds the simulated-panel how-to and ADR-008).
 - Private consumer repository: its framework capture lists ten reusable elements; elements 3 and 7 (records, editions, retired, parked art) shipped with pull request 14; elements 4 and 8 (the round trip, the owner's-words boundary) are this branch; elements 5 and 6 (the simulated reader panel, price perception) are the next extraction, then 9 and 10 as documents. Issues 1 to 5 and 7 of the owner's log are on its main; issue 6's gate is its merge request 157; issue 8 stays as designed.
@@ -49,7 +50,8 @@
 
 ## 3. Prioritised next steps
 
-- [ ] **Next action:** the owner merges the simulated panel checks (`grok/panel-checks`, ADR-008). What remains of that element is a persona record and a sandbox that still says simulated on every output.
+- [ ] **Next action:** open the pull request for `claude/continuity-actions-1-3` (3 commits on top of the carried continuity gates); the owner merges.
+- [ ] The owner merges the simulated panel checks (`grok/panel-checks`, ADR-008). What remains of that element is a persona record and a sandbox that still says simulated on every output.
 - [ ] Next extraction after that: price perception (the ladder and the four Van Westendorp questions), still documented as simulated, still not a decision the script makes.
 - [ ] Then elements 9 and 10 as documents (governance that keeps it automated; storycraft rules as gates), the dyad gate when a public story schema carries `teaches`.
 - [ ] From ADR-007's open loops: a variant that edits structured fields is refused today; decide whether `characters` and `props` of a spread should follow a tested text that names a new character.
