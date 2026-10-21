@@ -60,6 +60,21 @@
                 }
               }
             },
+            "prop_blocking": {
+              "type": "object",
+              "description": "Which of the character's own wrists bears each prop in this spread, and how the camera sees the character, keyed by a prop id listed under props. Written by node scripts/mutate.mjs set-prop, which computes screen_side; checked by check-prop-continuity.mjs (facing the camera, the left wrist is on screen-right; back to the camera, screen-left; in profile, the near or far side). Field reference: docs/3-reference/SINGLE-MUTATION-GATE-ARCHITECTURE.md.",
+              "additionalProperties": {
+                "type": "object",
+                "required": ["intrinsic_wrist", "camera_facing", "screen_side"],
+                "additionalProperties": false,
+                "properties": {
+                  "intrinsic_wrist": { "type": "string", "enum": ["left", "right"], "description": "The character's own wrist, never the viewer's side." },
+                  "camera_facing": { "type": "string", "enum": ["facing", "back", "profile"], "description": "facing: the character faces the camera; back: the back is to the camera; profile: side on." },
+                  "profile_toward": { "type": "string", "enum": ["screen-left", "screen-right"], "description": "In profile, the way the character faces; required for profile, because it decides near side or far side." },
+                  "screen_side": { "type": "string", "enum": ["SCREEN_LEFT", "SCREEN_RIGHT", "NEAR_SIDE_FOREGROUND", "FAR_SIDE_OCCLUDED"], "description": "Where the prop appears in the picture: computed from the two fields above, never typed." }
+                }
+              }
+            },
             "margin_note": { "type": "string", "description": "A short note printed in the margin, usually a line looking back." },
             "margin_author": { "type": "string", "description": "Who the margin note is by: a token." },
             "footnote": { "type": "string", "description": "A note under the spread: a definition, a source, a thing the reader may want to know." },

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "narrative-token-ssot",
-  "updated_at": "2026-10-20",
+  "updated_at": "2026-10-21",
   "docs": [
     {
       "doc_id": "tutorial-start-here",
@@ -217,6 +217,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "understand",
       "canonical_path": "docs/LESSONS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-single-mutation-gate-architecture",
+      "title": "The single mutation gate (mutate.mjs)",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/SINGLE-MUTATION-GATE-ARCHITECTURE.md",
       "status": "active"
     }
   ]
