@@ -1,7 +1,7 @@
 # STATE: narrative-token-ssot
 
 **Last rewritten:** 2026-10-21 EDT
-**HEAD:** 7531f00
+**HEAD:** 904a836
 **Date:** 2026-10-21
 **Session:** continuity actions 1 to 3 (branch `claude/continuity-actions-1-3`): garment layers in compile-shot, batch backwards-phone check, turnaround model sheet on the picture sheet; then the Before & After showcase engine.
 
