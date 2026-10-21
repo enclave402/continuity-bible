@@ -28,6 +28,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Continuity issue classes](3-reference/CONTINUITY-ISSUE-CLASSES.md): the eight ways a continuity system goes silent, and the mechanism that answers each.
 - [Intrinsic anatomical laterality](3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md): self-announcing architecture and camera-space projection matrix to eliminate diffusion laterality inversion.
 - [Continuity card and shot sheet fields](3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md): every field of the cards file and the shot sheet, the two surface declarations, every gate check, the compiled block line by line.
+- [The single mutation gate](3-reference/SINGLE-MUTATION-GATE-ARCHITECTURE.md): the narrow waist for additions, updates, retirements and laterality; the five assertion gates; the worklog spine.
 - [Scene and edition fields](3-reference/SCENE-AND-EDITION-FIELDS.md): every field of the scene file, an edition and the parked-art manifest; the built text line by line; the commands; the three gates and what each refuses.
 - [Variant names and the applied record](3-reference/VARIANTS-AND-THE-APPLIED-RECORD.md): the variants file, the four step shapes and every refusal, the commands, what apply does in order, the slot record, the banner, the applied record field by field.
 - [Research layers](3-reference/RESEARCH-LAYERS.md): card front matter, findings schema, sources schema, retrieval pack contract, configuration.
