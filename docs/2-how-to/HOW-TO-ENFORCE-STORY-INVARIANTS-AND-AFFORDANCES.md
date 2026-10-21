@@ -5,7 +5,7 @@ triadic_leg: diataxis
 diataxis_mode: solve
 canonical_path: docs/2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md
 status: active
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 canonical: true
 ---
 
@@ -87,6 +87,30 @@ If the prompt is missing those safety words, the tool warns you before you waste
 Prompt describes character looking at a phone without specifying "back chassis facing camera". High risk of AI backwards-screen generation.
 ```
 
+### Check a whole folder of pictures at once
+
+A good prompt lowers the risk; it does not remove it. After the pictures are made, check all of them in one go.
+
+1. Give each picture and the rubric (`node scripts/check-affordance.mjs --prompt`) to the vision AI you already use.
+2. Save its JSON answer next to the picture, named after it: `ch01-p02.png` gets `ch01-p02.png.affordance.json`.
+3. Run the batch check on the folder (or a pattern such as `"renders/ch01-*.png"`):
+
+```bash
+node scripts/check-affordance.mjs --batch renders/
+```
+
+```text
+File          Device  Canonical view bias  Verdict  Reason
+------------  ------  -------------------  -------  ------
+ch01-p01.png  yes     no                   PASS     Back of the phone faces the camera; screen faces her.
+ch01-p02.png  yes     yes                  FAIL     Screen faces the lens while she stares at the camera bump.
+
+2 picture(s): 1 PASS, 1 FAIL.
+FIX: redraw each FAIL with "back chassis facing camera, screen angled inward toward face" in the prompt.
+```
+
+The command exits 0 when every picture passes (a picture with no phone or tablet passes too) and 1 when any picture fails, so a build can stop on it. A picture with no saved answer is listed as `Not checked` and counts as a FAIL: nothing passes without being looked at. If you have a command that asks a vision AI for you, name it with `--inspector "<command>"` (or set `AFFORDANCE_INSPECTOR`); it gets each picture's path as its last argument and prints the JSON answer. Add `--json` for the results as data.
+
 ---
 
 ## 3. Stop AI From Confusing Outfits (Layered Wardrobes)
@@ -152,4 +176,5 @@ Before rendering expensive final panels, always generate and verify your turnaro
 | Check that no banished plot mistakes appear | `npm run check:invariants` |
 | Check an image prompt for backwards-phone safeguards | `node scripts/check-affordance.mjs --check-prompt "<prompt>"` |
 | Get the VLM vision rubric to inspect rendered panels | `node scripts/check-affordance.mjs --prompt` |
+| Check a whole folder of rendered pictures for backwards phones | `node scripts/check-affordance.mjs --batch <folder or "pattern">` |
 | Run all gates (names, tokens, art, story, invariants, docs) | `npm run verify` |
