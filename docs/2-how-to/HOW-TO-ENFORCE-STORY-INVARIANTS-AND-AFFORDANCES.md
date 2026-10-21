@@ -167,6 +167,14 @@ In `character-registry.json`, declare a `turnaround` for key characters:
 
 Before rendering expensive final panels, always generate and verify your turnaround model sheet so you have a baseline ground truth for all camera angles.
 
+Once the entry has a `turnaround`, build the character's picture sheet to see it. The page opens with **Turnaround Model Sheet (360° Continuity Ground Truth)**, above the picture cards: each view with its angle badge, a "not drawn yet" card for any view you have not made, and your notes in full.
+
+```bash
+node scripts/sheet.mjs examples/anchor/embeddings.jsonl --character sam-hayes --out sheet.html
+```
+
+To try a turnaround before you record it, pass it with `--turnaround` (a JSON file, or the object itself in quotes). It wins over the registry entry. Paths in the registry are relative to the registry file; paths in a `--turnaround` file are relative to that file.
+
 ---
 
 ## Summary of Commands
@@ -177,4 +185,5 @@ Before rendering expensive final panels, always generate and verify your turnaro
 | Check an image prompt for backwards-phone safeguards | `node scripts/check-affordance.mjs --check-prompt "<prompt>"` |
 | Get the VLM vision rubric to inspect rendered panels | `node scripts/check-affordance.mjs --prompt` |
 | Check a whole folder of rendered pictures for backwards phones | `node scripts/check-affordance.mjs --batch <folder or "pattern">` |
+| See a character's turnaround views and notes above their pictures | `node scripts/sheet.mjs <embeddings.jsonl> --character <id> --out sheet.html` |
 | Run all gates (names, tokens, art, story, invariants, docs) | `npm run verify` |

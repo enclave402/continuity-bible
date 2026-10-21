@@ -5,7 +5,7 @@ triadic_leg: diataxis
 diataxis_mode: lookup
 canonical_path: docs/3-reference/REGISTRY-FIELDS.md
 status: active
-last_reviewed: 2026-10-17
+last_reviewed: 2026-10-21
 canonical: true
 ---
 
@@ -62,7 +62,7 @@ Ids: lower-case letters, digits, hyphens.
 | `canon_tags{}` | fixed traits: what must never change, as image-readable tags written by the owner; the default answer to the first drift question, so only images carrying every one are eligible to be the anchor and the rest are always on the redraw list (`--keep` overrides for one run) |
 | `continuity_ids[]`, `sources[]`, `first_appearance`, `born`, `ages{}`, `members[]`, `questions[]`, `prose_only`, `generic`, `notes` | cross-references the gate checks exist and agree |
 | `anchor` | `{ image, sha256?, policy, prefer?, keep?, metric?, order?, chosen_at, embeddings?, stats?, why? }`: the visual anchor chosen after drift; `prefer` is the plain-named second answer, `keep` the fixed traits the choice was made within, `stats.kept` and `stats.excluded` how many images did and did not carry them; `stats.bill_basis` says whether the regeneration bill was by `cosine`, by `tags` (hand tags, no embeddings; `stats.tag_mismatches` is the count) or `none`; a missing image file is a gap |
-| `turnaround` | `{ front, back, profile_left?, profile_right?, sheet?, notes? }`: multi-angle reference comps and model sheet ensuring 360-degree character and wardrobe continuity across scene camera angles |
+| `turnaround` | `{ front, back, profile_left?, profile_right?, sheet?, notes? }`: multi-angle reference comps and model sheet ensuring 360-degree character and wardrobe continuity across scene camera angles. Paths are relative to the registry. `scripts/sheet.mjs --character <id>` shows them, with the notes, above the picture cards |
 | `drift_resolution` | per-entry override of the top-level defaults |
 
 ## Tokens
