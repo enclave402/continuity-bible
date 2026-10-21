@@ -32,6 +32,41 @@
       },
       "description": "Manifest stories whose files are not surfaces, each with the reason (a fixture, a placeholder cast)."
     },
+    "invariants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "pattern",
+          "why"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Regex pattern or exact string that is strictly forbidden in story prose, scenes, and dialog."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable label for this story invariant."
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Explanation of why this assertion violates story canon or timeline facts."
+          },
+          "surfaces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional list of surface types or file globs to scan. Defaults to all narrative surfaces, scenes, shot sheets, continuity cards, and markdown prose."
+          }
+        }
+      },
+      "description": "Permanent narrative gates preventing hallucinated, impossible, or banished story regressions."
+    },
     "surfaces": {
       "type": "array",
       "items": {
@@ -64,6 +99,10 @@
           "root": {
             "type": "string",
             "description": "scenes: the key holding the scene map (default scenes)."
+          },
+          "wardrobe": {
+            "type": "string",
+            "description": "continuity-cards: the wardrobe file (scripts/wardrobe-and-props.v1.schema.json) whose outfits a card may name by id. Why: a card that says evening-entrance gets every layer (coat, hood, top, trousers, shoes, cloth) and the outfit's words to avoid in each compiled shot, so a long coat never comes back with bare legs under it. How: the gate checks the file exists and fits its schema; compile-shot.mjs reads it."
           },
           "filter": {
             "type": "object",
@@ -448,6 +487,19 @@
                 }
               },
               "description": "The visual anchor chosen for this character after drift, recorded by scripts/anchor.mjs --write or by hand (policy manual)."
+            },
+            "turnaround": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "front": { "type": "string", "description": "Front-view reference comp or anchor image path." },
+                "back": { "type": "string", "description": "Rear-view reference comp (hood drape, hair back, coat line)." },
+                "profile_left": { "type": "string", "description": "Left profile view reference comp." },
+                "profile_right": { "type": "string", "description": "Right profile view reference comp." },
+                "sheet": { "type": "string", "description": "Combined turnaround model sheet image path." },
+                "notes": { "type": "string", "description": "Key multi-angle continuity notes (e.g. hood attaches to outer coat collar, palazzo hem length)." }
+              },
+              "description": "Multi-angle model sheet anchor references ensuring 360-degree character and wardrobe continuity across scene camera angles."
             },
             "drift_resolution": {
               "$ref": "#/$defs/drift_resolution"

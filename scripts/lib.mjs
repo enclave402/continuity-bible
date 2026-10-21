@@ -685,7 +685,38 @@ export const CARDS_SCHEMA_PATH = path.join(HERE, "continuity-cards.v1.schema.jso
 export const SHOT_SHEET_SCHEMA_PATH = path.join(HERE, "shot-sheet.v1.schema.json");
 export const CARD_REQUIRED = ["wardrobe"];
 export const SCENE_REQUIRED = ["story_day", "location", "time_of_day"];
-export const WARDROBE_LAYERS = ["outer", "top", "outfit", "bottom", "shoes"];
+// Clothes are written as layers because an image model asked for "a hooded silk pantsuit" draws bare legs under the coat or
+// drops the hood. Split into the pieces a person puts on (coat, hood, top, trousers, shoes, cloth), each layer is said once.
+export const WARDROBE_LAYERS = ["outer", "hood_or_cowl", "top", "outfit", "bottom", "shoes", "footwear", "fabric_spec"];
+export const WARDROBE_SCHEMA_PATH = path.join(HERE, "wardrobe-and-props.v1.schema.json");
+
+/**
+ * The wardrobe file a continuity-cards surface links with its `wardrobe` key (outfits by character id, each with its layers
+ * and the words to avoid), or null when the surface links none. Why: a card can then say just the outfit id
+ * ("evening-entrance") and every shot gets the full layers and the outfit's AVOID words from one place.
+ * Throws a plain problem when the linked file is missing or unreadable.
+ */
+export function readWardrobe(root, cardsSurface) {
+  if (!cardsSurface || !filled(cardsSurface.wardrobe)) return null;
+  const file = fromRoot(root, cardsSurface.wardrobe);
+  if (!fs.existsSync(file)) throw new Error(`${cardsSurface.file}: its surface links wardrobe "${cardsSurface.wardrobe}", which does not exist. Fix: correct the path in the registry, or remove the wardrobe key`);
+  return { file: cardsSurface.wardrobe, data: readJson(file) };
+}
+
+/**
+ * The outfit a carried wardrobe names, or null. A wardrobe names an outfit when it is an outfit id string, or when its
+ * one-line "outfit" layer is exactly an outfit id of that character in the linked wardrobe file. Any other layer the card
+ * or a change wrote stays on top of the outfit's layers, so a scene can still take off a coat.
+ */
+export function outfitOf(wardrobe, characterOutfits) {
+  if (!characterOutfits || typeof characterOutfits !== "object") return null;
+  const id = typeof wardrobe === "string" ? wardrobe.trim() : typeof wardrobe?.outfit === "string" ? wardrobe.outfit.trim() : "";
+  const outfit = id && Object.hasOwn(characterOutfits, id) ? characterOutfits[id] : null;
+  if (!outfit || typeof outfit !== "object") return null;
+  const own = typeof wardrobe === "string" ? {} : Object.fromEntries(Object.entries(wardrobe).filter(([k]) => k !== "outfit"));
+  const layers = Object.fromEntries(Object.entries(outfit.layers || {}).filter(([, v]) => !isNone(v)).map(([k, v]) => [k, String(v).trim()]));
+  return { id, name: outfit.name ?? "", layers: { ...layers, ...own }, negative_tokens: listOf(outfit.negative_tokens) };
+}
 export const CHANGE_KEYS = ["wardrobe", "hair", "accessories", "marks", "carries", "hands"];
 const CAST_TOKEN = /^\{\{([a-z0-9][a-z0-9-]*)(?::[a-z]+)?\}\}$/;
 const filled = (v) => v !== null && v !== undefined && String(v).trim() !== "";
@@ -729,12 +760,17 @@ export function continuityStories(surfaces) {
   return [...byStory.values()];
 }
 
-/** A card's starting state. A one-line wardrobe becomes the layer "outfit"; a layer whose value is "none" is left out. */
-export function stateFromCard(card = {}) {
-  const wardrobe = typeof card.wardrobe === "string" ? (isNone(card.wardrobe) ? {} : { outfit: card.wardrobe.trim() }) : Object.fromEntries(Object.entries(card.wardrobe || {}).filter(([, v]) => !isNone(v)).map(([k, v]) => [k, String(v).trim()]));
-  return { wardrobe, hair: filled(card.hair) ? String(card.hair).trim() : "", accessories: listOf(card.accessories), marks: listOf(card.marks), carries: listOf(card.carries) };
+/**
+ * A card's starting state. A one-line wardrobe becomes the layer "outfit"; a layer whose value is "none" is left out.
+ * A one-line wardrobe that is an outfit id of this character (characterOutfits, from the linked wardrobe file) becomes
+ * that outfit's layers, and `outfit` remembers the id, so a later change can take off one layer (the coat) and the rest stay.
+ */
+export function stateFromCard(card = {}, characterOutfits) {
+  const found = typeof card.wardrobe === "string" ? outfitOf(card.wardrobe, characterOutfits) : null;
+  const wardrobe = found ? found.layers : typeof card.wardrobe === "string" ? (isNone(card.wardrobe) ? {} : { outfit: card.wardrobe.trim() }) : Object.fromEntries(Object.entries(card.wardrobe || {}).filter(([, v]) => !isNone(v)).map(([k, v]) => [k, String(v).trim()]));
+  return { wardrobe, outfit: found ? found.id : "", hair: filled(card.hair) ? String(card.hair).trim() : "", accessories: listOf(card.accessories), marks: listOf(card.marks), carries: listOf(card.carries) };
 }
-const cloneState = (s) => ({ wardrobe: { ...s.wardrobe }, hair: s.hair, accessories: [...s.accessories], marks: [...s.marks], carries: [...s.carries] });
+const cloneState = (s) => ({ wardrobe: { ...s.wardrobe }, outfit: s.outfit || "", hair: s.hair, accessories: [...s.accessories], marks: [...s.marks], carries: [...s.carries] });
 const addAll = (list, items) => { for (const i of items) if (!list.includes(i)) list.push(i); };
 const removeAll = (list, items) => list.filter((x) => !items.includes(x));
 
@@ -827,8 +863,9 @@ function renderPhraseProblems(registry, surfaces, root) {
  *   - a character holds only what they carry at that moment: the card, an earlier add, or a hand-over;
  *   - marks that end a story day and are missing from that character's next card are a gap (healed, or forgotten?).
  */
-export function carryContinuity({ cards, sheet, characters = {}, index, story, cardsFile = "the cards file", sheetFile = "the shot sheet", cardRequired = CARD_REQUIRED, sceneRequired = SCENE_REQUIRED, renderSurfaces = null, registryFile = "character-registry.json" }) {
+export function carryContinuity({ cards, sheet, characters = {}, index, story, cardsFile = "the cards file", sheetFile = "the shot sheet", cardRequired = CARD_REQUIRED, sceneRequired = SCENE_REQUIRED, renderSurfaces = null, registryFile = "character-registry.json", outfits = {} }) {
   const failures = [];
+  const outfitsOf = (id) => outfits?.[id]?.outfits;
   const gaps = [];
   const surfaceIds = renderSurfaces && typeof renderSurfaces === "object" ? Object.keys(renderSurfaces).filter((k) => !k.startsWith("_")) : [];
   const seen = []; // every cast or card reference, for the registry's usage count
@@ -891,7 +928,7 @@ export function carryContinuity({ cards, sheet, characters = {}, index, story, c
       if (state.has(id)) return state.get(id);
       const card = dayOk ? cardOf(id, day) : undefined;
       if (dayOk && !card) failures.push(`${where}: ${nameOf(id)} is in this shot but has no continuity card for ${day}. Fix: add cards.${id}.${day} to ${cardsFile} (${cardRequired.join(", ")} at least); nothing carries forward from an empty card`);
-      const s = stateFromCard(card);
+      const s = stateFromCard(card, outfitsOf(id));
       state.set(id, s);
       return s;
     };
@@ -928,10 +965,20 @@ export function carryContinuity({ cards, sheet, characters = {}, index, story, c
         const touched = CHANGE_KEYS.filter((key) => change[key] !== undefined);
         if (!touched.length) failures.push(`${cw}: changes nothing. Fix: set one of ${CHANGE_KEYS.join(", ")}`);
         const s = ensure(who, cw);
-        if (typeof change.wardrobe === "string") { applied.push({ who, kind: "wardrobe", to: change.wardrobe.trim() }); s.wardrobe = isNone(change.wardrobe) ? {} : { outfit: change.wardrobe.trim() }; }
+        if (typeof change.wardrobe === "string") {
+          const found = outfitOf(change.wardrobe, outfitsOf(who));
+          applied.push({ who, kind: "wardrobe", to: found?.name || change.wardrobe.trim() });
+          s.wardrobe = found ? found.layers : isNone(change.wardrobe) ? {} : { outfit: change.wardrobe.trim() };
+          s.outfit = found ? found.id : "";
+        }
         else if (change.wardrobe && typeof change.wardrobe === "object") {
           for (const [layer, value] of Object.entries(change.wardrobe)) {
-            const from = s.wardrobe[layer];
+            let from = s.wardrobe[layer];
+            // a hood or cowl is worn on the coat's collar: taking off the coat takes the hood with it, unless the change sets the hood too
+            if (layer === "outer" && isNone(value) && filled(s.wardrobe.hood_or_cowl) && change.wardrobe.hood_or_cowl === undefined) {
+              if (filled(from)) from = `${from} with ${s.wardrobe.hood_or_cowl}`;
+              delete s.wardrobe.hood_or_cowl;
+            }
             if (isNone(value)) delete s.wardrobe[layer]; else s.wardrobe[layer] = String(value).trim();
             applied.push({ who, kind: "wardrobe", layer, from, to: isNone(value) ? undefined : String(value).trim() });
           }
@@ -1153,7 +1200,16 @@ export function checkRegistry(registry) {
     try { cards = cardsAbs ? readJson(cardsAbs) : null; sheet = sheetAbs ? readJson(sheetAbs) : null; } catch (e) { failures.push(`${pair.story}: ${e.message}`); continue; }
     if (cards) for (const p of validate(readJson(CARDS_SCHEMA_PATH), withoutNotes(cards))) failures.push(`${pair.cards.file}: ${p}`);
     if (sheet) for (const p of validate(readJson(SHOT_SHEET_SCHEMA_PATH), withoutNotes(sheet))) failures.push(`${pair.sheet.file}: ${p}`);
-    const carried = carryContinuity({ cards, sheet, characters, index, story: pair.story, cardsFile: pair.cards?.file, sheetFile: pair.sheet?.file, cardRequired: pair.cards?.required || CARD_REQUIRED, sceneRequired: pair.sheet?.required || SCENE_REQUIRED, renderSurfaces: registry.render_surfaces, registryFile: path.basename(registry._file) });
+    let outfits = {};
+    if (pair.cards && filled(pair.cards.wardrobe)) {
+      try {
+        const wardrobe = readWardrobe(root, pair.cards);
+        for (const p of validate(readJson(WARDROBE_SCHEMA_PATH), withoutNotes(wardrobe.data))) failures.push(`${wardrobe.file}: ${p}`);
+        for (const id of Object.keys(wardrobe.data.characters || {})) if (!characters[id]) failures.push(`${wardrobe.file}: characters.${id} is no registry id. Fix: use an id from ${path.basename(registry._file)} (${Object.keys(characters).join(", ")})`);
+        outfits = wardrobe.data.characters || {};
+      } catch (e) { failures.push(e.message); }
+    }
+    const carried = carryContinuity({ cards, sheet, characters, index, story: pair.story, cardsFile: pair.cards?.file, sheetFile: pair.sheet?.file, cardRequired: pair.cards?.required || CARD_REQUIRED, sceneRequired: pair.sheet?.required || SCENE_REQUIRED, renderSurfaces: registry.render_surfaces, registryFile: path.basename(registry._file), outfits });
     failures.push(...carried.failures);
     gaps.push(...carried.gaps);
     stats.labels += carried.labels;

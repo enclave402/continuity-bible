@@ -6,6 +6,13 @@
     "example": "This registry is the repository's own example: three people, two props, one scene file, one art manifest, one token source, continuity cards, a shot sheet, two render surfaces, a prompt template, and a story folder (examples/story: scene records, two editions, parked art, built output)."
   },
   "registry_version": 1,
+  "invariants": [
+    {
+      "pattern": "approved of (Theo|\\{\\{theo-vance\\}\\})",
+      "name": "Bob Barker approved of Theo",
+      "why": "Bob Barker was not alive when Sam met Theo; Bob Barker never met Theo on their date."
+    }
+  ],
   "surfaces": [
     {
       "type": "scenes",
@@ -53,6 +60,7 @@
       "type": "continuity-cards",
       "file": "examples/continuity/cards.json",
       "story": "main-story",
+      "wardrobe": "examples/continuity/wardrobe-and-props.json",
       "required": [
         "wardrobe",
         "hair"

@@ -1,0 +1,15 @@
+{
+  "_why": "Diagrams of the backwards-phone mistake. The prompts are real: scripts/check-affordance.mjs --check-prompt exits 1 on the before prompt and 0 on the after prompt.",
+  "title": "Backwards Phone: screen to the camera, eyes on the back",
+  "category": "affordance",
+  "evidence": "diagram",
+  "what_broke": "Asked for a person looking down at a phone from the front, AI picture tools turn the glowing screen toward the camera, because most phone photos they learned from show the screen. The person ends up staring at the blank back of the phone. This is called canonical view bias, and the result is gaze-affordance decoupling: the eyes point one way and the screen points the other.",
+  "how_fixed": "scripts/check-affordance.mjs --check-prompt stops a phone prompt that is missing \"back chassis facing camera, screen angled inward toward face\" and prints the phrase to add. The before prompt below fails that check and the after prompt passes it. After the pictures are made, --batch checks a whole folder and fails any picture with a backwards phone, or with no saved answer.",
+  "before_prompt": "Front medium shot of CHARACTER 1 looking down at her phone in the kitchen.",
+  "after_prompt": "Front medium shot of CHARACTER 1 looking down at her phone in the kitchen, back chassis facing camera, screen angled inward toward face.",
+  "proof_in_repo": [
+    "scripts/check-affordance.mjs",
+    "test/affordance.test.mjs",
+    "docs/2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md"
+  ]
+}

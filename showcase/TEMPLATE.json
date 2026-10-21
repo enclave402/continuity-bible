@@ -1,0 +1,13 @@
+{
+  "_why": "This showcase shows real mistakes that AI picture tools make, next to the fixed version, so anyone can see what this repository is for in ten seconds.",
+  "_how": "Make a new case with: node scripts/showcase.mjs --new <short-name>. That makes a folder in showcase/cases/ with a copy of this file in it, named case.json. Put two pictures in that folder: before.png (the mistake) and after.png (the fix). A .jpg, .jpeg, .webp or .svg works too. Replace every sentence below with your own words. Then run node scripts/showcase.mjs --check to test it, and node scripts/showcase.mjs to rebuild the gallery. Optional: before_label and after_label change the captions under the pictures (the default is \"Before: the mistake\" and \"After: the fix\"); use them when that is not the true story of the pair. No code changes are needed.",
+  "_rules": "Keep every path short and relative, like before.png. Never write a path from your own computer. Never name a character: write CHARACTER 1 or a {{token}}. Never call a drawing or a placeholder a real picture: say which one it is in evidence.",
+  "title": "Short descriptive title of the fix (e.g. Phantom Hoodie vs. Attached Cowl)",
+  "category": "garment-layering | affordance | turnaround | laterality | anchor",
+  "evidence": "real-pictures | diagram | placeholder",
+  "what_broke": "Explain in simple 8th-grade English what the AI got wrong when prompted normally.",
+  "how_fixed": "Explain in simple 8th-grade English which SSOT layer, token, or gate physically prevented the mistake.",
+  "before_prompt": "The naive or unguarded prompt that caused the drift",
+  "after_prompt": "The compiled SSOT prompt with explicit layers and negative tokens",
+  "proof_in_repo": []
+}
