@@ -20,11 +20,13 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Test a change to the words before you make it, and let the machine write the winner back](2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md): a named variant of the text to put in front of readers; the diff; the apply step that writes the winner into the records as tokens and proves the records render as the tested text; a spread the tests want becomes a slot the author fills; what an AI may never write into a story.
 - [Check a simulated reader panel](2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md): a quote must be verbatim in the spread it names; a no-read control throws the quiz out when it scores; the paired difference is written by the script and checked by recomputing it; simulated answers are not a human audience, and the script does not pick the winner.
 - [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, answer the two drift questions (or name a policy), record the anchor, size the regeneration bill.
+- [Enforce story invariants, affordances, and layered wardrobe](2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md): stop AI from reintroducing banished plot points, prevent backwards phones, decompose garment layers, and declare multi-angle turnaround sheets.
 
 ## 3. Look up (`3-reference/`)
 
 - [Registry fields](3-reference/REGISTRY-FIELDS.md): every key of `character-registry.json` and what the gate does with it.
 - [Continuity issue classes](3-reference/CONTINUITY-ISSUE-CLASSES.md): the eight ways a continuity system goes silent, and the mechanism that answers each.
+- [Intrinsic anatomical laterality](3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md): self-announcing architecture and camera-space projection matrix to eliminate diffusion laterality inversion.
 - [Continuity card and shot sheet fields](3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md): every field of the cards file and the shot sheet, the two surface declarations, every gate check, the compiled block line by line.
 - [Scene and edition fields](3-reference/SCENE-AND-EDITION-FIELDS.md): every field of the scene file, an edition and the parked-art manifest; the built text line by line; the commands; the three gates and what each refuses.
 - [Variant names and the applied record](3-reference/VARIANTS-AND-THE-APPLIED-RECORD.md): the variants file, the four step shapes and every refusal, the commands, what apply does in order, the slot record, the banner, the applied record field by field.

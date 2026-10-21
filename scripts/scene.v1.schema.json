@@ -56,7 +56,34 @@
                 "additionalProperties": false,
                 "properties": {
                   "speaker": { "type": "string", "minLength": 1, "description": "A token such as {{sam-hayes}}; must resolve to one character of the story." },
-                  "text": { "type": "string", "minLength": 1 }
+                  "text": { "type": "string", "minLength": 1 },
+                  "intent": { "type": "string", "description": "How the line is sent: the speaker's emotional state, goal, or defensive tactic." },
+                  "landing": { "type": "string", "description": "How the line lands: how the recipient perceives and absorbs it." },
+                  "teaches": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "me": { "type": "string", "description": "What the speaker's side reveals or learns." },
+                      "them": { "type": "string", "description": "What the recipient's side reveals or learns." }
+                    }
+                  }
+                }
+              }
+            },
+            "dyad": {
+              "type": "object",
+              "description": "Dual-audience relational dynamics (Send & Land ethos).",
+              "additionalProperties": false,
+              "properties": {
+                "polarity": { "type": "string", "description": "Relationship dynamic or attachment tension (e.g. anxious-sentinel vs dismissive-architect)." },
+                "their_side": { "type": "string", "description": "The partner's subjective internal reality during this scene." },
+                "teaches": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "me": { "type": "string", "description": "The mechanism taught from the protagonist's viewpoint." },
+                    "them": { "type": "string", "description": "The mechanism taught from the partner's viewpoint." }
+                  }
                 }
               }
             },

@@ -76,6 +76,14 @@
       "status": "active"
     },
     {
+      "doc_id": "how-to-enforce-story-invariants-and-affordances",
+      "title": "How to enforce story invariants and affordances",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md",
+      "status": "active"
+    },
+    {
       "doc_id": "ref-registry-fields",
       "title": "Registry fields",
       "triadic_leg": "diataxis",
@@ -217,6 +225,14 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "understand",
       "canonical_path": "docs/LESSONS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-intrinsic-vs-screen-space-laterality",
+      "title": "Self-Announcing Architecture: Intrinsic Anatomical Laterality and Camera-Space Projection Matrix",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "reference",
+      "canonical_path": "docs/3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md",
       "status": "active"
     }
   ]

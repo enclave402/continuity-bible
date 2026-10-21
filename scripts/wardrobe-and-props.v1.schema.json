@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/wardrobe-and-props.v1.schema.json",
+  "title": "Wardrobe and Props Registry, version 1",
+  "description": "Single Source of Truth for character wardrobe layers, fabric drape, garment decomposition, and physical prop placement. Prevents AI diffusion conflation (e.g., bare legs under long overcoats, missing cowl hoods, ambiguous wrist placements).",
+  "type": "object",
+  "required": ["characters"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_about": { "type": "object" },
+    "characters": {
+      "type": "object",
+      "description": "Wardrobe and props keyed by canonical character registry ID.",
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hair_and_makeup": { "type": "string" },
+            "outfits": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "required": ["layers"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "layers": {
+                    "type": "object",
+                    "required": ["top", "bottom"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "outer": { "type": "string", "description": "Overcoat, duster, jacket, cape, or 'none'." },
+                      "hood_or_cowl": { "type": "string", "description": "Drape, collar integration, and shoulder rest." },
+                      "top": { "type": "string", "description": "Inner top or wrap bodice." },
+                      "bottom": { "type": "string", "description": "Trousers, skirt, or all-in-one palazzo legs." },
+                      "footwear": { "type": "string", "description": "Shoes and hem relation (e.g. small gap showing heel, no bare leg)." },
+                      "fabric_spec": { "type": "string", "description": "Material finish (matte silk, crepe, satin lining)." }
+                    }
+                  },
+                  "accessories": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "prompt_tokens": { "type": "string" },
+                  "negative_tokens": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            },
+            "props": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item_id", "name"],
+                "additionalProperties": false,
+                "properties": {
+                  "_comment": { "type": "string", "description": "Pedagogical annotation explaining coordinate system logic (Andrej Karpathy transparency standard)." },
+                  "_engineering_purpose": { "type": "string", "description": "Failure mode addressed by this prop definition." },
+                  "_projection_rule": { "type": "string", "description": "Mathematical transformation rule from intrinsic body coordinates to 2D screen space." },
+                  "item_id": { "type": "string" },
+                  "name": { "type": "string" },
+                  "worn_on": {
+                    "type": "string",
+                    "enum": [
+                      "LEFT_WRIST_ONLY",
+                      "RIGHT_WRIST_ONLY",
+                      "LEFT_HAND",
+                      "RIGHT_HAND",
+                      "BOTH_HANDS",
+                      "NECK",
+                      "IN_POCKET",
+                      "ON_TABLE"
+                    ]
+                  },
+                  "intrinsic_laterality": {
+                    "type": "string",
+                    "description": "Anatomical coordinate anchored strictly to the character's intrinsic body frame, invariant to camera orientation.",
+                    "enum": [
+                      "ANATOMICAL_LEFT_WRIST",
+                      "ANATOMICAL_RIGHT_WRIST",
+                      "ANATOMICAL_LEFT_HAND",
+                      "ANATOMICAL_RIGHT_HAND",
+                      "BILATERAL",
+                      "NON_LATERAL"
+                    ]
+                  },
+                  "screen_projection_rules": {
+                    "type": "object",
+                    "description": "Deterministic transformation matrix projecting intrinsic coordinates into 2D viewer/camera screen coordinates based on character facing.",
+                    "additionalProperties": false,
+                    "properties": {
+                      "facing_camera": {
+                        "type": "string",
+                        "enum": ["SCREEN_LEFT", "SCREEN_RIGHT"]
+                      },
+                      "back_to_camera": {
+                        "type": "string",
+                        "enum": ["SCREEN_LEFT", "SCREEN_RIGHT"]
+                      },
+                      "profile_facing_screen_left": {
+                        "type": "string",
+                        "enum": ["NEAR_SIDE_FOREGROUND", "FAR_SIDE_OCCLUDED"]
+                      },
+                      "profile_facing_screen_right": {
+                        "type": "string",
+                        "enum": ["NEAR_SIDE_FOREGROUND", "FAR_SIDE_OCCLUDED"]
+                      }
+                    }
+                  },
+                  "geometry": { "type": "string" },
+                  "reference_image": { "type": "string" },
+                  "prompt_tokens": { "type": "string" },
+                  "negative_tokens": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
