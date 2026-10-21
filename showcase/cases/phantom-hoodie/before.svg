@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500" font-family="system-ui, sans-serif">
+  <title>Diagram: phantom hoodie. The hood sits on the inner top like a casual hoodie, the coat is short and her calves are bare.</title>
+  <rect width="400" height="500" fill="#f6f4ef"/>
+  <text x="200" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#b3261e">BEFORE: phantom hoodie</text>
+  <path d="M158 92 Q200 58 242 92 L246 140 L154 140 Z" fill="#9a9aa2"/>
+  <circle cx="200" cy="108" r="32" fill="#c99a78"/>
+  <path d="M168 104 Q172 70 200 72 Q228 70 232 104 Q220 86 200 88 Q180 86 168 104 Z" fill="#3b2a22"/>
+  <path d="M178 140 L222 140 L250 260 L150 260 Z" fill="#9a9aa2"/>
+  <path d="M190 150 L188 200 M210 150 L212 200" stroke="#f6f4ef" stroke-width="3"/>
+  <path d="M150 150 L182 140 L170 300 L132 300 Z" fill="#efe6d4" stroke="#c9bda5"/>
+  <path d="M250 150 L218 140 L230 300 L268 300 Z" fill="#efe6d4" stroke="#c9bda5"/>
+  <rect x="160" y="300" width="36" height="60" fill="#efe6d4" stroke="#c9bda5"/><rect x="204" y="300" width="36" height="60" fill="#efe6d4" stroke="#c9bda5"/>
+  <rect x="166" y="360" width="24" height="90" fill="#c99a78"/><rect x="210" y="360" width="24" height="90" fill="#c99a78"/>
+  <path d="M160 450 L196 450 L196 462 L156 462 Z M204 450 L240 450 L244 462 L204 462 Z" fill="#111"/>
+  <text x="262" y="96" font-size="14" fill="#b3261e">hood on the inner top,</text><text x="262" y="114" font-size="14" fill="#b3261e">like a casual hoodie</text>
+  <path d="M258 104 L242 110" stroke="#b3261e" stroke-width="2"/>
+  <text x="282" y="290" font-size="14" fill="#b3261e">short coat</text><path d="M278 286 L266 292" stroke="#b3261e" stroke-width="2"/>
+  <text x="252" y="405" font-size="14" fill="#b3261e">bare calves</text><path d="M248 401 L236 401" stroke="#b3261e" stroke-width="2"/>
+  <circle cx="60" cy="80" r="26" fill="none" stroke="#b3261e" stroke-width="5"/><path d="M47 67 L73 93 M73 67 L47 93" stroke="#b3261e" stroke-width="5"/>
+  <text x="200" y="490" text-anchor="middle" font-size="12" fill="#555">DIAGRAM: a drawing of the mistake, not a generated picture</text>
+</svg>

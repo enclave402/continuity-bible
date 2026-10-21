@@ -1,0 +1,16 @@
+{
+  "_why": "Diagrams of a mistake image tools make with one-phrase outfits. The prompts are real: the after prompt is what scripts/compile-shot.mjs writes from examples/continuity/wardrobe-and-props.json.",
+  "title": "Phantom Hoodie vs. Attached Cowl",
+  "category": "garment-layering",
+  "evidence": "diagram",
+  "what_broke": "Asked for \"a cream silk hooded pantsuit\" in one phrase, an AI picture tool does not know which piece the hood belongs to or how long the coat should be. It puts the hood on the inner top like a casual hoodie, or drops it, and draws a short coat with bare calves between the hem and the shoes.",
+  "how_fixed": "The wardrobe file writes the outfit as layers: the outer coat, the cowl hood attached to the coat's collar, the top, the trousers, the shoes and the fabric. scripts/compile-shot.mjs writes them in the order you would see them, coat with its hood over the top, and puts the outfit's own avoid words (bare leg, exposed calf, short coat, detached hood, casual hoodie) into AVOID on every shot. A test in test/continuity.test.mjs proves both.",
+  "before_prompt": "CHARACTER 1 wearing a cream silk hooded pantsuit, standing on a porch at night.",
+  "after_prompt": "CHARACTER 1 WEARING: Floor-grazing cream silk-satin long overcoat with dramatic drape, slightly shorter than pant hem with Deep Renaissance cowl hood attached to overcoat collar, draped softly down the back shoulders over Plunging crossover wrap bodice in matching cream silk crepe, Fluid wide-leg palazzo trousers resembling a long skirt until movement separates legs, Black pointed-toe kitten heels with narrow gap between hem and shoe, continuous trouser drape with zero bare leg, fabric: Heavyweight matte silk crepe with muted ivory satin inner lining. Standing on a porch at night. AVOID: bare leg, exposed calf, short coat, detached hood, casual hoodie.",
+  "proof_in_repo": [
+    "examples/continuity/wardrobe-and-props.json",
+    "scripts/compile-shot.mjs",
+    "test/continuity.test.mjs",
+    "docs/2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md"
+  ]
+}
