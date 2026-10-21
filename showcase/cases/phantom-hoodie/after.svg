@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500" font-family="system-ui, sans-serif">
+  <title>Diagram: attached cowl. A long coat with its cowl hood attached at the collar, worn over the top, wide trousers down to the shoes.</title>
+  <rect width="400" height="500" fill="#f6f4ef"/>
+  <text x="200" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#1e7a3c">AFTER: attached cowl</text>
+  <circle cx="200" cy="108" r="32" fill="#c99a78"/>
+  <path d="M168 104 Q172 70 200 72 Q228 70 232 104 Q220 86 200 88 Q180 86 168 104 Z" fill="#3b2a22"/>
+  <path d="M182 140 L218 140 L232 250 L168 250 Z" fill="#f3ead8"/>
+  <path d="M186 142 L200 200 L214 142" stroke="#d8cbb0" stroke-width="2" fill="none"/>
+  <path d="M168 250 L232 250 L246 440 L208 440 L200 300 L192 440 L154 440 Z" fill="#f3ead8" stroke="#d8cbb0"/>
+  <path d="M150 150 L184 138 L170 448 L118 448 Z" fill="#efe1c4" stroke="#c9b28a"/>
+  <path d="M250 150 L216 138 L230 448 L282 448 Z" fill="#efe1c4" stroke="#c9b28a"/>
+  <path d="M146 152 Q150 128 184 136 Q200 158 216 136 Q250 128 254 152 Q236 176 200 170 Q164 176 146 152 Z" fill="#e6d3ad" stroke="#c9b28a"/>
+  <path d="M158 440 L196 440 L196 452 L160 452 Z M204 440 L242 440 L240 452 L204 452 Z" fill="#111"/>
+  <text x="262" y="128" font-size="14" fill="#1e7a3c">cowl hood attached</text><text x="262" y="146" font-size="14" fill="#1e7a3c">to the coat collar</text>
+  <path d="M258 140 L248 150" stroke="#1e7a3c" stroke-width="2"/>
+  <text x="290" y="330" font-size="14" fill="#1e7a3c">long coat</text><path d="M286 326 L270 330" stroke="#1e7a3c" stroke-width="2"/>
+  <text x="262" y="430" font-size="14" fill="#1e7a3c">trousers reach</text><text x="262" y="448" font-size="14" fill="#1e7a3c">the shoes</text><path d="M258 440 L244 444" stroke="#1e7a3c" stroke-width="2"/>
+  <circle cx="60" cy="80" r="26" fill="none" stroke="#1e7a3c" stroke-width="5"/><path d="M47 80 L57 91 L75 68" stroke="#1e7a3c" stroke-width="5" fill="none"/>
+  <text x="200" y="490" text-anchor="middle" font-size="12" fill="#555">DIAGRAM: a drawing of the fix, not a generated picture</text>
+</svg>

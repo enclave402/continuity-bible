@@ -9,13 +9,18 @@
  * name), carries state from the first shot of the story day to the shots asked for, and prints one block per shot:
  *   - every present character, in cast order, as CHARACTER n: the look (the surface's `lead` form, default look; the name
  *     when the entry has no such form), WEARING, HAIR, ACCESSORIES, MARKS, IN HAND, ACTION, EYELINE, POSITION;
+ *   - WEARING is written layer by layer: coat (with its hood), top, one-piece outfit, trousers or skirt, shoes, cloth.
+ *     Why: "a hooded silk pantsuit" in one phrase makes an image model draw bare legs under the coat or forget the hood;
+ *     naming each piece once stops that. How: when a card (or a change) names an outfit id, and the continuity-cards
+ *     surface links a wardrobe file (its `wardrobe` key), the outfit's layers are filled in from that file;
  *   - SHOT size, SETTING (the location's look), TIME, WEATHER; props in frame; the staging line;
  *   - CHANGED SINCE THE LAST SHOT, in words, or "nothing" (the first shot of a story day has no previous shot);
  *   - KEEP, from the render surface the shot is for (registry.render_surfaces, named by the shot or its scene header):
  *     the surface's style_lock, must_keep, hands_rule and no_text sentence, in the author's words, labelled with its name
  *     and size; this script holds no rule phrase of its own;
- *   - AVOID: the held props' negative tokens, every other value's words of the sheet surface's exclusive markers, and the
- *     render surface's exclude list (plus the word text when its no_text is true).
+ *   - AVOID: the held props' negative tokens, the negative tokens of every outfit worn in the shot (bare leg, detached
+ *     hood: what the model tends to get wrong about that outfit), every other value's words of the sheet surface's
+ *     exclusive markers, and the render surface's exclude list (plus the word text when its no_text is true).
  * The character comes first and the setting after, the order the carded research recommends for a prompt. The whole gate
  * runs first: nothing is compiled from a sheet the gate fails, so a block never carries a contradiction. Exit 1 on a named
  * problem, 2 on usage. --json prints the same shots as data; --out writes built output (never edit it; edit the sheet).
@@ -24,7 +29,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadNames } from "./names.mjs";
-import { CARD_REQUIRED, SCENE_REQUIRED, WARDROBE_LAYERS, avoidWords, buildIndex, carryContinuity, checkRegistry, continuityStories, loadRegistry, readJson, registryPath, surfacesOf } from "./lib.mjs";
+import { CARD_REQUIRED, SCENE_REQUIRED, WARDROBE_LAYERS, avoidWords, buildIndex, carryContinuity, checkRegistry, continuityStories, loadRegistry, outfitOf, readJson, readWardrobe, registryPath, surfacesOf } from "./lib.mjs";
 
 const filled = (v) => v !== null && v !== undefined && String(v).trim() !== "";
 const scalarsOf = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k, v]) => !k.startsWith("_") && ["string", "number", "boolean"].includes(typeof v)));
@@ -32,10 +37,22 @@ const sentence = (parts) => parts.filter((p) => typeof p === "string" && p.trim(
 const articled = (text) => `the ${String(text).replace(/^(a|an|the)\s+/i, "")}`;
 const problem = (message, exitCode = 1) => { const e = new Error(message); e.exitCode = exitCode; return e; };
 
-/** "camel wool coat over wine silk blouse, black wide-leg trousers, black ankle boots": the outer layer over the next, then the rest in layer order, then any layer the card invented. */
-export function wardrobeLine(wardrobe = {}) {
-  const keys = [...WARDROBE_LAYERS.filter((k) => filled(wardrobe[k])), ...Object.keys(wardrobe).filter((k) => !WARDROBE_LAYERS.includes(k) && filled(wardrobe[k]))];
-  const parts = keys.map((k) => String(wardrobe[k]).trim());
+/**
+ * One line of clothes, in the order a camera reads a body from the outside in and top to bottom:
+ * "camel wool coat over wine silk blouse, black wide-leg trousers, black ankle boots".
+ * Order: outer (with hood_or_cowl when there is one) over the next layer, then top, outfit, bottom, shoes, footwear,
+ * fabric_spec (as "fabric: ..."), then any layer the card invented. Why the hood rides on the coat: a hood is part of the
+ * coat's collar, and saying so keeps the model from drawing a separate hoodie.
+ * `wardrobe` is an object of layers, or an outfit id string; pass the character's outfits (from the linked wardrobe file)
+ * and an outfit id becomes that outfit's layers. An id with no outfit is printed as written.
+ */
+export function wardrobeLine(wardrobe = {}, characterOutfits) {
+  const found = outfitOf(wardrobe, characterOutfits);
+  const layers = found ? found.layers : typeof wardrobe === "string" ? (filled(wardrobe) ? { outfit: wardrobe.trim() } : {}) : wardrobe || {};
+  const keys = [...WARDROBE_LAYERS.filter((k) => filled(layers[k])), ...Object.keys(layers).filter((k) => !WARDROBE_LAYERS.includes(k) && filled(layers[k]))];
+  const text = (k) => String(layers[k]).trim();
+  const hood = keys.includes("outer") && keys.includes("hood_or_cowl");
+  const parts = keys.filter((k) => !(hood && k === "hood_or_cowl")).map((k) => k === "outer" && hood ? `${text("outer")} with ${text("hood_or_cowl")}` : k === "fabric_spec" ? `fabric: ${text(k)}` : text(k));
   if (!parts.length) return "";
   if (keys[0] === "outer" && parts.length > 1) return [`${parts[0]} over ${parts[1]}`, ...parts.slice(2)].join(", ");
   return parts.join(", ");
@@ -70,7 +87,7 @@ export function surfaceRules(renderSurface) {
   return { keep, avoid, label };
 }
 
-export function formatShot(scene, shot, { names, story, surface, characters, lead = "look", renderSurfaces = {} }) {
+export function formatShot(scene, shot, { names, story, surface, characters, lead = "look", renderSurfaces = {}, outfits = {} }) {
   const context = { ...scalarsOf(scene), ...scalarsOf(shot) };
   const r = (text, extra = {}) => names.resolveTokens(String(text), story, { context: { ...context, ...extra } });
   const propText = (id) => r(characters[id]?.prompt_tokens || characters[id]?.name || id);
@@ -78,9 +95,14 @@ export function formatShot(scene, shot, { names, story, surface, characters, lea
   const people = shot.characters.map((c, i) => {
     const own = scalarsOf(c);
     const leadText = characters[c.id]?.forms?.[lead] !== undefined ? r(`{{${c.id}:${lead}}}`, own) : r(`{{${c.id}}}`, own);
-    const wearing = wardrobeLine(Object.fromEntries(Object.entries(c.state.wardrobe).map(([k, v]) => [k, r(v, own)])));
+    // carryContinuity has already turned a card's outfit id into its layers (so a scene can take one off) and kept the id in
+    // state.outfit, which says whose AVOID words apply; a state built by hand with { outfit: "<id>" } is expanded here
+    const outfit = outfitOf(c.state.outfit || c.state.wardrobe, outfits?.[c.id]?.outfits);
+    const layers = c.state.outfit ? c.state.wardrobe : outfit ? outfit.layers : c.state.wardrobe;
+    const wearing = wardrobeLine(Object.fromEntries(Object.entries(layers).map(([k, v]) => [k, r(v, own)])));
     const out = {
-      id: c.id, label: `CHARACTER ${i + 1}`, lead: leadText, wearing, hair: filled(c.state.hair) ? r(c.state.hair, own) : "",
+      id: c.id, label: `CHARACTER ${i + 1}`, lead: leadText, wearing, outfit: outfit ? outfit.id : "", outfit_avoid: outfit ? outfit.negative_tokens.map((t) => r(t, own)) : [],
+      hair: filled(c.state.hair) ? r(c.state.hair, own) : "",
       accessories: c.state.accessories.map((a) => r(a, own)), marks: c.state.marks.map((m) => r(m, own)),
       in_hand: [...c.holding], in_hand_text: c.holding.map(propText),
       action: filled(c.action) ? r(c.action, own) : "", eyeline: filled(c.eyeline) ? r(c.eyeline, own) : "", position: filled(c.position) ? r(c.position, own) : "",
@@ -108,6 +130,7 @@ export function formatShot(scene, shot, { names, story, surface, characters, lea
   const avoid = [...new Set([
     ...shot.characters.flatMap((c) => c.holding.flatMap((p) => characters[p]?.negative_tokens || [])),
     ...shot.props.flatMap((p) => characters[p]?.negative_tokens || []),
+    ...people.flatMap((p) => p.outfit_avoid),
     ...avoidWords(surface, scene),
     ...rules.avoid.map((a) => r(a)),
   ])];
@@ -145,14 +168,17 @@ export function compileContinuity(registry, { story, scene: slug, shot: shotId }
   if (!pair.cards) throw problem(`${registry._file}: story ${pair.story} has a shot sheet but no continuity-cards surface. Fix: declare one; the sheet carries what the cards start`);
   const cards = readJson(abs(pair.cards.file));
   const characters = registry.characters || {};
-  const carried = carryContinuity({ cards, sheet, characters, index: buildIndex(registry).index, story: pair.story, cardsFile: pair.cards.file, sheetFile: pair.sheet.file, cardRequired: pair.cards.required || CARD_REQUIRED, sceneRequired: pair.sheet.required || SCENE_REQUIRED, renderSurfaces: registry.render_surfaces, registryFile: path.basename(registry._file) });
+  let wardrobe;
+  try { wardrobe = readWardrobe(root, pair.cards); } catch (e) { throw problem(e.message); }
+  const outfits = wardrobe?.data?.characters || {};
+  const carried = carryContinuity({ cards, sheet, characters, index: buildIndex(registry).index, story: pair.story, cardsFile: pair.cards.file, sheetFile: pair.sheet.file, cardRequired: pair.cards.required || CARD_REQUIRED, sceneRequired: pair.sheet.required || SCENE_REQUIRED, renderSurfaces: registry.render_surfaces, registryFile: path.basename(registry._file), outfits });
   const compiled = carried.scenes[slug];
   const shots = shotId !== undefined ? compiled.shots.filter((s) => s.id === String(shotId)) : compiled.shots;
   if (shotId !== undefined && !shots.length) throw problem(`no shot "${shotId}" in ${slug}. Shots: ${compiled.shots.map((s) => s.id).join(", ")}`);
   const names = loadNames(root);
   return {
     story: pair.story, scene: slug, failures: carried.failures, gaps: carried.gaps,
-    shots: shots.map((shot) => formatShot(compiled, shot, { names, story: pair.story, surface: pair.sheet, characters, lead: pair.sheet.lead || "look", renderSurfaces: registry.render_surfaces || {} })),
+    shots: shots.map((shot) => formatShot(compiled, shot, { names, story: pair.story, surface: pair.sheet, characters, lead: pair.sheet.lead || "look", renderSurfaces: registry.render_surfaces || {}, outfits })),
   };
 }
 

@@ -39,3 +39,10 @@ research/retrieval/
 
 # Legacy Markdown worklogs are not a second trail
 WORK_LOG.md
+# Added by repo-audit-remediation-runner
+.env.local
+.env.*.local
+.venv/
+venv/
+__pycache__/
+*.pyc

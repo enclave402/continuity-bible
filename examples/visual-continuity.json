@@ -1,0 +1,17 @@
+{
+  "$schema": "../scripts/visual-continuity.v1.schema.json",
+  "_about": {
+    "role": "Single Source of Truth connecting stories in your narrative universe to their scenes and continuity cards.",
+    "why": "Instead of hardcoding paths in multiple scripts, this one master file tells your tools exactly where to find each story's scene records and wardrobe continuity cards.",
+    "how": "Add your story under 'stories' with its id, scenes_file, and continuity_file. Run `npm run verify` to test all stories."
+  },
+  "stories": {
+    "main-story": {
+      "scenes_file": "examples/story/scenes.json",
+      "continuity_file": "examples/continuity/cards.json",
+      "status": "active",
+      "require_continuity": true,
+      "require_blocking": true
+    }
+  }
+}

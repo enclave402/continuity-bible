@@ -1,0 +1,17 @@
+{
+  "_why": "A real pair from a published story: the same scene made on 2026-10-15 and redone on 2026-10-16, before an anchor existed.",
+  "title": "The Prosecutor's Finger: a redo with no anchor is a coin toss",
+  "category": "anchor",
+  "evidence": "real-pictures",
+  "before_label": "First version, 2026-10-15",
+  "after_label": "Redone the next day, before an anchor existed",
+  "what_broke": "The author redid this scene the day after it was first made. Nothing told the AI which version of the lead was the right one, so the redo moved her skin to a warmer brown and changed the room, her clothes and the light as well. Each redo was a coin toss, and across the book the same woman ended up with two skin tones.",
+  "how_fixed": "The anchor policy (scripts/anchor.mjs, ADR-004) asks the author two questions: what must never change (for her, eye colour) and, for everything else, which look to keep (fewest redraws). It picks one anchor picture and records it on her registry entry. Every later redo sends a close-up from that anchor and says: change only her face, skin and hair to match it, keep the eyes amber-brown, keep everything else. Both pictures here were made before the anchor existed, so they show the problem, not the fix at work. Checked at face size against the anchor later, the redone version happens to match it, so it stays.",
+  "before_prompt": "",
+  "after_prompt": "",
+  "proof_in_repo": [
+    "scripts/anchor.mjs",
+    "docs/4-explanation/decisions/ADR-004-retrospective-anchor-policy.md",
+    "docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md"
+  ]
+}

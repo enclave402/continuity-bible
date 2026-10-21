@@ -36,5 +36,6 @@ Names gate, tests, publication gate, worklog gate, research index, docs registry
 - **Public repository.** No personal data, local paths, credentials or private project names. `scripts/check-private.mjs` is the gate; keep your own words in a gitignored `.private-terms`.
 - **Nothing hardcoded.** Paths, models and endpoints come from config or the environment (`research/research.config.json`, `.env.example`), never from a machine.
 - Never edit a test to pass it. Never invent story data, names or evidence.
+- **Strict Additive Expansion & Deletion Boundary:** When an author identifies missing art or requests additions, systems must treat the directive as strictly additive expansion. Never assume delete-and-replace, and never overwrite existing scene panels, slots, or prompts. Automated content deletions are exclusively permitted as outputs of simulated market testing where the author explicitly authorized choosing the most lucrative commercial path.
 - Docs go under `docs/` by reader intent (`docs/CONTRIBUTING.md`); decisions are ADRs in `docs/4-explanation/decisions/`.
 - A research claim traces to a card in `research/`. Ask `node scripts/research/ask.mjs "<question>"` before opening a card.

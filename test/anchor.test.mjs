@@ -208,6 +208,49 @@ test("sheet.mjs writes one page agreeing with the anchor report, with the replac
   assert.doesNotMatch(html, /<script/i, "a static page: no scripts");
 });
 
+// Turnaround model sheet. Why: a front picture only shows the front; the back and the sides keep the model from making up
+// the hood or the hair when the character turns around. The page shows them first, above the picture cards.
+test("sheet.mjs opens with the turnaround model sheet from the registry entry or --turnaround: angle badges, notes, missing views", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-turnaround-"));
+  try {
+    fs.mkdirSync(path.join(dir, "refs"));
+    for (const f of ["front.png", "back.png", "left.png"]) fs.writeFileSync(path.join(dir, "refs", f), "stand-in picture");
+    const notes = "Hood attaches to outer coat collar only; palazzo trousers drape fully to kitten heel shoe line with zero bare leg";
+    const turnaround = { front: "refs/front.png", back: "refs/back.png", profile_left: "refs/left.png", sheet: "refs/no-such-sheet.png", notes };
+    const registry = path.join(dir, "character-registry.json");
+    fs.writeFileSync(registry, JSON.stringify({ characters: { "lin-test": { name: "Lin", turnaround } } }));
+    const out = path.join(dir, "out", "sheet.html");
+    fs.mkdirSync(path.dirname(out));
+    const r = spawnSync(process.execPath, ["scripts/sheet.mjs", path.resolve("examples/anchor/embeddings.jsonl"), "--registry", registry, "--character", "lin-test", "--out", out], { encoding: "utf8" });
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(r.stdout, /turnaround 4 of 5 views from the registry entry lin-test/);
+    const html = fs.readFileSync(out, "utf8");
+    const section = html.indexOf("Turnaround Model Sheet (360° Continuity Ground Truth)");
+    assert.ok(section > 0, "the section is on the page");
+    assert.ok(section < html.indexOf("Every picture, in the order it was made"), "above the picture cards");
+    for (const label of ["front", "back", "left profile", "right profile", "full model sheet"]) assert.match(html, new RegExp(`<span class="badge">${label}</span>`), label);
+    assert.match(html, /<img loading="lazy" src="\.\.\/refs\/back\.png" alt="back: back\.png">/, "paths are relative to the page, from the registry's folder");
+    assert.ok(fs.existsSync(path.resolve(path.dirname(out), "../refs/back.png")), "and the path the page uses finds the picture");
+    assert.match(html, /class="view missing"><div class="empty">not drawn yet<\/div><figcaption><span class="badge">right profile/, "a missing view is shown as missing");
+    assert.match(html, /picture not found at refs\/no-such-sheet\.png/, "a named picture that is not there is pointed out");
+    assert.ok(html.includes(notes), "the notes are on the page in full");
+    assert.doesNotMatch(html, /<script/i);
+
+    const inline = spawnSync(process.execPath, ["scripts/sheet.mjs", "examples/anchor/embeddings.jsonl", "--turnaround", JSON.stringify({ front: "examples/anchor/renders/ch01-p10.png", notes: "same coat from every side" }), "--out", out], { encoding: "utf8" });
+    assert.equal(inline.status, 0, inline.stderr);
+    assert.match(inline.stdout, /turnaround 1 of 5 views from --turnaround/);
+    assert.match(fs.readFileSync(out, "utf8"), /Notes that hold from every angle:<\/b> same coat from every side/);
+
+    const plain = spawnSync(process.execPath, ["scripts/sheet.mjs", "examples/anchor/embeddings.jsonl", "--out", out], { encoding: "utf8" });
+    assert.equal(plain.status, 0, plain.stderr);
+    assert.doesNotMatch(fs.readFileSync(out, "utf8"), /Turnaround Model Sheet/, "no turnaround, no section");
+
+    const broken = spawnSync(process.execPath, ["scripts/sheet.mjs", "examples/anchor/embeddings.jsonl", "--turnaround", path.join(dir, "missing.json"), "--out", out], { encoding: "utf8" });
+    assert.equal(broken.status, 2);
+    assert.match(broken.stderr, /--turnaround: no file at/);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 // --ask on a real terminal: the answers arrive on a stdin that stays open, as a terminal's does. The tests above feed `input:`,
 // which ends stdin and lets the process exit whether or not it closes its reader; that is how a hang once shipped unseen.
 function askOnOpenStdin({ args, answers, files }) {

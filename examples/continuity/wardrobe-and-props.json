@@ -1,0 +1,115 @@
+{
+  "$schema": "../../scripts/wardrobe-and-props.v1.schema.json",
+  "_about": {
+    "role": "Single Source of Truth for decomposed wardrobe layers, garment drape, and prop orientation.",
+    "rule": "Decomposing outer layers from inner garments prevents AI diffusion models from generating bare legs or omitting connected hoods."
+  },
+  "characters": {
+    "sam-hayes": {
+      "hair_and_makeup": "dark textured curls pinned up with tendrils, warm amber-brown eyes, light olive skin",
+      "outfits": {
+        "evening-entrance": {
+          "name": "Silk Cowl Overcoat and Palazzo Ensemble",
+          "description": "Floor-length hooded overcoat worn over an all-in-one crossover pantsuit.",
+          "layers": {
+            "outer": "Floor-grazing cream silk-satin long overcoat with dramatic drape, slightly shorter than pant hem",
+            "hood_or_cowl": "Deep Renaissance cowl hood attached to overcoat collar, draped softly down the back shoulders",
+            "top": "Plunging crossover wrap bodice in matching cream silk crepe",
+            "bottom": "Fluid wide-leg palazzo trousers resembling a long skirt until movement separates legs",
+            "footwear": "Black pointed-toe kitten heels with narrow gap between hem and shoe, continuous trouser drape with zero bare leg",
+            "fabric_spec": "Heavyweight matte silk crepe with muted ivory satin inner lining"
+          },
+          "accessories": [
+            "delicate gold chain pendant",
+            "vintage Art Deco tonneau watch on left wrist"
+          ],
+          "prompt_tokens": "Floor-length cream silk overcoat with deep Renaissance cowl hood draped at shoulders, worn over an all-in-one plunging crossover palazzo pantsuit, continuous draped pant fabric with kitten heels visible, no bare leg.",
+          "negative_tokens": [
+            "bare leg",
+            "exposed calf",
+            "short coat",
+            "detached hood",
+            "casual hoodie"
+          ]
+        }
+      },
+      "props": [
+        {
+          "_comment": "CONTINUITY STRUCTURE: Intrinsic Anatomical Laterality & Chirality Invariant (Andrej Karpathy Self-Announcing Standard)",
+          "_engineering_purpose": "Prevents Diffusion Laterality Inversion by enforcing Intrinsic Coordinates over Deictic Screen Coordinates",
+          "_projection_rule": "When the character faces the camera, their Intrinsic Left hand projects to Screen Right. When their back is to the camera, their Intrinsic Left hand projects to Screen Left. All prompts compile through this projection matrix.",
+          "item_id": "sam-tonneau-watch",
+          "name": "Art Deco tonneau watch",
+          "worn_on": "LEFT_WRIST_ONLY",
+          "intrinsic_laterality": "ANATOMICAL_LEFT_WRIST",
+          "screen_projection_rules": {
+            "facing_camera": "SCREEN_RIGHT",
+            "back_to_camera": "SCREEN_LEFT",
+            "profile_facing_screen_left": "NEAR_SIDE_FOREGROUND",
+            "profile_facing_screen_right": "FAR_SIDE_OCCLUDED"
+          },
+          "geometry": "tonneau-rectangular with curved flanks and cream vellum dial",
+          "reference_image": "examples/anchor/sam_watch_iso.png",
+          "prompt_tokens": "vintage tonneau-shaped gold watch on cognac leather strap, worn on left wrist only",
+          "negative_tokens": [
+            "round watch",
+            "circular dial",
+            "right wrist",
+            "smartwatch"
+          ]
+        }
+      ]
+    },
+    "theo-vance": {
+      "hair_and_makeup": "clean taper cut, razor-sharp jawline, dark slate eyes, fair olive complexion",
+      "outfits": {
+        "evening-entrance": {
+          "name": "Charcoal Overcoat and Dark Layering",
+          "description": "Tailored double-breasted overcoat over dark knit.",
+          "layers": {
+            "outer": "Heavyweight tailored charcoal wool overcoat with broad notched lapels",
+            "top": "Fine-gauge black merino wool crewneck",
+            "bottom": "Slim-cut charcoal wool trousers",
+            "footwear": "Burnished black leather Chelsea boots",
+            "fabric_spec": "Matte wool melton and high-twist merino"
+          },
+          "accessories": [
+            "matte-black stepped tank watch on left wrist"
+          ],
+          "prompt_tokens": "Tailored charcoal wool overcoat with broad lapels over black crewneck, slim wool trousers, black leather boots.",
+          "negative_tokens": [
+            "casual jacket",
+            "hoodie",
+            "sneakers"
+          ]
+        }
+      },
+      "props": [
+        {
+          "_comment": "CONTINUITY STRUCTURE: Intrinsic Anatomical Laterality & Chirality Invariant (Andrej Karpathy Self-Announcing Standard)",
+          "_engineering_purpose": "Prevents Diffusion Laterality Inversion by enforcing Intrinsic Coordinates over Deictic Screen Coordinates",
+          "_projection_rule": "When the character faces the camera, their Intrinsic Left hand projects to Screen Right. When their back is to the camera, their Intrinsic Left hand projects to Screen Left. All prompts compile through this projection matrix.",
+          "item_id": "theo-tank-watch",
+          "name": "Stepped-tank architectural watch",
+          "worn_on": "LEFT_WRIST_ONLY",
+          "intrinsic_laterality": "ANATOMICAL_LEFT_WRIST",
+          "screen_projection_rules": {
+            "facing_camera": "SCREEN_RIGHT",
+            "back_to_camera": "SCREEN_LEFT",
+            "profile_facing_screen_left": "NEAR_SIDE_FOREGROUND",
+            "profile_facing_screen_right": "FAR_SIDE_OCCLUDED"
+          },
+          "geometry": "stepped Art Deco tank rectangular case with black dial and leather strap",
+          "reference_image": "examples/anchor/theo_watch_iso.png",
+          "prompt_tokens": "matte-black stepped tank rectangular watch on black leather strap, worn on left wrist only",
+          "negative_tokens": [
+            "round watch",
+            "circular dial",
+            "right wrist",
+            "smartwatch"
+          ]
+        }
+      ]
+    }
+  }
+}

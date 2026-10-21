@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/visual-continuity.v1.schema.json",
+  "title": "Visual Continuity Manifest, version 1",
+  "description": "The master map linking every story in your universe to its scene files and character continuity cards. In Andrej Karpathy first-principles style, this file answers one simple question: 'Where do the scenes, outfits, and pictures for each story live?'",
+  "type": "object",
+  "required": ["stories"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_about": { "type": "object" },
+    "stories": {
+      "type": "object",
+      "description": "Dictionary of stories, keyed by unique story slug (e.g. 'main-story', 'tokyo-night').",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Path to story overview or blueprint file."
+          },
+          "scenes_file": {
+            "type": "string",
+            "description": "Path to the JSON file containing all scenes for this story."
+          },
+          "continuity_file": {
+            "type": "string",
+            "description": "Path to the JSON file containing wardrobe and props continuity cards."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "draft", "retired"],
+            "description": "Whether this story is active, in-progress draft, or retired."
+          },
+          "require_continuity": {
+            "type": "boolean",
+            "description": "If true, every scene in this story must have matching continuity cards."
+          },
+          "require_blocking": {
+            "type": "boolean",
+            "description": "If true, every shot must declare physical room blocking and prop hands."
+          }
+        }
+      }
+    }
+  }
+}

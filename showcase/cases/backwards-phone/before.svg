@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500" font-family="system-ui, sans-serif">
+  <title>Diagram: backwards phone. The screen faces the camera while her eyes look at the back of the phone.</title>
+  <rect width="400" height="500" fill="#f6f4ef"/>
+  <text x="200" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#b3261e">BEFORE: backwards phone</text>
+  <path d="M110 470 Q110 300 200 290 Q290 300 290 470 Z" fill="#7a6a8c"/>
+  <rect x="186" y="250" width="28" height="40" fill="#c99a78"/>
+  <circle cx="200" cy="190" r="70" fill="#c99a78"/>
+  <path d="M130 180 Q140 105 200 110 Q262 105 270 180 Q250 135 200 140 Q150 135 130 180 Z" fill="#3b2a22"/>
+  <ellipse cx="175" cy="195" rx="11" ry="7" fill="#fff"/><ellipse cx="225" cy="195" rx="11" ry="7" fill="#fff"/>
+  <circle cx="175" cy="200" r="5" fill="#222"/><circle cx="225" cy="200" r="5" fill="#222"/>
+  <path d="M185 232 Q200 238 215 232" stroke="#7a3b2e" stroke-width="3" fill="none"/>
+  <path d="M150 470 L170 380 L195 370" stroke="#c99a78" stroke-width="22" stroke-linecap="round" fill="none"/>
+  <rect x="168" y="318" width="64" height="112" rx="10" fill="#1b1b1f"/>
+  <rect x="174" y="326" width="52" height="96" rx="5" fill="#5ab0ff"/>
+  <rect x="181" y="340" width="38" height="7" rx="3" fill="#eaf5ff"/><rect x="181" y="354" width="28" height="7" rx="3" fill="#eaf5ff"/><rect x="181" y="368" width="34" height="7" rx="3" fill="#eaf5ff"/>
+  <path d="M175 205 L190 312" stroke="#b3261e" stroke-width="2" stroke-dasharray="5 4"/><path d="M225 205 L210 312" stroke="#b3261e" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="300" y="352" font-size="14" fill="#b3261e">screen faces</text><text x="300" y="370" font-size="14" fill="#b3261e">the camera</text>
+  <path d="M296 360 L236 370" stroke="#b3261e" stroke-width="2"/>
+  <text x="22" y="262" font-size="14" fill="#b3261e">her eyes look at</text><text x="22" y="280" font-size="14" fill="#b3261e">the blank back</text>
+  <circle cx="345" cy="80" r="26" fill="none" stroke="#b3261e" stroke-width="5"/><path d="M332 67 L358 93 M358 67 L332 93" stroke="#b3261e" stroke-width="5"/>
+  <text x="200" y="490" text-anchor="middle" font-size="12" fill="#555">DIAGRAM: a drawing of the mistake, not a generated picture</text>
+</svg>
