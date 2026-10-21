@@ -60,6 +60,7 @@
       "type": "continuity-cards",
       "file": "examples/continuity/cards.json",
       "story": "main-story",
+      "wardrobe": "examples/continuity/wardrobe-and-props.json",
       "required": [
         "wardrobe",
         "hair"

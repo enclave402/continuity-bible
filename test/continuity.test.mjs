@@ -299,3 +299,49 @@ test("a story folder with markdown scenes and no scene file still compiles: the 
   assert.match(out.stdout, /CHANGED SINCE THE LAST SHOT: Abel hands a dented tin matchbox to CHARACTER 1\./, "someone off-screen is named");
   assert.match(out.stdout, /AVOID: lighter, night, stars\./);
 });
+
+// Decomposed garment layers. Why: "a hooded silk pantsuit" in one phrase makes an image model draw bare legs under the coat
+// or drop the hood; written as layers, each piece is said once, and the outfit's own AVOID words go into every shot.
+test("decomposed layers compile in visual order: coat with its hood over the top, then trousers, shoes, cloth, whatever order the card used", () => {
+  const scrambled = { fabric_spec: "matte silk crepe", footwear: "black kitten heels", bottom: "wide-leg palazzo trousers", top: "crossover wrap bodice", hood_or_cowl: "cowl hood attached at the collar", outer: "floor-length cream overcoat" };
+  assert.equal(wardrobeLine(scrambled), "floor-length cream overcoat with cowl hood attached at the collar over crossover wrap bodice, wide-leg palazzo trousers, black kitten heels, fabric: matte silk crepe");
+  assert.equal(wardrobeLine({ shoes: "boots", outfit: "a green dress", top: "a cardigan" }), "a cardigan, a green dress, boots", "top, outfit, shoes keep their order");
+  assert.equal(wardrobeLine({ hood_or_cowl: "a loose hood", top: "a tunic", bottom: "leggings" }), "a loose hood, a tunic, leggings", "a hood with no coat is listed in its own place");
+  const outfits = JSON.parse(fs.readFileSync("examples/continuity/wardrobe-and-props.json", "utf8")).characters["sam-hayes"].outfits;
+  const line = wardrobeLine("evening-entrance", outfits);
+  assert.match(line, /^Floor-grazing cream silk-satin long overcoat.*? with Deep Renaissance cowl hood.*? over Plunging crossover wrap bodice/, "an outfit id string becomes that outfit's layers");
+  assert.ok(line.indexOf("palazzo trousers") < line.indexOf("kitten heels") && line.indexOf("kitten heels") < line.indexOf("fabric: Heavyweight"), line);
+  assert.equal(wardrobeLine("not-an-outfit", outfits), "not-an-outfit", "an id with no outfit is printed as written");
+});
+
+test("a card that names an outfit id gets every layer, the outfit's negative tokens land in AVOID, and taking off the coat still works", () => {
+  const dir = copyRepo();
+  try {
+    editJson(dir, CARDS, (j) => { j.cards["sam-hayes"]["day-1"].wardrobe = "evening-entrance"; });
+    // the sheet takes off an "outer" layer in 14a; the outfit's coat is that layer, so the change still has something to take off
+    assert.equal(check(dir).status, 0, check(dir).stderr);
+    const porch = run(dir, "compile-shot.mjs", ["13-the-porch"]);
+    assert.equal(porch.status, 0, porch.stderr);
+    assert.match(porch.stdout, /CHARACTER 1: a mixed-race woman[^\n]*WEARING: Floor-grazing cream silk-satin long overcoat[^\n]* with Deep Renaissance cowl hood[^\n]* over Plunging crossover wrap bodice[^\n]*palazzo trousers[^\n]*kitten heels[^\n]*fabric: Heavyweight matte silk crepe/);
+    const avoid = porch.stdout.split("\n").find((l) => l.startsWith("AVOID: "));
+    for (const t of ["bare leg", "exposed calf", "short coat", "detached hood", "casual hoodie"]) assert.ok(avoid.includes(t), `AVOID has "${t}": ${avoid}`);
+    const kitchen = run(dir, "compile-shot.mjs", ["14-read-at-1152", "--shot", "14a"]);
+    assert.equal(kitchen.status, 0, kitchen.stderr);
+    assert.match(kitchen.stdout, /WEARING: Plunging crossover wrap bodice/, "the coat came off; the hood went with it");
+    assert.doesNotMatch(kitchen.stdout, /WEARING: Floor-grazing/);
+    assert.match(kitchen.stdout, /CHARACTER 1 has taken off the Floor-grazing cream silk-satin long overcoat[^\n]* with Deep Renaissance cowl hood/);
+    const json = JSON.parse(run(dir, "compile-shot.mjs", ["13-the-porch", "--json"]).stdout);
+    const sam = json.shots[0].characters.find((c) => c.id === "sam-hayes");
+    assert.equal(sam.outfit, "evening-entrance");
+    assert.deepEqual(sam.outfit_avoid, ["bare leg", "exposed calf", "short coat", "detached hood", "casual hoodie"]);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("the wardrobe link is checked: a missing file or an unknown character id fails the gate, and compile-shot names the file", () => {
+  const missing = planted((dir) => editJson(dir, "character-registry.json", (j) => { j.surfaces.find((s) => s.type === "continuity-cards").wardrobe = "examples/continuity/no-such-wardrobe.json"; }));
+  assert.equal(missing.status, 1);
+  assert.match(missing.stderr, /links wardrobe "examples\/continuity\/no-such-wardrobe.json", which does not exist/);
+  const unknown = planted((dir) => editJson(dir, "examples/continuity/wardrobe-and-props.json", (j) => { j.characters["no-such-person"] = { outfits: {} }; }));
+  assert.equal(unknown.status, 1);
+  assert.match(unknown.stderr, /characters\.no-such-person is no registry id/);
+});

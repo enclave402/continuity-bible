@@ -100,6 +100,10 @@
             "type": "string",
             "description": "scenes: the key holding the scene map (default scenes)."
           },
+          "wardrobe": {
+            "type": "string",
+            "description": "continuity-cards: the wardrobe file (scripts/wardrobe-and-props.v1.schema.json) whose outfits a card may name by id. Why: a card that says evening-entrance gets every layer (coat, hood, top, trousers, shoes, cloth) and the outfit's words to avoid in each compiled shot, so a long coat never comes back with bare legs under it. How: the gate checks the file exists and fits its schema; compile-shot.mjs reads it."
+          },
           "filter": {
             "type": "object",
             "required": [
