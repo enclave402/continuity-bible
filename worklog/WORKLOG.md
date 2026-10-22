@@ -1,11 +1,18 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 57 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 59 entries. Read `STATE.md` first; this is the trail.
+
+## 2026-10-22
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 14:10:22 (UTC-04:00) | action | continuity | [Public prop index, layered wardrobe, turnarounds, companion exemplar, and the 8th-grade how-to](entries/2026-10-22_14-10-22_public-prop-index-layered-wardrobe-turnarounds-companion-exe.md) | agent:grok | closed |
 
 ## 2026-10-21
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 16:04:08 (UTC-04:00) | action | continuity | [Codified prop-index.v1.schema.json and unit tests for inverted prop continuity](entries/2026-10-21_16-04-08_codified-prop-index-v1-schema-json-and-unit-tests-for-invert.md) | agent:claude-code | closed |
 | 18:36:36 (UTC-04:00) | action | showcase | [Before & After showcase engine: scripts/showcase.mjs (--new, --check, build of docs/SHOWCASE.md and showcase.html), showcase/TEMPLATE.json, three cases, test/showcase.test.mjs; --check added to npm run verify. Verify green, 144 tests.](entries/2026-10-21_18-36-36_before-after-showcase-engine-scripts-showcase-mjs-new-check-.md) | agent:claude | closed |
 | 15:26:03 (UTC-04:00) | action | continuity | [Continuity actions 1 to 3: compile-shot pulls garment layers and outfit avoid words; check-affordance --batch prints a PASS/FAIL table; sheet.mjs shows the turnaround model sheet above the cards. npm run verify green, 134 tests.](entries/2026-10-21_15-26-03_continuity-actions-1-to-3-compile-shot-pulls-garment-layers-.md) | agent:claude | closed |
 

@@ -18,6 +18,51 @@
           "additionalProperties": false,
           "properties": {
             "hair_and_makeup": { "type": "string" },
+            "turnaround": {
+              "type": "object",
+              "description": "360 degree sheet. Front, back, and both profiles. Each view is a path plus what must stay true when the character turns. The picture may not exist yet; the words are the contract.",
+              "additionalProperties": false,
+              "required": ["front", "back", "profile_left", "profile_right"],
+              "properties": {
+                "notes": { "type": "string" },
+                "front": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": { "type": "string", "minLength": 1 },
+                    "description": { "type": "string", "minLength": 1 }
+                  }
+                },
+                "back": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": { "type": "string", "minLength": 1 },
+                    "description": { "type": "string", "minLength": 1 }
+                  }
+                },
+                "profile_left": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": { "type": "string", "minLength": 1 },
+                    "description": { "type": "string", "minLength": 1 }
+                  }
+                },
+                "profile_right": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": { "type": "string", "minLength": 1 },
+                    "description": { "type": "string", "minLength": 1 }
+                  }
+                }
+              }
+            },
             "outfits": {
               "type": "object",
               "additionalProperties": {

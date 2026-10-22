@@ -31,6 +31,49 @@
             "detached hood",
             "casual hoodie"
           ]
+        },
+        "morning-after": {
+          "name": "Camel coat over the morning blouse",
+          "description": "The next morning's clothes: the same coat as the night walk, without the evening silk.",
+          "layers": {
+            "outer": "Knee-length camel wool coat, single-breasted, hem ending mid-calf over the trousers",
+            "hood_or_cowl": "No hood and no cowl; a narrow notched lapel only, nothing hanging down the back",
+            "top": "Ivory cotton blouse with a soft collar, tucked in",
+            "bottom": "Black straight-leg trousers with a full-length crease",
+            "footwear": "Black leather ankle boots, trouser hem just above the boot, no bare ankle",
+            "fabric_spec": "Matte camel wool and crisp cotton"
+          },
+          "accessories": [
+            "delicate gold chain pendant",
+            "vintage Art Deco tonneau watch on left wrist"
+          ],
+          "prompt_tokens": "Knee-length camel wool coat with a notched lapel and no hood, over an ivory tucked blouse, black straight trousers, black ankle boots, no bare ankle.",
+          "negative_tokens": [
+            "bare ankle",
+            "evening silk gown",
+            "hood",
+            "sneakers",
+            "short coat"
+          ]
+        }
+      },
+      "turnaround": {
+        "notes": "The face, the pinned curls, and the scar through the character's own left eyebrow hold on every view. Outfits change by story day; this sheet is the body, not one costume.",
+        "front": {
+          "path": "examples/continuity/turnarounds/sam-hayes-front.png",
+          "description": "Facing the camera. Warm brown skin, dark curls pinned up with loose strands at the temples, scar through the character's own left eyebrow. Both arms down so the left wrist is free for the watch."
+        },
+        "back": {
+          "path": "examples/continuity/turnarounds/sam-hayes-back.png",
+          "description": "Back to the camera. The pinned curls and the nape show. No hood unless the outfit's hood_or_cowl says there is one. The coat hem and the trouser hem are both visible."
+        },
+        "profile_left": {
+          "path": "examples/continuity/turnarounds/sam-hayes-profile-left.png",
+          "description": "The character's own left side toward the camera. The scar through the left eyebrow is visible. The left wrist is the near wrist."
+        },
+        "profile_right": {
+          "path": "examples/continuity/turnarounds/sam-hayes-profile-right.png",
+          "description": "The character's own right side toward the camera. The left-eyebrow scar is on the far side. The left wrist is the far wrist and may be partly hidden."
         }
       },
       "props": [
@@ -68,6 +111,7 @@
           "description": "Tailored double-breasted overcoat over dark knit.",
           "layers": {
             "outer": "Heavyweight tailored charcoal wool overcoat with broad notched lapels",
+            "hood_or_cowl": "No hood and no cowl; the collar is the broad notched lapel and nothing hangs down the back",
             "top": "Fine-gauge black merino wool crewneck",
             "bottom": "Slim-cut charcoal wool trousers",
             "footwear": "Burnished black leather Chelsea boots",
@@ -82,6 +126,48 @@
             "hoodie",
             "sneakers"
           ]
+        },
+        "workshop-morning": {
+          "name": "Canvas chore coat over work clothes",
+          "description": "The morning in the workshop: a chore coat over the faded shirt, not the evening overcoat.",
+          "layers": {
+            "outer": "Unbuttoned tan canvas chore coat, hem at the hip, sleeves pushed to the forearm",
+            "hood_or_cowl": "No hood; a short stand collar on the chore coat, lying flat",
+            "top": "Faded black cotton t-shirt",
+            "bottom": "Work jeans with sawdust at the cuffs",
+            "footwear": "Scuffed steel-toe boots, jean cuffs resting on the boot tops, no bare ankle",
+            "fabric_spec": "Dry canvas, worn cotton, and rigid denim"
+          },
+          "accessories": [
+            "matte-black stepped tank watch on left wrist"
+          ],
+          "prompt_tokens": "Unbuttoned tan canvas chore coat with a flat stand collar and no hood, over a faded black t-shirt, dusty work jeans, steel-toe boots.",
+          "negative_tokens": [
+            "evening overcoat",
+            "hoodie",
+            "bare ankle",
+            "dress shoes",
+            "detached hood"
+          ]
+        }
+      },
+      "turnaround": {
+        "notes": "Sandy hair, short beard, and the chipped front tooth hold on every view. The left wrist stays clear for the tank watch. Outfits change by story day.",
+        "front": {
+          "path": "examples/continuity/turnarounds/theo-vance-front.png",
+          "description": "Facing the camera. Tall build, sandy hair, short beard, chipped front tooth. Arms relaxed so the character's own left wrist can show a watch."
+        },
+        "back": {
+          "path": "examples/continuity/turnarounds/theo-vance-back.png",
+          "description": "Back to the camera. Hair flattened at the crown where a cap sat. No hood unless that outfit's hood_or_cowl names one. Coat hem and boot tops both readable."
+        },
+        "profile_left": {
+          "path": "examples/continuity/turnarounds/theo-vance-profile-left.png",
+          "description": "The character's own left side toward the camera. Beard line and left wrist are the near side. The chipped tooth shows in the profile of the mouth."
+        },
+        "profile_right": {
+          "path": "examples/continuity/turnarounds/theo-vance-profile-right.png",
+          "description": "The character's own right side toward the camera. The left wrist is the far wrist. Same beard, same hair, same tooth."
         }
       },
       "props": [
@@ -110,6 +196,79 @@
           ]
         }
       ]
+    },
+    "chloe-jenkins": {
+      "hair_and_makeup": "close-cropped natural cut, deep brown skin, no jewelry on the face",
+      "outfits": {
+        "night-on-the-porch": {
+          "name": "Turtleneck and dark jeans",
+          "description": "The night the text is read: no coat, glasses pushed up, sneakers.",
+          "layers": {
+            "outer": "No coat; the turtleneck is the outer layer",
+            "hood_or_cowl": "No hood and no cowl; a close ribbed neck only",
+            "top": "Grey ribbed turtleneck",
+            "bottom": "Dark straight jeans",
+            "footwear": "White leather sneakers, jean hem just above the shoe, no bare ankle",
+            "fabric_spec": "Matte ribbed knit and dark denim"
+          },
+          "accessories": [
+            "reading glasses pushed up on the head",
+            "thin silver ring"
+          ],
+          "prompt_tokens": "Grey ribbed turtleneck with no hood and no coat, dark straight jeans, white sneakers, glasses pushed up on the head.",
+          "negative_tokens": [
+            "coat",
+            "hood",
+            "bare ankle",
+            "gown",
+            "heels"
+          ]
+        },
+        "next-morning": {
+          "name": "Cardigan over the same turtleneck",
+          "description": "The next morning in the kitchen: a cardigan added, the jeans and sneakers unchanged.",
+          "layers": {
+            "outer": "Navy wool cardigan, buttoned, hip length",
+            "hood_or_cowl": "No hood; the cardigan has a plain round neck and nothing attached at the collar",
+            "top": "Grey ribbed turtleneck under the cardigan",
+            "bottom": "Dark straight jeans",
+            "footwear": "White leather sneakers, jean hem just above the shoe, no bare ankle",
+            "fabric_spec": "Soft navy wool and the same ribbed knit"
+          },
+          "accessories": [
+            "reading glasses on the nose",
+            "thin silver ring"
+          ],
+          "prompt_tokens": "Navy wool cardigan with a plain round neck and no hood, over a grey ribbed turtleneck, dark jeans, white sneakers.",
+          "negative_tokens": [
+            "hood",
+            "bare ankle",
+            "evening coat",
+            "boots",
+            "detached collar"
+          ]
+        }
+      },
+      "turnaround": {
+        "notes": "Deep brown skin and the close-cropped natural cut hold on every view. There is no wrist prop. Glasses move between the head and the nose; the sheet draws them on the head.",
+        "front": {
+          "path": "examples/continuity/turnarounds/chloe-jenkins-front.png",
+          "description": "Facing the camera. Deep brown skin, close-cropped natural hair, glasses pushed up on the head, arms at the sides."
+        },
+        "back": {
+          "path": "examples/continuity/turnarounds/chloe-jenkins-back.png",
+          "description": "Back to the camera. The shape of the cropped hair at the nape is clear. No hood. The cardigan or turtleneck hem is readable."
+        },
+        "profile_left": {
+          "path": "examples/continuity/turnarounds/chloe-jenkins-profile-left.png",
+          "description": "The character's own left side toward the camera. The cropped hairline, the ear, and the glasses on the head stay the same."
+        },
+        "profile_right": {
+          "path": "examples/continuity/turnarounds/chloe-jenkins-profile-right.png",
+          "description": "The character's own right side toward the camera. Same hair, same glasses, same build as the left profile."
+        }
+      },
+      "props": []
     }
   }
 }

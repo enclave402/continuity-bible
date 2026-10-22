@@ -21,12 +21,14 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Check a simulated reader panel](2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md): a quote must be verbatim in the spread it names; a no-read control throws the quiz out when it scores; the paired difference is written by the script and checked by recomputing it; simulated answers are not a human audience, and the script does not pick the winner.
 - [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, answer the two drift questions (or name a policy), record the anchor, size the regeneration bill.
 - [Enforce story invariants, affordances, and layered wardrobe](2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md): stop AI from reintroducing banished plot points, prevent backwards phones, decompose garment layers, and declare multi-angle turnaround sheets.
+- [Track props and wardrobe](2-how-to/HOW-TO-TRACK-PROPS-AND-WARDROBE.md): build the prop index, check it, write layered outfits and a four-view turnaround, and keep a companion as a collar-tag token.
 
 ## 3. Look up (`3-reference/`)
 
 - [Registry fields](3-reference/REGISTRY-FIELDS.md): every key of `character-registry.json` and what the gate does with it.
 - [Continuity issue classes](3-reference/CONTINUITY-ISSUE-CLASSES.md): the eight ways a continuity system goes silent, and the mechanism that answers each.
 - [Intrinsic anatomical laterality](3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md): self-announcing architecture and camera-space projection matrix to eliminate diffusion laterality inversion.
+- [Prop disposition and visual continuity](3-reference/PROP-DISPOSITION-AND-VISUAL-CONTINUITY-STANDARDS.md): the prop-first index, its fields, wardrobe layers, turnaround views, and the public companion exemplar.
 - [Continuity card and shot sheet fields](3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md): every field of the cards file and the shot sheet, the two surface declarations, every gate check, the compiled block line by line.
 - [The single mutation gate](3-reference/SINGLE-MUTATION-GATE-ARCHITECTURE.md): the narrow waist for additions, updates, retirements and laterality; the five assertion gates; the worklog spine.
 - [Scene and edition fields](3-reference/SCENE-AND-EDITION-FIELDS.md): every field of the scene file, an edition and the parked-art manifest; the built text line by line; the commands; the three gates and what each refuses.

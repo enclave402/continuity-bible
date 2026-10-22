@@ -1,0 +1,190 @@
+{
+  "$schema": "../../scripts/prop-index.v1.schema.json",
+  "_about": "Compiled from character-registry.json, examples/story/scenes.json, and examples/continuity/wardrobe-and-props.json. Spread numbers come from examples/story/editions/sam-first.json. A page is listed only when the prop is on that page. Do not edit by hand. Rebuild with: node scripts/compile-prop-index.mjs",
+  "version": 1,
+  "props": {
+    "brass-key": {
+      "item_id": "brass-key",
+      "character": "theo-vance",
+      "worn_on": "HAND_HELD",
+      "intrinsic_laterality": "NONE",
+      "screen_projection_rules": {
+        "facing_camera": "SCREEN_RIGHT",
+        "back_to_camera": "SCREEN_LEFT"
+      },
+      "total_scenes": 2,
+      "worn_count": 1,
+      "removed_count": 0,
+      "timeline": [
+        {
+          "slug": "across-town",
+          "spread_number": 3,
+          "story_day": "day-1",
+          "in_universe_time": "Thursday, 11:55 PM",
+          "presence": "exempt",
+          "side": "none",
+          "image_filename": "main_across-town.png",
+          "thumbnail_path": "examples/story/art/main_across-town.png",
+          "reason": "in the scene, not in a hand"
+        },
+        {
+          "slug": "morning-at-the-workbench",
+          "spread_number": 4,
+          "story_day": "day-2",
+          "in_universe_time": "Friday, 6:10 AM",
+          "presence": "worn",
+          "side": "unspecified",
+          "image_filename": "main_morning-at-the-workbench.png",
+          "thumbnail_path": "examples/story/art/main_morning-at-the-workbench.png",
+          "reason": "the scene puts it in theo-vance's hand; it does not name which hand"
+        }
+      ]
+    },
+    "cracked-phone": {
+      "item_id": "cracked-phone",
+      "character": "sam-hayes",
+      "worn_on": "HAND_HELD",
+      "intrinsic_laterality": "NONE",
+      "screen_projection_rules": {
+        "facing_camera": "SCREEN_RIGHT",
+        "back_to_camera": "SCREEN_LEFT"
+      },
+      "total_scenes": 3,
+      "worn_count": 3,
+      "removed_count": 0,
+      "timeline": [
+        {
+          "slug": "the-porch",
+          "spread_number": 1,
+          "story_day": "day-1",
+          "in_universe_time": "Thursday, 11:50 PM",
+          "presence": "worn",
+          "side": "unspecified",
+          "image_filename": "main_the-porch.png",
+          "thumbnail_path": "examples/story/art/main_the-porch.png",
+          "reason": "held by sam-hayes; the shot does not name which hand"
+        },
+        {
+          "slug": "read-at-1152",
+          "spread_number": 2,
+          "story_day": "day-1",
+          "in_universe_time": "Thursday, 11:58 PM",
+          "presence": "worn",
+          "side": "unspecified",
+          "image_filename": "main_read-at-1152.png",
+          "thumbnail_path": "examples/story/art/main_read-at-1152.png",
+          "reason": "held by chloe-jenkins; the shot does not name which hand"
+        },
+        {
+          "slug": "the-text-sent",
+          "spread_number": 5,
+          "story_day": "day-2",
+          "in_universe_time": "Friday, 7:30 AM",
+          "presence": "worn",
+          "side": "unspecified",
+          "image_filename": "main_the-text-sent-1.png",
+          "thumbnail_path": "examples/story/art/main_the-text-sent-1.png",
+          "reason": "listed on the scene; the sheet does not name a hand"
+        }
+      ]
+    },
+    "sam-tonneau-watch": {
+      "item_id": "sam-tonneau-watch",
+      "character": "sam-hayes",
+      "geometry": "tonneau-rectangular with curved flanks and cream vellum dial",
+      "worn_on": "LEFT_WRIST_ONLY",
+      "intrinsic_laterality": "ANATOMICAL_LEFT_WRIST",
+      "screen_projection_rules": {
+        "facing_camera": "SCREEN_RIGHT",
+        "back_to_camera": "SCREEN_LEFT"
+      },
+      "total_scenes": 3,
+      "worn_count": 3,
+      "removed_count": 0,
+      "timeline": [
+        {
+          "slug": "the-porch",
+          "spread_number": 1,
+          "story_day": "day-1",
+          "in_universe_time": "Thursday, 11:50 PM",
+          "presence": "worn",
+          "side": "left",
+          "image_filename": "main_the-porch.png",
+          "thumbnail_path": "examples/story/art/main_the-porch.png",
+          "reason": "worn by sam-hayes on the left side"
+        },
+        {
+          "slug": "read-at-1152",
+          "spread_number": 2,
+          "story_day": "day-1",
+          "in_universe_time": "Thursday, 11:58 PM",
+          "presence": "worn",
+          "side": "left",
+          "image_filename": "main_read-at-1152.png",
+          "thumbnail_path": "examples/story/art/main_read-at-1152.png",
+          "reason": "worn by sam-hayes on the left side"
+        },
+        {
+          "slug": "the-text-sent",
+          "spread_number": 5,
+          "story_day": "day-2",
+          "in_universe_time": "Friday, 7:30 AM",
+          "presence": "worn",
+          "side": "left",
+          "image_filename": "main_the-text-sent-1.png",
+          "thumbnail_path": "examples/story/art/main_the-text-sent-1.png",
+          "reason": "worn by sam-hayes on the left side"
+        }
+      ]
+    },
+    "theo-tank-watch": {
+      "item_id": "theo-tank-watch",
+      "character": "theo-vance",
+      "geometry": "stepped Art Deco tank rectangular case with black dial and leather strap",
+      "worn_on": "LEFT_WRIST_ONLY",
+      "intrinsic_laterality": "ANATOMICAL_LEFT_WRIST",
+      "screen_projection_rules": {
+        "facing_camera": "SCREEN_RIGHT",
+        "back_to_camera": "SCREEN_LEFT"
+      },
+      "total_scenes": 3,
+      "worn_count": 3,
+      "removed_count": 0,
+      "timeline": [
+        {
+          "slug": "across-town",
+          "spread_number": 3,
+          "story_day": "day-1",
+          "in_universe_time": "Thursday, 11:55 PM",
+          "presence": "worn",
+          "side": "left",
+          "image_filename": "main_across-town.png",
+          "thumbnail_path": "examples/story/art/main_across-town.png",
+          "reason": "worn by theo-vance on the left side"
+        },
+        {
+          "slug": "morning-at-the-workbench",
+          "spread_number": 4,
+          "story_day": "day-2",
+          "in_universe_time": "Friday, 6:10 AM",
+          "presence": "worn",
+          "side": "left",
+          "image_filename": "main_morning-at-the-workbench.png",
+          "thumbnail_path": "examples/story/art/main_morning-at-the-workbench.png",
+          "reason": "worn by theo-vance on the left side"
+        },
+        {
+          "slug": "the-text-sent",
+          "spread_number": 5,
+          "story_day": "day-2",
+          "in_universe_time": "Friday, 7:30 AM",
+          "presence": "worn",
+          "side": "left",
+          "image_filename": "main_the-text-sent-1.png",
+          "thumbnail_path": "examples/story/art/main_the-text-sent-1.png",
+          "reason": "worn by theo-vance on the left side"
+        }
+      ]
+    }
+  }
+}
