@@ -1,4 +1,6 @@
-# Narrative Token SSOT
+# Continuity Bible
+
+> *Previously named Narrative Token SSOT.* A continuity bible is the living record a production keeps so a long series does not drift out of its own facts. Why this name, what was rejected, what is still free and whether to buy a domain: [Naming, availability and the parked domain decision](docs/3-reference/NAMING.md).
 
 > Keep your characters the same people from the first picture to the last. One file says who they are. Your story pages and picture prompts point at that file instead of repeating it. A checker catches the slip before you paste.
 >

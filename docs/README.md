@@ -24,6 +24,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 
 ## 3. Look up (`3-reference/`)
 
+- [Naming, availability and the parked domain decision](3-reference/NAMING.md): what this project is called and why, the rejected names with their trademark numbers, the RDAP availability sweep, and the parked domain decision.
 - [Registry fields](3-reference/REGISTRY-FIELDS.md): every key of `character-registry.json` and what the gate does with it.
 - [Continuity issue classes](3-reference/CONTINUITY-ISSUE-CLASSES.md): the eight ways a continuity system goes silent, and the mechanism that answers each.
 - [Intrinsic anatomical laterality](3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md): self-announcing architecture and camera-space projection matrix to eliminate diffusion laterality inversion.
