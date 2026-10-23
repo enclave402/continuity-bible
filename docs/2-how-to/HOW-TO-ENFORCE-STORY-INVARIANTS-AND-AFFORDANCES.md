@@ -175,6 +175,29 @@ node scripts/sheet.mjs examples/anchor/embeddings.jsonl --character sam-hayes --
 
 To try a turnaround before you record it, pass it with `--turnaround` (a JSON file, or the object itself in quotes). It wins over the registry entry. Paths in the registry are relative to the registry file; paths in a `--turnaround` file are relative to that file.
 
+|---
+
+## 5. Catch Visual Coherence Breaks Between Panels (Story Coherence Linter)
+
+### Why this happens
+AI image generators have no memory of the previous panel. A scene set indoors gets rendered as an outdoor shot. Rain that was falling in one panel vanishes in the next. A coat moves from one character's shoulders to another's without explanation.
+
+### How to solve it
+Run the coherence linter:
+
+```bash
+node scripts/check-story-coherence.mjs
+```
+
+It checks four canonical issue classes (see `docs/3-reference/operator/CONTINUITY-ISSUE-CLASSES.md`):
+
+1. **Environmental Polarity** — indoor description + outdoor visual (FAIL)
+2. **Precipitation Contradiction** — rain/wet mismatch (WARN)
+3. **Wardrobe Ownership** — garment on wrong character without transfer verb (WARN)
+4. **Screen Affordance** — phone/screen without guard declaration (WARN)
+
+The linter exits 0 for zero hard-fails. Downstream projects (like relator-app) inherit these four classes in their own implementation.
+
 ---
 
 ## Summary of Commands
@@ -182,6 +205,7 @@ To try a turnaround before you record it, pass it with `--turnaround` (a JSON fi
 | What you want to do | Command |
 |---|---|
 | Check that no banished plot mistakes appear | `npm run check:invariants` |
+| Check visual coherence across panels | `node scripts/check-story-coherence.mjs` |
 | Check an image prompt for backwards-phone safeguards | `node scripts/check-affordance.mjs --check-prompt "<prompt>"` |
 | Get the VLM vision rubric to inspect rendered panels | `node scripts/check-affordance.mjs --prompt` |
 | Check a whole folder of rendered pictures for backwards phones | `node scripts/check-affordance.mjs --batch <folder or "pattern">` |

@@ -1,6 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 57 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 58 entries. Read `STATE.md` first; this is the trail.
+
+## 2026-10-22
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 20:51:32 (UTC-04:00) | action | repo | [Run 2 Phase 2C: built check-story-coherence.mjs framework coherence linter with 4 canonical issue classes, 14 unit tests, CONTINUITY-ISSUE-CLASSES.md, updated how-to doc and doc_index](entries/2026-10-22_20-51-32_run-2-phase-2c-built-check-story-coherence-mjs-framework-coh.md) | agent:hermes | closed |
 
 ## 2026-10-21
 

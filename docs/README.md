@@ -26,6 +26,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 
 - [Registry fields](3-reference/REGISTRY-FIELDS.md): every key of `character-registry.json` and what the gate does with it.
 - [Continuity issue classes](3-reference/CONTINUITY-ISSUE-CLASSES.md): the eight ways a continuity system goes silent, and the mechanism that answers each.
+- [Continuity issue classes (operator)](3-reference/operator/CONTINUITY-ISSUE-CLASSES.md): the four canonical visual coherence issue classes — polarity, precipitation, wardrobe, screen affordance.
 - [Intrinsic anatomical laterality](3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md): self-announcing architecture and camera-space projection matrix to eliminate diffusion laterality inversion.
 - [Continuity card and shot sheet fields](3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md): every field of the cards file and the shot sheet, the two surface declarations, every gate check, the compiled block line by line.
 - [The single mutation gate](3-reference/SINGLE-MUTATION-GATE-ARCHITECTURE.md): the narrow waist for additions, updates, retirements and laterality; the five assertion gates; the worklog spine.

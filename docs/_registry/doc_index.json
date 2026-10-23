@@ -242,6 +242,14 @@
       "diataxis_mode": "reference",
       "canonical_path": "docs/3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md",
       "status": "active"
+    },
+    {
+      "doc_id": "continuity-issue-classes",
+      "title": "Continuity Issue Classes",
+      "triadic_leg": "reference",
+      "diataxis_mode": "reference",
+      "canonical_path": "docs/3-reference/operator/CONTINUITY-ISSUE-CLASSES.md",
+      "status": "active"
     }
   ]
 }
