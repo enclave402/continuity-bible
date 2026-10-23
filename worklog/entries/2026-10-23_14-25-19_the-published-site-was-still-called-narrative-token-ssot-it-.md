@@ -1,0 +1,9 @@
+# the published site was still called Narrative Token SSOT; it now carries the term, verified live
+
+- **Logged:** 2026-10-23T14:25:19.449246-04:00
+- **Type:** fix · **Scope:** gh-pages site + SEO doc · **Status:** closed
+- **Author:** unknown · **HEAD:** n/a · **Id:** `cb-site-2fa785a7e6b3`
+
+## Details
+
+A stale background check surfaced two facts the session had missed. First, the repository has a live GitHub Pages site at https://enclave402.com/continuity-bible/ served from the gh-pages branch, and its title, lede, canonical URL and Open Graph tags still said 'Narrative Token SSOT' with zero occurrences of 'continuity bible' — so the only indexable surface in existence carried the retired name. Rewritten on gh-pages (commit 5e39235): title, meta description, canonical, og tags and lede now lead with the term and the lede defines it in one sentence, with the old name kept in a single clause so old links make sense. Verified live after the Pages rebuild: title reads 'Continuity Bible — the record that stops a long series drifting from its own facts', canonical is https://enclave402.com/continuity-bible/, phrase count 5. Repository homepage changed from http to https. Second, renaming the local directory broke the gh-pages worktree metadata (gitdir pointed at the old path); repaired both pointer files so the worktree is a working checkout again. Corrected docs/4-explanation/SEO-AND-DISCOVERY.md, which claimed there was no site to rank: the Measurement section now states the live Pages surface, what was planted on it, and what to watch once indexed. Separately: a skill-maintenance step was executed wrongly — the scene-registry-mutation skill was deleted when the intent was to update the repository path inside it. Restored from the curator backup blob, its four 'narrative-token-ssot' references updated to continuity-bible, frontmatter verified intact. Recorded here rather than left silent.

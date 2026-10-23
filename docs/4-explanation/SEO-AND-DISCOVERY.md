@@ -53,6 +53,7 @@ Used in ordinary prose only where it is genuinely accurate. Never stuffed, never
 | `package.json` description | term first, human line second | done |
 | `package.json` keywords | the four exact phrase variants | done |
 | A tutorial titled with the term | *Build a continuity bible for a story* | **not yet — next tutorial** |
+| The published site (`enclave402.com/continuity-bible/`, gh-pages branch) | title, description, canonical, og tags and a lede that defines the term in one sentence | done 2026-10-23 |
 | Every doc that explains the artifact | term used once, in prose, no repetition | in force |
 
 ## Cross-pollination: related surfaces we can sweep in
@@ -64,16 +65,20 @@ The phrase travels only where a narrative artifact is genuinely involved. Anythi
 | `enclave402/agent-skills` (public) — the `visual-continuity-ssot` skill description | one clause: "…the continuity bible for a sequential story" | the skill maintains exactly this artifact | planned |
 | `outreach-engine` campaign copy for rel8r | the phrase as a content angle, once per campaign, in prose | the audience is writers fighting drift | planned |
 | `adhdworks-max-headroom` comic framework docs | name the framework's SSOT layer "the continuity bible" in operator docs | the comic renderer *is* one | planned |
-| Any future showcase page | a definition sentence and the term in the page title | direct intent match | blocked on the parked domain |
+| The GitHub Pages showcase | definition sentence and the term in the page title | direct intent match | done 2026-10-23 |
 | `rel8r`, `Coach-Hype`, `sloppyxbaby` product pages | **nothing** | different category; inserting it dilutes the term's meaning | excluded |
 
 **Rule for the sweep:** the phrase appears on a related surface only if that surface already concerns story continuity. If a reader would not be helped by the definition, the phrase does not belong there.
 
 ## Measurement, honestly
 
-There is no site yet, so there is nothing to rank. The domain decision is parked in [NAMING.md](../3-reference/NAMING.md). Until a page exists, discovery happens through GitHub: the repository name, description and topics are the entire surface, and they are all live.
+There is one indexable surface: the GitHub Pages site at `https://enclave402.com/continuity-bible/`, served from the `gh-pages` branch. As of 2026-10-23 its title, meta description, canonical URL, Open Graph tags and lede all carry the term, and the lede defines it in a sentence — which is what a search engine needs in order to associate the page with the phrase at all.
 
-Once a page exists, the term to watch is `continuity bible`, and the pages to compare against are the three explainers currently ranking — none of which sells software.
+The domain question is separate and still parked: no new domain was bought. The Pages site is enough to rank for a term nobody is competing for.
+
+Until the site has been indexed and has impressions, the repository's name, description and topics remain the discovery surface that works today, and they are all live.
+
+What to watch once indexed: impressions and average position for `continuity bible`, and whether the page is returned for the question forms ("what is a continuity bible", "continuity bible template"). A definition sentence answers the first; the tutorial answers the second.
 
 ## What not to do
 

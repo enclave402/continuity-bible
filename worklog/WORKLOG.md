@@ -1,11 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 59 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 60 entries. Read `STATE.md` first; this is the trail.
 
 ## 2026-10-23
 
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
+| 2026-10-23T14:25:19.449246-04:00 | fix | gh-pages site + SEO doc | [the published site was still called Narrative Token SSOT; it now carries the term, verified live](entries/2026-10-23_14-25-19_the-published-site-was-still-called-narrative-token-ssot-it-.md) |  | closed |
 | 2026-10-23T14:17:19.737114-04:00 | docs | docs/4-explanation/SEO-AND-DISCOVERY.md + package.json + topics | [SEO goal set: 'continuity bible' is the primary term, planted across repo surfaces with a cross-pollination register](entries/2026-10-23_14-17-19_seo-goal-set-continuity-bible-is-the-primary-term-planted-ac.md) |  | closed |
 | 2026-10-23T14:09:46.328718-04:00 | rename | repo name + naming record | [repo renamed to continuity-bible; naming research parked at docs/3-reference/NAMING.md](entries/2026-10-23_14-09-46_repo-renamed-to-continuity-bible-naming-research-parked-at-d.md) |  | closed |
 
