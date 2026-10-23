@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Narrative Token SSOT</title>
-<meta name="description" content="Stop AI character drift: compile-time name tokens and one character registry for long-form AI stories, graphic novels and game writing. Plain Node, zero dependencies, MIT.">
-<link rel="canonical" href="https://enclave402.com/narrative-token-ssot/">
-<meta property="og:title" content="Narrative Token SSOT">
-<meta property="og:description" content="Character names as build-time tokens, so AI agents can't drift them.">
-<meta property="og:url" content="https://enclave402.com/narrative-token-ssot/">
+<title>Continuity Bible — the record that stops a long series drifting from its own facts</title>
+<meta name="description" content="A continuity bible is the living record that stops a long series drifting from its own facts. This one keeps every character, prop and wardrobe state in a single registry, as build-time tokens, for long-form AI stories, graphic novels and game writing. Plain Node, zero dependencies, MIT.">
+<link rel="canonical" href="https://enclave402.com/continuity-bible/">
+<meta property="og:title" content="Continuity Bible">
+<meta property="og:description" content="The living record that stops a long series drifting from its own facts: names, props and wardrobe as build-time tokens.">
+<meta property="og:url" content="https://enclave402.com/continuity-bible/">
 <style>
 :root {
   --bg: #fbfaf8; --fg: #1d1b1a; --muted: #5f5a56; --line: #e4dfda;
@@ -41,13 +41,13 @@ footer { margin-top: 56px; color: var(--muted); font-size: 0.9rem; }
 </head>
 <body>
 <main>
-  <h1>Narrative Token SSOT</h1>
-  <p class="lede">Character names as build-time tokens, so AI agents can't drift them. One registry file is the single source of truth for every name in your scenes, prompts and image manifests. Plain Node, zero dependencies, no telemetry, MIT.</p>
+  <h1>Continuity Bible</h1>
+  <p class="lede">A continuity bible is the record a production keeps so a long series does not drift out of its own facts. This one is executable: character names, props and wardrobe states live in a single registry and resolve as build-time tokens, so AI agents cannot invent a second version of anyone. Formerly named Narrative Token SSOT. Plain Node, zero dependencies, no telemetry, MIT.</p>
   <nav>
     <a href="#quick-start">Quick start</a>
-    <a href="https://github.com/enclave402/narrative-token-ssot">GitHub</a>
-    <a href="https://rel8r.me/reader.html?utm_source=github-pages&amp;utm_medium=docs-nav&amp;utm_campaign=narrative-token-ssot">See it live</a>
-    <a href="https://sloppyxbaby.com/?utm_source=github-pages&amp;utm_medium=docs-nav&amp;utm_campaign=narrative-token-ssot">Antidote Kit</a>
+    <a href="https://github.com/enclave402/continuity-bible">GitHub</a>
+    <a href="https://rel8r.me/reader.html?utm_source=github-pages&amp;utm_medium=docs-nav&amp;utm_campaign=continuity-bible">See it live</a>
+    <a href="https://sloppyxbaby.com/?utm_source=github-pages&amp;utm_medium=docs-nav&amp;utm_campaign=continuity-bible">Antidote Kit</a>
   </nav>
 
   <h2>The problem</h2>
@@ -64,7 +64,7 @@ Sam shook her head. "Theodore has gone completely silent."</code></pre>
   <p>To rename a character, change one line in the registry and rebuild. An unknown id fails the build instead of printing a guessed name.</p>
 
   <h2 id="quick-start">Quick start</h2>
-<pre><code>git clone https://github.com/enclave402/narrative-token-ssot.git
+<pre><code>git clone https://github.com/enclave402/continuity-bible.git
 cd narrative-token-ssot
 node scripts/build.mjs</code></pre>
   <p>No install, no account, no API key. It prints the example scene as written (tokens), then resolved (names).</p>
@@ -84,16 +84,16 @@ node scripts/build.mjs</code></pre>
 node scripts/tokenize.mjs drafts/scene-14.md --text             # rewrite names into tokens
 npm run check   # exit 1 if any name is typed out or doesn't resolve
 npm test</code></pre>
-  <p>Put <code>check</code> in a pre-commit hook or CI. Agents in Claude Code, Cursor or Codex can read <a href="https://github.com/enclave402/narrative-token-ssot/blob/main/AGENTS.md">AGENTS.md</a> for the rule and the checks.</p>
+  <p>Put <code>check</code> in a pre-commit hook or CI. Agents in Claude Code, Cursor or Codex can read <a href="https://github.com/enclave402/continuity-bible/blob/main/AGENTS.md">AGENTS.md</a> for the rule and the checks.</p>
 
   <h2>Where it's used</h2>
-  <p>It came out of, and still runs, the build for <a href="https://rel8r.me/reader.html?utm_source=github-pages&amp;utm_medium=docs&amp;utm_campaign=narrative-token-ssot">Dating Red Flags</a>, an illustrated graphic novel on <a href="https://rel8r.me/?utm_source=github-pages&amp;utm_medium=docs&amp;utm_campaign=narrative-token-ssot">rel8r.me</a>: 82 illustrated scenes across two editions, with every character name resolved from one registry file.</p>
+  <p>It came out of, and still runs, the build for <a href="https://rel8r.me/reader.html?utm_source=github-pages&amp;utm_medium=docs&amp;utm_campaign=continuity-bible">Dating Red Flags</a>, an illustrated graphic novel on <a href="https://rel8r.me/?utm_source=github-pages&amp;utm_medium=docs&amp;utm_campaign=continuity-bible">rel8r.me</a>: 82 illustrated scenes across two editions, with every character name resolved from one registry file.</p>
 
   <h2>Related</h2>
   <p>This tool is free and MIT licensed. I'm packaging the rest of the guardrails I use with coding agents (git worktree isolation, repo rules that hold up across sessions) as the paid Antidote Kit.</p>
-  <p><a class="cta" href="https://sloppyxbaby.com/?utm_source=github-pages&amp;utm_medium=docs-cta&amp;utm_campaign=narrative-token-ssot">See the Antidote Kit</a></p>
+  <p><a class="cta" href="https://sloppyxbaby.com/?utm_source=github-pages&amp;utm_medium=docs-cta&amp;utm_campaign=continuity-bible">See the Antidote Kit</a></p>
 
-  <footer>Built by <a href="https://coachhype.com/?utm_source=github-pages&amp;utm_medium=docs&amp;utm_campaign=narrative-token-ssot">Coach Hype</a> · <a href="https://github.com/enclave402/narrative-token-ssot/blob/main/LICENSE">MIT License</a></footer>
+  <footer>Built by <a href="https://coachhype.com/?utm_source=github-pages&amp;utm_medium=docs&amp;utm_campaign=continuity-bible">Coach Hype</a> · <a href="https://github.com/enclave402/continuity-bible/blob/main/LICENSE">MIT License</a></footer>
 </main>
 </body>
 </html>
