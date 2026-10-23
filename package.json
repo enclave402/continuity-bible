@@ -1,7 +1,7 @@
 {
   "name": "narrative-token-ssot",
   "version": "1.0.0",
-  "description": "Keep AI story characters the same from the first picture to the last. One file says who they are; a checker catches the slip.",
+  "description": "Continuity bible for AI story characters: keep them the same from the first picture to the last. One file says who they are; a checker catches the slip.",
   "type": "module",
   "main": "scripts/names.mjs",
   "scripts": {
@@ -38,6 +38,10 @@
     "changelog": "git cliff -o CHANGELOG.md"
   },
   "keywords": [
+    "narrative-continuity",
+    "series-bible",
+    "story-bible",
+    "continuity-bible",
     "character-consistency",
     "picture-book",
     "ai-art",
