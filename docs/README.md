@@ -21,6 +21,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Check a simulated reader panel](2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md): a quote must be verbatim in the spread it names; a no-read control throws the quiz out when it scores; the paired difference is written by the script and checked by recomputing it; simulated answers are not a human audience, and the script does not pick the winner.
 - [Resolve character drift after the fact](2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md): produce embeddings, answer the two drift questions (or name a policy), record the anchor, size the regeneration bill.
 - [Enforce story invariants, affordances, and layered wardrobe](2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md): stop AI from reintroducing banished plot points, prevent backwards phones, decompose garment layers, and declare multi-angle turnaround sheets.
+- [Lock each lead's signature wardrobe](2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md): rule SIG-LOCK-001 as card data and a check: no character wears another lead's signature item, leads never overlap, live violations are tracked to a task, one engine shared across repositories.
 
 ## 3. Look up (`3-reference/`)
 

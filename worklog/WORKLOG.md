@@ -1,6 +1,12 @@
 # Worklog index
 
-Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 60 entries. Read `STATE.md` first; this is the trail.
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 61 entries. Read `STATE.md` first; this is the trail.
+
+## 2026-10-25
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 09:05:48 (UTC-04:00) | action | signature-lock | [Added SIG-LOCK-001: scripts/check-signature-lock.mjs (one engine for every repo that vendors it, sha256-pinned), scripts/signature-lock.v1.schema.json, an invented example cast in examples/signature-lock, five node tests, and docs/2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md with the two-repo sync method. npm run verify passes, check:locks included.](entries/2026-10-25_09-05-48_added-sig-lock-001-scripts-check-signature-lock-mjs-one-engi.md) | agent:claude-code | closed |
 
 ## 2026-10-23
 

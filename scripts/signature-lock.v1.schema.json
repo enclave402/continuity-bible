@@ -1,0 +1,46 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://github.com/enclave402/continuity-bible/blob/main/scripts/signature-lock.v1.schema.json",
+ "title": "Signature lock and face lock, version 1 (SIG-LOCK-001)",
+ "description": "Fields a lead's card entry may carry: signature_lock names what only this lead wears or carries; face_lock describes only this lead's own face. Checked by scripts/check-signature-lock.mjs.",
+ "$defs": {
+  "signature_lock": {
+   "type": "object",
+   "required": ["rule", "items"],
+   "additionalProperties": false,
+   "properties": {
+    "rule": { "const": "SIG-LOCK-001" },
+    "items": {
+     "type": "array", "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": ["id", "slot", "desc", "near_variant"],
+      "additionalProperties": false,
+      "properties": {
+       "id": { "type": "string", "pattern": "^[a-z0-9-]+\\.[a-z]+\\.[a-z0-9-]+$", "description": "<owner id>.<slot>.<item>" },
+       "slot": { "enum": ["outer", "top", "bottom", "footwear", "headwear", "accessory", "hair", "prop"] },
+       "desc": { "type": "string", "minLength": 1, "description": "what the owner wears in rendered art; no other character's name" },
+       "near_variant": {
+        "type": "object", "required": ["colour_family", "silhouette"], "additionalProperties": false,
+        "properties": {
+         "colour_family": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+         "silhouette": { "type": "array", "minItems": 1, "items": { "type": "string" }, "description": "phrases only this owner wears; a look matches when one clause holds a colour AND a silhouette" }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "face_lock": {
+   "type": "object",
+   "required": ["face_shape", "skin", "hair", "eyes_brows", "nose_mouth", "facial_hair"],
+   "additionalProperties": false,
+   "properties": {
+    "face_shape": { "type": "string", "minLength": 1 }, "skin": { "type": "string", "minLength": 1 },
+    "hair": { "type": "string", "minLength": 1 }, "eyes_brows": { "type": "string", "minLength": 1 },
+    "nose_mouth": { "type": "string", "minLength": 1 }, "facial_hair": { "type": "string", "minLength": 1 }
+   }
+  }
+ }
+}

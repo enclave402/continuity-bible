@@ -1,0 +1,40 @@
+{
+ "_about": {
+  "role": "example rule config for SIG-LOCK-001 (invented cast).",
+  "reads_like": "lock_sources: where each lead's items live; scan: where everyone else's look is written; distinct_from: how leads never look alike; known_violations: live art that breaks the rule, each with its task.",
+  "companion": "docs/2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md",
+  "do_not": "do not restate items here; do not loosen a lock to pass: narrow it."
+ },
+ "rule": "SIG-LOCK-001",
+ "lock_sources": [
+  {
+   "card": "cards/rosa-story.json"
+  },
+  {
+   "card": "cards/dex-story.json"
+  },
+  {
+   "markdown_json": "profiles/THE-GUIDE.md",
+   "owner": "guide"
+  }
+ ],
+ "scan": {
+  "cards_dir": "cards",
+  "moment_packs": "site/packs.json",
+  "image_records": "site/images.json"
+ },
+ "distinct_from": [
+  {
+   "pair": [
+    "dex",
+    "rosa"
+   ],
+   "never_alike": "{{rosa}} has a long copper braid; {{dex}} keeps a shaved head."
+  }
+ ],
+ "known_violations": [],
+ "engine": {
+  "source": "scripts/check-signature-lock.mjs (this repo is the source)",
+  "sha256": "313d46be6101a3bcb8c2c41d931199be81e57299116b1775678a9b8a9d84e53e"
+ }
+}

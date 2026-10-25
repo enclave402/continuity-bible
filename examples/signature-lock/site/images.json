@@ -1,0 +1,12 @@
+{
+ "slots": {
+  "hero": {
+   "src": "hero.png",
+   "alt": "{{rosa}} on a porch hugging her grey plush rabbit {{pip}}, {{dex}} beside her in his rain cape."
+  },
+  "shop": {
+   "src": "shop.png",
+   "alt": "A shopkeeper behind the counter with a jar of buttons."
+  }
+ }
+}
