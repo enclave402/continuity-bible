@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/prop-index.v1.schema.json",
+  "title": "Materialized Inverted Prop Index, version 1",
+  "description": "Inverted index mapping canonical props to their scene timeline, presence disposition, and camera projection rules.",
+  "type": "object",
+  "required": ["version", "props"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_about": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "generated_at": { "type": "string" },
+    "props": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "item_id",
+          "character",
+          "worn_on",
+          "intrinsic_laterality",
+          "screen_projection_rules",
+          "total_scenes",
+          "worn_count",
+          "removed_count",
+          "timeline"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "item_id": { "type": "string" },
+          "character": { "type": "string" },
+          "geometry": { "type": "string" },
+          "worn_on": {
+            "type": "string",
+            "enum": ["LEFT_WRIST_ONLY", "RIGHT_WRIST_ONLY", "EITHER_WRIST", "NECK", "TORSO", "HAND_HELD", "POCKET", "NONE"]
+          },
+          "intrinsic_laterality": {
+            "type": "string",
+            "enum": ["ANATOMICAL_LEFT_WRIST", "ANATOMICAL_RIGHT_WRIST", "ANATOMICAL_LEFT_HAND", "ANATOMICAL_RIGHT_HAND", "NONE"]
+          },
+          "screen_projection_rules": {
+            "type": "object",
+            "required": ["facing_camera", "back_to_camera"],
+            "additionalProperties": false,
+            "properties": {
+              "facing_camera": { "type": "string", "enum": ["SCREEN_LEFT", "SCREEN_RIGHT"] },
+              "back_to_camera": { "type": "string", "enum": ["SCREEN_LEFT", "SCREEN_RIGHT"] }
+            }
+          },
+          "total_scenes": { "type": "integer", "minimum": 0 },
+          "worn_count": { "type": "integer", "minimum": 0 },
+          "removed_count": { "type": "integer", "minimum": 0 },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["slug", "spread_number", "story_day", "presence"],
+              "additionalProperties": false,
+              "properties": {
+                "slug": { "type": "string" },
+                "spread_number": { "type": "integer", "minimum": 1 },
+                "story_day": { "type": "string" },
+                "in_universe_time": { "type": "string" },
+                "presence": { "type": "string", "enum": ["worn", "removed", "exempt"] },
+                "side": { "type": "string", "enum": ["left", "right", "none", "unspecified"] },
+                "camera_facing": { "type": "string" },
+                "projected_screen_side": { "type": "string" },
+                "reason": { "type": "string" },
+                "image_filename": { "type": "string" },
+                "thumbnail_path": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

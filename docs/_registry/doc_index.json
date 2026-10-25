@@ -254,7 +254,7 @@
     },
     {
       "doc_id": "exp-seo",
-      "title": "SEO and discovery \u2014 one primary term, and where it is planted",
+      "title": "SEO and discovery — one primary term, and where it is planted",
       "triadic_leg": "diataxis",
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/SEO-AND-DISCOVERY.md",
@@ -267,6 +267,22 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "solve",
       "canonical_path": "docs/2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "how-to-track-props-and-wardrobe",
+      "title": "How to track props and wardrobe",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-TRACK-PROPS-AND-WARDROBE.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-prop-disposition-and-visual-continuity",
+      "title": "Prop disposition and visual continuity",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/PROP-DISPOSITION-AND-VISUAL-CONTINUITY-STANDARDS.md",
       "status": "active"
     }
   ]

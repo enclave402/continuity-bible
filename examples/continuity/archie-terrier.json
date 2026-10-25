@@ -1,0 +1,24 @@
+{
+  "_about": "Public example of a companion in a young-world companion subworld. One id. The collar tag is that prop token. A scene writes the token and never a typed name. This file is not a second story and it is not a page in the example edition.",
+  "id": "archie-terrier",
+  "kind": "companion",
+  "pattern": "young-world-companion-subworld",
+  "token": "{{archie-terrier}}",
+  "species": "terrier",
+  "look": "a small wire-haired terrier with a tan coat, a dark saddle, and one leather collar",
+  "prop": {
+    "item_id": "archie-terrier",
+    "name": "collar tag",
+    "token": "{{archie-terrier}}",
+    "worn_on": "NECK",
+    "intrinsic_laterality": "NON_LATERAL",
+    "geometry": "a small round brass tag with no readable letters, on a brown leather collar",
+    "prompt_tokens": "a small round brass collar tag on a brown leather collar, no letters",
+    "negative_tokens": [
+      "readable name",
+      "printed letters",
+      "a second collar",
+      "a bow"
+    ]
+  }
+}
