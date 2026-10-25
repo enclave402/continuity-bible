@@ -1,0 +1,28 @@
+{
+ "characters": {
+  "rosa": {
+   "name": "Rosa",
+   "continuity_ids": [
+    "rosa",
+    "young-rosa"
+   ]
+  },
+  "dex": {
+   "name": "Dex",
+   "continuity_ids": [
+    "dex"
+   ]
+  },
+  "guide": {
+   "name": "The Guide"
+  },
+  "pip": {
+   "name": "Pip",
+   "kind": "companion",
+   "species": "plush rabbit"
+  },
+  "kai": {
+   "name": "KAI"
+  }
+ }
+}

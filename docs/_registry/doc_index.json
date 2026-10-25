@@ -260,6 +260,14 @@
       "canonical_path": "docs/4-explanation/SEO-AND-DISCOVERY.md",
       "status": "active",
       "canonical": true
+    },
+    {
+      "doc_id": "how-to-lock-signature-wardrobes",
+      "title": "How to lock each lead's signature wardrobe",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md",
+      "status": "active"
     }
   ]
 }
