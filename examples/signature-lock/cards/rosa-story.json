@@ -1,0 +1,74 @@
+{
+ "characters": {
+  "rosa": {
+   "hair_and_makeup": "long copper braid",
+   "face_lock": {
+    "face_shape": "heart-shaped face, high cheekbones",
+    "skin": "warm tan",
+    "hair": "long copper braid",
+    "eyes_brows": "hazel eyes, straight brows",
+    "nose_mouth": "small straight nose, full lips",
+    "facial_hair": "none"
+   },
+   "signature_lock": {
+    "rule": "SIG-LOCK-001",
+    "items": [
+     {
+      "id": "rosa.footwear.teal-riding-boots",
+      "slot": "footwear",
+      "desc": "teal suede knee-high riding boots",
+      "near_variant": {
+       "colour_family": [
+        "teal",
+        "turquoise"
+       ],
+       "silhouette": [
+        "riding boot",
+        "knee high boot"
+       ]
+      }
+     },
+     {
+      "id": "rosa.prop.pip",
+      "slot": "prop",
+      "desc": "grey plush rabbit with one floppy ear",
+      "near_variant": {
+       "colour_family": [
+        "grey",
+        "silver"
+       ],
+       "silhouette": [
+        "plush rabbit",
+        "stuffed bunny"
+       ]
+      }
+     }
+    ]
+   },
+   "outfits": {
+    "day": {
+     "layers": {
+      "outer": "olive field jacket",
+      "shoes": "teal suede riding boots"
+     }
+    }
+   }
+  },
+  "young-rosa": {
+   "hair_and_makeup": "copper pigtails",
+   "props": [
+    "grey plush rabbit"
+   ]
+  },
+  "sam": {
+   "hair_and_makeup": "short black bob",
+   "outfits": {
+    "day": {
+     "layers": {
+      "shoes": "white canvas sneakers"
+     }
+    }
+   }
+  }
+ }
+}

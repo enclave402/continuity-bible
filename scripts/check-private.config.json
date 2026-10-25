@@ -23,7 +23,10 @@
       "@example.com",
       "@users.noreply.github.com"
     ],
-    "_why": "example.com is reserved for documentation; GitHub noreply addresses are public by design."
+    "private-tool-paths": [
+      "worklog-index-build.py"
+    ],
+    "_why": "example.com is reserved for documentation; GitHub noreply addresses are public by design. worklog-index-build.py is allowed because the generated worklog headers name the tool that wrote them: it is a filename, not a path and not a secret, and regenerating the index reintroduces it on every run."
   },
   "skip": [
     "LICENSE",

@@ -1,0 +1,34 @@
+{
+ "characters": {
+  "dex": {
+   "hair_and_makeup": "shaved head, silver hoop",
+   "signature_lock": {
+    "rule": "SIG-LOCK-001",
+    "items": [
+     {
+      "id": "dex.outer.yellow-rain-cape",
+      "slot": "outer",
+      "desc": "mustard-yellow hooded rain cape",
+      "near_variant": {
+       "colour_family": [
+        "mustard",
+        "yellow"
+       ],
+       "silhouette": [
+        "rain cape",
+        "poncho"
+       ]
+      }
+     }
+    ]
+   },
+   "outfits": {
+    "day": {
+     "layers": {
+      "outer": "mustard-yellow rain cape"
+     }
+    }
+   }
+  }
+ }
+}
