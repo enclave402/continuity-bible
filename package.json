@@ -1,7 +1,7 @@
 {
   "name": "narrative-token-ssot",
   "version": "1.0.0",
-  "description": "Keep AI story characters the same from the first picture to the last. One file says who they are; a checker catches the slip.",
+  "description": "Continuity bible for AI story characters: keep them the same from the first picture to the last. One file says who they are; a checker catches the slip.",
   "type": "module",
   "main": "scripts/names.mjs",
   "scripts": {
@@ -21,7 +21,7 @@
     "check:props": "node scripts/check-prop-continuity.mjs",
     "showcase": "node scripts/showcase.mjs",
     "test:showcase": "node scripts/showcase.mjs --check",
-    "verify": "node scripts/check.mjs && node --test && node scripts/story.mjs check examples/story && node scripts/check-story-invariants.mjs && node scripts/check-prop-continuity.mjs && node scripts/showcase.mjs --check && node scripts/check-private.mjs && node scripts/check-worklog.mjs && node scripts/research/index.mjs --check && node scripts/check-docs.mjs",
+    "verify": "node scripts/check.mjs && node --test && node scripts/story.mjs check examples/story && node scripts/check-story-invariants.mjs && node scripts/check-prop-continuity.mjs && npm run check:locks && node scripts/showcase.mjs --check && node scripts/check-private.mjs && node scripts/check-worklog.mjs && node scripts/research/index.mjs --check && node scripts/check-docs.mjs",
     "private": "node scripts/check-private.mjs",
     "hooks": "bash scripts/install-git-hooks.sh",
     "worklog": "node scripts/worklog-append.mjs",
@@ -35,9 +35,14 @@
     "research:overlap": "node scripts/research/overlap.mjs",
     "research:ask": "node scripts/research/ask.mjs",
     "research:verify": "node scripts/research/verify.mjs",
-    "changelog": "git cliff -o CHANGELOG.md"
+    "changelog": "git cliff -o CHANGELOG.md",
+    "check:locks": "SIG_LOCK_ROOT=examples/signature-lock node scripts/check-signature-lock.mjs signature-locks.json"
   },
   "keywords": [
+    "narrative-continuity",
+    "series-bible",
+    "story-bible",
+    "continuity-bible",
     "character-consistency",
     "picture-book",
     "ai-art",

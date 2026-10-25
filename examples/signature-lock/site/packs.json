@@ -1,0 +1,16 @@
+{
+ "packs": {
+  "rainy-day": {
+   "characters": [
+    {
+     "name": "KAI",
+     "presentation": "short locs",
+     "wardrobe": "navy raincoat, black rubber boots",
+     "holds": [
+      "umbrella"
+     ]
+    }
+   ]
+  }
+ }
+}

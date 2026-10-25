@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "narrative-token-ssot",
-  "updated_at": "2026-10-21",
+  "updated_at": "2026-10-23T14:17:08.621359-04:00",
   "docs": [
     {
       "doc_id": "tutorial-start-here",
@@ -241,6 +241,32 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "reference",
       "canonical_path": "docs/3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-naming",
+      "title": "Naming, availability and the parked domain decision",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/NAMING.md",
+      "status": "active",
+      "canonical": true
+    },
+    {
+      "doc_id": "exp-seo",
+      "title": "SEO and discovery — one primary term, and where it is planted",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/SEO-AND-DISCOVERY.md",
+      "status": "active",
+      "canonical": true
+    },
+    {
+      "doc_id": "how-to-lock-signature-wardrobes",
+      "title": "How to lock each lead's signature wardrobe",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md",
       "status": "active"
     },
     {

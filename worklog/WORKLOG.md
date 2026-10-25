@@ -7,6 +7,21 @@ Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 58 entri
 | Time | Type | Scope | Summary | Author | Status |
 |---|---|---|---|---|---|
 | 20:51:32 (UTC-04:00) | action | repo | [Run 2 Phase 2C: built check-story-coherence.mjs framework coherence linter with 4 canonical issue classes, 14 unit tests, CONTINUITY-ISSUE-CLASSES.md, updated how-to doc and doc_index](entries/2026-10-22_20-51-32_run-2-phase-2c-built-check-story-coherence-mjs-framework-coh.md) | agent:hermes | closed |
+Generated from `log.jsonl` by `scripts/worklog-index.mjs`. Do not edit. 61 entries. Read `STATE.md` first; this is the trail.
+
+## 2026-10-25
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 09:05:48 (UTC-04:00) | action | signature-lock | [Added SIG-LOCK-001: scripts/check-signature-lock.mjs (one engine for every repo that vendors it, sha256-pinned), scripts/signature-lock.v1.schema.json, an invented example cast in examples/signature-lock, five node tests, and docs/2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md with the two-repo sync method. npm run verify passes, check:locks included.](entries/2026-10-25_09-05-48_added-sig-lock-001-scripts-check-signature-lock-mjs-one-engi.md) | agent:claude-code | closed |
+
+## 2026-10-23
+
+| Time | Type | Scope | Summary | Author | Status |
+|---|---|---|---|---|---|
+| 2026-10-23T14:25:19.449246-04:00 | fix | gh-pages site + SEO doc | [the published site was still called Narrative Token SSOT; it now carries the term, verified live](entries/2026-10-23_14-25-19_the-published-site-was-still-called-narrative-token-ssot-it-.md) |  | closed |
+| 2026-10-23T14:17:19.737114-04:00 | docs | docs/4-explanation/SEO-AND-DISCOVERY.md + package.json + topics | [SEO goal set: 'continuity bible' is the primary term, planted across repo surfaces with a cross-pollination register](entries/2026-10-23_14-17-19_seo-goal-set-continuity-bible-is-the-primary-term-planted-ac.md) |  | closed |
+| 2026-10-23T14:09:46.328718-04:00 | rename | repo name + naming record | [repo renamed to continuity-bible; naming research parked at docs/3-reference/NAMING.md](entries/2026-10-23_14-09-46_repo-renamed-to-continuity-bible-naming-research-parked-at-d.md) |  | closed |
 
 ## 2026-10-21
 
