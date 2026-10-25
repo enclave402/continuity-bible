@@ -29,6 +29,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Naming, availability and the parked domain decision](3-reference/NAMING.md): what this project is called and why, the rejected names with their trademark numbers, the RDAP availability sweep, and the parked domain decision.
 - [Registry fields](3-reference/REGISTRY-FIELDS.md): every key of `character-registry.json` and what the gate does with it.
 - [Continuity issue classes](3-reference/CONTINUITY-ISSUE-CLASSES.md): the eight ways a continuity system goes silent, and the mechanism that answers each.
+- [Continuity issue classes (operator)](3-reference/operator/CONTINUITY-ISSUE-CLASSES.md): the four canonical visual coherence issue classes — polarity, precipitation, wardrobe, screen affordance.
 - [Intrinsic anatomical laterality](3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md): self-announcing architecture and camera-space projection matrix to eliminate diffusion laterality inversion.
 - [Prop disposition and visual continuity](3-reference/PROP-DISPOSITION-AND-VISUAL-CONTINUITY-STANDARDS.md): the prop-first index, its fields, wardrobe layers, turnaround views, and the public companion exemplar.
 - [Continuity card and shot sheet fields](3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md): every field of the cards file and the shot sheet, the two surface declarations, every gate check, the compiled block line by line.

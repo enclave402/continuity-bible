@@ -270,6 +270,14 @@
       "status": "active"
     },
     {
+      "doc_id": "continuity-issue-classes",
+      "title": "Continuity Issue Classes",
+      "triadic_leg": "reference",
+      "diataxis_mode": "reference",
+      "canonical_path": "docs/3-reference/operator/CONTINUITY-ISSUE-CLASSES.md",
+      "status": "active"
+    },
+    {
       "doc_id": "how-to-track-props-and-wardrobe",
       "title": "How to track props and wardrobe",
       "triadic_leg": "diataxis",
