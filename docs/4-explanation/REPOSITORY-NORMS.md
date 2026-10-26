@@ -19,7 +19,7 @@ Everything in the tree is for anyone. That is a construction rule, not a hope: `
 
 ## 2. Nothing hardcoded
 
-A value that belongs to one machine or one person is not a norm. Models and endpoints come from `research/research.config.json` with environment overrides; the registry's vocabularies (species words, exclusive markers, forbidden keys, coverage globs) are the project's own; the worklog stamps whatever timezone `WORKLOG_TZ` or the machine says; the scripts find each other relatively. Any clone on any machine with Node 18 gets the same behaviour.
+A value that belongs to one machine or one person is not a norm. Models and endpoints come from `research/research.config.json` with environment overrides; the registry's vocabularies (species words, exclusive markers, forbidden keys, coverage globs) are the project's own; the story-mutation log stamps whatever timezone `WORKLOG_TZ` or the machine says; the scripts find each other relatively. Any clone on any machine with Node 18 gets the same behaviour.
 
 ## 3. Any agent, any model
 
