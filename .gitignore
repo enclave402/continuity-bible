@@ -46,3 +46,9 @@ WORK_LOG.md
 venv/
 __pycache__/
 *.pyc
+
+# Local worklog decommissioned 2026-10-26 (tasks live in Linear)
+worklog/STATE.md
+worklog/log.jsonl
+worklog/WORKLOG.md
+worklog/WORKLOG_INDEX.html

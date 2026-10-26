@@ -40,11 +40,12 @@ const NEW_SCENE = {
   art: ["main_read-at-1152-first-try.png"],
 };
 
-/** A temp copy of the repository with an empty worklog, so no test ever writes this repository's own trail. */
+/** A temp copy of the repository with an empty story-mutation log, so no test ever writes this repository's own trail. */
 function fixture({ watch = false, wardrobe = false } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-mutate-"));
   fs.cpSync(process.cwd(), dir, { recursive: true, filter: (src) => !path.relative(process.cwd(), src).split(path.sep).some((p) => SKIP.has(p)) });
-  fs.writeFileSync(path.join(dir, "worklog", "log.jsonl"), "");
+  fs.mkdirSync(path.join(dir, "logs"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "logs", "story-mutations.jsonl"), "");
   if (watch) edit(dir, "character-registry.json", (j) => { j.characters["sam-tonneau-watch"] = WATCH; });
   if (wardrobe) fs.writeFileSync(path.join(dir, STORY, "wardrobe-and-props.json"), JSON.stringify(WARDROBE, null, 2) + "\n");
   return dir;
@@ -55,7 +56,7 @@ function edit(dir, rel, fn) { const j = read(dir, rel); fn(j); fs.writeFileSync(
 const put = (dir, name, value) => { const f = path.join(dir, name); fs.writeFileSync(f, JSON.stringify(value, null, 2) + "\n"); return f; };
 const mutate = (dir, ...args) => spawnSync(process.execPath, [path.join(dir, "scripts", "mutate.mjs"), ...args], { cwd: dir, encoding: "utf8" });
 const story = (dir, ...args) => spawnSync(process.execPath, [path.join(dir, "scripts", "story.mjs"), ...args], { cwd: dir, encoding: "utf8" });
-const entries = (dir) => fs.readFileSync(path.join(dir, "worklog", "log.jsonl"), "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
+const entries = (dir) => fs.readFileSync(path.join(dir, "logs", "story-mutations.jsonl"), "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
 const snapshot = (dir) => Object.fromEntries(STATE_FILES.map((f) => [f, fs.readFileSync(path.join(dir, f), "utf8")]));
 const AUTHOR = ["--author", "agent:test"];
 
@@ -189,7 +190,6 @@ test("add-scene places the record after --after in every edition, unparks its pi
     assert.ok(details.diff["scenes.json"].some((d) => d.path === "scenes.read-at-1152-first-try" && d.op === "add"));
     assert.ok(details.diff["parked-art.json"].length);
     assert.match(entry.run.files, /examples\/story\/scenes\.json/);
-    assert.ok(fs.readdirSync(path.join(dir, "worklog", "entries")).length, "the human index is rebuilt");
   } finally { cleanup(dir); }
 });
 
@@ -348,16 +348,16 @@ test("set-prop refuses a wrist against the canon in wardrobe-and-props.json: the
 test("a mutation with no worklog to record it is refused before anything is written", () => {
   const dir = fixture();
   try {
-    fs.rmSync(path.join(dir, "worklog", "log.jsonl"));
+    fs.rmSync(path.join(dir, "logs", "story-mutations.jsonl"));
     const before = snapshot(dir);
     const r = mutate(dir, "add-scene", STORY, "--slug", "read-at-1152-first-try", "--payload", put(dir, "new.json", NEW_SCENE), ...AUTHOR, "--reason", "r");
     assert.equal(r.status, 1);
-    assert.match(r.stderr, /no worklog\/log\.jsonl in examples\/story or any folder above it[\s\S]*--worklog <repo>/);
+    assert.match(r.stderr, /no logs\/story-mutations\.jsonl in examples\/story or any folder above it[\s\S]*--worklog <repo>/);
     assert.deepEqual(snapshot(dir), before);
     const other = fs.mkdtempSync(path.join(os.tmpdir(), "ntssot-mutate-nolog-"));
     const r2 = mutate(dir, "add-scene", STORY, "--slug", "read-at-1152-first-try", "--payload", put(dir, "new.json", NEW_SCENE), ...AUTHOR, "--reason", "r", "--worklog", other);
     assert.equal(r2.status, 1);
-    assert.match(r2.stderr, /has no worklog\/log\.jsonl/);
+    assert.match(r2.stderr, /has no logs\/story-mutations\.jsonl/);
     cleanup(other);
   } finally { cleanup(dir); }
 });
