@@ -2,7 +2,7 @@
 
 1. Dump raw or verbose tool output into `<name>.tmp` here.
 2. Keep only a summary or a retrieval handle in the active conversation.
-3. At session end, extract durable facts into the worklog or docs, then delete the temps.
+3. At session end, extract durable facts into docs or the pull request, then delete the temps.
 4. Never re-ingest an orphaned `.tmp` as truth in a later session.
 5. Never leave secrets in temps.
 

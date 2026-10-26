@@ -1,6 +1,6 @@
 # AGENTS.md
 
-How any coding agent (Claude Code, Codex, Cursor, Copilot, Gemini, others) works in this repository. WHAT this repo ships is `PRODUCT.md`. NOW is `worklog/STATE.md`. Routing: `.context/_index.md`.
+How any coding agent (Claude Code, Codex, Cursor, Copilot, Gemini, others) works in this repository. WHAT this repo ships is `PRODUCT.md`. Routing: `.context/_index.md`.
 
 ## The one rule
 
@@ -18,10 +18,8 @@ Ids live in `character-registry.json`. An unknown token fails the build on purpo
 
 ## Session
 
-1. Read `worklog/STATE.md`; do its Next action.
-2. Branch `<agent>/<task>` in a worktree at `.worktrees/<agent>-<task>` from `origin/main`. The root tree stays on `main`. Never push to `main`; open a pull request; a human merges.
-3. Stage files by name, never `git add .`. Conventional Commits with an `Agent: <name>` trailer.
-4. Log real beats: `node scripts/worklog-append.mjs --author agent:<name> --event-type action --scope <area> --summary "..."`. Never hand-write `worklog/log.jsonl`. Rewrite `STATE.md` when facts change.
+1. Branch `<agent>/<task>` in a worktree at `.worktrees/<agent>-<task>` from `origin/main`. The root tree stays on `main`. Never push to `main`; open a pull request; a human merges.
+2. Stage files by name, never `git add .`. Conventional Commits with an `Agent: <name>` trailer.
 
 ## Before you finish
 
@@ -29,7 +27,7 @@ Ids live in `character-registry.json`. An unknown token fails the build on purpo
 npm run verify
 ```
 
-Names gate, tests, publication gate, worklog gate, research index, docs registry. All must pass. Zero dependencies: do not add packages.
+Names gate, tests, story gates, publication gate, research index, docs registry. All must pass. Zero dependencies: do not add packages.
 
 ## Boundaries
 

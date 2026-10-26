@@ -1,3 +1,3 @@
-# worklog/entries/: GENERATED ONLY
+# worklog/entries/: history only
 
-Every file here is GENERATED from `../log.jsonl` by `scripts/worklog-index.mjs`. The generator creates a missing file and never overwrites one, so you may enrich an entry by hand after it exists. Do not author a new event here: append it to the trail with `scripts/worklog-append.mjs` and regenerate.
+Generated copies of past work-record entries, kept as dated history. The local worklog was decommissioned on 2026-10-26; nothing writes here any more.

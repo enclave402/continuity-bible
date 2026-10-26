@@ -89,4 +89,4 @@ Ask before opening a card. `--checked` when the answer will reach users: only ch
 
 ## 9. Log
 
-Append a worklog entry (files, before, after, verified-by) and commit the card, the index, the findings and the sources together. The retrieval pack and vector cache are derived and stay out of git.
+Commit the card, the index, the findings and the sources together. The retrieval pack and vector cache are derived and stay out of git.

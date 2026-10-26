@@ -16,7 +16,7 @@ git clone <your fork>
 cd narrative-token-ssot
 bash scripts/install-git-hooks.sh   # pre-commit: publication gate; pre-push: full verify
 git switch -c <you>/<short-task>    # one branch per task; never commit on main
-npm run verify                      # names gate, tests, publication gate, worklog gate, research index, docs registry
+npm run verify                      # names gate, tests, story gates, publication gate, research index, docs registry
 ```
 
 Open a pull request. A maintainer merges; nobody pushes to `main`.
@@ -38,7 +38,6 @@ Pull requests written with an AI tool are welcome on three conditions:
 - Code: `scripts/`. Tests: `test/` (Node's built-in runner). Examples: `examples/`.
 - Docs: `docs/` by reader intent (`docs/CONTRIBUTING.md`). Decisions: `docs/4-explanation/decisions/ADR-NNN-*.md`. Register canonical docs in `docs/_registry/doc_index.json`.
 - Research: `research/` (cards, findings, sources). Process: `docs/2-how-to/HOW-TO-INGEST-RESEARCH.md`.
-- Work record: `worklog/` (append with `scripts/worklog-append.mjs`; never by hand).
 
 ## Reporting a problem
 
