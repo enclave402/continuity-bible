@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * mutate.mjs: the single mutation gate. Every change to a story's records, reading orders and parked pictures goes
- * through here, so every invariant is checked in one place and every change leaves one entry in the worklog.
+ * through here, so every invariant is checked in one place and every change leaves one entry in the story-mutation log.
  *
  *   node scripts/mutate.mjs add-scene    <story-folder> --slug <slug> --payload <json-file> [--after <slug>] --author <who> --reason <text>
  *   node scripts/mutate.mjs update-scene <story-folder> --slug <slug> --patch <json-file> --author <who> --reason <text>
@@ -10,7 +10,7 @@
  *                                        --camera-facing <facing|back|profile> [--toward <screen-left|screen-right>] --author <who> [--reason <text>]
  *   node scripts/mutate.mjs verify       <story-folder>
  *   every command takes --registry <path> (default: character-registry.json in the current folder);
- *   every mutation takes --worklog <repo> (default: the nearest folder above the story that holds worklog/log.jsonl)
+ *   every mutation takes --worklog <repo> (default: the nearest folder above the story that holds logs/story-mutations.jsonl)
  *   and may carry --market-test <id> or --owner-auth <text> to authorize a change that loses a value.
  *   <who> is agent:<name> or human:<name>.
  *
@@ -27,14 +27,15 @@
  *      <story>/wardrobe-and-props.json when that file exists, and the picture line does not mix screen and body sides.
  *   4. Pictures. A picture a spread now loads leaves parked-art.json; a picture no placed spread loads any more is
  *      parked there with the reason. A picture a payload names must already be in the art folder.
- *   5. Audit. After the files are written, built/ is rebuilt and the three story gates run; then one worklog entry is
- *      appended through scripts/worklog-append.mjs with the author, the reason, the authorization and the diff.
+ *   5. Audit. After the files are written, built/ is rebuilt and the three story gates run; then one entry is
+ *      appended to logs/story-mutations.jsonl with the author, the reason, the authorization and the diff.
  *      Any failure puts every file back as it was.
  * Exit 0 on success, 1 when an invariant refuses the change (the reason and the fix are printed), 2 on usage.
  */
 import fs from "node:fs";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { loadStory, buildStory, readParked, isSlot, SLUG, closest } from "./story.mjs";
 import { readJson, writeJsonLike } from "./lib.mjs";
@@ -279,20 +280,45 @@ export function lateralityProblems(scenes, slugs, wardrobe, where) {
   return out;
 }
 
-/** Find the story folder's worklog: --worklog, else the nearest folder at or above the story holding worklog/log.jsonl. */
+/** The story-mutation log, relative to the repository that records the story. */
+export const MUTATION_LOG = path.join("logs", "story-mutations.jsonl");
+
+/** Find the story folder's log: --worklog, else the nearest folder at or above the story holding logs/story-mutations.jsonl. */
 export function worklogRepo(dir, given) {
   if (given) {
     const repo = path.resolve(given);
-    if (!fs.existsSync(path.join(repo, "worklog", "log.jsonl"))) throw new Refusal(`--worklog ${given} has no worklog/log.jsonl. Fix: name the repository whose worklog records this story`);
+    if (!fs.existsSync(path.join(repo, MUTATION_LOG))) throw new Refusal(`--worklog ${given} has no logs/story-mutations.jsonl. Fix: name the repository whose log records this story`);
     return repo;
   }
   let at = path.resolve(dir);
   for (;;) {
-    if (fs.existsSync(path.join(at, "worklog", "log.jsonl"))) return at;
+    if (fs.existsSync(path.join(at, MUTATION_LOG))) return at;
     const up = path.dirname(at);
-    if (up === at) throw new Refusal(`no worklog/log.jsonl in ${rel(process.cwd(), path.resolve(dir))} or any folder above it, so the change could not be recorded. Fix: --worklog <repo> names the repository whose worklog records this story`);
+    if (up === at) throw new Refusal(`no logs/story-mutations.jsonl in ${rel(process.cwd(), path.resolve(dir))} or any folder above it, so the change could not be recorded. Fix: --worklog <repo> names the repository whose log records this story`);
     at = up;
   }
+}
+
+/** Now as ISO-8601 with a numeric offset in WORKLOG_TZ (default: this machine's zone), never a bare Z. */
+export function stampNow(tz = process.env.WORKLOG_TZ) {
+  const zone = tz || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: zone, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).formatToParts(new Date()).map((p) => [p.type, p.value]));
+  const name = new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "longOffset" }).formatToParts(new Date()).find((p) => p.type === "timeZoneName")?.value || "GMT+00:00";
+  const m = name.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/);
+  const off = m ? `${m[1]}${m[2].padStart(2, "0")}:${m[3] || "00"}` : "+00:00";
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}${off}`;
+}
+
+/** Append one story-mutation entry (the fields worklog-append.mjs wrote for it) and return its one-line summary. */
+function appendMutationLog(repo, { author, summary, details, tags, files, verifiedBy }) {
+  const head = (() => { try { return execFileSync("git", ["-C", repo, "rev-parse", "--short", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); } catch { return "uncommitted"; } })();
+  const now = stampNow();
+  const entry = {
+    id: `wl-${randomUUID()}`, timestamp: now, edited_at: now, event_type: "action", scope: "story-mutation", summary, details,
+    tags, status: "closed", author, git_head: head, run: { files, removed: "none", verified_by: verifiedBy },
+  };
+  fs.appendFileSync(path.join(repo, MUTATION_LOG), JSON.stringify(entry) + "\n");
+  return `${entry.id} ${entry.timestamp} ${entry.event_type} ${entry.scope}: ${entry.summary}`;
 }
 
 /**
@@ -384,7 +410,7 @@ function filesOf(story, state) {
   ];
 }
 
-/** Write the new state, rebuild, run the story gates, append the worklog entry; on any failure put every file back. */
+/** Write the new state, rebuild, run the story gates, append the log entry; on any failure put every file back. */
 function commit({ story, before, after, flags, command, slug, summary, auth, notes, registry, repo }) {
   const builtDir = path.join(story.dir, "built");
   const touched = [...filesOf(story, after), ...(fs.existsSync(builtDir) ? fs.readdirSync(builtDir).filter((f) => f.endsWith(".txt")).map((f) => [path.join(builtDir, f)]) : [])];
@@ -415,13 +441,14 @@ function commit({ story, before, after, flags, command, slug, summary, auth, not
     };
     for (const k of Object.keys(diff)) if (!diff[k].length) delete diff[k];
     const details = JSON.stringify({ gate: "mutate.mjs", command, story: rel(repo, story.dir), slug, author: flags.author, reason: flags.reason, authorization: auth || "none needed: the change only adds", art: notes, diff });
-    const log = spawnSync(process.execPath, [
-      path.join(HERE, "worklog-append.mjs"), "--repo", repo, "--author", flags.author, "--event-type", "action", "--scope", "story-mutation",
-      "--summary", summary, "--details", details, "--tags", `mutate,${command}`, "--files", changed.join(", ") || "none",
-      "--removed", "none", "--verified-by", "node scripts/story.mjs check (built output, pictures, retirements) after the write",
-    ], { encoding: "utf8" });
-    if (log.status !== 0) throw new Refusal([...`${log.stdout}${log.stderr}`.trim().split("\n").filter(Boolean), "the worklog entry could not be written, so every file was put back: no change goes unrecorded"]);
-    return { changed, logLine: log.stdout.trim().split("\n").filter((l) => l.startsWith("worklog-append:")).pop() || "" };
+    let logLine;
+    try {
+      logLine = appendMutationLog(repo, {
+        author: flags.author, summary, details, tags: ["mutate", command], files: changed.join(", ") || "none",
+        verifiedBy: "node scripts/story.mjs check (built output, pictures, retirements) after the write",
+      });
+    } catch (e) { throw new Refusal([e.message, "the log entry could not be written, so every file was put back: no change goes unrecorded"]); }
+    return { changed, logLine };
   } catch (e) {
     restore();
     throw e instanceof Refusal ? e : new Refusal([e.message, "every file was put back"]);
@@ -561,7 +588,7 @@ export function run(argv) {
     ...(plan.lost || []).map((l) => `mutate: replaced (authorized): ${l}`),
     ...plan.notes.map((n) => `mutate: ${n}`),
     `mutate: wrote ${changed.join(", ") || "nothing"}`,
-    `mutate: story gates pass; ${logLine.replace(/^worklog-append: /, "logged ")}`,
+    `mutate: story gates pass; logged ${logLine}`,
   ];
 }
 
