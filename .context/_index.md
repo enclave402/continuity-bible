@@ -7,7 +7,6 @@ Entry point for any agent or harness that can read a repository. Under 300 words
 | Task | Load |
 |---|---|
 | Orient | `README.md`, `AGENTS.md` (how we work), `PRODUCT.md` (what this repo ships) |
-| Work state | `worklog/STATE.md` first, then the last entries of `worklog/log.jsonl` |
 | Names and the gate | `character-registry.json`, `scripts/names.mjs`, `scripts/check.mjs`, `docs/3-reference/REGISTRY-FIELDS.md` |
 | Research | `research/README.md`, then `node scripts/research/ask.mjs "<question>"` before opening any corpus card |
 | Drift anchors | `docs/2-how-to/HOW-TO-RESOLVE-CHARACTER-DRIFT.md`, `scripts/anchor.mjs` |
@@ -27,5 +26,5 @@ Entry point for any agent or harness that can read a repository. Under 300 words
 ## Gates
 
 ```bash
-npm run verify   # names gate, tests, story gates, publication gate, worklog gate, research index, docs registry
+npm run verify   # names gate, tests, story gates, publication gate, research index, docs registry
 ```

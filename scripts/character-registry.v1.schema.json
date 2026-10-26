@@ -515,7 +515,7 @@
         "type": "string",
         "minLength": 1
       },
-      "description": "Globs (relative to this file; ** and * as in gitignore) of dated history that is never rewritten: the worklog, transcripts, decision records, research, past prompt records, retired plans, test fixtures. Every other tracked text file is scanned for retired names and companion species mismatches."
+      "description": "Globs (relative to this file; ** and * as in gitignore) of dated history that is never rewritten: logs, transcripts, decision records, research, past prompt records, retired plans, test fixtures. Every other tracked text file is scanned for retired names and companion species mismatches."
     },
     "species": {
       "type": "object",

@@ -11,7 +11,7 @@ canonical: true
 
 # The single mutation gate (`mutate.mjs`)
 
-`scripts/mutate.mjs` is the one door a change to a story goes through. Adding a scene, changing one, retiring one, or saying which wrist a prop is on: each is one command. The command checks every rule before it writes anything, and it leaves one entry in the worklog after it writes.
+`scripts/mutate.mjs` is the one door a change to a story goes through. Adding a scene, changing one, retiring one, or saying which wrist a prop is on: each is one command. The command checks every rule before it writes anything, and it leaves one entry in `logs/story-mutations.jsonl` after it writes.
 
 The design is a **narrow waist**. Many tools and agents sit above it, and the story's files sit below it. Every change passes through the same small script, so every rule lives in one place. Each rule is an **assertion**: a plain check that either passes or stops the run with the reason and the fix. Nothing is guessed, and nothing is fixed silently.
 
@@ -28,9 +28,9 @@ node scripts/mutate.mjs set-prop     <story-folder> --slug <slug> --prop <prop-i
 node scripts/mutate.mjs verify       <story-folder>
 ```
 
-- `<who>` is `agent:<name>` or `human:<name>`. The worklog records who made the change.
+- `<who>` is `agent:<name>` or `human:<name>`. The story-mutation log records who made the change.
 - `--registry <path>` works with every command. The default is `character-registry.json` in the current folder.
-- `--worklog <repo>` names the repository whose `worklog/log.jsonl` records the change. The default is the nearest folder at or above the story folder that holds `worklog/log.jsonl`. With no worklog found, the change is refused before anything is written.
+- `--worklog <repo>` names the repository whose `logs/story-mutations.jsonl` records the change. The default is the nearest folder at or above the story folder that holds `logs/story-mutations.jsonl`. With no log found, the change is refused before anything is written.
 - `--market-test <id>` or `--owner-auth <text>` may go on any change. It is required for a change that loses a value (rule 1).
 - Exit codes: 0 when the change is written and logged, 1 when a rule refuses it, 2 when the command is malformed.
 
@@ -57,7 +57,7 @@ A change that loses a value is refused with exit 1 unless it carries an authoriz
 
 There are two kinds of authorization:
 
-- `--owner-auth "<the owner's words>"`: the words go into the worklog entry exactly as typed. They are never written into a token source such as `parked-art.json`, where a name in them would break the names gate.
+- `--owner-auth "<the owner's words>"`: the words go into the log entry exactly as typed. They are never written into a token source such as `parked-art.json`, where a name in them would break the names gate.
 - `--market-test <id>`: the id must be a test recorded in `<story-folder>/market-tests.json`. The test must have a non-empty `authorized_by`, meaning the author agreed to act on its result, and must list the scene under `authorizes`. Without the file, the test, the authorization or the slug, the change is refused.
 
 ```json
@@ -68,7 +68,7 @@ There are two kinds of authorization:
 }
 ```
 
-Nothing is deleted from disk, even when a change is authorized. The old value stays in the worklog entry's diff. A picture no placed spread loads any more is parked (rule 4).
+Nothing is deleted from disk, even when a change is authorized. The old value stays in the log entry's diff. A picture no placed spread loads any more is parked (rule 4).
 
 One exception: `set-prop` may replace an earlier blocking of the same prop in the same scene. That field exists to be corrected toward the canon, and the canon check (rule 3) still applies. The old blocking is printed and kept in the diff.
 
@@ -129,7 +129,7 @@ After the checks pass, the gate:
 1. writes `scenes.json`, every edition and `parked-art.json`, keeping each file's indentation;
 2. loads the story again and rebuilds `built/`;
 3. runs `node scripts/story.mjs check` (built output current, every picture accounted for, nothing deleted);
-4. appends one entry through `scripts/worklog-append.mjs` (the only writer of `log.jsonl`), which also rebuilds the worklog index and refreshes the HEAD line of `STATE.md`.
+4. appends one entry to `logs/story-mutations.jsonl` (`mutate.mjs` is its only writer).
 
 If any step fails, every file it touched is put back byte for byte, and the run exits 1. A change is either fully made and logged, or not made at all.
 
@@ -176,10 +176,10 @@ node scripts/mutate.mjs retire-scene /tmp/story-copy --slug across-town --author
 node scripts/mutate.mjs verify /tmp/story-copy
 ```
 
-The first two print what they wrote and the worklog line. `--worklog .` records them in this repository's worklog, so run them in a scratch clone if you do not want the entries. The third is refused with exit 1 and says to add `--market-test` or `--owner-auth`. The fourth passes.
+The first two print what they wrote and the log line. `--worklog .` records them in this repository's `logs/story-mutations.jsonl`, so run them in a scratch clone if you do not want the entries. The third is refused with exit 1 and says to add `--market-test` or `--owner-auth`. The fourth passes.
 
 ## What the gate does not cover yet
 
-- `scripts/story-variants.mjs apply` (ADR-007) and `scripts/check-story-art.mjs --park` still write the story's files directly, and so does any hand edit. `verify` catches a hand edit that breaks a rule, but a hand edit that follows every rule is not recorded in the worklog. One possible next step: have `mutate.mjs` write a hash of the story's files after each change, and have `verify` report any change made outside the gate.
+- `scripts/story-variants.mjs apply` (ADR-007) and `scripts/check-story-art.mjs --park` still write the story's files directly, and so does any hand edit. `verify` catches a hand edit that breaks a rule, but a hand edit that follows every rule is not recorded in the story-mutation log. One possible next step: have `mutate.mjs` write a hash of the story's files after each change, and have `verify` report any change made outside the gate.
 - The market-test ledger checks that a test exists, was authorized and lists the scene. It does not check how the test was run; that belongs to the panel check ([ADR-008](../4-explanation/decisions/ADR-008-simulated-panel-checks.md)).
 - Laterality is checked on the records and on the picture line. Checking the finished picture itself, by reading which wrist the watch is actually on, is still open.

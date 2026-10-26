@@ -25,13 +25,13 @@ A value that belongs to one machine or one person is not a norm. Models and endp
 
 The product core is files, git and gates. `AGENTS.md`, `CLAUDE.md` and `.context/_index.md` are aliases of one routing layer; `.context/skills/` holds payloads any agent can read; `.context/**/*.tmp` is ephemeral scratch vacuumed by gitignore, pre-commit and whatever host scheduler you add. No vendor's hook is required for anything to work; a hook only makes a layer faster.
 
-## 4. One trail, one helm
+## 4. Story changes leave a trail
 
-`worklog/log.jsonl` is append-only and written only by `scripts/worklog-append.mjs`; `worklog/STATE.md` is rewritten whenever verified facts change and carries the git HEAD it describes. Generated indexes are mirrors, never a second source. Two branches that both appended merge by union. A person reads `STATE.md` first and the last entries of the trail second; an agent does the same.
+`logs/story-mutations.jsonl` is append-only and written only by `scripts/mutate.mjs`. Two branches that both appended merge by union.
 
-## 5. WHAT, HOW and NOW live apart
+## 5. WHAT and HOW live apart
 
-`PRODUCT.md` says what ships and changes in weeks. `AGENTS.md` says how we work and changes in months. `STATE.md` says what is true now and changes in hours. A spoken change to WHAT is written into `PRODUCT.md` in the same turn, so the instruction file never keeps shipping a product that was retired in conversation.
+`PRODUCT.md` says what ships and changes in weeks. `AGENTS.md` says how we work and changes in months. A spoken change to WHAT is written into `PRODUCT.md` in the same turn, so the instruction file never keeps shipping a product that was retired in conversation.
 
 ## 6. Docs by reader intent
 
@@ -39,13 +39,13 @@ The product core is files, git and gates. `AGENTS.md`, `CLAUDE.md` and `.context
 
 ## 7. Gates at the git boundary, locally
 
-`npm run verify` is the whole gate: names, tests, publication, worklog, research index, docs registry. The pre-commit hook runs the publication gate and scratch cleanup; the pre-push hook runs everything and refuses a direct push to `main`. Checks run on the contributor's machine, not on paid hosted runners; a clone needs `bash scripts/install-git-hooks.sh` once.
+`npm run verify` is the whole gate: names, tests, story gates, publication, research index, docs registry. The pre-commit hook runs the publication gate and scratch cleanup; the pre-push hook runs everything and refuses a direct push to `main`. Checks run on the contributor's machine, not on paid hosted runners; a clone needs `bash scripts/install-git-hooks.sh` once.
 
 ## 8. One branch per task, humans merge
 
 Work happens on `<agent>/<task>` or `<you>/<task>` branches, for agents in a linked worktree under `.worktrees/` so the root tree stays on `main`. Files are staged by name. Commits follow Conventional Commits, carry an `Agent: <name>` trailer when an agent wrote them, and `CHANGELOG.md` is generated from them. Every change ships as a pull request that a maintainer merges.
 
-When a pull request conflicts with `main`, merge `origin/main` in the worktree (`git fetch origin main && git merge origin/main`): keep `main`'s newer wording where both sides touched a line, add the branch's lines beside it, run `node scripts/worklog-index.mjs`, and append a worklog entry so the helm stays at most one commit behind. An agent app's own base-branch sync may refuse a worktree the agent created; the manual merge is the path.
+When a pull request conflicts with `main`, merge `origin/main` in the worktree (`git fetch origin main && git merge origin/main`): keep `main`'s newer wording where both sides touched a line, add the branch's lines beside it, and run `npm run verify`. An agent app's own base-branch sync may refuse a worktree the agent created; the manual merge is the path.
 
 ## 9. Evidence before claims
 
