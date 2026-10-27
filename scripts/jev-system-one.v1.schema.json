@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/continuity-bible/blob/main/scripts/jev-system-one.v1.schema.json",
+  "title": "JEV System One Decision Primitives and Narrative Questions Schema, Version 1",
+  "description": "Schema for TypeSafe AI / System One calibrated decision requests, typed questions (noul, choice, score, box), and storycraft evaluation contracts.",
+  "type": "object",
+  "required": ["model", "state", "questions"],
+  "properties": {
+    "model": {
+      "type": "string",
+      "description": "Model alias or versioned identifier (e.g. jev-latest, jev-1.14.0, or local-readout)."
+    },
+    "state": {
+      "description": "The context payload evaluated: natural-language prose, scene record, draft card, or JSON object.",
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "object" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "questions": {
+      "type": "object",
+      "description": "Map of caller-defined question IDs to typed question primitives. Keys are bookkeeping only.",
+      "additionalProperties": {
+        "$ref": "#/$defs/question"
+      }
+    }
+  },
+  "$defs": {
+    "question": {
+      "type": "object",
+      "required": ["type", "instructions"],
+      "properties": {
+        "type": {
+          "enum": ["noul", "choice", "score", "box"],
+          "description": "The four Jev System One decision primitives."
+        },
+        "instructions": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The complete, self-contained semantic question query evaluated against state."
+        },
+        "criteria": {
+          "description": "Validation criteria or category descriptions clarifying boundary conditions.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Ordered rubric levels for score primitives (lowest index 0 to highest index N)."
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "choice" } } },
+          "then": {
+            "required": ["criteria"],
+            "properties": {
+              "criteria": {
+                "type": "object",
+                "minProperties": 2,
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "score" } } },
+          "then": {
+            "required": ["criteria"],
+            "properties": {
+              "criteria": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 10,
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "noul_answer": {
+      "type": "object",
+      "required": ["type", "noul"],
+      "properties": {
+        "type": { "const": "noul" },
+        "noul": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "choice_answer": {
+      "type": "object",
+      "required": ["type", "choice", "probabilities", "confidence"],
+      "properties": {
+        "type": { "const": "choice" },
+        "choice": { "type": "string" },
+        "probabilities": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+        },
+        "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "score_answer": {
+      "type": "object",
+      "required": ["type", "score", "confidence"],
+      "properties": {
+        "type": { "const": "score" },
+        "score": { "type": "number" },
+        "legend": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    }
+  }
+}
