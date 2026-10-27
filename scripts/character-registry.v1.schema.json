@@ -501,6 +501,19 @@
               },
               "description": "Multi-angle model sheet anchor references ensuring 360-degree character and wardrobe continuity across scene camera angles."
             },
+            "facial_dna": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "bone_structure": { "type": "string", "description": "Face shape, jawline, cheekbones, chin." },
+                "skin_phenotype": { "type": "string", "description": "Skin tone, undertone and finish." },
+                "eyes_and_brows": { "type": "string", "description": "Eye colour and shape, brows, marks such as a brow scar." },
+                "nose_and_mouth": { "type": "string", "description": "Nose bridge, lips, teeth, facial hair." },
+                "rooted_hair": { "type": "string", "description": "Hair length, colour and texture." },
+                "negative_drift_tokens": { "type": "array", "items": { "type": "string" }, "description": "Looks this face drifts toward and must never take." }
+              },
+              "description": "The fixed face of a person, written once for prompt compilers so no two characters share a face. The one-line prompt form is forms.face ({{id:face}})."
+            },
             "drift_resolution": {
               "$ref": "#/$defs/drift_resolution"
             }
