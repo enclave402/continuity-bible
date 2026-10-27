@@ -244,7 +244,16 @@
       "forms": {
         "formal": "Ms. Jenkins",
         "nickname": "Chlo",
-        "look": "a Black woman in her late thirties with deep brown skin and a close-cropped natural cut"
+        "look": "a Black woman in her late thirties with deep brown skin and a close-cropped natural cut",
+        "face": "sculpted high cheekbones, refined jawline, deep rich warm brown skin, warm observant dark brown eyes, close-cropped textured natural cut"
+      },
+      "facial_dna": {
+        "bone_structure": "Sculpted high cheekbones, refined jawline, poised empathetic expression",
+        "skin_phenotype": "Deep rich warm brown skin, smooth matte vinyl finish",
+        "eyes_and_brows": "Warm observant dark brown eyes, gently arched defined brows",
+        "nose_and_mouth": "Straight refined nose bridge, full natural lips",
+        "rooted_hair": "Close-cropped textured natural cut",
+        "negative_drift_tokens": ["straight hair", "pale skin", "long hair", "angular scowl"]
       },
       "retired": []
     },
@@ -261,7 +270,16 @@
       "forms": {
         "formal": "Samantha",
         "short": "Sam",
-        "look": "a mixed-race woman in her early thirties with warm brown skin, dark curly hair and a small scar through her left eyebrow"
+        "look": "a mixed-race woman in her early thirties with warm brown skin, dark curly hair and a small scar through her left eyebrow",
+        "face": "delicate heart-shaped face, soft rounded jawline, warm golden-brown mixed-race skin, large dark brown eyes, scar through left eyebrow, shoulder-length dark curls"
+      },
+      "facial_dna": {
+        "bone_structure": "Delicate feminine heart-shaped face, soft rounded jawline",
+        "skin_phenotype": "Warm golden-brown mixed-race skin with soft satin finish",
+        "eyes_and_brows": "Large expressive dark brown eyes, small distinct scar through left eyebrow",
+        "nose_and_mouth": "Soft rounded nose bridge, expressive natural rose lips",
+        "rooted_hair": "Shoulder-length voluminous dark brown curls with dimensional texture",
+        "negative_drift_tokens": ["straight blonde hair", "pale skin", "chiseled jaw", "missing eyebrow scar"]
       },
       "retired": []
     },
@@ -278,7 +296,16 @@
       "forms": {
         "formal": "Theodore",
         "short": "Theo",
-        "look": "a tall white man in his thirties with sandy hair, a short beard and a chipped front tooth"
+        "look": "a tall white man in his thirties with sandy hair, a short beard and a chipped front tooth",
+        "face": "rugged square jawline, masculine planes, fair sun-weathered skin, hazel-green eyes, chipped front tooth, short sandy beard and disheveled sandy hair"
+      },
+      "facial_dna": {
+        "bone_structure": "Rugged broad square jawline with defined masculine planar angles",
+        "skin_phenotype": "Fair sun-weathered skin with warm golden undertone",
+        "eyes_and_brows": "Intense observant hazel-green eyes under straight thick brows",
+        "nose_and_mouth": "Straight nose with slight bridge character, chipped upper left front tooth visible when speaking, trimmed sandy beard",
+        "rooted_hair": "Slightly disheveled textured sandy-brown hair",
+        "negative_drift_tokens": ["clean-shaven chin", "jet black hair", "dark skin", "sharp gaunt cheeks"]
       },
       "retired": []
     },

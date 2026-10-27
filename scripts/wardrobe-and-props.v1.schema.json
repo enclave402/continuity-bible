@@ -89,6 +89,16 @@
                     "type": "array",
                     "items": { "type": "string" }
                   },
+                  "exclusive_signature": {
+                    "type": "boolean",
+                    "description": "If true, this outfit is permanently exclusive to this character token. No other character may wear this outfit or its components.",
+                    "default": false
+                  },
+                  "prohibited_on_others": {
+                    "type": "array",
+                    "description": "Negative prompt tokens automatically injected into the negative prompts of all OTHER characters in multi-character scenes.",
+                    "items": { "type": "string" }
+                  },
                   "prompt_tokens": { "type": "string" },
                   "negative_tokens": {
                     "type": "array",
@@ -159,6 +169,16 @@
                   },
                   "geometry": { "type": "string" },
                   "reference_image": { "type": "string" },
+                  "exclusive_signature": {
+                    "type": "boolean",
+                    "description": "If true, this prop or companion is permanently exclusive to this character token (e.g. Barnaby Bear to {{aleksandr}}). No other character may carry or possess it.",
+                    "default": false
+                  },
+                  "prohibited_on_others": {
+                    "type": "array",
+                    "description": "Negative prompt tokens automatically injected into the negative prompts of all OTHER characters in multi-character scenes.",
+                    "items": { "type": "string" }
+                  },
                   "prompt_tokens": { "type": "string" },
                   "negative_tokens": {
                     "type": "array",
