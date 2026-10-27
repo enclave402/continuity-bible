@@ -42,3 +42,5 @@ Pull requests written with an AI tool are welcome on three conditions:
 ## Reporting a problem
 
 Open an issue with the command you ran, its exact output, and what you expected. For a security concern see `SECURITY.md`.
+
+**How changes reach this repository.** Maintainers work in a private upstream and publish finished work here after the publication gate passes. Pull requests from outside contributors are welcome on this repository; a maintainer carries accepted ones into the upstream so the next publish includes them.

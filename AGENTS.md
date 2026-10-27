@@ -18,7 +18,7 @@ Ids live in `character-registry.json`. An unknown token fails the build on purpo
 
 ## Session
 
-1. Branch `<agent>/<task>` in a worktree at `.worktrees/<agent>-<task>` from `origin/main`. The root tree stays on `main`. Never push to `main`; open a pull request; a human merges.
+1. Branch `<agent>/<task>` in a worktree at `.worktrees/<agent>-<task>` from `origin/main`. The root tree stays on `main`. Never push to `main`; open a merge request on `origin`, the private upstream where all work happens. This public repository receives only finished `main`, through a publish step that runs `scripts/check-private.mjs` and `npm run verify` first; work in progress never appears here.
 2. Stage files by name, never `git add .`. Conventional Commits with an `Agent: <name>` trailer.
 
 ## Before you finish
