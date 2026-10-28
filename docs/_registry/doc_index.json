@@ -292,6 +292,14 @@
       "diataxis_mode": "lookup",
       "canonical_path": "docs/3-reference/PROP-DISPOSITION-AND-VISUAL-CONTINUITY-STANDARDS.md",
       "status": "active"
+    },
+    {
+      "doc_id": "ref-camera-and-look-explainers-a-d",
+      "title": "Camera and look explainers, groups A to D",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/CAMERA-AND-LOOK-EXPLAINERS-A-D.md",
+      "status": "active"
     }
   ]
 }

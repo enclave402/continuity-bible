@@ -37,6 +37,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Scene and edition fields](3-reference/SCENE-AND-EDITION-FIELDS.md): every field of the scene file, an edition and the parked-art manifest; the built text line by line; the commands; the three gates and what each refuses.
 - [Variant names and the applied record](3-reference/VARIANTS-AND-THE-APPLIED-RECORD.md): the variants file, the four step shapes and every refusal, the commands, what apply does in order, the slot record, the banner, the applied record field by field.
 - [Research layers](3-reference/RESEARCH-LAYERS.md): card front matter, findings schema, sources schema, retrieval pack contract, configuration.
+- [Camera and look explainers, groups A to D](3-reference/CAMERA-AND-LOOK-EXPLAINERS-A-D.md): 73 plain-language entries for look development, lens and optics, camera position and framing, and camera movement: what each term means, what it does to the picture, when to pick it, the safe default, a sketch to draw, two beginner mistakes, the source checked. Read-checked at grade 7.1 or below.
 - [Launch readiness, 2026-10-20](3-reference/LAUNCH-READINESS-2026-10-20.md): the proposed repository description and topics, the launch steps in order, and the decisions left to the owner.
 
 ## 4. Understand (`4-explanation/`)
