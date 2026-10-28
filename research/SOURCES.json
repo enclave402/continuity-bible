@@ -403,6 +403,50 @@
    "checked_how": "arxiv-api",
    "checked_at": "2026-10-18T00:15:16.638Z"
   },
+  "blender-manual-cameras": {
+   "kind": "url",
+   "id": "https://docs.blender.org/manual/en/latest/render/cameras.html",
+   "url": "https://docs.blender.org/manual/en/latest/render/cameras.html",
+   "title": "Cameras - Blender 5.2 LTS Manual",
+   "authors": [],
+   "year": "",
+   "venue": "docs.blender.org",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-28T06:02:04.731Z",
+   "finding_used": "Perspective camera shrinks distant objects; orthographic keeps size constant and parallel lines parallel; lens set in mm or FOV degrees; depth of field via focus object or distance, F-Stop (lower = more blur), blades shape bokeh",
+   "caveat": "One software camera's manual; field names differ in other tools"
+  },
+  "brown-cinematography-theory-practice-2016": {
+   "kind": "doi",
+   "id": "10.4324/9781315667829",
+   "url": "https://doi.org/10.4324/9781315667829",
+   "title": "Cinematography Theory and Practice",
+   "authors": [
+    "Blain Brown"
+   ],
+   "year": "2016",
+   "venue": "Routledge",
+   "abstract_excerpt": "",
+   "checked_how": "crossref",
+   "checked_at": "2026-10-28T06:00:42.848Z",
+   "finding_used": "Standard definitions of focal length, depth of field, shot sizes, camera angles, camera moves and the 180-degree rule used by the A-D explainers",
+   "caveat": "A textbook for live-action cinematography; animation and synthetic cameras follow the same geometry but have no physical lens limits"
+  },
+  "canon-ts-e-tilt-and-shift": {
+   "kind": "url",
+   "id": "https://support.usa.canon.com/kb/s/article/ART174524",
+   "url": "https://support.usa.canon.com/kb/s/article/ART174524",
+   "title": "Support",
+   "authors": [],
+   "year": "",
+   "venue": "support.usa.canon.com",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-28T06:02:04.312Z",
+   "finding_used": "Tilt angles the lens axis so the plane of focus tilts (sharp front to back, or a narrow sharp band); shift moves the axis parallel to the sensor to straighten converging verticals",
+   "caveat": "Describes real tilt-shift lenses; the miniature look uses the tilt direction that narrows focus and is usually faked in software"
+  },
   "cite16-blog-segmind-com": {
    "kind": "url",
    "id": "https://blog.segmind.com/easy-flux-lora-training-guide/",
@@ -462,6 +506,97 @@
    "abstract_excerpt": "Face Embeds Distance is a ComfyUI node in the FaceAnalysis category from Face Analysis for ComfyUI. Inputs: analysis_models, reference, image…",
    "checked_how": "http 200",
    "checked_at": "2026-10-18T02:28:27.373Z"
+  },
+  "lasseter-1987-principles-traditional-animation": {
+   "kind": "doi",
+   "id": "10.1145/37401.37407",
+   "url": "https://doi.org/10.1145/37401.37407",
+   "title": "Principles of traditional animation applied to 3D computer animation",
+   "authors": [
+    "John Lasseter"
+   ],
+   "year": "1987",
+   "venue": "Proceedings of the 14th annual conference on Computer graphics and interactive techniques",
+   "abstract_excerpt": "",
+   "checked_how": "crossref",
+   "checked_at": "2026-10-28T06:00:43.252Z",
+   "finding_used": "Slow in and slow out (easing) as a principle of traditional animation applied to computer animation, including camera moves",
+   "caveat": "A 1987 paper about character animation; applying easing to camera moves follows from the same principle but is the explainer's inference"
+  },
+  "mercado-filmmakers-eye-2013": {
+   "kind": "doi",
+   "id": "10.4324/9780080959344",
+   "url": "https://doi.org/10.4324/9780080959344",
+   "title": "The Filmmaker's Eye",
+   "authors": [
+    "Gustavo Mercado"
+   ],
+   "year": "2013",
+   "venue": "Routledge",
+   "abstract_excerpt": "",
+   "checked_how": "crossref",
+   "checked_at": "2026-10-28T06:00:42.988Z",
+   "finding_used": "Shot-size names, headroom, lead room, rule of thirds, Dutch angle and high/low angle conventions and their emotional effect",
+   "caveat": "Composition conventions, not rules; the author states each can be broken on purpose"
+  },
+  "nikon-understanding-focal-length": {
+   "kind": "url",
+   "id": "https://www.nikonusa.com/learn-and-explore/a/tips-and-techniques/understanding-focal-length.html",
+   "url": "https://www.nikonusa.com/learn-and-explore/c/tips-and-techniques/understanding-focal-length",
+   "title": "Understanding Focal Length",
+   "authors": [],
+   "year": "",
+   "venue": "www.nikonusa.com",
+   "abstract_excerpt": "Focal length controls the angle of view and magnification of a photograph. Learn when to use Nikon zoom and prime lenses to best capture your subject.",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-28T06:02:03.341Z",
+   "finding_used": "Focal length in mm sets the angle of view: longer is narrower and more magnified, shorter is wider; standard 50-60 mm on full frame is closest to how humans see; wide 14-35, telephoto 70-200 (FX)",
+   "caveat": "Does not discuss crop factor or perspective compression; a camera maker's beginner article"
+  },
+  "nikon-understanding-maximum-aperture": {
+   "kind": "url",
+   "id": "https://www.nikonusa.com/learn-and-explore/c/tips-and-techniques/understanding-maximum-aperture",
+   "url": "https://www.nikonusa.com/learn-and-explore/c/tips-and-techniques/understanding-maximum-aperture",
+   "title": "Understanding Maximum Aperture",
+   "authors": [],
+   "year": "",
+   "venue": "www.nikonusa.com",
+   "abstract_excerpt": "Camera lens aperture affects depth of field and shutter speed by restricting light passed through your Nikon lenses. Learn how aperture affects your photos!",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-28T06:02:03.987Z",
+   "finding_used": "Lower f-number means a larger lens opening and less depth of field (blurrier background); f/2.8 for isolating a portrait subject, f/8-f/11 for landscapes, f/5.6 as a middle test",
+   "caveat": "Live-action photography guidance; synthetic cameras can set any f-number"
+  },
+  "winder-producing-animation-2019": {
+   "kind": "doi",
+   "id": "10.1201/9780429490521",
+   "url": "https://doi.org/10.1201/9780429490521",
+   "title": "Producing Animation",
+   "authors": [
+    "Catherine Winder",
+    "Zahra Dowlatabadi"
+   ],
+   "year": "2019",
+   "venue": "CRC Press",
+   "abstract_excerpt": "",
+   "checked_how": "crossref",
+   "checked_at": "2026-10-28T06:00:43.121Z",
+   "finding_used": "Animation pre-production artifacts: visual development, style guide, model sheets and turnarounds, color keys, approval steps, rights and clearances",
+   "caveat": "A producer's view of the pipeline; it names the artifacts and who approves them, not how to draw them"
+  },
+  "zeiss-distortion-honlinger-nasse": {
+   "kind": "url",
+   "id": "https://lenspire.zeiss.com/photo/app/uploads/2022/02/technical-article-distortion.pdf",
+   "url": "https://lenspire.zeiss.com/photo/app/uploads/2022/02/technical-article-distortion.pdf",
+   "title": "https://lenspire.zeiss.com/photo/app/uploads/2022/02/technical-article-distortion.pdf",
+   "authors": [],
+   "year": "",
+   "venue": "lenspire.zeiss.com",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-28T06:02:06.234Z",
+   "finding_used": "Barrel distortion bows straight lines outward (common on wide lenses); pincushion bends them inward (common on telephoto); mustache mixes both",
+   "caveat": "A lens maker's technical paper; the plain-language shapes are the explainer's summary"
   }
  }
 }

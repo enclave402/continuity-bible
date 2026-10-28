@@ -9,7 +9,8 @@
     "qa-drift-gates": "Automated checks that measure drift: face embeddings, structural similarity, prompt alignment, model-as-judge audits.",
     "continuity-sop": "End-to-end operating procedures for character continuity in a production pipeline.",
     "research-methods": "How this repository ingests, verifies, grades and retrieves research.",
-    "agent-workflows": "Coding-agent practices that keep names, continuity and evidence honest in a repository."
+    "agent-workflows": "Coding-agent practices that keep names, continuity and evidence honest in a repository.",
+    "cinematography-language": "Camera, lens, framing, movement, light and colour vocabulary for planning a short film, and the plain-language explainers that let a reader with no film training choose a value."
   },
   "kinds": {
     "owner-research": "Research written or commissioned by the repository owner, including AI deep-research reports they ran. Stored verbatim.",
