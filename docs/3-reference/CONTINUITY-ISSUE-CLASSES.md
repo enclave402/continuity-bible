@@ -98,7 +98,7 @@ Eight ways a character-and-continuity system goes silent, found in production us
 
 **Symptom.** Watches or asymmetrical accessories drift between left and right wrists across sequential panels, or appear on the wrong hand during physical actions (gripping portfolio handles, checking time, holding phones). In a single spread, one character's watch appears on their left wrist while the opposing character's watch flips to their right wrist.
 
-**Why (First-Principles Architectural Root Cause).**
+**Why (First-Principles Architectural [Root Cause](../4-explanation/concepts/ROOT-CAUSE-AND-LASTING-FIX.md)).**
 1. **The Viewer vs. Character Coordinate Paradox:** A human viewer observing a character face-to-face sees the character's anatomical right arm on the viewer's *screen-left*, and the character's anatomical left arm on the viewer's *screen-right*. When the character turns their back to the viewer, their anatomical right arm aligns with the viewer's *screen-right*. Stating "left wrist" in an unprojected prompt creates ambiguity between the character's body frame and the 2D canvas frame.
 2. **Diffusion Reflectional Symmetry Bias:** Text-to-image diffusion models are trained on datasets with horizontal reflection augmentations and mirror selfies. The attention layers lack an intrinsic 3D skeletal frame of reference; words like "left" bind weakly to limbs and are overridden by global composition priors (e.g. balancing weight across the frame or mirroring two characters around a shared object).
 3. **Formal Coordinate Frames:**

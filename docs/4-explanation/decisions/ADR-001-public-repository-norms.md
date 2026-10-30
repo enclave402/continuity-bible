@@ -12,7 +12,7 @@ canonical: true
 # ADR-001: this repository adopts machine-wide operating norms in a form that is safe to publish
 
 **Status:** accepted, 2026-10-17.
-**Deciders:** the repository owner set the rule ("a public SSOT process, never hardcoding, adaptive flows for all systems and users, leveraged on our own end to resolve our own issues"); the agent that built it chose the shape.
+**Deciders:** the repository owner set the rule ("a public [SSOT](../concepts/ONE-HOME-FOR-EACH-FACT.md) process, never hardcoding, adaptive flows for all systems and users, leveraged on our own end to resolve our own issues"); the agent that built it chose the shape.
 
 ## Context
 

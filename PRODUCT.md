@@ -21,6 +21,16 @@ Today the eleven elements stand at the counts the feed printed: `public states: 
 
 Wherever this page mentions the product's numbers, they are simulated-reader numbers. They are not a count of a human audience.
 
+## Asset pipeline (owner, 2026-10-30)
+
+The job above covers the art pipeline around the pictures, not only the words. Making the pictures stays out: any image tool plugs in. In scope, as methods anyone can reuse:
+
+- **Records:** each picture has a [made-by record](docs/4-explanation/concepts/MADE-BY-RECORD.md) that says how it was made, and whether it is a new render or an edit.
+- **Reuse:** each picture has one home in the [asset library](docs/4-explanation/concepts/ASSET-LIBRARY.md) and is used in one place. A fix is a [fresh render](docs/4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md), not a patch.
+- **Grading:** every picture is checked against the [character card](docs/4-explanation/concepts/CHARACTER-CARD.md) by a [second checker](docs/4-explanation/concepts/SECOND-CHECKER.md), never by the tool that made it.
+
+Each term has a page in the [concept index](docs/3-reference/CONCEPT-INDEX.md).
+
 ## Deliverables
 
 | Piece | Files | Done when |
@@ -39,6 +49,7 @@ Wherever this page mentions the product's numbers, they are simulated-reader num
 | Simulated panel checks | `scripts/panel.mjs`, `examples/panel/`, `docs/2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md` | a quote is a verbatim substring of the spread it names, or the check fails; a no-read reader above the quiz ceiling throws the quiz out, and a file with no no-read reader fails; the paired difference for one numeric field is the mean over readers on both sides, unpaired readers are counted and not filled in, and `check-report` refuses a report that is not the script's own text; every report says the result is simulated, is not a human audience, and that the script does not decide which text wins (ADR-008). Persona records, a sandbox and price-perception questions are not in this slice |
 | Intrinsic laterality & chirality invariant gate | `scripts/wardrobe-and-props.v1.schema.json`, `scripts/check-prop-continuity.mjs`, `examples/continuity/wardrobe-and-props.json`, `docs/3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md` | Karpathian self-announcing architecture; projects intrinsic anatomical limb coordinates (egocentric) into 2D viewer screen space (allocentric) across all camera facings; `npm run check:props` and `npm test` eliminate diffusion laterality inversion |
 | Before-and-after journey | `docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md`, `docs/4-explanation/assets/before-after/` | the page shows the published story's own drift with real pictures (the lead's 85 scenes found by token, 58 faces tagged by hand with one fixed trait), every answer's anchor and bill side by side from the engine's own output, the owner's stated reason for the choice (eyes kept, fewest redraws for the rest, story facts in prose), the proposed list, and the before-and-after pairs as the author approves each redo |
+| Concept pages and link lint | `docs/4-explanation/concepts/`, `docs/3-reference/CONCEPT-INDEX.md`, `docs/_registry/concept_index.json`, `scripts/concept-links.mjs` | every term has a page; in every doc under `docs/` the first use of a term links to its page; no page is an orphan; `scripts/check-docs.mjs` fails otherwise |
 
 ## Planned (owner direction 2026-10-17; not yet built)
 
