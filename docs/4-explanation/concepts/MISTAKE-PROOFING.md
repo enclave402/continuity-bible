@@ -15,7 +15,7 @@ canonical: true
 
 **What it is:** Designing a step so the wrong thing is hard or impossible to do, instead of asking people to be careful.
 
-**Why it matters:** People and tools make mistakes. A design that blocks the mistake works every time; a warning works only when read.
+**Why it matters:** People and tools make mistakes. A design that blocks the mistake does not depend on anyone reading a warning.
 
 **The rule here:** When a mistake repeats, change the tool or the format so it cannot happen, then add a check.
 
@@ -27,7 +27,7 @@ canonical: true
 
 Mistake-proofing is the strongest kind of [lasting fix](ROOT-CAUSE-AND-LASTING-FIX.md). Where it cannot block the mistake, a [quality gate](GATE.md) catches it.
 
-**Source:** [Poka-yoke](https://en.wikipedia.org/wiki/Poka-yoke) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [Poka-yoke](https://en.wikipedia.org/wiki/Poka-yoke), finding `cps-11` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

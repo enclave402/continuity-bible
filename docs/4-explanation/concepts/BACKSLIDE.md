@@ -27,7 +27,7 @@ canonical: true
 
 Tests for backslides run in a [quality gate](GATE.md). If the same kind of mistake keeps coming back, look for its [root cause](ROOT-CAUSE-AND-LASTING-FIX.md).
 
-**Source:** [Software regression](https://en.wikipedia.org/wiki/Software_regression) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [Software regression](https://en.wikipedia.org/wiki/Software_regression), finding `cps-08` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

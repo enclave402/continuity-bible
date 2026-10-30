@@ -27,7 +27,7 @@ canonical: true
 
 A [quality gate](GATE.md) is a done-when list that a computer checks.
 
-**Source:** [Acceptance testing](https://en.wikipedia.org/wiki/Acceptance_testing) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [Acceptance testing](https://en.wikipedia.org/wiki/Acceptance_testing), finding `cps-07` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

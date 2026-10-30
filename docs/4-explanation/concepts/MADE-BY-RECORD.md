@@ -27,7 +27,7 @@ canonical: true
 
 The record is what lets you choose a [fresh render](FRESH-RENDER-NOT-A-PATCH.md) over a patch with confidence. The industry form is a signed record stored inside the file.
 
-**Source:** [Content Credentials](https://en.wikipedia.org/wiki/Content_Credentials) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [Content Credentials](https://en.wikipedia.org/wiki/Content_Credentials), finding `cps-05` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia; the record on this page is plain and unsigned, not a C2PA manifest.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

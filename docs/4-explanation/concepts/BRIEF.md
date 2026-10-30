@@ -13,7 +13,7 @@ canonical: true
 
 *Also called:* creative brief, design brief, art brief, creative request
 
-**What it is:** A short note, written before any work starts, that says what to make, who it is for, and what it must show.
+**What it is:** A short note, written before the work starts, that says what to make and what it must show. The person asking and the people making both agree to it.
 
 **Why it matters:** If the goal is only in someone's head, the maker guesses. A written brief lets the maker and the checker work from the same goal.
 
@@ -27,7 +27,7 @@ canonical: true
 
 A brief says what to make. The [character card](CHARACTER-CARD.md) says how each character looks. Keep the two apart, so a change to a character is one edit to one card.
 
-**Source:** [Creative brief](https://en.wikipedia.org/wiki/Creative_brief) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [Creative brief](https://en.wikipedia.org/wiki/Creative_brief), finding `cps-02` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia; it describes advertising agencies, not picture prompts.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 
@@ -42,7 +42,7 @@ All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
     "art brief",
     "creative request"
   ],
-  "description": "A short note, written before any work starts, that says what to make, who it is for, and what it must show.",
+  "description": "A short note, written before the work starts, that says what to make and what it must show. The person asking and the people making both agree to it.",
   "inDefinedTermSet": {
     "@type": "DefinedTermSet",
     "name": "Continuity bible concepts"

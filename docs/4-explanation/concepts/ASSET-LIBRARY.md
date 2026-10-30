@@ -27,7 +27,7 @@ canonical: true
 
 The library holds the files. The [approval steps](APPROVAL-STEPS.md) say which files are ready to use.
 
-**Source:** [Digital asset management](https://en.wikipedia.org/wiki/Digital_asset_management) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [Digital asset management](https://en.wikipedia.org/wiki/Digital_asset_management), finding `cps-04` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia; one home and one use per picture is this repository's own rule, not the source's.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

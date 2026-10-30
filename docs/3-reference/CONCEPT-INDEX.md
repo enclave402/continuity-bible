@@ -22,7 +22,7 @@ canonical: true
 | Plain word | Also called | In one line |
 |---|---|---|
 | [Character card](../4-explanation/concepts/CHARACTER-CARD.md) | character model sheet, turnaround, character bible, golden record, master data | One page per character that says exactly how they look: face, body, hair, clothes, and the marks that never change. |
-| [Brief](../4-explanation/concepts/BRIEF.md) | creative brief, design brief, art brief, creative request | A short note, written before any work starts, that says what to make, who it is for, and what it must show. |
+| [Brief](../4-explanation/concepts/BRIEF.md) | creative brief, design brief, art brief, creative request | A short note, written before the work starts, that says what to make and what it must show. |
 | [One home for each fact](../4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md) | single source of truth, SSOT, system of record, no hard coding | Each fact is written down in exactly one place. |
 | [Asset library](../4-explanation/concepts/ASSET-LIBRARY.md) | digital asset management, DAM, media library, asset register | The one place where finished pictures and other files are kept, each with a name, a version and a status. |
 | [Approval steps](../4-explanation/concepts/APPROVAL-STEPS.md) | asset lifecycle, approval workflow, review status, draft, approved, rejected | The stages a picture moves through, such as draft, approved and rejected, and what has to be true to move to the next one. |

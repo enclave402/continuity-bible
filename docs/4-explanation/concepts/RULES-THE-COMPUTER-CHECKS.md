@@ -27,7 +27,7 @@ canonical: true
 
 These checks run in a [quality gate](GATE.md). A good one is a form of [mistake-proofing](MISTAKE-PROOFING.md): it makes the wrong thing hard to do.
 
-**Source:** [Policy as Code](https://developer.hashicorp.com/sentinel/docs/concepts/policy-as-code) (HashiCorp Sentinel docs; loaded 2026-10-30; not yet a research card).
+**Source:** [Policy as Code](https://developer.hashicorp.com/sentinel/docs/concepts/policy-as-code), finding `cps-09` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. HashiCorp Sentinel docs; settings in a data file is this repository's own rule.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

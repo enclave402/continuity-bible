@@ -15,7 +15,7 @@ canonical: true
 
 **What it is:** A check that must pass before work can move on. If it fails, the work stops until it is fixed.
 
-**Why it matters:** It catches a mistake while it is cheap to fix, before anyone else sees it.
+**Why it matters:** Work that fails the check does not move on, so a mistake is stopped at the gate instead of found later.
 
 **The rule here:** Gates run by machine with no human step. `npm run verify` is this repository's gate; it must pass before a merge.
 
@@ -27,7 +27,7 @@ canonical: true
 
 A gate is made of [rules the computer checks](RULES-THE-COMPUTER-CHECKS.md). Tests that guard against a [backslide](BACKSLIDE.md) belong in it.
 
-**Source:** [Phase-gate process](https://en.wikipedia.org/wiki/Phase-gate_process) (Wikipedia; loaded 2026-10-30; not yet a research card). In this repo's research: finding `accp-28` in [research findings](../../../research/FINDINGS.jsonl), status unchecked.
+**Source:** [Phase-gate process](https://en.wikipedia.org/wiki/Phase-gate_process), finding `cps-10` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia; its gates are decision meetings, and running gates by machine is this repository's rule. In this repo's research: finding `accp-28` in [research findings](../../../research/FINDINGS.jsonl), status unchecked.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 
