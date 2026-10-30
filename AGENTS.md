@@ -38,7 +38,7 @@ One line each. Plain words lead; the trade terms are in the *Also called* list b
 9. **New pictures, not patched ones.** To fix a picture, make a new one from the card. Never paint over part of a picture. Never edit someone else's art.
 10. **One picture, one place.** A scene or character picture is used in one spot only. Small interface parts, like icons, may repeat.
 11. **The maker does not grade its own work.** A different tool or model checks what one made.
-12. **Proof from outside.** Back each best practice with an outside source. Look for what would prove you wrong, not just what agrees. Mark anything you did not check as UNVERIFIED.
+12. **Proof from outside.** Back each best practice with an outside source. Look for what would prove you wrong, not just what agrees. Mark anything you did not check as UNVERIFIED. Never point to a file that does not exist.
 13. **No made-up sign-offs.** Do not add "check with the author" or any other approval step that these rules do not name.
 14. **Nothing hard-coded.** Each value lives in one place and is read from there. Names and pronouns live in the registry. A look lives on its card. Paths, models, limits and word lists live in config or the environment, never in one machine. Name a new file by slot and version, never by a person.
 15. **One place per fact.** If a fact shows up twice, one copy becomes a link to the other.
