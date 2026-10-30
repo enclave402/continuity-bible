@@ -1,5 +1,10 @@
 # Contributing
 
+**What this is:** how to send a change to this repo, and where each kind of file goes.
+**Why it exists:** so every change, from a person or an agent, meets the same bar.
+**How to use it:** read Ground rules and Workflow. Then check "Where docs go" before you add a doc.
+**Next step:** run `npm run verify` on your branch.
+
 Thank you for helping keep names, continuity and research honest. This is a public repository with zero runtime dependencies; please keep it that way.
 
 ## Ground rules

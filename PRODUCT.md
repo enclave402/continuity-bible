@@ -1,5 +1,10 @@
 # PRODUCT.md: what this repository ships
 
+**What this is:** the list of what this repo ships, who it is for, and when each piece is done.
+**Why it exists:** so WHAT we build lives in one place, apart from HOW we work (`AGENTS.md`).
+**How to use it:** find the piece you are touching in Deliverables. Then meet its "Done when" line.
+**Next step:** if a spoken change alters what ships, write it here in the same turn.
+
 > Half-life: weeks. A spoken change to WHAT is written here in the same turn. HOW: `AGENTS.md`.
 
 ## Buyer and job
