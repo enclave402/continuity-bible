@@ -64,7 +64,7 @@ The phrase travels only where a narrative artifact is genuinely involved. Anythi
 |---|---|---|---|
 | `enclave402/agent-skills` (public) — the `visual-continuity-ssot` skill description | one clause: "…the continuity bible for a sequential story" | the skill maintains exactly this artifact | planned |
 | `outreach-engine` campaign copy for rel8r | the phrase as a content angle, once per campaign, in prose | the audience is writers fighting drift | planned |
-| `adhdworks-max-headroom` comic framework docs | name the framework's SSOT layer "the continuity bible" in operator docs | the comic renderer *is* one | planned |
+| `adhdworks-max-headroom` comic framework docs | name the framework's [SSOT](concepts/ONE-HOME-FOR-EACH-FACT.md) layer "the continuity bible" in operator docs | the comic renderer *is* one | planned |
 | The GitHub Pages showcase | definition sentence and the term in the page title | direct intent match | done 2026-10-23 |
 | `rel8r`, `Coach-Hype`, `sloppyxbaby` product pages | **nothing** | different category; inserting it dilutes the term's meaning | excluded |
 

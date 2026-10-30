@@ -1,4 +1,10 @@
 {
+  "_about": {
+    "what": "The list of every canonical doc: its id, title, kind and path.",
+    "why": "The docs check reads it. A doc that is not on this list, or a path that is gone, fails the check.",
+    "how": "Add one entry when you add a doc, and link the doc from docs/README.md.",
+    "next": "Run node scripts/check-docs.mjs."
+  },
   "schema_version": 1,
   "repository": "narrative-token-ssot",
   "updated_at": "2026-10-23T14:17:08.621359-04:00",
@@ -291,6 +297,190 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "lookup",
       "canonical_path": "docs/3-reference/PROP-DISPOSITION-AND-VISUAL-CONTINUITY-STANDARDS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-camera-and-look-explainers-a-d",
+      "title": "Camera and look explainers, groups A to D",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/CAMERA-AND-LOOK-EXPLAINERS-A-D.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-concept-index",
+      "title": "Concept index",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/CONCEPT-INDEX.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-parts-map",
+      "title": "Parts map",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/PARTS-MAP.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-character-card",
+      "title": "Character card",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/CHARACTER-CARD.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-brief",
+      "title": "Brief",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/BRIEF.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-one-home-for-each-fact",
+      "title": "One home for each fact",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-asset-library",
+      "title": "Asset library",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/ASSET-LIBRARY.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-approval-steps",
+      "title": "Approval steps",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/APPROVAL-STEPS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-made-by-record",
+      "title": "Made-by record",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/MADE-BY-RECORD.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-second-checker",
+      "title": "Second checker",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/SECOND-CHECKER.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-done-when-list",
+      "title": "Done-when list",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/DONE-WHEN-LIST.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-backslide",
+      "title": "Backslide",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/BACKSLIDE.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-rules-the-computer-checks",
+      "title": "Rules the computer checks",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/RULES-THE-COMPUTER-CHECKS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-gate",
+      "title": "Gate",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/GATE.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-mistake-proofing",
+      "title": "Mistake-proofing",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/MISTAKE-PROOFING.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-required-reviewers",
+      "title": "Required reviewers",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/REQUIRED-REVIEWERS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-stale-docs",
+      "title": "Stale docs",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/STALE-DOCS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-root-cause-and-lasting-fix",
+      "title": "Root cause and lasting fix",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/ROOT-CAUSE-AND-LASTING-FIX.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-fresh-render-not-a-patch",
+      "title": "Fresh render, not a patch",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-self-explaining-part",
+      "title": "Self-explaining part",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/SELF-EXPLAINING-PART.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-two-masters",
+      "title": "Two masters",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/TWO-MASTERS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-reading-grade",
+      "title": "Reading grade",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/READING-GRADE.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-shrink-only-list",
+      "title": "Shrink-only list",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/SHRINK-ONLY-LIST.md",
       "status": "active"
     }
   ]

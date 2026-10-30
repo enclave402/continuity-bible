@@ -165,7 +165,7 @@ In `character-registry.json`, declare a `turnaround` for key characters:
 }
 ```
 
-Before rendering expensive final panels, always generate and verify your turnaround model sheet so you have a baseline ground truth for all camera angles.
+Before rendering expensive final panels, always generate and verify your [turnaround](../4-explanation/concepts/CHARACTER-CARD.md) model sheet so you have a baseline ground truth for all camera angles.
 
 Once the entry has a `turnaround`, build the character's picture sheet to see it. The page opens with **Turnaround Model Sheet (360° Continuity Ground Truth)**, above the picture cards: each view with its angle badge, a "not drawn yet" card for any view you have not made, and your notes in full.
 
