@@ -27,7 +27,7 @@ canonical: true
 
 A gate is made of [rules the computer checks](RULES-THE-COMPUTER-CHECKS.md). Tests that guard against a [backslide](BACKSLIDE.md) belong in it.
 
-**Source:** [Phase-gate process](https://en.wikipedia.org/wiki/Phase-gate_process), finding `cps-10` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia; its gates are decision meetings, and running gates by machine is this repository's rule. In this repo's research: finding `accp-28` in [research findings](../../../research/FINDINGS.jsonl), status unchecked.
+**Source:** Robert G. Cooper, [The Stage-Gate Model: An Overview](https://www.stage-gate.com/blog/the-stage-gate-model-an-overview/): finding `cps-10` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Its gates are management decisions; running gates by machine is this repository's rule.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

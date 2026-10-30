@@ -433,6 +433,20 @@
    "finding_used": "Standard definitions of focal length, depth of field, shot sizes, camera angles, camera moves and the 180-degree rule used by the A-D explainers",
    "caveat": "A textbook for live-action cinematography; animation and synthetic cameras follow the same geometry but have no physical lens limits"
   },
+  "c2pa-specification-2-2": {
+   "kind": "url",
+   "id": "https://spec.c2pa.org/specifications/specifications/2.2/specs/C2PA_Specification.html",
+   "url": "https://spec.c2pa.org/specifications/specifications/2.2/specs/C2PA_Specification.html",
+   "title": "Content Credentials : C2PA Technical Specification :: C2PA Specifications",
+   "authors": [],
+   "year": "",
+   "venue": "spec.c2pa.org",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:30:27.533Z",
+   "finding_used": "Provenance discloses how an asset was created and changed; each change is added to it; a Content Credential is a signed C2PA Manifest, embedded in or external to the asset",
+   "note": "COA-138 concept page primary source; read 2026-10-30"
+  },
   "canon-ts-e-tilt-and-shift": {
    "kind": "url",
    "id": "https://support.usa.canon.com/kb/s/article/ART174524",
@@ -446,6 +460,21 @@
    "checked_at": "2026-10-28T06:02:04.312Z",
    "finding_used": "Tilt angles the lens axis so the plane of focus tilts (sharp front to back, or a narrow sharp band); shift moves the axis parallel to the sensor to straighten converging verticals",
    "caveat": "Describes real tilt-shift lenses; the miniature look uses the tilt direction that narrows focus and is usually faked in software"
+  },
+  "cfr-21-820-100-2024": {
+   "kind": "url",
+   "id": "https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-01-01/title-21?part=820&section=820.100",
+   "url": "https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-01-01/title-21?chapter=I&subchapter=H&part=820&subpart=J&section=820.100",
+   "title": "https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-01-01/title-21?part=820&section=820.100",
+   "authors": [],
+   "year": "",
+   "venue": "www.ecfr.gov",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:30:28.643Z",
+   "finding_used": "21 CFR 820.100 Corrective and preventive action: analyse quality data, investigate the cause of nonconformities, act to correct and prevent recurrence, verify the action is effective, record it",
+   "caveat": "Text as of 2024-01-01; FDA's QMSR replaced this section from 2026-02-02 by incorporating ISO 13485, which is not openly readable",
+   "note": "COA-138 concept page primary source; read 2026-10-30; cited by the Wikipedia article on CAPA"
   },
   "cite16-blog-segmind-com": {
    "kind": "url",
@@ -507,6 +536,21 @@
    "checked_how": "http 200",
    "checked_at": "2026-10-18T02:28:27.373Z"
   },
+  "cooper-stage-gate-overview": {
+   "kind": "url",
+   "id": "https://www.stage-gate.com/blog/the-stage-gate-model-an-overview/",
+   "url": "https://www.stage-gate.com/blog/the-stage-gate-model-an-overview/",
+   "title": "The Stage-Gate Model: An Overview | Stage-Gate International",
+   "authors": [],
+   "year": "",
+   "venue": "www.stage-gate.com",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:30:28.260Z",
+   "finding_used": "Stage-Gate (Cooper): stages of work separated by gates, each a go/kill decision point; work must complete prescribed tasks before approval to proceed (PDMA definition)",
+   "caveat": "The originator's firm's page; gates are management decisions",
+   "note": "COA-138 concept page primary source; read 2026-10-30; Cooper's original paper is doi 10.1016/0007-6813(90)90040-I (Business Horizons 1990), paywalled"
+  },
   "gitlab-docs-code-owners": {
    "kind": "url",
    "id": "https://docs.gitlab.com/user/project/codeowners/",
@@ -535,6 +579,35 @@
    "finding_used": "Policy as code writes policies as code in text files so they get version control and automated testing",
    "note": "COA-138 concept page source; read 2026-10-30"
   },
+  "hunt-thomas-dry-principle-2003": {
+   "kind": "url",
+   "id": "https://www.artima.com/articles/orthogonality-and-the-dry-principle",
+   "url": "https://www.artima.com/articles/orthogonality-and-the-dry-principle",
+   "title": "artima - Orthogonality and the DRY Principle",
+   "authors": [],
+   "year": "",
+   "venue": "www.artima.com",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:30:26.802Z",
+   "finding_used": "DRY (Hunt and Thomas): every piece of system knowledge should have one authoritative, unambiguous representation, including schemas, test plans, build and docs",
+   "note": "COA-138 concept page primary source; read 2026-10-30; interview by Bill Venners, 2003-03-10, with the authors of The Pragmatic Programmer"
+  },
+  "ibm-what-is-dam": {
+   "kind": "url",
+   "id": "https://www.ibm.com/topics/digital-asset-management",
+   "url": "https://www.ibm.com/think/topics/digital-asset-management",
+   "title": "What Is Digital Asset Management? | IBM",
+   "authors": [],
+   "year": "",
+   "venue": "www.ibm.com",
+   "abstract_excerpt": "Digital asset management (DAM) enables you to improve your content, gain content efficiencies and improve the customer experience.",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:30:27.325Z",
+   "finding_used": "A DAM is a searchable, centralized repository with versioning, metadata, access control and rule-driven workflows",
+   "caveat": "Vendor explainer page",
+   "note": "COA-138 concept page primary source; read 2026-10-30; cited by the Wikipedia article on digital asset management"
+  },
   "lasseter-1987-principles-traditional-animation": {
    "kind": "doi",
    "id": "10.1145/37401.37407",
@@ -550,6 +623,24 @@
    "checked_at": "2026-10-28T06:00:43.252Z",
    "finding_used": "Slow in and slow out (easing) as a principle of traditional animation applied to computer animation, including camera moves",
    "caveat": "A 1987 paper about character animation; applying easing to camera moves follows from the same principle but is the explainer's inference"
+  },
+  "leung-white-1990-regression": {
+   "kind": "doi",
+   "id": "10.1109/ICSM.1990.131377",
+   "url": "https://doi.org/10.1109/ICSM.1990.131377",
+   "title": "A study of integration testing and software regression at the integration level",
+   "authors": [
+    "H.K.N. Leung",
+    "L. White"
+   ],
+   "year": "",
+   "venue": "Proceedings. Conference on Software Maintenance 1990",
+   "abstract_excerpt": "",
+   "checked_how": "crossref",
+   "checked_at": "2026-10-30T20:30:28.048Z",
+   "finding_used": "New errors may be introduced by a correction or design change; regression testing reuses previous test cases and retests modified parts",
+   "caveat": "Read from the abstract (OpenAlex); full paper behind IEEE paywall",
+   "note": "COA-138 concept page primary source; read 2026-10-30; cited by the Wikipedia article on software regression"
   },
   "mercado-filmmakers-eye-2013": {
    "kind": "doi",
@@ -594,6 +685,36 @@
    "checked_at": "2026-10-28T06:02:03.987Z",
    "finding_used": "Lower f-number means a larger lens opening and less depth of field (blurrier background); f/2.8 for isolating a portrait subject, f/8-f/11 for landscapes, f/5.6 as a middle test",
    "caveat": "Live-action photography guidance; synthetic cameras can set any f-number"
+  },
+  "nist-gsc-is-reference-implementation-2003": {
+   "kind": "url",
+   "id": "https://web.archive.org/web/20060928231404id_/http://xw2k.sdct.itl.nist.gov/smartcard/document/ref-imp51.pdf",
+   "url": "https://web.archive.org/web/20060928231404id_/http://xw2k.sdct.itl.nist.gov/smartcard/document/ref-imp51.pdf",
+   "title": "https://web.archive.org/web/20060928231404id_/http://xw2k.sdct.itl.nist.gov/smartcard/document/ref-imp51.pdf",
+   "authors": [],
+   "year": "",
+   "venue": "web.archive.org",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:30:29.855Z",
+   "finding_used": "A reference implementation is an implementation of a specification used as its definitive interpretation; a trusted one helps discover errors or ambiguities in the specification and validate a conformance test suite",
+   "note": "COA-138 concept page primary source; read 2026-10-30; Dalci, Fong and Goldfine, NIST ITL, 2003-06-05, Requirements for GSC-IS Reference Implementations; the original NIST URL is gone, read from the Internet Archive copy; cited by the Wikipedia article"
+  },
+  "nist-sp-800-53r5": {
+   "kind": "doi",
+   "id": "10.6028/NIST.SP.800-53r5",
+   "url": "https://doi.org/10.6028/NIST.SP.800-53r5",
+   "title": "Security and Privacy Controls for Information Systems and Organizations",
+   "authors": [
+    ""
+   ],
+   "year": "2020",
+   "venue": "National Institute of Standards and Technology",
+   "abstract_excerpt": "",
+   "checked_how": "crossref",
+   "checked_at": "2026-10-30T20:30:27.658Z",
+   "finding_used": "Control AC-5 Separation of Duties: divide mission or business functions among different individuals or roles to reduce abuse of privilege",
+   "note": "COA-138 concept page primary source; read 2026-10-30; AC-5 text read from NIST's OSCAL catalog of SP 800-53 rev 5 (usnistgov/oscal-content on GitHub)"
   },
   "nngroup-recognition-and-recall": {
    "kind": "url",

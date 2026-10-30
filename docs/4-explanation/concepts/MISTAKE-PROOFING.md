@@ -27,7 +27,7 @@ canonical: true
 
 Mistake-proofing is the strongest kind of [lasting fix](ROOT-CAUSE-AND-LASTING-FIX.md). Where it cannot block the mistake, a [quality gate](GATE.md) catches it.
 
-**Source:** [Poka-yoke](https://en.wikipedia.org/wiki/Poka-yoke), finding `cps-11` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia.
+**Source:** [Poka-yoke](https://en.wikipedia.org/wiki/Poka-yoke) (Wikipedia), finding `cps-11` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia is kept because Shingo's book is not free to read and the ASQ and Grout pages refused automated reading.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

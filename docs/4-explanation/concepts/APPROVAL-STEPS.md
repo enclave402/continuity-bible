@@ -27,7 +27,7 @@ canonical: true
 
 Each step should be guarded by a [quality gate](GATE.md), and the check should be done by a [second checker](SECOND-CHECKER.md), not the maker.
 
-**Source:** *Producing Animation* (Winder and Dowlatabadi, 2019): finding `eadp-11` in [research findings](../../../research/FINDINGS.jsonl), status checked. Lifecycle states (creation, approval, live, archived): [Wikipedia's DAM article](https://en.wikipedia.org/wiki/Digital_asset_management), finding `cps-04` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked.
+**Source:** *Producing Animation* (Winder and Dowlatabadi, 2019): finding `eadp-11` in [research findings](../../../research/FINDINGS.jsonl), status checked. Lifecycle states (creation, approval, live, archived): [Wikipedia's DAM article](https://en.wikipedia.org/wiki/Digital_asset_management), finding `cps-17` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

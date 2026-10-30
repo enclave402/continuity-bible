@@ -27,7 +27,7 @@ canonical: true
 
 A brief says what to make. The [character card](CHARACTER-CARD.md) says how each character looks. Keep the two apart, so a change to a character is one edit to one card.
 
-**Source:** [Creative brief](https://en.wikipedia.org/wiki/Creative_brief), finding `cps-02` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia; it describes advertising agencies, not picture prompts.
+**Source:** [Creative brief](https://en.wikipedia.org/wiki/Creative_brief) (Wikipedia), finding `cps-02` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia is kept because the sources it cites are vendor blogs and no standards body defines a brief. It describes advertising agencies, not picture prompts.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 
