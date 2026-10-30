@@ -7,6 +7,10 @@ canonical_path: docs/2-how-to/HOW-TO-SYNC-A-PRODUCT-REPO.md
 status: active
 last_reviewed: 2026-10-30
 canonical: true
+what: A way to copy files from this bible into a product repo and keep the copies in sync.
+why: A copy someone edits in place drifts away from the bible, and nobody sees it until the two disagree.
+how: List the files in one manifest, pull them once at one commit, and run the check in your CI.
+next: Copy the sync script into your repo and write the manifest in step 1.
 ---
 
 # How to keep a product repo in sync with the bible

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// What this is: the sync check that keeps a product repo's copies of bible files equal to one pinned bible version.
-// Why it exists: the bible defines the framework and a product repo copies parts of it. Copies drift apart quietly
-//   unless a check compares them on every change.
-// How to use it, from the product repo's root folder:
+// What this is: the sync check. It keeps a product repo's copies of bible files the same as one pinned bible version.
+// Why it exists: the bible sets the rules and a product repo copies some of its files. A copy can drift with no one
+//   seeing it, unless a check looks at it on every change.
+// How to use it: run one of these two commands from the product repo's root folder.
 //   node scripts/sync-continuity-ssot.mjs --check <manifest.json>
-//       Checks each copy against the sha256 hash pinned in the manifest. Runs in CI with no bible on the machine.
-//       When CONTINUITY_BIBLE_DIR names a bible checkout, it also checks the pins against the bible itself.
+//       Checks each copy against its pinned hash. It needs no bible, so it runs in CI.
+//       When CONTINUITY_BIBLE_DIR names a bible checkout, it also checks the pins against the bible.
 //   CONTINUITY_BIBLE_DIR=<bible checkout> node scripts/sync-continuity-ssot.mjs --pull <manifest.json> [--ref <commit>] [--migration <file>]
-//       Copies every listed file from the bible at one commit (default: the manifest's "track" ref), then writes that
-//       commit and each file's hash into the manifest. A schema whose hash changes needs --migration.
+//       Copies each listed file from the bible at one commit, then writes that commit and each hash into the
+//       manifest. The default commit is the manifest's track ref. A changed schema needs a migration file.
 // Next step: list a new framework file in the manifest's "files", then run --pull. Guide: docs/2-how-to/HOW-TO-SYNC-A-PRODUCT-REPO.md.
 //
 // The manifest (JSON):

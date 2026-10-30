@@ -7,6 +7,10 @@ canonical_path: docs/3-reference/WARDROBE-EXCLUSIVITY-INVARIANT.md
 status: active
 last_reviewed: 2026-10-30
 canonical: true
+what: The wardrobe exclusivity rule. Each signature item has one owner, and no one else may wear it.
+why: Image tools copy a lead's signature item onto other people in a group picture. A clear rule and a check stop that.
+how: Look up who owns an item in the table, then put it in the avoid list for everyone else in the picture.
+next: Run npm test. The prop check must pass with no clashes.
 ---
 
 <!-- WHAT THIS IS: Single Source of Truth (SSOT) invariant for character signature wardrobe exclusivity. -->

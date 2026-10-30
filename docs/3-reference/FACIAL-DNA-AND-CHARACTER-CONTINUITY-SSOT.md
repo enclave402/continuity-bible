@@ -7,6 +7,10 @@ canonical_path: docs/3-reference/FACIAL-DNA-AND-CHARACTER-CONTINUITY-SSOT.md
 status: active
 last_reviewed: 2026-10-30
 canonical: true
+what: The facial DNA rule. Every person in the registry has five written face facts, and no two people share them.
+why: Image tools drift toward the same face for everyone. Written face facts give each person a face of their own.
+how: Fill in the five fields under facial_dna for each person, then run npm test.
+next: Read the roster table, then check your own cast against it.
 ---
 
 <!-- WHAT THIS IS: Universal Single Source of Truth (SSOT) architecture for character facial bone structure, skin tone, and phenotypic DNA. -->

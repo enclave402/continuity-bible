@@ -1,3 +1,7 @@
+// What this is: a test that every person in the registry has facial DNA, and no two people share the same face facts.
+// Why it exists: image tools give different people the same face. Written face facts, checked here, keep each face its own.
+// How to use it: run node --test test/facial-dna-invariants.test.mjs, or npm test.
+// Next step: when a person is added to the registry, give them a facial_dna block before you run it.
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
