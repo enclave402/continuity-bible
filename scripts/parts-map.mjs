@@ -10,6 +10,10 @@
  *   The output path and the page's own header are in scripts/self-explaining.config.json.
  * Next step: open the map. A part marked "no header yet" or "header not finished" is in the baseline. Give it
  *   its four lines.
+ *
+ * Terms, each with its concept page in the continuity bible:
+ *   self-explaining part: docs/4-explanation/concepts/SELF-EXPLAINING-PART.md
+ *   stale docs (why the map is generated): docs/4-explanation/concepts/STALE-DOCS.md
  */
 import fs from "node:fs";
 import path from "node:path";

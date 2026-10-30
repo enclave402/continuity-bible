@@ -3,7 +3,10 @@
     "what": "The package file. It names this project and lists the commands you can run with npm.",
     "why": "npm reads it. The commands here are the one place each check and tool is started from.",
     "how": "Run npm run verify to run every check. Run npm run followed by a name below to run one.",
-    "next": "Run npm run verify before you finish a change."
+    "next": "Run npm run verify before you finish a change.",
+    "terms": {
+      "gate (npm run verify)": "docs/4-explanation/concepts/GATE.md"
+    }
   },
   "name": "narrative-token-ssot",
   "version": "1.0.0",

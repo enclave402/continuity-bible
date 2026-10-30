@@ -6,6 +6,9 @@
  * How to use it: import fkGrade and pass it a string. It gives back a number, or null when there are no words.
  * Next step: read the notes below on how it counts. It is a guess, so use it to compare text, not to prove a grade.
  *
+ * Terms, each with its concept page in the continuity bible:
+ *   reading grade: docs/4-explanation/concepts/READING-GRADE.md
+ *
  * The score is the Flesch-Kincaid grade level: 0.39 x (words per sentence) + 11.8 x (syllables per word) - 15.59.
  * Syllables are counted by vowel groups, minus a silent final e, at least 1 per word. This is a heuristic.
  */

@@ -466,6 +466,22 @@
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/concepts/TWO-MASTERS.md",
       "status": "active"
+    },
+    {
+      "doc_id": "concept-reading-grade",
+      "title": "Reading grade",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/READING-GRADE.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-shrink-only-list",
+      "title": "Shrink-only list",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/SHRINK-ONLY-LIST.md",
+      "status": "active"
     }
   ]
 }

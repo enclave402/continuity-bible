@@ -3,7 +3,10 @@
   "what": "The parts that had no full header when the self-explaining check began, each with a fingerprint of its text.",
   "why": "The check must not fail on old files all at once. This list lets them wait, and it only shrinks.",
   "how": "Do not add to it. When you fix a part, run node scripts/check-self-explaining.mjs --update-baseline to drop it. A part you edit leaves the list and must pass.",
-  "next": "Pick a part from this list, give it its four lines, and run the update."
+  "next": "Pick a part from this list, give it its four lines, and run the update.",
+  "terms": {
+   "shrink-only list": "docs/4-explanation/concepts/SHRINK-ONLY-LIST.md"
+  }
  },
  "parts": {
   "character-registry.json": "58276192e493acec",
@@ -23,7 +26,6 @@
   "docs/2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md": "43677b766b6b716c",
   "docs/2-how-to/HOW-TO-TRACK-PROPS-AND-WARDROBE.md": "cbd0e1038ad2a963",
   "docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md": "2776bff7f4edcf2e",
-  "docs/3-reference/CAMERA-AND-LOOK-EXPLAINERS-A-D.md": "728f4f8ac502e236",
   "docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md": "a41341e96f35a852",
   "docs/3-reference/CONTINUITY-ISSUE-CLASSES.md": "30e267aadf062743",
   "docs/3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md": "61ee5ac2b8f0f9a9",

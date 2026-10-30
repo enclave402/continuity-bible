@@ -41,7 +41,7 @@ Each kind of file keeps the four lines in its own place:
 | Schema | the schema's top `description`, as the four labelled sentences; every field also has its own `description` |
 | Doc | the front matter, as `what:`, `why:`, `how:`, `next:`, or the four labelled lines near the top of the page |
 
-The four lines read at grade 8 or below. The grade is the Flesch-Kincaid score from `scripts/reading-grade.mjs`. It is a guess based on word and sentence length, so the limit lives in a config file and was set by scoring headers we already trust.
+The four lines read at grade 8 or below. The grade is the [Flesch-Kincaid](READING-GRADE.md) score from `scripts/reading-grade.mjs`. It is a guess based on word and sentence length, so the limit lives in a config file and was set by scoring headers we already trust.
 
 The file's name must match what its header says. A word of the name shows up in the *What this is* or *Why it exists* line. A file called `check-lanes` that mostly checks wording, not lanes, fails.
 
@@ -56,7 +56,7 @@ The file's name must match what its header says. A word of the name shows up in 
 
 Each failure names the file, what is missing and the one next step.
 
-Old parts that had no header when the check began wait in `scripts/self-explaining-baseline.json`. That list only shrinks. A part in it that you edit must get its header in the same change, and a fixed part must leave the list (`--update-baseline` drops it).
+Old parts that had no header when the check began wait in `scripts/self-explaining-baseline.json`. That list is a [shrink-only list](SHRINK-ONLY-LIST.md). A part in it that you edit must get its header in the same change, and a fixed part must leave the list (`--update-baseline` drops it).
 
 `scripts/parts-map.mjs` writes the [parts map](../../3-reference/PARTS-MAP.md): one page listing every part with its *What this is* line. The check fails when the map is out of date.
 

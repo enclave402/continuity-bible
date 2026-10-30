@@ -9,6 +9,13 @@
  *   Add --update-baseline to drop fixed parts from the baseline.
  * Next step: read the first failure. It names the file, the missing line and the one fix.
  *
+ * Terms, each with its concept page in the continuity bible:
+ *   self-explaining part: docs/4-explanation/concepts/SELF-EXPLAINING-PART.md
+ *   rules the computer checks: docs/4-explanation/concepts/RULES-THE-COMPUTER-CHECKS.md
+ *   reading grade: docs/4-explanation/concepts/READING-GRADE.md
+ *   shrink-only list (the baseline): docs/4-explanation/concepts/SHRINK-ONLY-LIST.md
+ *   one home for each fact (no hard coding): docs/4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md
+ *
  * Rules, in order:
  *   1. The part has four labelled lines, in this order: What this is, Why it exists, How to use it, Next step.
  *      A script keeps them in its top comment. A JSON data file keeps them in an "_about" object. A schema keeps
@@ -106,12 +113,21 @@ export function sectionsFromText(text, sections) {
   return { found, order: hits.map((h) => h.key) };
 }
 
-/** The top comment of a script: its first lines with comment marks taken off. */
+/** The top comment of a script: its leading comment lines with comment marks taken off. It ends at the first line of code. */
 function scriptHead(text, headLines) {
-  return text.split("\n").slice(0, headLines)
-    .filter((l) => !l.startsWith("#!"))
-    .map((l) => l.replace(/^\s*(\/\*\*?|\*\/|\*|\/\/+|#+|--|"""|''')\s?/, "").replace(/\*\/\s*$/, ""))
-    .join("\n");
+  const out = [];
+  let block = null;
+  for (const line of text.split("\n").slice(0, headLines)) {
+    if (line.startsWith("#!")) continue;
+    const t = line.trim();
+    if (!block && t && !/^(\/\*|\*|\/\/|#|--|"""|''')/.test(t)) break;
+    if (!block && /^(\/\*|"""|''')/.test(t)) {
+      const open = t.startsWith("/*") ? "*/" : t.slice(0, 3);
+      if (!t.slice(open === "*/" ? 2 : 3).includes(open)) block = open;
+    } else if (block && t.includes(block)) block = null;
+    out.push(line.replace(/^\s*(\/\*\*?|\*\/|\*|\/\/+|#+|--|"""|''')\s?/, "").replace(/(\*\/|"""|''')\s*$/, ""));
+  }
+  return out.join("\n");
 }
 
 function frontMatter(text) {

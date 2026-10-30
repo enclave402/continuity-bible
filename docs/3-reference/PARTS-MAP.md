@@ -8,7 +8,7 @@ status: active
 last_reviewed: 2026-10-30
 canonical: true
 what: A list of every part of this repo, each with one line on what it is.
-why: Open one page and see all the parts. You do not need to open each file to learn what it does.
+why: Open one page and see all the parts. You do not need to open each file to learn what it does. Each part is a [self-explaining part](../4-explanation/concepts/SELF-EXPLAINING-PART.md).
 how: Find a part by its folder. Click it to open it. The line next to it is the part's own What this is line.
 next: Run node scripts/parts-map.mjs after you add a part. The check fails if this page is out of date.
 ---
@@ -19,13 +19,13 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 
 **What this is:** A list of every part of this repo, each with one line on what it is.
 
-**Why it exists:** Open one page and see all the parts. You do not need to open each file to learn what it does.
+**Why it exists:** Open one page and see all the parts. You do not need to open each file to learn what it does. Each part is a [self-explaining part](../4-explanation/concepts/SELF-EXPLAINING-PART.md).
 
 **How to use it:** Find a part by its folder. Click it to open it. The line next to it is the part's own What this is line.
 
 **Next step:** Run node scripts/parts-map.mjs after you add a part. The check fails if this page is out of date.
 
-152 parts. 32 explain themselves. The rest are in the baseline and get their header when next changed.
+154 parts. 35 explain themselves. The rest are in the baseline and get their header when next changed.
 
 ## (top folder)
 
@@ -59,7 +59,7 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 | [docs/2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md](../2-how-to/HOW-TO-TEST-A-CHANGE-BEFORE-YOU-MAKE-IT.md) | *no header yet (in the baseline)* |
 | [docs/2-how-to/HOW-TO-TRACK-PROPS-AND-WARDROBE.md](../2-how-to/HOW-TO-TRACK-PROPS-AND-WARDROBE.md) | *no header yet (in the baseline)* |
 | [docs/2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md](../2-how-to/HOW-TO-WORK-FROM-A-BROWSER-CHATBOT.md) | *no header yet (in the baseline)* |
-| [docs/3-reference/CAMERA-AND-LOOK-EXPLAINERS-A-D.md](CAMERA-AND-LOOK-EXPLAINERS-A-D.md) | *no header yet (in the baseline)* |
+| [docs/3-reference/CAMERA-AND-LOOK-EXPLAINERS-A-D.md](CAMERA-AND-LOOK-EXPLAINERS-A-D.md) | Plain answers for camera and look words, such as lens, camera height, shot size and camera move. |
 | [docs/3-reference/CONCEPT-INDEX.md](CONCEPT-INDEX.md) | the list of every process term this repository explains, each with its own page. |
 | [docs/3-reference/CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md](CONTINUITY-CARD-AND-SHOT-SHEET-FIELDS.md) | *no header yet (in the baseline)* |
 | [docs/3-reference/CONTINUITY-ISSUE-CLASSES.md](CONTINUITY-ISSUE-CLASSES.md) | *no header yet (in the baseline)* |
@@ -86,11 +86,13 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 | [docs/4-explanation/concepts/MADE-BY-RECORD.md](../4-explanation/concepts/MADE-BY-RECORD.md) | A short record kept with a picture that says how it was made: which tool, which inputs, when, and whether it was a new render or an edit. |
 | [docs/4-explanation/concepts/MISTAKE-PROOFING.md](../4-explanation/concepts/MISTAKE-PROOFING.md) | Designing a step so the wrong thing is hard or impossible to do, instead of asking people to be careful. |
 | [docs/4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md](../4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md) | Each fact is written down in exactly one place. Everything else reads it from there. |
+| [docs/4-explanation/concepts/READING-GRADE.md](../4-explanation/concepts/READING-GRADE.md) | A school grade that says how hard a piece of text is to read. Grade 8 means a typical 13-year-old can read it. |
 | [docs/4-explanation/concepts/REQUIRED-REVIEWERS.md](../4-explanation/concepts/REQUIRED-REVIEWERS.md) | A rule in the code host that says who must approve a change to certain files before it can merge. |
 | [docs/4-explanation/concepts/ROOT-CAUSE-AND-LASTING-FIX.md](../4-explanation/concepts/ROOT-CAUSE-AND-LASTING-FIX.md) | Finding the real reason a mistake happened, then changing the process so it cannot happen again. |
 | [docs/4-explanation/concepts/RULES-THE-COMPUTER-CHECKS.md](../4-explanation/concepts/RULES-THE-COMPUTER-CHECKS.md) | A rule written as a script or data file that a computer can test, instead of only as a sentence in a doc. |
 | [docs/4-explanation/concepts/SECOND-CHECKER.md](../4-explanation/concepts/SECOND-CHECKER.md) | The person or tool that checks a piece of work is not the one who made it. |
 | [docs/4-explanation/concepts/SELF-EXPLAINING-PART.md](../4-explanation/concepts/SELF-EXPLAINING-PART.md) | A file, message or page that tells a newcomer with no memory what it is, why it exists, how to use it and the next step. |
+| [docs/4-explanation/concepts/SHRINK-ONLY-LIST.md](../4-explanation/concepts/SHRINK-ONLY-LIST.md) | A list of old problems a check lets through for now. Items can leave the list, but none can join it. |
 | [docs/4-explanation/concepts/STALE-DOCS.md](../4-explanation/concepts/STALE-DOCS.md) | Docs that no longer match what the code or the files do. |
 | [docs/4-explanation/concepts/TWO-MASTERS.md](../4-explanation/concepts/TWO-MASTERS.md) | Two things kept in step: the product, which is a real story, and the framework, which is the method written down so others can use it. |
 | [docs/4-explanation/decisions/ADR-001-public-repository-norms.md](../4-explanation/decisions/ADR-001-public-repository-norms.md) | *no header yet (in the baseline)* |

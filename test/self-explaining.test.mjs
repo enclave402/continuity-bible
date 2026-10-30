@@ -4,6 +4,10 @@
 //   pass a good one. Without tests, the check could quietly stop working.
 // How to use it: run node --test test/self-explaining.test.mjs. npm run verify runs it too.
 // Next step: when you add a rule to the check, add a case here that fails without it.
+//
+// Terms, each with its concept page in the continuity bible:
+//   self-explaining part: docs/4-explanation/concepts/SELF-EXPLAINING-PART.md
+//   backslide (what these tests guard against): docs/4-explanation/concepts/BACKSLIDE.md
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -91,6 +95,18 @@ test("a schema needs labelled sentences in its description and a description on 
 test("a SQL schema keeps the four lines in its -- comments", () => {
   const sql = "-- widgets.sql: the widget table.\n-- What this is: the table that holds widgets.\n-- Why it exists: the app saves widgets here.\n-- How to use it: run it once on a new database.\n-- Next step: add a column when you add a field.\nCREATE TABLE widgets (id int);\n";
   const { dir, cfg } = repo({ "src/widgets.sql": sql });
+  assert.deepEqual(runCheck(dir, cfg).errors, []);
+});
+
+test("a script's header ends at its first line of code", () => {
+  const sh = "#!/usr/bin/env bash\n# What this is: a tool that makes widgets.\n# Why it exists: we need widgets.\n# How to use it: run it.\n# Next step: open the list.\nset -euo pipefail\nextraordinarily_sophisticated_configuration_orchestration_variable=1\n";
+  const { dir, cfg } = repo({ "src/widget-maker.sh": sh });
+  assert.deepEqual(runCheck(dir, cfg).errors, []);
+});
+
+test("a Python docstring header counts", () => {
+  const py = '"""\nwidget_maker.py: makes widgets.\n\nWhat this is: a tool that makes widgets.\nWhy it exists: we need widgets.\nHow to use it: run it.\nNext step: open the list.\n"""\nimport os\n';
+  const { dir, cfg } = repo({ "src/widget_maker.py": py });
   assert.deepEqual(runCheck(dir, cfg).errors, []);
 });
 

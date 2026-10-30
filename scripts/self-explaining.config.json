@@ -3,7 +3,13 @@
   "what": "The rules for the self-explaining parts check. It says which files count as parts, what their header must hold, and the grade limit.",
   "why": "Rules kept in data can change with one edit. The script holds no lists of its own, so nothing is hard coded.",
   "how": "Edit a value, then run node scripts/check-self-explaining.mjs. Each list has a reason next to it. Add a reason when you add an entry.",
-  "next": "Read the concept page named in concept_page to see why each part explains itself."
+  "next": "Read the concept page named in concept_page to see why each part explains itself.",
+  "terms": {
+   "rules the computer checks": "docs/4-explanation/concepts/RULES-THE-COMPUTER-CHECKS.md",
+   "one home for each fact (no hard coding)": "docs/4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md",
+   "reading grade (max_grade)": "docs/4-explanation/concepts/READING-GRADE.md",
+   "shrink-only list (baseline)": "docs/4-explanation/concepts/SHRINK-ONLY-LIST.md"
+  }
  },
  "concept_page": "docs/4-explanation/concepts/SELF-EXPLAINING-PART.md",
  "sections": [
@@ -129,7 +135,10 @@
   "what": "The parts that had no full header when the self-explaining check began, each with a fingerprint of its text.",
   "why": "The check must not fail on old files all at once. This list lets them wait, and it only shrinks.",
   "how": "Do not add to it. When you fix a part, run node scripts/check-self-explaining.mjs --update-baseline to drop it. A part you edit leaves the list and must pass.",
-  "next": "Pick a part from this list, give it its four lines, and run the update."
+  "next": "Pick a part from this list, give it its four lines, and run the update.",
+  "terms": {
+   "shrink-only list": "docs/4-explanation/concepts/SHRINK-ONLY-LIST.md"
+  }
  },
  "parts_map": {
   "output": "docs/3-reference/PARTS-MAP.md",
@@ -148,7 +157,7 @@
    "last_reviewed": "2026-10-30",
    "canonical": "true",
    "what": "A list of every part of this repo, each with one line on what it is.",
-   "why": "Open one page and see all the parts. You do not need to open each file to learn what it does.",
+   "why": "Open one page and see all the parts. You do not need to open each file to learn what it does. Each part is a [self-explaining part](../4-explanation/concepts/SELF-EXPLAINING-PART.md).",
    "how": "Find a part by its folder. Click it to open it. The line next to it is the part's own What this is line.",
    "next": "Run node scripts/parts-map.mjs after you add a part. The check fails if this page is out of date."
   }

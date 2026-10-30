@@ -4,6 +4,9 @@
 # Why it exists: a slip is cheapest to fix before the commit is made. Nothing private may reach this public repo.
 # How to use it: install it once with bash scripts/install-git-hooks.sh. Then git runs it on every commit.
 # Next step: if it stops a commit, read the line it prints, fix that, and commit again.
+#
+# Terms, each with its concept page in the continuity bible:
+#   gate: docs/4-explanation/concepts/GATE.md
 set -u
 ROOT="$(git rev-parse --show-toplevel)"
 node "$ROOT/scripts/cleanup-context-scratch.mjs" >/dev/null 2>&1 || true
