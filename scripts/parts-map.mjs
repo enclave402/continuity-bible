@@ -8,7 +8,8 @@
  *   The map is made from the files, so it never goes out of date by hand.
  * How to use it: run node scripts/parts-map.mjs to write the map. Add --check to only test that it is current.
  *   The output path and the page's own header are in scripts/self-explaining.config.json.
- * Next step: open the map. A part marked "no header yet" is in the baseline; give it its four lines.
+ * Next step: open the map. A part marked "no header yet" or "header not finished" is in the baseline. Give it
+ *   its four lines.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -36,7 +37,7 @@ export function buildMap(repo, cfg, results) {
     out.push(`## ${group}\n\n| Part | What this is |\n|---|---|`);
     for (const r of rows) {
       const rel = path.posix.relative(path.posix.dirname(pm.output), r.file);
-      const what = r.sections.what && !r.problems.length ? cell(r.sections.what) : `*${pm.no_header_text}*`;
+      const what = !r.sections.what ? `*${pm.no_header_text}*` : r.problems.length ? `${cell(r.sections.what)} *${pm.partial_header_text}*` : cell(r.sections.what);
       out.push(`| [${r.file}](${rel}) | ${what} |`);
     }
     out.push("");

@@ -65,7 +65,7 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 | [docs/3-reference/CONTINUITY-ISSUE-CLASSES.md](CONTINUITY-ISSUE-CLASSES.md) | *no header yet (in the baseline)* |
 | [docs/3-reference/INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md](INTRINSIC-VS-SCREEN-SPACE-LATERALITY.md) | *no header yet (in the baseline)* |
 | [docs/3-reference/LAUNCH-READINESS-2026-10-20.md](LAUNCH-READINESS-2026-10-20.md) | *no header yet (in the baseline)* |
-| [docs/3-reference/NAMING.md](NAMING.md) | *no header yet (in the baseline)* |
+| [docs/3-reference/NAMING.md](NAMING.md) | the record of what this project is called, why, what was rejected, what is still free, and what to do about a domain if that day ever comes. It exists so nobody re-runs the research. *(header not finished; in the baseline)* |
 | [docs/3-reference/operator/CONTINUITY-ISSUE-CLASSES.md](operator/CONTINUITY-ISSUE-CLASSES.md) | *no header yet (in the baseline)* |
 | [docs/3-reference/PARTS-MAP.md](PARTS-MAP.md) | A list of every part of this repo, each with one line on what it is. |
 | [docs/3-reference/PROP-DISPOSITION-AND-VISUAL-CONTINUITY-STANDARDS.md](PROP-DISPOSITION-AND-VISUAL-CONTINUITY-STANDARDS.md) | *no header yet (in the baseline)* |
@@ -102,7 +102,7 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 | [docs/4-explanation/decisions/ADR-007-variants-round-trip-and-owners-words.md](../4-explanation/decisions/ADR-007-variants-round-trip-and-owners-words.md) | *no header yet (in the baseline)* |
 | [docs/4-explanation/decisions/ADR-008-simulated-panel-checks.md](../4-explanation/decisions/ADR-008-simulated-panel-checks.md) | *no header yet (in the baseline)* |
 | [docs/4-explanation/REPOSITORY-NORMS.md](../4-explanation/REPOSITORY-NORMS.md) | *no header yet (in the baseline)* |
-| [docs/4-explanation/SEO-AND-DISCOVERY.md](../4-explanation/SEO-AND-DISCOVERY.md) | *no header yet (in the baseline)* |
+| [docs/4-explanation/SEO-AND-DISCOVERY.md](../4-explanation/SEO-AND-DISCOVERY.md) | the search goal for this repository, stated as a single term with the surfaces it must appear on. Not a marketing plan — a register, so the phrase is planted once, in the right places, and never open to negotiation again. *(header not finished; in the baseline)* |
 | [docs/CONTRIBUTING.md](../CONTRIBUTING.md) | *no header yet (in the baseline)* |
 | [docs/README.md](../README.md) | the front door to the docs. It lists every doc by what you want to do. |
 

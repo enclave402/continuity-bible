@@ -110,7 +110,7 @@ export function sectionsFromText(text, sections) {
 function scriptHead(text, headLines) {
   return text.split("\n").slice(0, headLines)
     .filter((l) => !l.startsWith("#!"))
-    .map((l) => l.replace(/^\s*(\/\*\*?|\*\/|\*|\/\/+|#+|"""|''')\s?/, "").replace(/\*\/\s*$/, ""))
+    .map((l) => l.replace(/^\s*(\/\*\*?|\*\/|\*|\/\/+|#+|--|"""|''')\s?/, "").replace(/\*\/\s*$/, ""))
     .join("\n");
 }
 
@@ -186,7 +186,7 @@ export function headerGrade(sections, cfg) {
 export function nameMatches(file, sections, cfg, title = "") {
   const ignored = new Set((cfg.name_words.ignored || []).map((w) => w.toLowerCase()));
   const stem = path.basename(file).replace(/\.[^/]*$/, "");
-  const nameWords = stem.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase().split(/[^a-z]+/).filter((w) => w.length >= cfg.name_words.min_length && !ignored.has(w));
+  const nameWords = stem.replace(/([a-z])([A-Z])/g, (_, a, b) => `${a} ${b}`).toLowerCase().split(/[^a-z]+/).filter((w) => w.length >= cfg.name_words.min_length && !ignored.has(w));
   if (!nameWords.length) return { ok: true, nameWords };
   const text = `${title} ${sections.what || ""} ${sections.why || ""}`.toLowerCase();
   const said = text.split(/[^a-z]+/).filter(Boolean);

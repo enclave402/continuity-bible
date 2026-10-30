@@ -88,6 +88,12 @@ test("a schema needs labelled sentences in its description and a description on 
   assert.match(errors[0], /1 field\(s\) with no "description": size/);
 });
 
+test("a SQL schema keeps the four lines in its -- comments", () => {
+  const sql = "-- widgets.sql: the widget table.\n-- What this is: the table that holds widgets.\n-- Why it exists: the app saves widgets here.\n-- How to use it: run it once on a new database.\n-- Next step: add a column when you add a field.\nCREATE TABLE widgets (id int);\n";
+  const { dir, cfg } = repo({ "src/widgets.sql": sql });
+  assert.deepEqual(runCheck(dir, cfg).errors, []);
+});
+
 test("a doc can keep the four lines in its front matter", () => {
   const doc = "---\ntitle: Widgets\nwhat: A page about widgets.\nwhy: People ask about them.\nhow: Read it top to bottom.\nnext: Make a widget.\n---\n\n# Widgets\n";
   const { dir, cfg } = repo({ "src/WIDGETS.md": doc });
