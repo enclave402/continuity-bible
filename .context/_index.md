@@ -1,6 +1,6 @@
 # `.context/_index.md`: routing index (tier 1)
 
-Entry point for any agent or harness that can read a repository. Under 300 words, flat routes, no rules dump. Root `AGENTS.md` and `CLAUDE.md` point here; the architecture is the same whichever file your tool loads first.
+Entry point for any agent or harness that can read a repository. Under 300 words, flat routes, no rules dump. Root `AGENTS.md`, `CLAUDE.md` and `GEMINI.md` point here; the architecture is the same whichever file your tool loads first.
 
 ## Routes
 

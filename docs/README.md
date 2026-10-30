@@ -1,6 +1,6 @@
 # narrative-token-ssot: docs
 
-Human front door to this repository's documentation. Placement policy: [CONTRIBUTING.md](CONTRIBUTING.md). Registry of canonical docs: [_registry/doc_index.json](_registry/doc_index.json). Unresolved placement: [_registry/open_loops.md](_registry/open_loops.md).
+Human front door to this repository's documentation. Placement policy: [Where docs go](../CONTRIBUTING.md#where-docs-go). Registry of canonical docs: [_registry/doc_index.json](_registry/doc_index.json). Unresolved placement: [_registry/open_loops.md](_registry/open_loops.md).
 
 ## What this repo is
 

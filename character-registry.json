@@ -165,6 +165,7 @@
       "README.md",
       "AGENTS.md",
       "CLAUDE.md",
+      "GEMINI.md",
       "PRODUCT.md",
       "CONTRIBUTING.md",
       "docs/**",
