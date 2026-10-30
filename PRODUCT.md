@@ -1,5 +1,10 @@
 # PRODUCT.md: what this repository ships
 
+**What this is:** the list of what this repo ships, who it is for, and when each piece is done.
+**Why it exists:** so WHAT we build lives in one place, apart from HOW we work (`AGENTS.md`).
+**How to use it:** find the piece you are touching in Deliverables. Then meet its "Done when" line.
+**Next step:** if a spoken change alters what ships, write it here in the same turn.
+
 > Half-life: weeks. A spoken change to WHAT is written here in the same turn. HOW: `AGENTS.md`.
 
 ## Buyer and job
@@ -7,7 +12,7 @@
 - **Buyer:** a layperson who wants to tell an illustrated story with AI without the characters drifting: a parent making a picture book, a coach illustrating a short narrative, a hobbyist making a comic, a writer who wants unique art for a book. Secondary: teams and agents running long-form narrative pipelines.
 - **Job:** keep every character the same person from the first picture to the last, keep the story's names, props and continuity straight across every prompt and page, and recover when a character has already drifted; with whatever model the person has, including a browser chatbot driven by copy and paste.
 - **Positioning (owner, 2026-10-17):** completely layperson-friendly and intuitive first. "Want to use AI to tell stories without AI slop? Want unique art, or to make a book?" LLM-agnostic and API-agnostic: the proof case runs through a browser tab, not an expert node graph or an API, and the engine must still hold. Every anchor policy shows its regeneration bill and the person chooses: the proof case takes the least-regeneration state (consistency throughout over any particular endpoint); `canon` is there for whoever needs the drift undone. Drift resolution is two questions: what must never change, and for everything else fewest redraws, first look or last look.
-- **Not the job:** image generation itself, hosting, any single vendor's agent harness.
+- **Not the job:** making the images (any image tool plugs in), hosting, any single vendor's agent harness. **Part of the job:** saying exactly how each character looks, and checking every image against that.
 
 ## Why this exists: two masters
 
