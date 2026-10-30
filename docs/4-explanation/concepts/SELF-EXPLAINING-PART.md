@@ -64,7 +64,7 @@ Old parts that had no header when the check began wait in `scripts/self-explaini
 
 A self-explaining part is one half of [two masters](TWO-MASTERS.md) working well: anyone can pick up either side. It also slows [stale docs](STALE-DOCS.md). The header check is one of the [rules the computer checks](RULES-THE-COMPUTER-CHECKS.md), and it runs in the repository's [gate](GATE.md).
 
-**Source:** [Memory recognition and recall in user interfaces](https://www.nngroup.com/articles/recognition-and-recall/) (Nielsen Norman Group; loaded 2026-10-30; not yet a research card).
+**Source:** [Memory recognition and recall in user interfaces](https://www.nngroup.com/articles/recognition-and-recall/), finding `cps-15` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Nielsen Norman Group; it is about user interfaces, and applying it to files and messages is this repository's rule.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

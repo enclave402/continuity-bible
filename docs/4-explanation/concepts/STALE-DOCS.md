@@ -27,7 +27,7 @@ canonical: true
 
 Stale docs are a sign that a fact has more than [one home](ONE-HOME-FOR-EACH-FACT.md). A [self-explaining part](SELF-EXPLAINING-PART.md) is harder to let go stale, because the words sit next to the thing.
 
-**Source:** [Docs as code](https://www.writethedocs.org/guide/docs-as-code/) (Write the Docs; loaded 2026-10-30; not yet a research card).
+**Source:** [Docs as code](https://www.writethedocs.org/guide/docs-as-code/), finding `cps-13` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Write the Docs; it supports the fix (docs in the same workflow as code, checked with it), not a definition of stale docs.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

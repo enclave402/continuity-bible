@@ -27,7 +27,7 @@ canonical: true
 
 This repository's main tool is built on this idea: the registry is the home for every name, and the [character card](CHARACTER-CARD.md) is the home for every look. The [rules the computer checks](RULES-THE-COMPUTER-CHECKS.md) catch a fact that was typed in a second place.
 
-**Source:** [Single source of truth](https://en.wikipedia.org/wiki/Single_source_of_truth) (Wikipedia; loaded 2026-10-30; not yet a research card). In this repo's research: finding `accp-27` in [research findings](../../../research/FINDINGS.jsonl), status unchecked.
+**Source:** Andy Hunt and Dave Thomas on the DRY principle, in [Orthogonality and the DRY Principle](https://www.artima.com/articles/orthogonality-and-the-dry-principle) (Artima, 2003): finding `cps-03` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. It is about software; using it for story names and looks is this repository's choice.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

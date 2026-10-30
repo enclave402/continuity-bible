@@ -53,7 +53,8 @@ export function loadConfig(repo, configPath = DEFAULT_CONFIG) {
 function listFiles(repo, skipDirs) {
   try {
     const out = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], { cwd: repo, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], maxBuffer: 256 * 1024 * 1024 });
-    return out.split("\n").filter(Boolean).filter((f) => fs.existsSync(path.join(repo, f)));
+    // During a merge, git lists a conflicted file once per side; keep each path once.
+    return [...new Set(out.split("\n").filter(Boolean))].filter((f) => fs.existsSync(path.join(repo, f)));
   } catch {
     const walk = (dir) => fs.readdirSync(path.join(repo, dir), { withFileTypes: true }).flatMap((e) => {
       const rel = dir ? `${dir}/${e.name}` : e.name;

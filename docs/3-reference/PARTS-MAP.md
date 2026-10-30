@@ -25,18 +25,20 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 
 **Next step:** Run node scripts/parts-map.mjs after you add a part. The check fails if this page is out of date.
 
-154 parts. 35 explain themselves. The rest are in the baseline and get their header when next changed.
+156 parts. 42 explain themselves. The rest are in the baseline and get their header when next changed.
 
 ## (top folder)
 
 | Part | What this is |
 |---|---|
-| [character-registry.json](../../character-registry.json) | *no header yet (in the baseline)* |
+| [AGENTS.md](../../AGENTS.md) | the rules for any coding agent in this repo (Claude Code, Codex, Cursor, Copilot, Gemini, and others). |
+| [character-registry.json](../../character-registry.json) | The one file that holds every character's name, forms and look, plus the props and the rules the checker reads. |
 | [CLAUDE.md](../../CLAUDE.md) | *no header yet (in the baseline)* |
 | [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md) | *no header yet (in the baseline)* |
-| [CONTRIBUTING.md](../../CONTRIBUTING.md) | *no header yet (in the baseline)* |
+| [CONTRIBUTING.md](../../CONTRIBUTING.md) | how to send a change to this repo, and where each kind of file goes. |
+| [GEMINI.md](../../GEMINI.md) | the file Gemini tools load first in this repo. |
 | [package.json](../../package.json) | The package file. It names this project and lists the commands you can run with npm. |
-| [PRODUCT.md](../../PRODUCT.md) | *no header yet (in the baseline)* |
+| [PRODUCT.md](../../PRODUCT.md) | the list of what this repo ships, who it is for, and when each piece is done. |
 | [README.md](../../README.md) | *no header yet (in the baseline)* |
 | [SECURITY.md](../../SECURITY.md) | *no header yet (in the baseline)* |
 
@@ -46,7 +48,7 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 |---|---|
 | [docs/_registry/concept_index.json](../_registry/concept_index.json) | The list of concept terms this repository explains. Each term has one page. The concept link lint (scripts/concept-links.mjs, run by scripts/check-docs.mjs) reads this file. |
 | [docs/_registry/doc_index.json](../_registry/doc_index.json) | The list of every canonical doc: its id, title, kind and path. |
-| [docs/_registry/open_loops.md](../_registry/open_loops.md) | *no header yet (in the baseline)* |
+| [docs/_registry/open_loops.md](../_registry/open_loops.md) | the list of open loops: doc questions nobody has settled yet. |
 | [docs/1-tutorials/START-HERE.md](../1-tutorials/START-HERE.md) | *no header yet (in the baseline)* |
 | [docs/2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md](../2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md) | *no header yet (in the baseline)* |
 | [docs/2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md](../2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md) | *no header yet (in the baseline)* |
@@ -76,9 +78,9 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 | [docs/3-reference/VARIANTS-AND-THE-APPLIED-RECORD.md](VARIANTS-AND-THE-APPLIED-RECORD.md) | *no header yet (in the baseline)* |
 | [docs/4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md](../4-explanation/BEFORE-AND-AFTER-A-DRIFTED-LEAD.md) | *no header yet (in the baseline)* |
 | [docs/4-explanation/concepts/APPROVAL-STEPS.md](../4-explanation/concepts/APPROVAL-STEPS.md) | The stages a picture moves through, such as draft, approved and rejected, and what has to be true to move to the next one. |
-| [docs/4-explanation/concepts/ASSET-LIBRARY.md](../4-explanation/concepts/ASSET-LIBRARY.md) | The one place where finished pictures and other files are kept, each with a name, a version and a status. |
+| [docs/4-explanation/concepts/ASSET-LIBRARY.md](../4-explanation/concepts/ASSET-LIBRARY.md) | The one place where finished pictures and other files are kept, each with a name, a version and details you can search. |
 | [docs/4-explanation/concepts/BACKSLIDE.md](../4-explanation/concepts/BACKSLIDE.md) | Something that used to work and is broken again after a change. |
-| [docs/4-explanation/concepts/BRIEF.md](../4-explanation/concepts/BRIEF.md) | A short note, written before any work starts, that says what to make, who it is for, and what it must show. |
+| [docs/4-explanation/concepts/BRIEF.md](../4-explanation/concepts/BRIEF.md) | A short note, written before the work starts, that says what to make and what it must show. The person asking and the people making both agree to it. |
 | [docs/4-explanation/concepts/CHARACTER-CARD.md](../4-explanation/concepts/CHARACTER-CARD.md) | One page per character that says exactly how they look: face, body, hair, clothes, and the marks that never change. It shows them from the front, the side and the back. |
 | [docs/4-explanation/concepts/DONE-WHEN-LIST.md](../4-explanation/concepts/DONE-WHEN-LIST.md) | A short list, written before the work starts, of what must be true for the work to count as done. |
 | [docs/4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md) | When a picture is wrong, you make a new one from the character's card. You do not paint over part of the old one. |
@@ -105,8 +107,8 @@ next: Run node scripts/parts-map.mjs after you add a part. The check fails if th
 | [docs/4-explanation/decisions/ADR-008-simulated-panel-checks.md](../4-explanation/decisions/ADR-008-simulated-panel-checks.md) | *no header yet (in the baseline)* |
 | [docs/4-explanation/REPOSITORY-NORMS.md](../4-explanation/REPOSITORY-NORMS.md) | *no header yet (in the baseline)* |
 | [docs/4-explanation/SEO-AND-DISCOVERY.md](../4-explanation/SEO-AND-DISCOVERY.md) | the search goal for this repository, stated as a single term with the surfaces it must appear on. Not a marketing plan — a register, so the phrase is planted once, in the right places, and never open to negotiation again. *(header not finished; in the baseline)* |
-| [docs/CONTRIBUTING.md](../CONTRIBUTING.md) | *no header yet (in the baseline)* |
-| [docs/README.md](../README.md) | the front door to the docs. It lists every doc by what you want to do. |
+| [docs/CONTRIBUTING.md](../CONTRIBUTING.md) | a pointer for contributing docs, so the docs folder still leads to its placement rules. |
+| [docs/README.md](../README.md) | the front door to this repo's docs, sorted by what you want to do. |
 
 ## scripts/
 

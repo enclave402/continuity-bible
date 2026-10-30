@@ -15,7 +15,7 @@ canonical: true
 
 **What it is:** When a picture is wrong, you make a new one from the character's card. You do not paint over part of the old one.
 
-**Why it matters:** Each edit of an edit drifts further from the card, and patched areas often do not match the rest. A new render starts from the truth.
+**Why it matters:** Each edit of an edit drifts further from the card. A new render starts from the truth.
 
 **The rule here:** Painting over part of a picture is not used. Every fix is a new render from the card.
 
@@ -25,9 +25,9 @@ canonical: true
 
 ## How it connects
 
-Chained edits lose detail with each pass. Going back to the master each time keeps every picture one step from the truth.
+The paper behind one popular editing model measures a character drifting a little more with each edit in a row, and shows visible flaws after six edits. Going back to the card each time keeps every picture one step from the truth.
 
-**Source:** *FLUX.1 Kontext* (arXiv 2506.15742, 2025): finding `accp-15` in [research findings](../../../research/FINDINGS.jsonl), status checked; finding `accp-14`, status unchecked.
+**Source:** *FLUX.1 Kontext* ([arXiv 2506.15742](https://arxiv.org/abs/2506.15742), 2025): finding `accp-15` in [research findings](../../../research/FINDINGS.jsonl), status checked, including the paper's own measures of drift over successive edits and its note that many edits in a row add visible flaws.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

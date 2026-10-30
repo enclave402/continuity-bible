@@ -13,7 +13,7 @@ canonical: true
 
 *Also called:* digital asset management, DAM, media library, asset register
 
-**What it is:** The one place where finished pictures and other files are kept, each with a name, a version and a status.
+**What it is:** The one place where finished pictures and other files are kept, each with a name, a version and details you can search.
 
 **Why it matters:** When files sit in many folders with loose names, people reuse the wrong one or lose the right one.
 
@@ -27,7 +27,7 @@ canonical: true
 
 The library holds the files. The [approval steps](APPROVAL-STEPS.md) say which files are ready to use.
 
-**Source:** [Digital asset management](https://en.wikipedia.org/wiki/Digital_asset_management) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [What is digital asset management?](https://www.ibm.com/topics/digital-asset-management) (IBM): finding `cps-04` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. One home and one use per picture is this repository's own rule, not the source's.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 
@@ -42,7 +42,7 @@ All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
     "media library",
     "asset register"
   ],
-  "description": "The one place where finished pictures and other files are kept, each with a name, a version and a status.",
+  "description": "The one place where finished pictures and other files are kept, each with a name, a version and details you can search.",
   "inDefinedTermSet": {
     "@type": "DefinedTermSet",
     "name": "Continuity bible concepts"

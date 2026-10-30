@@ -1,5 +1,13 @@
 # Open loops: unresolved placement and documentation debt
 
+**What this is:** the list of open loops: doc questions nobody has settled yet.
+
+**Why it exists:** an open question written down is not lost when the chat that raised it ends.
+
+**How to use it:** read one line per item: the date, what it is, where it sits, and what would close it.
+
+**Next step:** pick one item, close it, and remove its line in the same change.
+
 One line per item: date, what, where it sits now, what would resolve it. Remove a line when it is resolved and say so in the pull request.
 
 - 2026-10-17: the sibling continuity system referenced by `visual_continuity` now has a public form: continuity cards and a shot sheet (ADR-005, `examples/continuity/`). The private manifest shape (`visual_continuity`, `continuity_file`, a `continuity` surface keyed by `scene_name`) remains a separate surface type. Resolve by converging the two (the private matrix exported as cards and shots) or by documenting the mapping.
@@ -13,4 +21,3 @@ One line per item: date, what, where it sits now, what would resolve it. Remove 
   - labelling people CHARACTER 1, 2 in the block instead of by name;
   - the render surface fields (`style_lock`, `must_keep`, `exclude`, `size`, `no_text`, `hands_rule`, ADR-005 amendment) against a style guide's, a [model sheet](../4-explanation/concepts/CHARACTER-CARD.md)'s and a colour script's own fields, and the two-word rule for what counts as a retyped phrase.
 - 2026-10-17: the research findings layer holds the first findings merged from a local-model extraction; the checked subset covers only the sources verified through the arXiv API. Resolve by verifying the conference and vendor sources behind the numeric thresholds and promoting or correcting the findings that rest on them.
-- 2026-10-30: the concept pages in `docs/4-explanation/concepts/` cite outside pages that were loaded on 2026-10-30 but are not research cards yet; each page's Source line says which. Resolve by carding each source in `research/`, then pointing the page at its finding.

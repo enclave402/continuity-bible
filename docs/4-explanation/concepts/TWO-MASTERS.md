@@ -27,7 +27,7 @@ canonical: true
 
 Each fact has [one home](ONE-HOME-FOR-EACH-FACT.md), so the product links to the framework's pages instead of copying them. A [self-explaining part](SELF-EXPLAINING-PART.md) makes either side easy to pick up.
 
-**Source:** [Reference implementation](https://en.wikipedia.org/wiki/Reference_implementation) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** NIST, [Requirements for GSC-IS Reference Implementations](https://web.archive.org/web/20060928231404id_/http://xw2k.sdct.itl.nist.gov/smartcard/document/ref-imp51.pdf) (2003, archived copy): finding `cps-16` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. A reference implementation is the nearest industry idea, not the same thing as two masters.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

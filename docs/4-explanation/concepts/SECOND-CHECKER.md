@@ -27,7 +27,7 @@ canonical: true
 
 This is how a [quality gate](GATE.md) stays honest. In code, [required reviewers](REQUIRED-REVIEWERS.md) do the same job.
 
-**Source:** [Separation of duties](https://en.wikipedia.org/wiki/Separation_of_duties) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** [NIST SP 800-53 Rev. 5](https://doi.org/10.6028/NIST.SP.800-53r5), control AC-5 Separation of Duties: finding `cps-06` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. It is about people and roles; using a different tool to check is this repository's application.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

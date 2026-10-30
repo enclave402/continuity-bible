@@ -27,7 +27,7 @@ canonical: true
 
 The best lasting fix is [mistake-proofing](MISTAKE-PROOFING.md). A test that stops a [backslide](BACKSLIDE.md) keeps the fix in place.
 
-**Source:** [Corrective and preventive action](https://en.wikipedia.org/wiki/Corrective_and_preventive_action) (Wikipedia; loaded 2026-10-30; not yet a research card).
+**Source:** US regulation [21 CFR 820.100, Corrective and preventive action](https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-01-01/title-21?part=820&section=820.100) (text as of 2024; replaced in 2026 by a rule that brings in ISO 13485): finding `cps-14` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. The ask-why-again method is common practice, not from this source.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

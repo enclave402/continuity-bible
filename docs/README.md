@@ -1,14 +1,11 @@
 # narrative-token-ssot: docs
 
-**What this is:** the front door to the docs. It lists every doc by what you want to do.
+**What this is:** the front door to this repo's docs, sorted by what you want to do.
+**Why it exists:** so you can find a guide, a how-to, a fact sheet or a reason without searching.
+**How to use it:** pick the heading that fits your goal: learn, solve, look up, or understand.
+**Next step:** new here? Start with the first tutorial under Learn.
 
-**Why it exists:** you should find the right doc without opening each one.
-
-**How to use it:** pick the section that fits: learn, solve, look up or understand. Then open a link.
-
-**Next step:** new here? Open the first tutorial in section 1.
-
-Human front door to this repository's documentation. Placement policy: [CONTRIBUTING.md](CONTRIBUTING.md). Registry of canonical docs: [_registry/doc_index.json](_registry/doc_index.json). Unresolved placement: [_registry/open_loops.md](_registry/open_loops.md).
+Human front door to this repository's documentation. Placement policy: [Where docs go](../CONTRIBUTING.md#where-docs-go). Registry of canonical docs: [_registry/doc_index.json](_registry/doc_index.json). Unresolved placement: [_registry/open_loops.md](_registry/open_loops.md).
 
 ## What this repo is
 

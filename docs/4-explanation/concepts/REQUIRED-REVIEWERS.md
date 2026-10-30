@@ -27,7 +27,7 @@ canonical: true
 
 This is the code form of a [second checker](SECOND-CHECKER.md).
 
-**Source:** [Code Owners](https://docs.gitlab.com/user/project/codeowners/) (GitLab Docs; loaded 2026-10-30; not yet a research card).
+**Source:** [Code Owners](https://docs.gitlab.com/user/project/codeowners/), finding `cps-12` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. GitLab Docs; machine checks first is this repository's rule.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

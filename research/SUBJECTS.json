@@ -10,7 +10,8 @@
     "continuity-sop": "End-to-end operating procedures for character continuity in a production pipeline.",
     "research-methods": "How this repository ingests, verifies, grades and retrieves research.",
     "agent-workflows": "Coding-agent practices that keep names, continuity and evidence honest in a repository.",
-    "cinematography-language": "Camera, lens, framing, movement, light and colour vocabulary for planning a short film, and the plain-language explainers that let a reader with no film training choose a value."
+    "cinematography-language": "Camera, lens, framing, movement, light and colour vocabulary for planning a short film, and the plain-language explainers that let a reader with no film training choose a value.",
+    "process-quality": "Production and quality-management practice behind the concept pages: briefs, one home for each fact, asset records and approvals, gates, second checkers, mistake-proofing and root-cause fixes."
   },
   "kinds": {
     "owner-research": "Research written or commissioned by the repository owner, including AI deep-research reports they ran. Stored verbatim.",

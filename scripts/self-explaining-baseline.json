@@ -9,11 +9,8 @@
   }
  },
  "parts": {
-  "character-registry.json": "58276192e493acec",
   "CLAUDE.md": "22b64da338a9f1ec",
   "CODE_OF_CONDUCT.md": "6050263e7b3a3dec",
-  "CONTRIBUTING.md": "e3793c8e5745a8ae",
-  "docs/_registry/open_loops.md": "22297b11eda1b9d8",
   "docs/1-tutorials/START-HERE.md": "7e066fd0498d66fc",
   "docs/2-how-to/HOW-TO-ADOPT-THE-REGISTRY.md": "8d589ef2d953a745",
   "docs/2-how-to/HOW-TO-CHECK-A-SIMULATED-PANEL.md": "54ad43d7f6c5ecc2",
@@ -49,8 +46,6 @@
   "docs/4-explanation/decisions/ADR-008-simulated-panel-checks.md": "a8108d13627f0277",
   "docs/4-explanation/REPOSITORY-NORMS.md": "62c96b397185ed84",
   "docs/4-explanation/SEO-AND-DISCOVERY.md": "16d8db6de837f306",
-  "docs/CONTRIBUTING.md": "4b3e27eca025d562",
-  "PRODUCT.md": "bede19bcff028cc5",
   "README.md": "47600ae5e21eaf32",
   "scripts/anchor.mjs": "4ebf7061bb81787b",
   "scripts/build.mjs": "c1aa2d7e57156b64",
