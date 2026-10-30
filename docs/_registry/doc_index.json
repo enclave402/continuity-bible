@@ -278,6 +278,22 @@
       "status": "active"
     },
     {
+      "doc_id": "ref-wardrobe-exclusivity-invariant",
+      "title": "Wardrobe exclusivity invariant",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "reference",
+      "canonical_path": "docs/3-reference/WARDROBE-EXCLUSIVITY-INVARIANT.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-facial-dna-continuity",
+      "title": "Universal facial DNA and character continuity",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "reference",
+      "canonical_path": "docs/3-reference/FACIAL-DNA-AND-CHARACTER-CONTINUITY-SSOT.md",
+      "status": "active"
+    },
+    {
       "doc_id": "continuity-issue-classes",
       "title": "Continuity Issue Classes",
       "triadic_leg": "reference",

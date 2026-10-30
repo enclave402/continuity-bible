@@ -13,15 +13,32 @@ const SCRIPT = path.resolve("scripts/sync-continuity-ssot.mjs");
 // Git hooks export GIT_DIR, GIT_INDEX_FILE and friends. A throwaway repo must never inherit them, or its
 // init and config land in the real repository (seen 2026-10-30: core.bare=true on this repo).
 const CLEAN_ENV = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("GIT_")));
-const git = (dir, ...args) => execFileSync("git", ["-C", dir, ...args], { encoding: "utf8", env: CLEAN_ENV }).trim();
+// Every git call is pinned to its throwaway folder (GIT_DIR, GIT_WORK_TREE) and may not look above the temp folder
+// (GIT_CEILING_DIRECTORIES), so it has no way to reach a real repository. Identity is passed per call, not written.
+const TMP = fs.realpathSync(os.tmpdir());
+const git = (dir, ...args) => execFileSync("git", ["-c", "user.name=test", "-c", "user.email=test@example.com", "-c", "commit.gpgsign=false", ...args], {
+  encoding: "utf8",
+  cwd: dir,
+  env: { ...CLEAN_ENV, GIT_DIR: path.join(dir, ".git"), GIT_WORK_TREE: dir, GIT_CEILING_DIRECTORIES: TMP },
+}).trim();
+const mkTemp = (prefix) => fs.realpathSync(fs.mkdtempSync(path.join(TMP, prefix)));
+
+// The real repository's shared config, fingerprinted before any case runs and checked after the last one.
+function realConfig() {
+  try {
+    const common = execFileSync("git", ["rev-parse", "--path-format=absolute", "--git-common-dir"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    return path.join(common, "config");
+  } catch {
+    return null;
+  }
+}
+const REAL_CONFIG = realConfig();
+const REAL_BEFORE = REAL_CONFIG && fs.existsSync(REAL_CONFIG) ? fs.readFileSync(REAL_CONFIG, "utf8") : null;
 
 /** A throwaway bible repo with one schema and one check, committed; returns its folder and commit. */
 function makeBible() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "sync-bible-"));
+  const dir = mkTemp("sync-bible-");
   git(dir, "init", "-q");
-  git(dir, "config", "user.name", "test");
-  git(dir, "config", "user.email", "test@example.com");
-  git(dir, "config", "commit.gpgsign", "false");
   fs.mkdirSync(path.join(dir, "scripts"));
   fs.writeFileSync(path.join(dir, "scripts/thing.v1.schema.json"), '{"version":1}\n');
   fs.writeFileSync(path.join(dir, "scripts/check-thing.mjs"), "console.log('ok')\n");
@@ -33,7 +50,7 @@ function makeBible() {
 
 /** A throwaway product repo holding only a manifest. */
 function makeProduct() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "sync-product-"));
+  const dir = mkTemp("sync-product-");
   const manifest = {
     _about: "test manifest",
     bible: { commit: "", track: "track" },
@@ -138,4 +155,8 @@ test("usage errors exit 2 and name the fix", () => {
   const r = spawnSync(process.execPath, [SCRIPT], { encoding: "utf8", env: CLEAN_ENV });
   assert.equal(r.status, 2);
   assert.match(r.stderr, /usage/);
+});
+
+test("no case changed the real repository's shared git config", { skip: REAL_BEFORE === null && "not run inside a git checkout" }, () => {
+  assert.equal(fs.readFileSync(REAL_CONFIG, "utf8"), REAL_BEFORE);
 });
