@@ -21,7 +21,9 @@ next: Read the roster table, then check your own cast against it.
 
 # Universal Facial DNA SSOT & Multi-Character Mapping Architecture
 
-> **Amnesiac Landing (8th-Grade Clarity):**  
+*Terms:* [character card](../4-explanation/concepts/CHARACTER-CARD.md) · [one home for each fact](../4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md) · [two masters](../4-explanation/concepts/TWO-MASTERS.md) · [fresh render, not a patch](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md). All terms: [concept index](../3-reference/CONCEPT-INDEX.md).
+
+> **[Amnesiac](../4-explanation/concepts/SELF-EXPLAINING-PART.md) Landing (8th-Grade Clarity):**  
 > **The Biometric School ID Rule:** When a school prints student IDs, it doesn't ask an artist to guess what each kid looks like from memory. It looks up their official photo and measurements in the central computer database.  
 > In our doll universe, **every single character** (not just the main leads!) has an official biometric facial profile locked in the computer: exact jawline shape, skin tone hex, eye shape, brow arch, and hair texture. Whenever an AI draws a group picture, it **must** look up the official profile for *every person on the stage*. No one is ever drawn from memory, and no two characters are ever allowed to share the same face.
 
@@ -99,4 +101,4 @@ No character is exempted. In the "WE REL8!" panoramic lineup:
 | **Tier 1** | **Exact Error** | Jev `milo_soren_differentiation` score < 1.50 | Read raw API output. Identify which facial features collided. |
 | **Tier 2** | **Payload / Compiler** | Prompt JSON in `chatgpt-studio-queue` was written by hand | Run `node scripts/compile-cast-prompt.mjs`. Banned: handwritten facial prompts. |
 | **Tier 3** | **Engineering / Schema** | Registry is missing `facial_dna` for a character | Compiler halts with exit code 1: `MISSING_FACIAL_DNA_ERROR: {{id}} has no facial_dna block.` |
-| **Tier 4** | **Vendor / Diffusion** | Diffusion model bleeds faces across adjacent bounding boxes | Switch to regional inpainting masks using the exact coordinate boxes from `barnaby_box` and facial landmarks. |
+| **Tier 4** | **Vendor / Diffusion** | Diffusion model bleeds faces across adjacent bounding boxes | Switch to regional [inpainting](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md) masks using the exact coordinate boxes from `barnaby_box` and facial landmarks. |

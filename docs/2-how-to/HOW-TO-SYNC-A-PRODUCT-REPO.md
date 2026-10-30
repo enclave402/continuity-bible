@@ -22,6 +22,8 @@ next: Copy the sync script into your repo and write the manifest in step 1.
 
 *Also called:* pinned dependency, vendoring with a lockfile, single source of truth (SSOT), policy as code.
 
+*Terms:* [one home for each fact](../4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md) · [rules the computer checks](../4-explanation/concepts/RULES-THE-COMPUTER-CHECKS.md) · [gate](../4-explanation/concepts/GATE.md) · [two masters](../4-explanation/concepts/TWO-MASTERS.md) · [self-explaining part](../4-explanation/concepts/SELF-EXPLAINING-PART.md). All terms: [concept index](../3-reference/CONCEPT-INDEX.md).
+
 ## The idea in one line
 
 Your repo pulls one fixed version of the bible (a commit), and keeps a fingerprint (a sha256 hash) of every file it copied. The bible never pushes into your repo.

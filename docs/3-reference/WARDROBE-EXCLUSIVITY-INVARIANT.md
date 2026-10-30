@@ -21,7 +21,9 @@ next: Run npm test. The prop check must pass with no clashes.
 
 # Wardrobe Exclusivity Invariant & Anti-Collision Rule
 
-> **Amnesiac Landing:** You do not need prior context to understand this rule. Read the 8th-grade summary, check the schema table, and follow the Karpathian troubleshooting steps below.
+*Terms:* [character card](../4-explanation/concepts/CHARACTER-CARD.md) · [rules the computer checks](../4-explanation/concepts/RULES-THE-COMPUTER-CHECKS.md) · [gate](../4-explanation/concepts/GATE.md) · [fresh render, not a patch](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md). All terms: [concept index](../3-reference/CONCEPT-INDEX.md).
+
+> **[Amnesiac](../4-explanation/concepts/SELF-EXPLAINING-PART.md) Landing:** You do not need prior context to understand this rule. Read the 8th-grade summary, check the schema table, and follow the Karpathian troubleshooting steps below.
 
 ---
 
@@ -89,7 +91,7 @@ When a wardrobe collision or leak occurs, follow the 5-tier diagnostic ladder li
 | **Tier 1** | **Exact Error** | Visual check shows multiple women wearing pink sequin boots | Read the prompt JSON in `chatgpt-studio-queue/`. Verify if `AVOID` contains the prohibited tokens. |
 | **Tier 2** | **Payload / Prompt** | Secondary character prompt omits negative tokens | Inject `prohibited_on_others` directly into the character's regional inpaint prompt. |
 | **Tier 3** | **Engineering / Code** | Prompt generator script failed to copy `prohibited_on_others` | Patch `scripts/compile-shot.mjs` or `scripts/character-registry/check.mjs`. Run `npm test`. |
-| **Tier 4** | **Vendor / Diffusion** | Diffusion model ignores negative prompt across whole image | Switch from monolithic full-canvas prompting to **regional inpainting masks** (Zone-by-Zone). Fail cleanly rather than accepting contaminated images. |
+| **Tier 4** | **Vendor / Diffusion** | Diffusion model ignores negative prompt across whole image | Switch from monolithic full-canvas prompting to **regional [inpainting](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md) masks** (Zone-by-Zone). Fail cleanly rather than accepting contaminated images. |
 
 ---
 
