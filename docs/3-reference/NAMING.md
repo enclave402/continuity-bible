@@ -89,6 +89,6 @@ If the day comes:
 ## Open items this record does not close
 
 - **`package.json` still says `name: "narrative-token-ssot"`.** Renaming the package is a separate, riskier change (import paths, docs, any consumer). Park it until a publish decision exists.
-- **README headline still reads "Narrative Token SSOT".** The repo name and description now lead with Continuity Bible; the README headline is the next surface to align.
+- **README headline still reads "Narrative Token [SSOT](../4-explanation/concepts/ONE-HOME-FOR-EACH-FACT.md)".** The repo name and description now lead with Continuity Bible; the README headline is the next surface to align.
 - **npm publication status unverified.** `npm view narrative-token-ssot` returned nothing on 2026-10-23; treat as unpublished until confirmed.
 - **The `-launch` folder** (`~/narrative-token-ssot-launch`) is not a git repository; it is unattached working material and still carries the old name in its path.
