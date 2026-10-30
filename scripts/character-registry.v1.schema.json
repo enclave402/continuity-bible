@@ -409,6 +409,233 @@
               },
               "description": "Fixed traits: what must never change about this character, as tags a person or a tagger can read off an image (eyes, a scar, heritage markers, a signature garment). The answer to the first drift question: only images carrying every one of them are eligible to be the anchor, and images without them are always on the redraw list. Written by the owner, never inferred from the drifted images."
             },
+            "pronouns": {
+              "description": "How the story refers to this character: { subject, object, possessive, possessive_pronoun?, reflexive?, source }, copied from canon (source names the file), or the word unknown when canon does not say. Never inferred from a picture or a name.",
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "object",
+                    "possessive",
+                    "source"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "she, he, they, it, or the story's own word."
+                    },
+                    "object": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "her, him, them, it."
+                    },
+                    "possessive": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Before a noun: her, his, their, its."
+                    },
+                    "possessive_pronoun": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "On its own: hers, his, theirs."
+                    },
+                    "reflexive": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "herself, himself, themselves."
+                    },
+                    "source": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "The canon file (a #fragment may follow) that states these pronouns, relative to the registry."
+                    }
+                  }
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "unknown"
+                  ]
+                }
+              ]
+            },
+            "model_sheet": {
+              "type": "object",
+              "required": [
+                "anchors",
+                "face",
+                "skin",
+                "hair",
+                "body",
+                "signature_items",
+                "never",
+                "sources"
+              ],
+              "additionalProperties": false,
+              "description": "The vision-checkable model sheet: what a judge model must see (or must not see) in every picture of this character. Every line is one concrete, visible fact a model can answer yes or no to from the image; no mood words, no names (write {{id}}). Facts are copied from canon named in sources, never invented. Field reference: docs/3-reference/REGISTRY-FIELDS.md.",
+              "properties": {
+                "anchors": {
+                  "description": "Approved reference images of this character, relative to the registry, or unknown. A missing file is a gap (generated images are often untracked).",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unknown"
+                      ]
+                    }
+                  ]
+                },
+                "face": {
+                  "description": "Face shape, eyes and brows, nose and mouth, facial hair, marks. One visible fact per line, or the word unknown when canon is silent (then todo says what is missing). Rules: scripts/model-sheet.config.json.",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 3
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unknown"
+                      ]
+                    }
+                  ]
+                },
+                "skin": {
+                  "description": "Skin tone (a hex when canon gives one), undertone, tattoos and marks on the skin. One visible fact per line, or the word unknown when canon is silent (then todo says what is missing). Rules: scripts/model-sheet.config.json.",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 3
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unknown"
+                      ]
+                    }
+                  ]
+                },
+                "hair": {
+                  "description": "Colour, length, texture and cut of the hair, or what covers it. One visible fact per line, or the word unknown when canon is silent (then todo says what is missing). Rules: scripts/model-sheet.config.json.",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 3
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unknown"
+                      ]
+                    }
+                  ]
+                },
+                "body": {
+                  "description": "Build, height relative to others, scale, visible joints or aids (a wheelchair, glasses). One visible fact per line, or the word unknown when canon is silent (then todo says what is missing). Rules: scripts/model-sheet.config.json.",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 3
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unknown"
+                      ]
+                    }
+                  ]
+                },
+                "signature_items": {
+                  "description": "The garments, jewellery and props this character is always or most often shown with. One visible fact per line, or the word unknown when canon is silent (then todo says what is missing). Rules: scripts/model-sheet.config.json.",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 3
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unknown"
+                      ]
+                    }
+                  ]
+                },
+                "never": {
+                  "description": "Things that must never appear on this character in a picture (a wrong hair colour, another character's signature item). One visible fact per line, or the word unknown when canon is silent (then todo says what is missing). Rules: scripts/model-sheet.config.json.",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 3
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unknown"
+                      ]
+                    }
+                  ]
+                },
+                "sources": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "The canon files these facts were copied from, relative to the registry; a #fragment may follow."
+                },
+                "todo": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "What is missing: one line per unknown field, saying which canon is silent. Required when any field is unknown."
+                }
+              }
+            },
             "prompt_tokens": {
               "type": "string",
               "description": "prop or companion: the look a prompt writer compiles from this entry, written once here."
