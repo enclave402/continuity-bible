@@ -89,9 +89,9 @@ When a wardrobe collision or leak occurs, follow the 5-tier diagnostic ladder li
 | :--- | :--- | :--- | :--- |
 | **Tier 0** | **Docs / State** | Unsure which character owns which item | Open this document or [`character-registry.json`](../../character-registry.json). Do not guess. |
 | **Tier 1** | **Exact Error** | Visual check shows multiple women wearing pink sequin boots | Read the prompt JSON in `chatgpt-studio-queue/`. Verify if `AVOID` contains the prohibited tokens. |
-| **Tier 2** | **Payload / Prompt** | Secondary character prompt omits negative tokens | Inject `prohibited_on_others` directly into the character's regional inpaint prompt. |
+| **Tier 2** | **Payload / Prompt** | Secondary character prompt omits negative tokens | Inject `prohibited_on_others` directly into that character's block of the full prompt, then make a [fresh full render](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md). |
 | **Tier 3** | **Engineering / Code** | Prompt generator script failed to copy `prohibited_on_others` | Patch `scripts/compile-shot.mjs` or `scripts/character-registry/check.mjs`. Run `npm test`. |
-| **Tier 4** | **Vendor / Diffusion** | Diffusion model ignores negative prompt across whole image | Switch from monolithic full-canvas prompting to **regional [inpainting](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md) masks** (Zone-by-Zone). Fail cleanly rather than accepting contaminated images. |
+| **Tier 4** | **Vendor / Diffusion** | Diffusion model ignores negative prompt across whole image | Make a **[fresh full render](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md) from the model sheet** with a separate prompt zone per character. Never patch with regional inpainting masks: an inpaint on a figure causes identity drift, and each patch moves the face and look further from the model sheet. Fail cleanly rather than accepting contaminated images. |
 
 ---
 

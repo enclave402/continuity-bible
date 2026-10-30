@@ -60,9 +60,10 @@ One line each. Plain words lead; the trade terms are in the *Also called* list b
 
 ## Session
 
-1. Work on a branch named `<agent>/<task>`. Make it in a worktree at `.worktrees/<agent>-<task>` from `origin/main`. The root tree stays on `main`.
-2. Never push to `main`. Open a merge request on `origin`, the private upstream where all work happens. This public repo gets only finished `main`. A publish step runs `scripts/check-private.mjs` and `npm run verify` first, so work in progress never shows here.
-3. Stage files by name, never `git add .`. Use Conventional Commits with an `Agent: <name>` trailer.
+1. Work on a branch named `<agent>/<task>`. Make it in a worktree at `.worktrees/<agent>-<task>` from `github/main` (`git fetch github main` first). The root tree stays on `main`.
+2. The canonical remote is GitHub: `github` = `github.com/enclave402/continuity-bible`. Fetch from it and push to it. The old GitLab `origin` is retired (it returns 404); do not fetch, push or open merge requests there, and do not use `glab`.
+3. Never push to `main`. Push your branch to `github` and open a pull request with `gh pr create`. A maintainer merges. `scripts/check-private.mjs` and `npm run verify` must pass first.
+4. Stage files by name, never `git add .`. Use Conventional Commits with an `Agent: <name>` trailer.
 
 ## Before you finish
 

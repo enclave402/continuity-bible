@@ -90,4 +90,4 @@ Register every canonical doc in `docs/_registry/doc_index.json` and link it from
 
 Open an issue with the command you ran, its exact output, and what you expected. For a security concern see `SECURITY.md`.
 
-**How changes reach this repository.** Maintainers work in a private upstream and publish finished work here after the publication gate passes. Pull requests from outside contributors are welcome on this repository; a maintainer carries accepted ones into the upstream so the next publish includes them.
+**How changes reach this repository.** This GitHub repository (`github.com/enclave402/continuity-bible`) is the canonical one; there is no separate upstream. Maintainers and contributors alike push a branch and open a pull request here (`gh pr create`); a maintainer merges after `npm run verify` and the publication gate pass.
