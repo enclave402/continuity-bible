@@ -1,4 +1,10 @@
 {
+  "_about": {
+    "what": "The package file. It names this project and lists the commands you can run with npm.",
+    "why": "npm reads it. The commands here are the one place each check and tool is started from.",
+    "how": "Run npm run verify to run every check. Run npm run followed by a name below to run one.",
+    "next": "Run npm run verify before you finish a change."
+  },
   "name": "narrative-token-ssot",
   "version": "1.0.0",
   "description": "Continuity bible for AI story characters: keep them the same from the first picture to the last. One file says who they are; a checker catches the slip.",
@@ -21,7 +27,7 @@
     "check:props": "node scripts/check-prop-continuity.mjs",
     "showcase": "node scripts/showcase.mjs",
     "test:showcase": "node scripts/showcase.mjs --check",
-    "verify": "node scripts/check.mjs && node --test && node scripts/story.mjs check examples/story && node scripts/check-story-invariants.mjs && node scripts/check-prop-continuity.mjs && node scripts/compile-prop-index.mjs --check && npm run check:locks && node scripts/showcase.mjs --check && node scripts/check-private.mjs && node scripts/research/index.mjs --check && node scripts/check-docs.mjs",
+    "verify": "node scripts/check.mjs && node --test && node scripts/story.mjs check examples/story && node scripts/check-story-invariants.mjs && node scripts/check-prop-continuity.mjs && node scripts/compile-prop-index.mjs --check && npm run check:locks && node scripts/showcase.mjs --check && node scripts/check-private.mjs && node scripts/research/index.mjs --check && node scripts/check-docs.mjs && node scripts/check-self-explaining.mjs",
     "private": "node scripts/check-private.mjs",
     "hooks": "bash scripts/install-git-hooks.sh",
     "docs:check": "node scripts/check-docs.mjs",
@@ -34,7 +40,9 @@
     "research:verify": "node scripts/research/verify.mjs",
     "changelog": "git cliff -o CHANGELOG.md",
     "check:locks": "SIG_LOCK_ROOT=examples/signature-lock node scripts/check-signature-lock.mjs signature-locks.json",
-    "prop-index": "node scripts/compile-prop-index.mjs"
+    "prop-index": "node scripts/compile-prop-index.mjs",
+    "check:self-explaining": "node scripts/check-self-explaining.mjs",
+    "parts-map": "node scripts/parts-map.mjs"
   },
   "keywords": [
     "narrative-continuity",
