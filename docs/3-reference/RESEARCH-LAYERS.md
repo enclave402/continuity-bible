@@ -30,7 +30,7 @@ An embedding base URL ending in `/v1` is treated as OpenAI-style (`/v1/embedding
 
 ## Card (`research/corpus/<id>.md`)
 
-Front matter keys: `id` (= file stem), `title`, `kind`, `subjects[]`, `constructs[]`, `evidence`, `source_keys[]`, `origin`, `origin_title`, `captured`, `status` (`raw` | `reviewed`), `summary`, plus provenance written by `card.mjs`: `source_sha256`, `source_words`, `citations`, `cited_primary`, `cited_web`, `figures`. Body: the document verbatim; embedded data-URI figures become files under `corpus/assets/<id>/`. Kinds, subjects, evidence levels and strengths: `research/SUBJECTS.json`.
+Front matter keys: `id` (= file stem), `title`, `kind`, `subjects[]`, `constructs[]`, `evidence`, `source_keys[]`, `origin`, `origin_title`, `captured`, `status` (`raw` | `reviewed`), `summary`, plus [provenance](../4-explanation/concepts/MADE-BY-RECORD.md) written by `card.mjs`: `source_sha256`, `source_words`, `citations`, `cited_primary`, `cited_web`, `figures`. Body: the document verbatim; embedded data-URI figures become files under `corpus/assets/<id>/`. Kinds, subjects, evidence levels and strengths: `research/SUBJECTS.json`.
 
 ## Finding (`research/FINDINGS.jsonl`, one object per line)
 

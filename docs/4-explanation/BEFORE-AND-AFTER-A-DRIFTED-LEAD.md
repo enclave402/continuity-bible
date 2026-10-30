@@ -197,7 +197,7 @@ Each new pair the author approves is added here with its scene name, so this pag
 
 Once the anchor is adopted, her written description has to say the same thing, or the next prompt will pull her back. Three places changed, and one did not:
 
-- Her profile and the story's character bible now describe her skin as light olive with warm undertones, with a dated note quoting the author's decision.
+- Her profile and the story's [character bible](concepts/CHARACTER-CARD.md) now describe her skin as light olive with warm undertones, with a dated note quoting the author's decision.
 - Her continuity card gained a look line, which the story's prompt compiler prints in every scene she is in, and a face block with one sentence that names nobody, so a rename never strands it.
 - Her eye colour, amber-brown, stays written exactly as before. It was the one thing that may never change.
 - Her heritage, one quarter Black on her father's side, stays written exactly as before. It is a fact of the story, not a description of a picture.
