@@ -11,7 +11,7 @@ canonical: true
 
 # Camera and look explainers, groups A to D
 
-> **Amnesiac landing.** You are planning a short animated film and a field asks for a lens, a camera height, a shot size or a camera move. You do not need to know any camera words. Find the term below. Each one has: what it means in plain words, what it does to the picture, when to pick it, what to type if you are not sure, what a tiny sketch of it would show, two mistakes beginners make, and the source we checked it against.
+> **[Amnesiac](../4-explanation/concepts/SELF-EXPLAINING-PART.md) landing.** You are planning a short animated film and a field asks for a lens, a camera height, a shot size or a camera move. You do not need to know any camera words. Find the term below. Each one has: what it means in plain words, what it does to the picture, when to pick it, what to type if you are not sure, what a tiny sketch of it would show, two mistakes beginners make, and the source we checked it against.
 
 ## How to use this page
 
@@ -24,7 +24,7 @@ Time and motion, editing, scale, light, colour, captions and delivery are separa
 
 ## All the terms on this page
 
-- **[A] Look development:** Style frame · Mood board · Reference board · Look bible · Turnaround · Color key · Style lock · Reference-only provenance · License note · Approval status
+- **[A] Look development:** Style frame · Mood board · Reference board · Look bible · [Turnaround](../4-explanation/concepts/CHARACTER-CARD.md) · Color key · Style lock · Reference-only [provenance](../4-explanation/concepts/MADE-BY-RECORD.md) · License note · Approval status
 - **[B] Optics / lens:** Focal length (mm) · 35 mm-equivalent focal length · Angle of view / field of view · Crop factor · Aperture (f-stop) · T-stop · Focus distance · Focal plane / plane of focus · Depth of field · Circle of confusion · Hyperfocal distance · Bokeh · Tilt-shift · Scheimpflug principle · Miniature faking (synthetic tilt-shift) · Focus band position · Focus band height · Blur falloff · Lens distortion: barrel · Lens distortion: pincushion · Projection: perspective vs orthographic / isometric
 - **[C] Camera position and framing:** Camera height · Elevation / tilt angle · High angle · Low angle · Bird's-eye view · Top-down / overhead · Azimuth · Dutch angle (roll) · Extreme close-up (ECU) · Close-up (CU) · Medium close-up (MCU) · Medium shot (MS) · Medium wide / cowboy shot (MWS) · Wide shot / long shot (WS / LS) · Extreme wide shot (EWS / ELS) · Establishing shot · Insert · Two-shot · Over-the-shoulder (OTS) · Point of view (POV) · Headroom · Lead room / nose room · Rule of thirds · Eyeline · 180-degree rule / screen direction
 - **[D] Camera movement:** Pan · Tilt · Dolly push-in · Dolly pull-out · Truck · Pedestal · Crane / jib · Arc / orbit · Zoom (optical) · Digital zoom · Rack focus / focus pull · Handheld · Locked-off · Drone / aerial · Parallax · Move speed · Easing (ease-in / ease-out)

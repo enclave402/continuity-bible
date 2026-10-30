@@ -11,7 +11,7 @@ canonical: true
 
 # Repository norms
 
-How this public single-source-of-truth repository is run, and why. The short, binding version for agents is `AGENTS.md`; this page is the reasoning. Decision record: [ADR-001](decisions/ADR-001-public-repository-norms.md).
+How this public [single-source-of-truth](concepts/ONE-HOME-FOR-EACH-FACT.md) repository is run, and why. The short, binding version for agents is `AGENTS.md`; this page is the reasoning. Decision record: [ADR-001](decisions/ADR-001-public-repository-norms.md).
 
 ## 1. Public by default, private by construction
 
