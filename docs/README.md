@@ -1,5 +1,10 @@
 # narrative-token-ssot: docs
 
+**What this is:** the front door to this repo's docs, sorted by what you want to do.
+**Why it exists:** so you can find a guide, a how-to, a fact sheet or a reason without searching.
+**How to use it:** pick the heading that fits your goal: learn, solve, look up, or understand.
+**Next step:** new here? Start with the first tutorial under Learn.
+
 Human front door to this repository's documentation. Placement policy: [Where docs go](../CONTRIBUTING.md#where-docs-go). Registry of canonical docs: [_registry/doc_index.json](_registry/doc_index.json). Unresolved placement: [_registry/open_loops.md](_registry/open_loops.md).
 
 ## What this repo is

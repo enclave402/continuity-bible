@@ -1,6 +1,11 @@
 # `.context/_index.md`: routing index (tier 1)
 
-Entry point for any agent or harness that can read a repository. Under 300 words, flat routes, no rules dump. Root `AGENTS.md`, `CLAUDE.md` and `GEMINI.md` point here; the architecture is the same whichever file your tool loads first.
+**What this is:** the map an agent reads first, to find the right file for a task.
+**Why it exists:** so an agent loads only what the task needs, not the whole repo.
+**How to use it:** find your task in Routes and open the files it names.
+**Next step:** for rules, read `AGENTS.md`; for what ships, read `PRODUCT.md`.
+
+Under 300 words, flat routes, no rules dump. Root `AGENTS.md`, `CLAUDE.md` and `GEMINI.md` point here; the architecture is the same whichever file your tool loads first.
 
 ## Routes
 
