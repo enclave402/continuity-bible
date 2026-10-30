@@ -23,6 +23,7 @@ One registry file holds every character's name once; every source holds `{{id}}`
 - [Enforce story invariants, affordances, and layered wardrobe](2-how-to/HOW-TO-ENFORCE-STORY-INVARIANTS-AND-AFFORDANCES.md): stop AI from reintroducing banished plot points, prevent backwards phones, decompose garment layers, and declare multi-angle turnaround sheets.
 - [Track props and wardrobe](2-how-to/HOW-TO-TRACK-PROPS-AND-WARDROBE.md): build the prop index, check it, write layered outfits and a four-view turnaround, and keep a companion as a collar-tag token.
 - [Lock each lead's signature wardrobe](2-how-to/HOW-TO-LOCK-SIGNATURE-WARDROBES.md): rule SIG-LOCK-001 as card data and a check: no character wears another lead's signature item, leads never overlap, live violations are tracked to a task, one engine shared across repositories.
+- [Keep a product repo in sync with the bible](2-how-to/HOW-TO-SYNC-A-PRODUCT-REPO.md): one manifest pins a bible commit and a sha256 per copied file; CI fails on a copy edited in place; a changed schema moves the pin together with a migration.
 
 ## 3. Look up (`3-reference/`)
 

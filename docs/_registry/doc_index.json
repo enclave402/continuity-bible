@@ -270,6 +270,14 @@
       "status": "active"
     },
     {
+      "doc_id": "how-to-sync-a-product-repo",
+      "title": "How to keep a product repo in sync with the bible",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "solve",
+      "canonical_path": "docs/2-how-to/HOW-TO-SYNC-A-PRODUCT-REPO.md",
+      "status": "active"
+    },
+    {
       "doc_id": "continuity-issue-classes",
       "title": "Continuity Issue Classes",
       "triadic_leg": "reference",
