@@ -27,7 +27,7 @@ canonical: true
 
 The score comes from `scripts/reading-grade.mjs`. It counts words per sentence and syllables per word, so it is a guess: use it to compare text, not to prove a grade. Every [self-explaining part](SELF-EXPLAINING-PART.md) must pass it.
 
-**Source:** [Flesch-Kincaid readability tests](https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests) (Wikipedia; not opened in this change, UNVERIFIED; not yet a research card).
+**Source:** Kincaid, Fishburne, Rogers and Chissom, [Derivation of new readability formulas for Navy enlisted personnel](https://stars.library.ucf.edu/istlibrary/56/) (Research Branch Report 8-75, 1975; record page loaded 2026-10-30). Its full text could not be opened: the PDF sits behind a bot check (HTTP 403), so the formula's numbers come from [Flesch-Kincaid readability tests](https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests) (Wikipedia; loaded 2026-10-30). In this repo's research: findings `rgrs-01` and `rgrs-02` in [research findings](../../../research/FINDINGS.jsonl), status checked; card `reading-grade-and-ratchet-sources`.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 

@@ -27,7 +27,7 @@ canonical: true
 
 A shrink-only list stops a [backslide](BACKSLIDE.md): the count can only go down. It is one of the [rules the computer checks](RULES-THE-COMPUTER-CHECKS.md).
 
-**Source:** [Ratchets](https://qntm.org/ratchet) (qntm; not opened in this change, UNVERIFIED; not yet a research card).
+**Source:** [Ratchets in software development](https://qntm.org/ratchet) (qntm, 2021; loaded 2026-10-30). No paper or standard defines the term; this practitioner's post is the clearest first-hand account found. In this repo's research: finding `rgrs-03` in [research findings](../../../research/FINDINGS.jsonl), status checked; card `reading-grade-and-ratchet-sources`.
 
 All terms: [concept index](../../3-reference/CONCEPT-INDEX.md).
 
