@@ -2,13 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/enclave402/narrative-token-ssot/blob/main/scripts/wardrobe-and-props.v1.schema.json",
   "title": "Wardrobe and Props Registry, version 1",
-  "description": "Single Source of Truth for character wardrobe layers, fabric drape, garment decomposition, and physical prop placement. Prevents AI diffusion conflation (e.g., bare legs under long overcoats, missing cowl hoods, ambiguous wrist placements).",
+  "description": "What this is: the shape of the wardrobe and props file. It holds each character's clothes in layers, how cloth falls, and where each prop sits. Why it exists: image tools mix up clothes and props, such as bare legs under a long coat, a lost hood, or a watch on the wrong wrist. One file of facts stops that. How to use it: write your wardrobe-and-props.json to this shape; the prop check reads it. Next step: add a character under characters, with layers, props and a turnaround.",
   "type": "object",
   "required": ["characters"],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
-    "_about": { "type": "object" },
+    "$schema": { "type": "string", "description": "The address of the JSON Schema version this file follows." },
+    "_about": { "type": "object", "description": "Notes for a person reading the file: what it is and how to use it." },
     "characters": {
       "type": "object",
       "description": "Wardrobe and props keyed by canonical character registry ID.",

@@ -102,7 +102,7 @@ In [`scripts/wardrobe-and-props.v1.schema.json`](../../scripts/wardrobe-and-prop
 
 ## 5. The Verification Linter Gate (`check-prop-continuity.mjs`)
 
-A schema alone does not prevent regressions; it must be backed by an automated CI gate. The gate enforces:
+A schema alone does not prevent [regressions](../4-explanation/concepts/BACKSLIDE.md); it must be backed by an automated CI gate. The gate enforces:
 
 1. **Schema Validation:** Rejects any prop marked with `worn_on: "LEFT_WRIST_ONLY"` or `"RIGHT_WRIST_ONLY"` that lacks `intrinsic_laterality` and `screen_projection_rules`.
 2. **Prompt Coordinate Disambiguation:** Fails any prompt that mixes screen coordinates (`"Left: ... Right: ..."`) with anatomical words (`"left wrist"`) without explicit projection.
