@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
  * check-docs.mjs: the docs registry gate. Every canonical document is registered, every registered path exists, front
- * matter is present and consistent, and docs/README.md links each one.
+ * matter is present and consistent, and docs/README.md links each one. It also runs the concept link lint
+ * (scripts/concept-links.mjs): the first use of a term in a doc links to the term's concept page.
  *
  *   node scripts/check-docs.mjs [<repo-root>]
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkConcepts } from "./concept-links.mjs";
 
 const repo = path.resolve(process.argv[2] || path.join(path.dirname(fileURLToPath(import.meta.url)), ".."));
 const docs = path.join(repo, "docs");
@@ -40,5 +42,7 @@ for (const file of walk(docs).filter((f) => f.endsWith(".md"))) {
   const parts = rel.split("/");
   if (parts.length > 2 && !["c4", "arc42", "1-tutorials", "2-how-to", "3-reference", "4-explanation", "_registry"].includes(parts[1])) errors.push(`${rel}: not under a known leg (see docs/CONTRIBUTING.md)`);
 }
+// Concept link lint: first use of a term links to its concept page; no orphan pages. Terms: docs/_registry/concept_index.json.
+errors.push(...checkConcepts(repo));
 if (errors.length) { for (const e of errors) process.stderr.write(`${e}\n`); process.stderr.write(`docs gate: fail (${errors.length})\n`); process.exit(1); }
 console.log(`docs gate: pass (${registered.size} registered doc(s))`);
