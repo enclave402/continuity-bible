@@ -49,7 +49,7 @@ A row is written only when the object is on that page:
 
 ## Wardrobe layers
 
-`examples/continuity/wardrobe-and-props.json` is the clothes file the continuity cards link. An outfit's `layers` are `outer`, `hood_or_cowl`, `top`, `bottom`, `footwear`, and `fabric_spec`. `negative_tokens` are the mistakes that outfit tends to cause (a bare leg, a hood that is not attached). The three people in the public cast each have two outfits and a turnaround.
+`examples/continuity/wardrobe-and-props.json` is the clothes file the continuity cards link. An outfit's `layers` are `outer`, `hood_or_cowl`, `top`, `bottom`, `footwear`, and `fabric_spec`. `negative_tokens` are the mistakes that outfit tends to cause (a bare leg, a hood that is not attached). The three people in the public cast each have two outfits and a [turnaround](../4-explanation/concepts/CHARACTER-CARD.md).
 
 ## Turnaround
 

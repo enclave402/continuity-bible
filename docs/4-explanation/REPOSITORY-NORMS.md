@@ -11,7 +11,7 @@ canonical: true
 
 # Repository norms
 
-How this public single-source-of-truth repository is run, and why. The short, binding version for agents is `AGENTS.md`; this page is the reasoning. Decision record: [ADR-001](decisions/ADR-001-public-repository-norms.md).
+How this public [single-source-of-truth](concepts/ONE-HOME-FOR-EACH-FACT.md) repository is run, and why. The short, binding version for agents is `AGENTS.md`; this page is the reasoning. Decision record: [ADR-001](decisions/ADR-001-public-repository-norms.md).
 
 ## 1. Public by default, private by construction
 
@@ -45,7 +45,7 @@ The product core is files, git and gates. `AGENTS.md`, `CLAUDE.md` and `.context
 
 Work happens on `<agent>/<task>` or `<you>/<task>` branches, for agents in a linked worktree under `.worktrees/` so the root tree stays on `main`. Files are staged by name. Commits follow Conventional Commits, carry an `Agent: <name>` trailer when an agent wrote them, and `CHANGELOG.md` is generated from them. Every change ships as a pull request that a maintainer merges.
 
-When a pull request conflicts with `main`, merge `origin/main` in the worktree (`git fetch origin main && git merge origin/main`): keep `main`'s newer wording where both sides touched a line, add the branch's lines beside it, and run `npm run verify`. An agent app's own base-branch sync may refuse a worktree the agent created; the manual merge is the path.
+The canonical remote is GitHub (`github.com/enclave402/continuity-bible`, named `github` in maintainer checkouts); pull requests open there with `gh pr create`. When a pull request conflicts with `main`, merge `github/main` in the worktree (`git fetch github main && git merge github/main`): keep `main`'s newer wording where both sides touched a line, add the branch's lines beside it, and run `npm run verify`. An agent app's own base-branch sync may refuse a worktree the agent created; the manual merge is the path.
 
 ## 9. Evidence before claims
 
