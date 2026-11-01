@@ -1,0 +1,30 @@
+{
+  "_about": {
+    "what": "A small example art manifest: one slot per picture on a story's pages.",
+    "why": "It shows the slot shape and feeds the example list, so the builder is tested on real data.",
+    "how": "Run node scripts/art-manifest.mjs examples/art-manifest/manifest.json --out examples/art-manifest/ART-LIST.md.",
+    "next": "Copy this file into your project, keep the slots key, and add your own slots."
+  },
+  "slots": {
+    "_about": "Slot id -> what the slot shows. Shape: scripts/art-manifest-slot.v1.schema.json.",
+    "cover-hero": {
+      "src": "img/cover-hero-v2.png",
+      "alt": "A kitchen table at night, lit by a glowing phone.",
+      "alternates": ["img/cover-hero-v1.png"],
+      "source": "fresh render from the character card",
+      "purpose": "the first picture a reader sees; sets the mood",
+      "section": "cover",
+      "cast": "{{sam-hayes}}",
+      "layout": "full width, text on the left third",
+      "record": "examples/art.json"
+    },
+    "key-closeup": {
+      "status": "placeholder",
+      "label": "Brass key close-up",
+      "purpose": "shows the key before it matters",
+      "section": "chapter 2",
+      "layout": "small inset beside the text",
+      "carries": ["{{brass-key}} on its red thread"]
+    }
+  }
+}

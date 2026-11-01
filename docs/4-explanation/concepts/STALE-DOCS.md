@@ -5,7 +5,7 @@ triadic_leg: diataxis
 diataxis_mode: understand
 canonical_path: docs/4-explanation/concepts/STALE-DOCS.md
 status: active
-last_reviewed: 2026-10-30
+last_reviewed: 2026-11-01
 canonical: true
 ---
 
@@ -26,6 +26,8 @@ canonical: true
 ## How it connects
 
 Stale docs are a sign that a fact has more than [one home](ONE-HOME-FOR-EACH-FACT.md). A [self-explaining part](SELF-EXPLAINING-PART.md) is harder to let go stale, because the words sit next to the thing.
+
+The surest fix is a list built from the data, not typed. The art list is one: an art manifest holds each picture slot in the shape of `scripts/art-manifest-slot.v1.schema.json`, and `scripts/art-manifest.mjs` writes the list people read. Its `--check` fails when the saved list differs from the data, so a hand edit or a forgotten rebuild cannot slip through. Example: `examples/art-manifest/`.
 
 **Source:** [Docs as code](https://www.writethedocs.org/guide/docs-as-code/), finding `cps-13` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Write the Docs; it supports the fix (docs in the same workflow as code, checked with it), not a definition of stale docs.
 
