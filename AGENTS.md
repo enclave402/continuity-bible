@@ -23,6 +23,30 @@ Ids live in `character-registry.json`. An unknown token fails the build on purpo
 
 Pronouns follow the same rule. They come from the character's entry, never from memory. Pronoun tokens such as `{{sam-hayes:subject}}` are planned. The build does not read them yet.
 
+### When something fails
+
+Keep the work moving. Each time:
+
+1. Read the live state: the page, the log, git. See what really happened.
+2. Find the exact cause.
+3. Fix it and carry on.
+4. If that way stays closed, take another way the maintainer already allows: another account, tool or browser profile.
+5. If a tool or skill caused it, fix that tool or skill in the same turn, so the next run goes through.
+
+Then go back to the work. Asking the maintainer comes last, after every step above.
+
+### When a call times out or hits a rate limit
+
+Neither one is a blocker. Each is a step in fixing the problem.
+
+1. Read the exact error: the status (429, 503, a timeout), any Retry-After or reset time, and which limit it is (per minute, per day, per account).
+2. Name the cause from what you read: a short limit or a slow reply, a limit that will not clear soon (a daily quota, an account cap), or a fault in the call itself (size, payload, sign-in).
+3. A short limit or a slow reply: retry when the service says (its Retry-After). If it does not say, wait 1 s, 2 s, 4 s, 8 s and so on, up to 60 s, with a little random jitter.
+4. A limit that will not clear soon: carry the task on another way the maintainer already allows (another account, key, model or provider).
+5. A fault in the call: fix the call, then send it.
+6. After a timeout, check whether the call went through before you send it again.
+7. Each new try carries the change the diagnosis called for. The same error twice means the cause is something else: go back to step 1 with what you now know.
+
 ## Ethos
 
 One line each. Plain words lead; the trade terms are in the *Also called* list below.
