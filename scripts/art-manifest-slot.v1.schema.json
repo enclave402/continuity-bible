@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/enclave402/continuity-bible/blob/main/scripts/art-manifest-slot.v1.schema.json",
+  "title": "Art manifest slot, version 1",
+  "description": "What this is: the shape of one slot in an art manifest. A slot is one place a picture goes, and the manifest lists every slot under 'slots'. Why it exists: the list people read is built from this data, so it cannot drift from what the pages show. How to use it: write each slot to this shape; scripts/art-manifest.mjs checks it and writes the list. Next step: add a field here before you add it to a slot. Uses only type, enum, minLength, items and additionalProperties, so small checkers can read it.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "src": { "type": "string", "minLength": 1, "description": "the file the slot shows now, as a path from the project root" },
+    "alt": { "type": "string", "description": "the alt text a screen reader says; an empty string marks a picture that only decorates" },
+    "alternates": { "type": "array", "description": "kept versions that are not shown now; swap one in by changing src", "items": { "type": "string", "minLength": 1 } },
+    "source": { "type": "string", "minLength": 1, "description": "where the art came from, in a few words" },
+    "carries": { "type": "array", "description": "what the slot has to show, one item each", "items": { "type": "string", "minLength": 1 } },
+    "status": { "type": "string", "enum": ["placeholder"], "description": "placeholder means no art yet: the page shows a labelled empty box. Leave it out when the slot shows src" },
+    "label": { "type": "string", "minLength": 1, "description": "the words a placeholder box shows" },
+    "purpose": { "type": "string", "minLength": 1, "description": "what the slot is for, in plain words" },
+    "section": { "type": "string", "minLength": 1, "description": "the page or part of a page the slot sits in" },
+    "cast": { "type": "string", "minLength": 1, "description": "who is in the picture; names only as {{id}} tokens from the character registry" },
+    "layout": { "type": "string", "minLength": 1, "description": "how the picture sits on the page: size, crop, what overlaps it" },
+    "record": { "type": "string", "minLength": 1, "description": "the path to the slot's made-by record or brief, when it lives in its own file" }
+  }
+}
