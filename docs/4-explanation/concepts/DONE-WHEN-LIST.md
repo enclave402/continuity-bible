@@ -25,7 +25,7 @@ canonical: true
 
 ## How it connects
 
-A [quality gate](GATE.md) is a done-when list that a computer checks.
+A [quality gate](GATE.md) is a done-when list that a computer checks. For a picture, the character's card is the done-when list, and the [on-model check](ON-MODEL-CHECK.md) turns each card line into a yes or no test.
 
 **Source:** [Acceptance testing](https://en.wikipedia.org/wiki/Acceptance_testing) (Wikipedia), finding `cps-07` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. Wikipedia is kept because the IEEE and ISO definitions it quotes are paywalled. The Agile Alliance glossary entry on the Definition of Done agrees, but its site refused the repository's verify tool.
 
