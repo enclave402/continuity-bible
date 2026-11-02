@@ -25,7 +25,7 @@ canonical: true
 
 ## How it connects
 
-This is how a [quality gate](GATE.md) stays honest. In code, [required reviewers](REQUIRED-REVIEWERS.md) do the same job.
+This is how a [quality gate](GATE.md) stays honest. In code, [required reviewers](REQUIRED-REVIEWERS.md) do the same job. For pictures, the [on-model check](ON-MODEL-CHECK.md) is the second checker: its judge must come from another model family than the picture maker.
 
 **Source:** [NIST SP 800-53 Rev. 5](https://doi.org/10.6028/NIST.SP.800-53r5), control AC-5 Separation of Duties: finding `cps-06` in the [concept page sources card](../../../research/corpus/concept-page-sources.md), status checked. It is about people and roles; using a different tool to check is this repository's application.
 

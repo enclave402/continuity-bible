@@ -476,6 +476,30 @@
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/concepts/TWO-MASTERS.md",
       "status": "active"
+    },
+    {
+      "doc_id": "concept-on-model-check",
+      "title": "On-model check",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/ON-MODEL-CHECK.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-golden-set",
+      "title": "Golden set",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/GOLDEN-SET.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "ref-on-model-check-layers",
+      "title": "On-model check layers",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/ON-MODEL-CHECK-LAYERS.md",
+      "status": "active"
     }
   ]
 }

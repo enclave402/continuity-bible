@@ -140,6 +140,20 @@
       "page": "docs/4-explanation/concepts/TWO-MASTERS.md",
       "also_called": ["product and framework", "reference implementation", "instance and template"],
       "match": ["two masters", "reference implementation"]
+    },
+    {
+      "id": "on-model-check",
+      "term": "On-model check",
+      "page": "docs/4-explanation/concepts/ON-MODEL-CHECK.md",
+      "also_called": ["on-model", "off-model", "automated visual QA", "acceptance testing for images", "reference-based identity verification", "question-based faithfulness (TIFA, DSG)"],
+      "match": ["on-model check", "off-model"]
+    },
+    {
+      "id": "golden-set",
+      "term": "Golden set",
+      "page": "docs/4-explanation/concepts/GOLDEN-SET.md",
+      "also_called": ["golden dataset", "labelled evaluation set", "ground truth", "calibration set", "Cohen's kappa"],
+      "match": ["golden set"]
     }
   ]
 }
