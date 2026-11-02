@@ -7,7 +7,9 @@
  *   node scripts/check-private.mjs <file> ... # named files (a document about to be added)
  *
  * What it looks for comes from scripts/check-private.config.json (regex patterns with names, an allow list, files to skip)
- * plus an optional, gitignored list of your own private words: PRIVATE_TERMS_FILE or ./.private-terms, one term per line.
+ * plus an optional, gitignored list of your own private words, one term per line, found by scripts/private-terms.mjs:
+ * PRIVATE_TERMS_FILE, else ./.private-terms, else the main worktree's .private-terms when you run it from a linked worktree.
+ * The last line says how many words loaded and from where.
  * A private term is reported by its line number in that file, never by its text, so the gate's own output stays safe to
  * paste into an issue. Exit 1 on any hit, one line per hit with the file, line and pattern name.
  */
@@ -15,6 +17,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { privateTermsSource, readPrivateTerms } from "./private-terms.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..");
@@ -45,17 +48,11 @@ function contentOf(rel) {
   return buf.toString("utf8");
 }
 
-/** Your own private words, if you keep a list; the file itself is gitignored. */
-function privateTerms() {
-  const file = process.env.PRIVATE_TERMS_FILE || path.join(ROOT, ".private-terms");
-  if (!fs.existsSync(file)) return [];
-  return fs.readFileSync(file, "utf8").split("\n").map((l, i) => [l.trim(), i + 1]).filter(([t]) => t && !t.startsWith("#"));
-}
-
 const patterns = Object.entries(config.patterns).map(([name, src]) => [name, new RegExp(src, "g")]);
 const allow = config.allow || {};
 const skip = (config.skip || []).map((g) => new RegExp(`^${g.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*")}$`));
-const terms = privateTerms();
+const termsSource = privateTermsSource(ROOT);
+const terms = readPrivateTerms(termsSource.file);
 const hits = [];
 let scanned = 0;
 
@@ -83,4 +80,4 @@ if (hits.length) {
   process.stderr.write(`publication gate: fail (${hits.length} hit(s) in ${scanned} file(s)). Fix: remove the value, move it to the environment or a gitignored file, or add a narrow allow entry in scripts/check-private.config.json with a reason.\n`);
   process.exit(1);
 }
-process.stdout.write(`publication gate: pass (${scanned} file(s), ${patterns.length} patterns, ${terms.length} private term(s))\n`);
+process.stdout.write(`publication gate: pass (${scanned} file(s), ${patterns.length} patterns, ${terms.length} private term(s) ${termsSource.label ? `from ${termsSource.label}` : "(no private terms file found)"})\n`);
