@@ -1,4 +1,10 @@
 {
+  "_about": {
+    "what": "The list of every canonical doc: its id, title, kind and path.",
+    "why": "The docs check reads it. A doc that is not on this list, or a path that is gone, fails the check.",
+    "how": "Add one entry when you add a doc, and link the doc from docs/README.md.",
+    "next": "Run node scripts/check-docs.mjs."
+  },
   "schema_version": 1,
   "repository": "narrative-token-ssot",
   "updated_at": "2026-10-23T14:17:08.621359-04:00",
@@ -334,6 +340,14 @@
       "status": "active"
     },
     {
+      "doc_id": "ref-parts-map",
+      "title": "Parts map",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "lookup",
+      "canonical_path": "docs/3-reference/PARTS-MAP.md",
+      "status": "active"
+    },
+    {
       "doc_id": "concept-character-card",
       "title": "Character card",
       "triadic_leg": "diataxis",
@@ -475,6 +489,22 @@
       "triadic_leg": "diataxis",
       "diataxis_mode": "understand",
       "canonical_path": "docs/4-explanation/concepts/TWO-MASTERS.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-reading-grade",
+      "title": "Reading grade",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/READING-GRADE.md",
+      "status": "active"
+    },
+    {
+      "doc_id": "concept-shrink-only-list",
+      "title": "Shrink-only list",
+      "triadic_leg": "diataxis",
+      "diataxis_mode": "understand",
+      "canonical_path": "docs/4-explanation/concepts/SHRINK-ONLY-LIST.md",
       "status": "active"
     }
   ]

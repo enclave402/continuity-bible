@@ -942,6 +942,48 @@
    "checked_at": "2026-10-28T06:02:06.234Z",
    "finding_used": "Barrel distortion bows straight lines outward (common on wide lenses); pincushion bends them inward (common on telephoto); mustache mixes both",
    "caveat": "A lens maker's technical paper; the plain-language shapes are the explainer's summary"
+  },
+  "kincaid-1975-derivation-readability-formulas": {
+   "kind": "url",
+   "id": "https://stars.library.ucf.edu/istlibrary/56/",
+   "url": "https://stars.library.ucf.edu/istlibrary/56/",
+   "title": "\"Derivation Of New Readability Formulas (Automated Readability Index, F\" by J. Peter Kincaid, Robert P. Fishburne Jr. et al.",
+   "authors": [],
+   "year": "",
+   "venue": "stars.library.ucf.edu",
+   "abstract_excerpt": "Three readability formulas were recalculated to be more suitable for Navy use. The three formulas are the Automated Readability Index (ARI), Fog Count, and Flesch Reading Ease Formula. They were derived from test results of 531 Navy enlisted personnel enrolled in four technical training schools at two Navy bases: Naval Air Station at Memphis, and Great Lakes Navy Training Center. Personnel were te",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:35:10.067Z",
+   "finding_used": "Kincaid, Fishburne, Rogers and Chissom (1975, Research Branch Report 8-75) recalculated the Flesch Reading Ease formula and two others as grade-level formulas, from tests of 531 Navy enlisted personnel on 18 passages from Navy training manuals",
+   "caveat": "Opened the university library's record page (title, authors, abstract, contents) on 2026-10-30. The full-text PDF answered HTTP 403 behind a bot check, so the formula's numbers are confirmed from wikipedia-flesch-kincaid-readability-tests, not from the report"
+  },
+  "qntm-2021-ratchets-software-development": {
+   "kind": "url",
+   "id": "https://qntm.org/ratchet",
+   "url": "https://qntm.org/ratchet",
+   "title": "Ratchets in software development @ Things Of Interest",
+   "authors": [],
+   "year": "",
+   "venue": "qntm.org",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:35:10.619Z",
+   "finding_used": "A ratchet is a lint-time script that counts instances of a pattern a team has stopped using: too many fails with the reason, too few fails and asks you to lower the expected count, so the count only goes down",
+   "caveat": "One practitioner's blog post (2021-11-21), not a study; it describes one team's practice"
+  },
+  "wikipedia-flesch-kincaid-readability-tests": {
+   "kind": "url",
+   "id": "https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests",
+   "url": "https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests",
+   "title": "Flesch–Kincaid readability tests - Wikipedia",
+   "authors": [],
+   "year": "",
+   "venue": "en.wikipedia.org",
+   "abstract_excerpt": "",
+   "checked_how": "http 200",
+   "checked_at": "2026-10-30T20:35:10.217Z",
+   "finding_used": "The Flesch-Kincaid grade level is 0.39 x (words per sentence) + 11.8 x (syllables per word) - 15.59, and it weighs sentence length more than word length",
+   "caveat": "A secondary source, used only for the formula's numbers because the primary report's full text could not be opened"
   }
  }
 }

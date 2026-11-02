@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # pre-commit: nothing private or secret enters a public repository; ephemeral scratch never gets committed.
-# Install once: bash scripts/install-git-hooks.sh
+# What this is: the checks git runs on your machine before each commit.
+# Why it exists: a slip is cheapest to fix before the commit is made. Nothing private may reach this public repo.
+# How to use it: install it once with bash scripts/install-git-hooks.sh. Then git runs it on every commit.
+# Next step: if it stops a commit, read the line it prints, fix that, and commit again.
+#
+# Terms, each with its concept page in the continuity bible:
+#   gate: docs/4-explanation/concepts/GATE.md
 set -u
 ROOT="$(git rev-parse --show-toplevel)"
 node "$ROOT/scripts/cleanup-context-scratch.mjs" >/dev/null 2>&1 || true
@@ -9,4 +15,6 @@ node "$ROOT/scripts/check-private.mjs" --staged || exit 1
 if git diff --cached --name-only | grep -qE '^(character-registry\.json|scripts/|examples/|test/)'; then
   (cd "$ROOT" && node scripts/check.mjs && node --test) || exit 1
 fi
+# Every part explains itself, and the parts map is current (docs/4-explanation/concepts/SELF-EXPLAINING-PART.md).
+(cd "$ROOT" && node scripts/check-self-explaining.mjs) || exit 1
 exit 0

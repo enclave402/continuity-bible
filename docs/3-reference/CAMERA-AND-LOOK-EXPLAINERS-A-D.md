@@ -7,6 +7,10 @@ canonical_path: docs/3-reference/CAMERA-AND-LOOK-EXPLAINERS-A-D.md
 status: active
 last_reviewed: 2026-10-28
 canonical: true
+what: Plain answers for camera and look words, such as lens, camera height, shot size and camera move.
+why: A field may ask for a camera word you do not know. This page tells you what to type and why.
+how: Find the field's name in the list. Read Not sure? first. It is the safe value.
+next: Pick one field you need for your shot and read its entry.
 ---
 
 # Camera and look explainers, groups A to D
@@ -713,6 +717,6 @@ Chapter pointers in the entries are to the books' chapters by topic; page number
 ## How this page was checked
 
 - **Sources.** Nine sources were loaded by `node scripts/research/verify.mjs` on 2026-10-28 (four by DOI through Crossref, five web pages by URL) and recorded in `research/SOURCES.json`. The Nikon, Canon and Blender pages were read in the same session; the claims used here come from their text.
-- **Read check.** Each of the 73 entries was run on its own through the machine's audit script (`audit_post.py`, Flesch-Kincaid grade, ceiling 8.9) on 2026-10-28. Worst entry: grade 7.1 (Projection). Every other entry read at grade 5.2 or below. No field reached 25 words.
+- **Read check.** Each of the 73 entries was run on its own through the machine's audit script (`audit_post.py`, [Flesch-Kincaid](../4-explanation/concepts/READING-GRADE.md) grade, ceiling 8.9) on 2026-10-28. Worst entry: grade 7.1 (Projection). Every other entry read at grade 5.2 or below. No field reached 25 words.
 - **Eighth-grade dry run.** On 2026-10-28 a fresh agent playing a 13-year-old, reading only this page, planned one shot: a sad six-year-old alone on the bottom step of a school staircase, face visible, feeling small. It chose a 50 mm lens, the camera a little above the child's eyes, 15 degrees down, a medium shot and a slow dolly pull-out, quoting an entry for each. It rated finding entries "okay" and trusted *Focal length*'s "Use 50" most, "because it gives one number and one reason". It reported: the **Not sure?** line was formatted unlike the other lines; no sign for "down" in *Elevation*; no eye height for a sitting child in *Camera height*; the page framing used words it did not know (render surface, prompt, gate, sensor, full frame); and apparent conflicts between *Elevation* and *High angle*, and between *Locked-off* and *Dolly pull-out*. Each was fixed on this page the same day: the term list above, the plain intro, and the reworded lines in those entries. The raw card keeps the pre-fix words.
 - **Not yet run.** No simulated or human readers have reviewed these words line by line (the owner's reader-panel process). Until that runs, every entry on this page is a draft for readers: `DRAFT - not yet reader panel`.

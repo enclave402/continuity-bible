@@ -39,6 +39,8 @@ canonical: true
 | [Fresh render, not a patch](../4-explanation/concepts/FRESH-RENDER-NOT-A-PATCH.md) | destructive editing, clean render, inpainting, re-render from the master, non-destructive editing | When a picture is wrong, you make a new one from the character's card. |
 | [Self-explaining part](../4-explanation/concepts/SELF-EXPLAINING-PART.md) | amnesiac principle, amnesiac protocol, amnesiac landing, recognition rather than recall, self-documenting | A file, message or page that tells a newcomer with no memory what it is, why it exists, how to use it and the next step. |
 | [Two masters](../4-explanation/concepts/TWO-MASTERS.md) | product and framework, reference implementation, instance and template | Two things kept in step: the product, which is a real story, and the framework, which is the method written down so others can use it. |
+| [Reading grade](../4-explanation/concepts/READING-GRADE.md) | Flesch-Kincaid grade level, readability score, reading level, plain language | A school grade that says how hard a piece of text is to read. |
+| [Shrink-only list](../4-explanation/concepts/SHRINK-ONLY-LIST.md) | ratchet, baseline, grandfather list, known-issues baseline | A list of old problems a check lets through for now; items can leave it, but none can join. |
 
 ## How the list is kept
 
