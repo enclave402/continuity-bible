@@ -1023,6 +1023,62 @@ export function carryContinuity({ cards, sheet, characters = {}, index, story, c
   return { failures, gaps, scenes, ids: [...new Set(seen)], labels: seen.length };
 }
 
+// ---- the model sheet: what a judge model must see in every picture of a character ----
+export const MODEL_SHEET_CONFIG_PATH = path.join(HERE, "model-sheet.config.json");
+export const MODEL_SHEET_FACT_FIELDS = ["face", "skin", "hair", "body", "signature_items", "never"];
+
+/** Which fields of an entry's model sheet are still unknown, and whether the sheet and the pronouns are complete. */
+export function modelSheetStatus(entry) {
+  const sheet = entry.model_sheet;
+  if (!sheet) return { present: false, complete: false, unknown: ["model_sheet"] };
+  const unknown = ["anchors", ...MODEL_SHEET_FACT_FIELDS].filter((k) => sheet[k] === "unknown" || sheet[k] === undefined);
+  if (entry.pronouns === undefined || entry.pronouns === "unknown") unknown.push("pronouns");
+  return { present: true, complete: unknown.length === 0, unknown };
+}
+
+/**
+ * A model sheet line must be something a vision model can answer yes or no to from a picture: no mood words
+ * (model-sheet.config.json), no names (write {{id}}), one fact short enough to check. Sources and pronoun sources must
+ * exist; a missing anchor image is a gap; an unknown field needs a todo line and is reported as a gap.
+ */
+export function checkModelSheet(id, entry, { root, file, labels = [], config } = {}) {
+  const failures = [], gaps = [];
+  const sheet = entry.model_sheet;
+  const pron = entry.pronouns;
+  if (pron && typeof pron === "object" && pron.source && !fs.existsSync(fromRoot(root, pron.source.split("#")[0]))) failures.push(`${file}: ${id}.pronouns.source ${pron.source} does not exist. Fix: point it at the canon file that states the pronouns`);
+  if (sheet && pron === undefined) failures.push(`${file}: ${id} has a model_sheet but no pronouns. Fix: copy them from canon with a source, or write "pronouns": "unknown"`);
+  if (pron === "unknown") gaps.push(`gap: ${id}.pronouns is unknown (canon does not state them)`);
+  if (!sheet || typeof sheet !== "object") return { failures, gaps };
+  const cfg = config || readJson(MODEL_SHEET_CONFIG_PATH);
+  const moods = (cfg.non_visual_words || []).map((w) => [w, new RegExp(`(^|[^A-Za-z])${escapeRe(w)}([^A-Za-z]|$)`, "i")]);
+  const names = labels.filter((l) => l && l.length > 1).map((l) => [l, new RegExp(`(^|[^A-Za-z])${escapeRe(l)}([^A-Za-z]|$)`)]);
+  const max = cfg.max_chars || 220;
+  for (const source of sheet.sources || []) if (!fs.existsSync(fromRoot(root, source.split("#")[0]))) failures.push(`${file}: ${id}.model_sheet source ${source} does not exist. Fix: correct the path; every fact must come from a canon file`);
+  const unknown = [];
+  if (sheet.anchors === "unknown") unknown.push("anchors");
+  else for (const img of Array.isArray(sheet.anchors) ? sheet.anchors : []) {
+    if (!(cfg.image_extensions || []).some((ext) => img.toLowerCase().endsWith(ext))) failures.push(`${file}: ${id}.model_sheet.anchors "${img}" is not a picture (${(cfg.image_extensions || []).join(", ")}). Fix: list approved reference images only`);
+    else if (!fs.existsSync(fromRoot(root, img))) gaps.push(`gap: ${id}.model_sheet.anchors ${img} is not on disk here (generated images are often untracked)`);
+  }
+  for (const field of MODEL_SHEET_FACT_FIELDS) {
+    const value = sheet[field];
+    if (value === "unknown") { unknown.push(field); continue; }
+    (Array.isArray(value) ? value : []).forEach((line, i) => {
+      const at = `${file}: ${id}.model_sheet.${field}[${i}]`;
+      if (typeof line !== "string") return;
+      if (line.length > max) failures.push(`${at} is ${line.length} characters (limit ${max}). Fix: split it into one visible fact per line`);
+      for (const [w, re] of moods) if (re.test(line)) failures.push(`${at} says "${w}", which a vision model cannot see in a picture. Fix: write what the eye sees, or drop the word (list: scripts/model-sheet.config.json)`);
+      const bare = line.replace(TOKEN, " ");
+      for (const [n, re] of names) if (re.test(bare)) { failures.push(`${at} names "${n}". Fix: write the {{id}} token`); break; }
+    });
+  }
+  if (unknown.length) {
+    if (!(sheet.todo || []).length) failures.push(`${file}: ${id}.model_sheet has unknown field(s) ${unknown.join(", ")} but no todo. Fix: add a todo line per unknown field saying which canon is silent`);
+    gaps.push(`gap: ${id}.model_sheet unknown: ${unknown.join(", ")}`);
+  }
+  return { failures, gaps };
+}
+
 // ---- the check ----
 export function checkRegistry(registry) {
   const failures = [];
@@ -1074,6 +1130,9 @@ export function checkRegistry(registry) {
       const ok = value && typeof value === "object" && typeof value.by === "string" && value.by && value.values && typeof value.values === "object" && Object.values(value.values).every((t) => typeof t === "string" && t);
       if (!ok) failures.push(`${registry._file}: ${id}.forms.${form} must be a string or { "by": "<field>", "values": { "<value>": "<text>", "default": "<text>" } }`);
     }
+    const sheet = checkModelSheet(id, entry, { root, file: registry._file, labels: liveLabels });
+    failures.push(...sheet.failures);
+    gaps.push(...sheet.gaps);
     if (entry.anchor?.image && !fs.existsSync(fromRoot(root, entry.anchor.image))) gaps.push(`gap: ${id}.anchor.image ${entry.anchor.image} is not on disk here (generated images are often untracked); the registry still records which image is the anchor`);
   }
 
